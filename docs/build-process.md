@@ -1,4 +1,4 @@
-# Build Process: docs/* documents (single or multiple)
+# Build Process: docs/\* documents (single or multiple)
 
 ## Source Of Truth Hierarchy
 
