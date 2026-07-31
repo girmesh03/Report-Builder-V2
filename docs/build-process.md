@@ -6,7 +6,7 @@
 2. **docs/initial-doc.md** — the base reference and the **final home** of all content. Contains many fixed rules and specifications. **However, it is not infallible.** Some items may need correction, update, or removal as we discover conflicts or better approaches during this session. When a conflict arises between initial-doc and my instruction, my instruction wins and initial-doc gets aligned afterward.
 3. **The target document(s) under `docs/`** — the document(s) being built: an existing working document, a brand-new document (created only when I request it), or several documents at once. Content is added/replaced iteratively.
 4. **Two build modes** — you use whichever I specify for each task:
-   - **Working-docs mode** — you build and cross-align working docs (e.g., `temp.md` ↔ `workflow-data-flow-ui-ux.md`, or any new doc) **without ever touching `docs/initial-doc.md`** during this phase. When GREEN and **when I decide**, you merge that green content into `docs/initial-doc.md`. Whether and when the working docs are deleted afterward is **my decision** — they may or may not exist after a certain period of time.
+   - **Working-docs mode** — you build and cross-align working docs (any new doc created only on my request) **without ever touching `docs/initial-doc.md`** during this phase. When GREEN and **when I decide**, you merge that green content into `docs/initial-doc.md`. Whether and when the working docs are deleted afterward is **my decision** — they may or may not exist after a certain period of time.
    - **Direct mode** — you build straight into `docs/initial-doc.md`, using the same loop, with no intermediate working docs.
 
 ## The Plan → Review → Build Loop
@@ -106,7 +106,7 @@ Once I approve your plan, you enter build mode. You run this loop for every buil
 
 ## Working Docs and the Final Document
 
-- You build and cross-align **working docs** (`temp.md`, `workflow-data-flow-ui-ux.md`, any new doc created only on my request) **among themselves** — never touching `docs/initial-doc.md` during this phase.
+- You build and cross-align **working docs** (any new doc created only on my request) **among themselves** — never touching `docs/initial-doc.md` during this phase.
 - When a working doc (or set of working docs) is GREEN and **I decide it is time**, you merge that green content into `docs/initial-doc.md` using the same Build Loop.
 - Whether working docs are deleted after the merge, and when, is **my decision** — you never delete a working doc unless I ask.
 - Sometimes there are no working docs at all: you build directly into `docs/initial-doc.md`.
@@ -122,6 +122,4 @@ Once I approve your plan, you enter build mode. You run this loop for every buil
 - **While working in working-docs mode, `docs/initial-doc.md` is untouchable.** Merge and delete timing are decided by me, case by case.
 - **initial-doc.md is aligned after build** only when the new section introduces changes that contradict initial-doc. If the section is purely additive, alignment is skipped.
 - **No tables** in output content (per my instruction).
-- **workflow ↔ temp alignment (applies only while both documents exist)** — whenever `docs/workflow-data-flow-ui-ux.md` and `docs/temp.md` both exist, they are mirrors of the same content in the paired sections (§3.5.1.x ↔ §3.x). After every build cycle that touches either document, you run `python scripts/verify-docs-alignment.py` — it must exit 0 (ALIGNED: all 15 mirrored pairs match). If it reports mismatches, you fix them in the same cycle; you do not proceed to the next section while misaligned. If either document does not exist, this rule does not apply. Other docs have no such mirror rule.
-  - Allowed differences only: heading numbers, cross-ref numbering between the two docs (remapped by the checker), and the workflow-only metadata lines (File/Layout Context/Setup/Backend reference). Everything else must be byte-identical after normalization.
-  - temp.md is canonical for the shared content; when a section diverges, you rewrite the workflow side to match temp.md (or mirror the change in both).
+- **initial-doc self-alignment (applies always)** — after every build cycle that touches `docs/initial-doc.md`, you run `python scripts/verify-initial-doc.py` — it must exit 0 (SELF-ALIGNED). It checks: no path/name reference to the retired working draft (`temp.md`) anywhere in the doc, top-level sections `## 1 .. ## 34` present and in order, no duplicate heading numbers, and every internal ref (`(N.M[.K])`, `(N.M[.K], Title)`, self `§N.M[.K]`) resolves to an existing heading number or numbered bullet. This rule always applies.
