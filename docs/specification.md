@@ -54,7 +54,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 20 | 20. Audio Recording And STT Pipeline | GREEN | Audio Recording STT, Transcription Review, API Contract, Data Modeling |
 | 21 | 21. AI Prompt Requirements | GREEN | AI Prompt Spec, Report Format, Rules |
 | 22 | 22. Export | GREEN | Export Spec, API Contract, Work Flow |
-| 23 | 23. Mock Data | PENDING | Mock Data Seeding, Data Modeling, Tasks |
+| 23 | 23. Mock Data | GREEN | Mock Data Seeding, Data Modeling, Tasks |
 | 24 | 24. Data Model | PENDING | Data Modeling, API Contract, Business Rules, Report Domain |
 | 25 | 25. Project Directory Structure | PENDING | Project Directory Structure, Coding Conventions, Architecture |
 | 26 | 26. Code Quality And Coding Conventions | PENDING | Coding Conventions, Rules, JSDoc Standards, Checklists |
@@ -89,7 +89,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Business Rules | 5, 24, 35 | GREEN (Phase 5 seed) |
 | Checklists | 26, 30, 31 | PENDING |
 | Coding Conventions | 9, 25, 26, 27 | GREEN (Phase 9 seed) |
-| Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11, 20 enrichment) |
+| Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11, 20, 23 enrichment) |
 | Decision Log | 1, 2, 33 | GREEN |
 | Design | consolidated across phases; finalized in 36 | PENDING |
 | Environment Config | 17, 19 | GREEN (Phase 17 seed, Phase 19 enrichment) |
@@ -102,7 +102,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Implementation Plan | 32 | PENDING |
 | JSDoc Standards | 26, 27 | PENDING |
 | Logging | 10, 28 | GREEN (Phase 10 seed) |
-| Mock Data Seeding | 23 | PENDING |
+| Mock Data Seeding | 23 | GREEN (Phase 23 seed) |
 | MUI Component Standards | 12, 14 | GREEN (Phase 14 enrichment) |
 | Non-Functional Requirements | 31 | PENDING |
 | Other AI Providers | 19 | GREEN (Phase 19 seed) |
@@ -124,7 +124,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Security | 11, 17, 18, 29 | GREEN (Phase 11 seed, Phase 17, 18 enrichment) |
 | Source Traceability | 31 | PENDING |
 | Status Machine | 5, 35 | GREEN (Phase 5 seed) |
-| Tasks | 32 | PENDING |
+| Tasks | 23 (seed — content lives in ## Mock Data Seeding), 32 | PENDING |
 | Theme Standards | 14 | GREEN (Phase 14 seed) |
 | Transcription Review | 8, 20 | GREEN (Phase 8 seed, Phase 20 enrichment) |
 | UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 15, 16 enrichment) |
@@ -472,6 +472,18 @@ All `§` references below identify sections of the original source brief. They a
 | §22 | The four client-side formats (PDF, TXT, CSV, XLSX) are generated in the browser — no backend export endpoints for them; the Google Docs export is the only backend export | Export Spec (3), API Contract (7), Requirements (REQ-159) |
 | §22 + codebase (`client/package.json`) | `jspdf` ^4.2.1 and `jspdf-autotable` ^5.0.8 are already installed in `client/package.json`; no workbook library is installed (chosen at implementation); `GOOGLE_SERVICE_ACCOUNT_EMAIL`/`GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` are optional env vars (`## Environment Config` §2, REQ-121), absent from `backend/.env` and added when the Google Docs export is enabled | Export Spec (2, 4), API Contract (7) |
 
+## Source Trace Map — Phase 23 (source §23)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §23 | The `backend/mock/*` data injection must support MongoDB sessions | Mock Data Seeding (2), Data Modeling (6), Requirements (REQ-160) |
+| §23 | The `backend/mock/*` wipe must support MongoDB sessions | Mock Data Seeding (2, 3), Requirements (REQ-161) |
+| §23 | No additional mock data requirements are specified in the source notes | Mock Data Seeding (1) |
+| §10.3 | `backend/mock/*` data injection and wipe must support session; the write-controller session pattern is startSession → startTransaction → commit or abort → endSession in `finally` | Backend Architecture (3), Mock Data Seeding (2), Requirements (REQ-082) |
+| §25.1 | `backend/mock/*` is an explicit backend path | Project Directory Structure (4), Mock Data Seeding (6) |
+| §33 (ADR-037) | Mock Data Seeding Strategy — metadata-only audio clips: mock narration records carry clip metadata but no real audio files | Mock Data Seeding (5), Data Modeling (6), Decision Log (AD-009), Requirements (REQ-162) |
+| Codebase (`backend/`, `backend/package.json`) | No `mock/` or `seed/` directory and no seed npm script exist yet — the mock modules are created during implementation; mongoose ^9.7.4 is installed (MongoDB sessions supported) | Mock Data Seeding (6), Project Directory Structure (4) |
+
 ---
 
 ## Project Overview
@@ -812,6 +824,7 @@ Secondary features should not distract from the core workflow of generating a bo
 | aiCorrectedText | The corrected transcription text the AI returns from transcription correction (fixing gaps and misrecognized words); stored on the Transcription model. | §21.4 |
 | Noto Sans Ethiopic | The Amharic-capable Unicode font used to render Amharic text in the PDF export (section headers and body). | §22 |
 | Google Service Account | The server-side identity the backend uses to authenticate to the Google Docs API for the Google Docs export; configured via the optional `GOOGLE_SERVICE_ACCOUNT_EMAIL` and `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` environment variables. | §22 |
+| Mock data | Development/demo-only records injected into MongoDB via `backend/mock/*`; injection and wipe run inside MongoDB sessions, mock narrations are metadata-only (no audio files), and the commands refuse to run when `NODE_ENV` is `production` (AD-009). | §23, §33 (ADR-037) |
 
 ---
 
@@ -1204,6 +1217,16 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 
 - Export rules: **Phase 22 — DONE (REQ-154..159)**.
 
+### Functional Requirements (Phase 23)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-160 | The `backend/mock/*` data injection runs inside a MongoDB session: `mongoose.startSession()`, `session.startTransaction()`, write, commit or abort, `session.endSession()` in `finally`; every write passes `{ session }` and model hooks/methods support the session (REQ-082). | Injecting mock data succeeds as one all-or-nothing transaction; a failure aborts and leaves the database untouched. | §23, §10.3 |
+| REQ-161 | The `backend/mock/*` wipe runs inside a MongoDB session with the same transaction pattern as REQ-160 and deletes the mock records of every seeded collection in one transaction. | Wiping mock data succeeds as one all-or-nothing transaction; all seeded collections are cleared. | §23, §10.3 |
+| REQ-162 | Mock narrations are metadata-only records: clip metadata without real audio files; seeding never writes to `backend/uploads/audio/` and never calls the STT/AI providers. | No audio file is created by seeding; mock transcriptions exist as pre-created records. | §23, §33 (ADR-037) |
+| REQ-163 | Mock-data injection is idempotent: it wipes existing mock records before inserting the seed set. | Re-running the inject command always ends with exactly one seed set. | §23 |
+| REQ-164 | The mock-data inject and wipe commands refuse to run when `NODE_ENV` is `production`. | Running the commands with `NODE_ENV=production` exits without modifying the database. | §23 (user decision) |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -1233,6 +1256,8 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Other AI providers rules: **Phase 19 — DONE (REQ-132..138)**.
 - Audio recording and STT pipeline rules: **Phase 20 — DONE (REQ-139..145)**.
 - AI prompt rules: **Phase 21 — DONE (REQ-146..153)**.
+- Export rules: **Phase 22 — DONE (REQ-154..159)**.
+- Mock data rules: **Phase 23 — DONE (REQ-160..164)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -1597,6 +1622,15 @@ Entity-level seeds from the recording/STT pipeline (§20; field-level schema rem
 **Transcription:**
 - Text produced from narration audio via the Addis AI STT endpoint (language code `am`; `## Addis AI` §7); status `transcribed`, then `reviewed` after supervisor review/correction (W-04; `## Transcription Review` §2).
 - Re-transcription re-runs STT on the stored audio for accuracy verification; the backend accepts both `audio_recorded` and `transcribed` statuses for the re-transcription endpoint (§20.5; `## API Contract` §6; REQ-145).
+
+### 6. Mock Data Seeds (Phase 23)
+
+Entity-level mock-data seeding rules from §23 (exact records deferred to Phase 24):
+
+- The `backend/mock/*` injection and wipe run inside MongoDB sessions with the write-controller transaction pattern (REQ-082; `## Mock Data Seeding` §2).
+- Seeded entities: User, Branch, DailyReport, Narration, Transcription, AIConversation, GeneratedReport, ReportVersion — the §1 inventory (`## Mock Data Seeding` §4).
+- Mock narrations are metadata-only records — clip metadata without audio files; mock transcriptions are pre-created (ADR-037; `## Mock Data Seeding` §5).
+- Injection is idempotent (wipe-before-inject) and development/demo-only — the commands refuse to run when `NODE_ENV` is `production` (REQ-163, REQ-164).
 
 ---
 
@@ -2771,7 +2805,7 @@ backend/
 ├── controllers/           # One file per domain: auth, branch, report, audio, transcription, ai, user, analytics (§10.3)
 ├── middleware/            # Global security stack: helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit (§10.2)
 ├── models/                # Mongoose schemas; hooks/instance/static methods accept sessions (§10.3, §10.11)
-├── mock/                  # Mock-data injection/wipe supporting sessions (§10.3; details in Phase 23)
+├── mock/                  # Mock-data injection/wipe supporting sessions (§10.3; `## Mock Data Seeding`)
 ├── routes/
 │   └── index.js           # Imports and mounts all /api/v1 route modules (§10.1)
 ├── utils/
@@ -2782,7 +2816,7 @@ backend/
 └── logs/                  # Winston daily-rotated logs; gitignored; 30-day auto-delete (§10.9)
 ```
 
-Notes: `backend/.env` defines the environment keys (codebase fact; the full environment-variable contract is Phase 17). `backend/mock/*` is confirmed by §10.3; its seeding behavior is detailed in Phase 23.
+Notes: `backend/.env` defines the environment keys (codebase fact; the full environment-variable contract is Phase 17). `backend/mock/*` is confirmed by §10.3; its seeding behavior is detailed in `## Mock Data Seeding`.
 
 ### 4. Frontend Directory Structure (Phase 12)
 
@@ -3025,6 +3059,76 @@ client/
 ### Expansion Markers
 
 - Phase 28 (§28 Error Handling Patterns): error-handling logging detail.
+
+---
+
+## Mock Data Seeding
+
+> **Phase 23 seed — the mock-data injection and wipe rules from §23. Field-level seed records arrive in Phase 24 (§24 Data Model); the implementation tasks are consolidated into the Tasks And Implementation Plan section in Phase 32.**
+
+### 1. Purpose And Scope
+
+- `backend/mock/*` provides development/demo-only mock data for the backend (REQ-160..164). It is internal tooling — not a product feature: no API endpoint, no UI, and no user-visible behavior depends on it.
+- The source notes (§23) specify only the session-support contract; every rule below fills a missing implementation detail.
+- Mock data is development/demo-only: the inject and wipe commands refuse to run when `NODE_ENV` is `production` (REQ-164; AD-009). No mock record is ever created or removed in a production database.
+- Seeding never writes to `backend/uploads/audio/` and never invokes the AI providers (REQ-162; AD-009).
+
+### 2. Session Contract
+
+- The injection and the wipe each run inside a MongoDB session, mirroring the write-controller pattern of `## Backend Architecture` §3 (REQ-082):
+  1. `mongoose.startSession()`
+  2. `session.startTransaction()`
+  3. write (inject) or delete (wipe)
+  4. commit or abort on failure
+  5. `session.endSession()` in `finally`
+- Every model write and delete inside the inject/wipe passes `{ session }`; model hooks, instance methods, and static methods must support the session (REQ-082, `## Backend Architecture` §10).
+- Each run is all-or-nothing: a failure aborts the transaction and leaves the database untouched.
+
+### 3. Wipe Behavior
+
+- The wipe deletes the mock records of every seeded collection (the `## Data Modeling` §1 inventory) inside one transaction.
+- Injection is idempotent: it wipes existing mock records first, then inserts the seed set (REQ-163).
+
+### 4. Seeded Entity Set
+
+Entity-level seed set; the exact records and field values are defined in Phase 24 (field-level schema per §5.4):
+
+| Entity | Seeded as | Source |
+|---|---|---|
+| User | A demo supervisor account; created through the model so the bcrypt `pre('save')` hook hashes the password | §11, §23 |
+| Branch | Multiple branches under the demo supervisor's area | §5.1, §23 |
+| DailyReport | Reports covering the statuses of `## Status Machine` (status-name reconciliation owned by Phase 35) | §5, §23 |
+| Narration | Metadata-only records (§5) | §23, ADR-037 |
+| Transcription | Reviewed/corrected transcriptions linked to the mock narrations and reports | §20, §23 |
+| AIConversation | Conversation records associated with mock report generation | §2.1, §23 |
+| GeneratedReport | Generated-report records with their content | §2.1, §23 |
+| ReportVersion | Version-history records for the mock reports | §5.2, §23 |
+
+### 5. Metadata-Only Audio Rule
+
+- Mock narrations exist as metadata-only records (ADR-037): they carry clip metadata (MIME, duration) but no real audio files.
+- Seeding does not populate `backend/uploads/audio/` and makes no STT call for mock narrations; mock transcriptions are pre-created records (REQ-162).
+
+### 6. Entry Points
+
+- The inject and wipe logic lives under `backend/mock/*` (§25.1; `## Project Directory Structure` §4). The concrete module file names and npm script names are defined at implementation, following the §10.3 directory conventions.
+- No `mock/` or `seed/` directory and no seed npm script exist in `backend/` today — the modules are created during implementation (codebase fact).
+- The npm scripts wrap the functions of §2–§3 and enforce the production guard of §1 (REQ-164).
+
+### 7. Implementation Tasks (Phase 23 seed)
+
+Task seeds for the Tasks And Implementation Plan section (Phase 32):
+
+- T-MOCK-01 — Create the `backend/mock/*` inject module (session contract, wipe-before-inject).
+- T-MOCK-02 — Create the `backend/mock/*` wipe module (transactional wipe across the seeded collections).
+- T-MOCK-03 — Wire the seed set per `## Data Modeling` §6 (model-created User, metadata-only narrations).
+- T-MOCK-04 — Add the npm scripts and the `NODE_ENV` production guard (REQ-164).
+
+### 8. Expansion Markers
+
+- Phase 24 (§24 Data Model): exact seed records and field values.
+- Phase 32 (Tasks And Implementation Plan): the §7 tasks are consolidated into the section.
+- Phase 35 (Archive, Delete, And Restore Lifecycle): status-name reconciliation may adjust the seeded report statuses.
 
 ---
 
@@ -3807,6 +3911,15 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 - **Consequences:** The report/transcription model supports one-to-many narration→report; exact merge behavior is re-confirmed with the audio pipeline (Phases 20/21).
 - **Source:** §2.1.
 
+#### AD-009 — Mock data seeding strategy
+
+- **Date:** 2026-08-02. **Status:** Accepted.
+- **Context:** §23 requires the `backend/mock/*` data injection and wipe to support MongoDB sessions and specifies nothing else; the source ADR-037 names the strategy "metadata-only audio clips".
+- **Decision:** Mock data lives under `backend/mock/*`. Injection and wipe each run inside a MongoDB session with the write-controller transaction pattern (REQ-082, REQ-160..161). Mock narrations are metadata-only records — clip metadata without audio files, no STT calls, mock transcriptions pre-created (REQ-162). Mock data is development/demo-only: the commands refuse to run when `NODE_ENV` is `production` (REQ-164). No API endpoints or UI expose mock data.
+- **Rationale:** The session rule is explicit in the source; the metadata-only clip strategy comes from the source ADR title; the production guard keeps demo tooling away from real data.
+- **Consequences:** Seeded narrations have no playable audio and seeding never touches `backend/uploads/audio/` or the AI providers; exact seed records arrive in Phase 24.
+- **Source:** §23, §33 (ADR-037).
+
 ### Decision Log open items
 
 - Measurable success KPIs (OQ-001) — decision pending user input.
@@ -3906,3 +4019,7 @@ Phases 1–21 are GREEN (2026-08-01). Phase 21 built the AI prompt requirements 
 ## End Of Phase 22 Content
 
 Phases 1–22 are GREEN (2026-08-01). Phase 22 built the export mechanics from §22: enriched `## Export Spec` (new §2 Format Details — PDF via `jspdf` + `jspdf-autotable` (already installed in `client/package.json`), A4, Noto Sans Ethiopic font for Amharic, section headers, page numbers; TXT via UTF-8 Blob preserving the report format; CSV via UTF-8 Blob with BOM for Excel compatibility with structured columns; XLSX as a multi-sheet workbook — content, version history (all versions with metadata), and metadata (provider, dates, status) sheets, workbook library chosen at implementation; new §3 Client-Side Only Rule — PDF/TXT/CSV/XLSX generated in the browser with no backend export endpoints; new §4 Google Docs Backend Export — backend-only via the Google Docs API with a Google Service Account (`GOOGLE_SERVICE_ACCOUNT_EMAIL`/`GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`, `## Environment Config` §2, REQ-121, absent from `backend/.env` and added when the export is enabled), document created from the report content, sharing set to "Anyone with link can view", URL returned, frontend opens it in a new tab, edits happen freely in Google Docs outside the app, credentials server-side only; §2 Expansion Markers renumbered to §5 and flipped to DONE), enriched `## API Contract` (new §7 Export — the four client-side formats need no backend endpoints; Google Docs is the only backend export, path defined at implementation per the Phase 10 precedent), enriched `## Work Flow` (W-12 row now details `## Export Spec` §2–4; new §5 Export Sub-Flow — E-01..E-05: format choice from the finalized report, browser download for the four client-side formats, backend Google Docs export returning the shareable URL, URL opened in a new tab, free editing in Google Docs; export available only on a finalized report; failure outcomes via the §10.7 envelope), flipped the Phase 22 forward marker in `## Export Spec` to DONE, added REQ-154..159, extended `## Glossary` (Noto Sans Ethiopic, Google Service Account), updated the Checklist (Export Spec — GREEN Phase 22 enrichment; Work Flow — GREEN Phase 22 enrichment; API Contract — GREEN Phase 22 enrichment), and added the Phase 22 Source Trace Map with the `client/package.json` codebase facts (jspdf ^4.2.1 and jspdf-autotable ^5.0.8 installed, no workbook library) and the `backend/.env` fact (GOOGLE_SERVICE_ACCOUNT_* absent, added when the Google Docs export is enabled). Phase 23 will build the mock data rules.
+
+## End Of Phase 23 Content
+
+Phases 1–23 are GREEN (2026-08-02). Phase 23 built the mock data rules from §23: new `## Mock Data Seeding` seed (development/demo-only scope with the `NODE_ENV` production guard — user decision; session contract mirroring the write-controller transaction pattern of REQ-082 — `startSession`/`startTransaction`/commit-or-abort/`endSession` in `finally` with `{ session }` on every write, all-or-nothing runs; transactional wipe across the seeded collections; idempotent wipe-before-inject; seeded entity set — User (created through the model so the bcrypt `pre('save')` hook applies), Branch, DailyReport (statuses of `## Status Machine`, reconciliation owned by Phase 35), Narration, Transcription, AIConversation, GeneratedReport, ReportVersion; metadata-only audio rule from ADR-037 — clip metadata without audio files, `backend/uploads/audio/` untouched, no STT calls, mock transcriptions pre-created; entry points under `backend/mock/*` with module and npm script names defined at implementation — no `mock/`/`seed/` directory or seed script exists in `backend/` today (codebase fact); implementation task seeds T-MOCK-01..04 for the Phase 32 Tasks And Implementation Plan section; expansion markers for Phases 24, 32, 35), enriched `## Data Modeling` (new §6 Mock Data Seeds — entity-level seeding rules, metadata-only narrations, session-based inject/wipe, Phase 24 deferral), added REQ-160..164 (inject session, wipe session, metadata-only mock audio, idempotent injection, production guard), added AD-009 (Mock Data Seeding Strategy), extended `## Glossary` (Mock data), flipped the Phase 23 forward markers in `## Project Directory Structure` (the `mock/` tree comment and the backend-directory note) to reference `## Mock Data Seeding`, added the missing Phase 22 export marker to the requirement expansion markers, updated the Checklist (Mock Data Seeding — GREEN seed; Data Modeling — GREEN Phase 23 enrichment; Tasks — Phase 23 seed, content lives in `## Mock Data Seeding`, consolidated in Phase 32), and added the Phase 23 Source Trace Map with the `backend/` and `backend/package.json` codebase facts (no `mock/`/`seed/` directory, no seed script, mongoose ^9.7.4). Phase 24 will build the data model.
