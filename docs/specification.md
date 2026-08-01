@@ -36,7 +36,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 2 | 2. Problem Statement | GREEN | Problem Statement, PRD, Requirements, User Stories |
 | 3 | 3. Manual Reporting Mental Model | GREEN | PRD, Work Flow, User Interactions, Report Domain |
 | 4 | 4. Supporting Features Needed Because Of The Core Problem | GREEN | PRD, Requirements, User Stories, Report Management |
-| 5 | 5. Report And Branch Domain | PENDING | Report Domain, Data Modeling, Business Rules, API Contract, Status Machine, Report Management |
+| 5 | 5. Report And Branch Domain | GREEN | Report Domain, Data Modeling, Business Rules, API Contract, Status Machine, Report Management |
 | 6 | 6. Report Format, Samples, And Tone | PENDING | Report Format, AI Prompt Spec, Export Spec |
 | 7 | 7. Language Rules | PENDING | AI Prompt Spec, Report Format, UI/UX Spec |
 | 8 | 8. Transcription Accuracy Requirement | PENDING | Audio Recording STT, Transcription Review, Validation Audit |
@@ -80,16 +80,16 @@ Status of every section the target document must contain at minimum. Extra secti
 | Addis AI | 18 | PENDING |
 | AI Prompt Spec | 6, 7, 18, 19, 21 | PENDING |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
-| API Contract | 5, 10, 11, 18, 20, 22, 24, 28 | PENDING |
+| API Contract | 5, 10, 11, 18, 20, 22, 24, 28 | GREEN (Phase 5 seed) |
 | Architecture | 9, 10, 25 | PENDING |
 | Audio Recording STT | 8, 20 | PENDING |
 | Auth Cookies | 11 | PENDING |
 | Backend Architecture | 10 | PENDING |
 | Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
-| Business Rules | 5, 24, 35 | PENDING |
+| Business Rules | 5, 24, 35 | GREEN (Phase 5 seed) |
 | Checklists | 26, 30, 31 | PENDING |
 | Coding Conventions | 9, 25, 26, 27 | PENDING |
-| Data Modeling | 5, 11, 20, 23, 24, 35 | PENDING |
+| Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 5 seed) |
 | Decision Log | 1, 2, 33 | GREEN |
 | Design | consolidated across phases; finalized in 36 | PENDING |
 | Environment Config | 17 | PENDING |
@@ -114,16 +114,16 @@ Status of every section the target document must contain at minimum. Extra secti
 | Project Overview | 1 | GREEN |
 | React Hook Form Standards | 15 | PENDING |
 | Redux RTK Query | 13 | PENDING |
-| Report Domain | 3, 5, 24 | GREEN (Phase 3 seed) |
+| Report Domain | 3, 5, 24 | GREEN (Phase 5 enrichment) |
 | Report Format | 6, 7, 21 | PENDING |
-| Report Management | 4, 5, 35 | GREEN (Phase 4 seed) |
+| Report Management | 4, 5, 35 | GREEN (Phase 5 enrichment) |
 | Requirements | 1, 2, 4, 9, 29, 31, 34 | GREEN (Phase 4 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
 | Routing Layout | 12 | PENDING |
 | Rules | 9, 13, 16, 17, 21, 26, 29, 30 | PENDING |
 | Security | 11, 17, 18, 29 | PENDING |
 | Source Traceability | 31 | PENDING |
-| Status Machine | 5, 35 | PENDING |
+| Status Machine | 5, 35 | GREEN (Phase 5 seed) |
 | Tasks | 32 | PENDING |
 | Theme Standards | 14 | PENDING |
 | Transcription Review | 8, 20 | PENDING |
@@ -207,6 +207,27 @@ All `§` references below identify sections of the original source brief. They a
 | §4 | Report CRUD, so the user can manage reports | PRD (6), Report Management (4), Requirements (REQ-045), User Stories (US-015) |
 | §4 | Branch CRUD, so the user can manage branches | PRD (6), Report Management (4), Requirements (REQ-046), User Stories (US-014) |
 | §4 | Export, so the report can be shared or archived | PRD (6), Report Management (2), Requirements (REQ-047), User Stories (US-007 extended) |
+
+---
+
+## Source Trace Map — Phase 5 (source §5)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §5.1 | Company has more than 14 branches; supervisor visits one or more branches per working day | Report Domain (6), PRD (4) |
+| §5.1 | Report format must support one branch or multiple branches | Report Domain (6), Business Rules (BR-01), Requirements (REQ-050), User Stories (US-018) |
+| §5.1 | Multi-branch reports must preserve branch-specific details | Report Domain (6), Business Rules (BR-02), Requirements (REQ-051), Glossary (branch-specific details) |
+| §5.1 | Multi-branch reports must preserve time ranges per branch when the audio contains them | Report Domain (6), Business Rules (BR-03), Requirements (REQ-052), Glossary (per-branch time range) |
+| §5.1 | All list endpoints use `mongoose-paginate-v2`: default page 1, default limit 10, max limit 100 | API Contract (1), Business Rules (BR-04), Requirements (REQ-053), Glossary (pagination convention) |
+| §5.1 | Branch CRUD required so the user can manage branch records | Report Management (4), Report Domain (6), Requirements (REQ-046), User Stories (US-014) |
+| §5.2 | Daily reports belong to the correct authenticated user | Report Domain (7), Business Rules (BR-06), Requirements (REQ-041) |
+| §5.2 | Reports remain editable after generation; historical versions preserved | Report Domain (7), Business Rules (BR-07/08), Report Management (6), Requirements (REQ-024/027) |
+| §5.2 | Report management requires list and grid views | Report Management (3), Requirements (REQ-044), User Stories (US-013) |
+| §5.2 | Previous reports searchable, updateable, retrievable, reviewable | Report Domain (7), Report Management (3), Business Rules (BR-09), Requirements (REQ-055), User Stories (US-019) |
+| §5.2 | Report CRUD required so the user can manage reports | Report Management (4), Requirements (REQ-045), User Stories (US-015) |
+| §5.2 | Report content generated from reviewed transcription, not directly from raw audio | Report Domain (DR-6), Business Rules (BR-05), Work Flow (W-05), Requirements (REQ-054), Glossary (reviewed transcription) |
+| §5.3 | Eight named report fields: ቀን, ብራንች, ስም, ስራ የገባሁበት ሰዓት, የተሰሩ ስራዎች, መፍትሄ የሚፈሉ ጉዳዮች, አጠቃላይ አስተያየት, ከስራ የወጣሁበት ሰዓት | Report Domain (8), Requirements (REQ-056) |
+| §5.4 | Manage: daily supervision reports, transcriptions, AI conversations, generated reports, report version history, reporting analytics; fields defined in the data-modeling phase | Report Domain (9), Data Modeling, Requirements (REQ-057) |
 
 ---
 
@@ -458,7 +479,7 @@ Secondary features should not distract from the core workflow of generating a bo
 
 ## Glossary
 
-> **Terms added in Phases 1–4. The full glossary is built in Phase 34 (§34 Glossary).**
+> **Terms added in Phases 1–5. The full glossary is built in Phase 34 (§34 Glossary).**
 
 | Term | Definition | Source |
 |---|---|---|
@@ -505,6 +526,10 @@ Secondary features should not distract from the core workflow of generating a bo
 | List view | A report management view for finding previous reports. | §4 |
 | Grid view | A report management view for finding previous reports, backed by the MUI X Data Grid dependency (component standards in Phase 14). | §4 |
 | CRUD | Create, read, update, delete operations; report CRUD and branch CRUD are supporting features. | §4 |
+| Pagination convention (list endpoints) | All list endpoints use `mongoose-paginate-v2` with default page 1, default limit 10, and max limit 100. | §5.1, §5.2 |
+| Reviewed transcription | The transcription text the supervisor has reviewed (and, if needed, corrected with AI help) before report generation; report content is generated only from it, never directly from raw audio. | §5.2 |
+| Branch-specific details | The per-branch information (activities, issues, times) that multi-branch reports must preserve. | §5.1 |
+| Per-branch time range | The time range spent at a branch; preserved in multi-branch reports when the audio contains it. | §3.1, §5.1 |
 
 ---
 
@@ -533,6 +558,7 @@ The complete problem statement is in `## Problem Statement`. In summary: the sup
 - Reports are prepared **at the end of each day for the boss** (source: §1.3).
 - **Per-branch supervision activities** (source: §2.2): check daily operational activities; check cleanliness; check employee readiness; follow a checklist; observe urgent branch problems; communicate with staff or responsible people; follow up on previously reported issues; take action or give instructions; form an opinion about branch performance; identify things that need immediate attention; identify things that can make the branch better.
 - **End-of-day report must explain** (source: §2.2): date, branch, working time, completed activities, unresolved issues, general opinion, work exit time.
+- **Report format supports one or multiple branches** (source: §5.1); multi-branch reports preserve branch-specific details and per-branch time ranges when the audio contains them.
 
 ### 5. Core Workflow (high level)
 
@@ -708,6 +734,19 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-048 | Addis AI speech-to-text must turn Amharic audio into text. | Amharic audio is transcribed via the Addis AI STT workflow (same as REQ-017/035; §4 states the purpose). | §4 |
 | REQ-049 | Addis AI text generation must turn the raw transcription into a structured report. | The generated report is produced from the transcription by the Addis AI text-generation workflow (same as REQ-017). | §4 |
 
+### Functional Requirements (Phase 5)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-050 | The report format must support one branch or multiple branches. | A single daily report renders for one branch or several branches. | §5.1 |
+| REQ-051 | Multi-branch reports must preserve branch-specific details. | Each branch's details (activities, issues, times) remain attributable to that branch in the report. | §5.1 |
+| REQ-052 | Multi-branch reports must preserve time ranges per branch when the audio contains them. | When the narration includes per-branch time ranges, they appear per branch in the report. | §5.1 |
+| REQ-053 | All list endpoints must use `mongoose-paginate-v2` with default page 1, default limit 10, and max limit 100. | Every list endpoint returns paginated data with the stated defaults and honors a max limit of 100. | §5.1, §5.2 |
+| REQ-054 | Report content must be generated from the reviewed transcription, not directly from raw audio. | Generation consumes the reviewed transcription; no path generates a report directly from audio. | §5.2 |
+| REQ-055 | Previous reports must be searchable, updateable, retrievable, and reviewable. | Reports can be searched, updated, retrieved, and reviewed (§5.2 states it explicitly). | §5.2 |
+| REQ-056 | The generated report must include the eight named fields: ቀን, ብራንች, ስም, ስራ የገባሁበት ሰዓት, የተሰሩ ስራዎች, መፍትሄ የሚፈሉ ጉዳዮች, አጠቃላይ አስተያየት, ከስራ የወጣሁበት ሰዓት. | Each named field is present in the generated report structure (format detail in Phase 6). | §5.3 |
+| REQ-057 | The system must manage daily supervision reports, transcriptions, AI conversations, generated reports, report version history, and reporting analytics. | Each record type is managed; detailed fields are defined in the data-modeling phase (Phase 24). | §5.4 |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -720,6 +759,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Detailed functional requirements for the full problem context: **Phase 2 — DONE (REQ-015..035)**.
 - Mental-model extraction and review-loop rules: **Phase 3 — DONE (REQ-036..038)**.
 - Supporting features requirements (the twelve §4 features): **Phase 4 — DONE (REQ-039..049)**.
+- Report and branch domain rules: **Phase 5 — DONE (REQ-050..057)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -750,6 +790,8 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | US-015 | As an Area Supervisor, I want to manage reports through CRUD, so that I can organize my reports. | Reports can be created, read, updated, and deleted (archive/delete semantics in Phase 35). | §4 |
 | US-016 | As an Area Supervisor, I want my reports to belong to my authenticated account, so that reports stay correctly attributed. | Reports are user-scoped and owned by the authenticated supervisor (auth design in Phase 11). | §4 |
 | US-017 | As an Area Supervisor, I want my profile identity to appear in reports, so that the report identifies me. | Profile identity fields are usable in report content. | §4 |
+| US-018 | As an Area Supervisor, I want multi-branch daily reports that preserve branch-specific details and per-branch time ranges, so that each branch's part of the day is accurately represented. | Branch-specific details stay attributed per branch; per-branch time ranges appear when the audio contains them. | §5.1 |
+| US-019 | As an Area Supervisor, I want previous reports to be searchable, updateable, retrievable, and reviewable, so that I can find and rework old reports. | Search, update, retrieval, and review of previous reports work (REQ-055). | §5.2 |
 
 ---
 
@@ -779,7 +821,9 @@ The supporting features exist to support the core workflow (§4): the supervisor
 
 - **List view** — find previous reports (§4); mechanics (columns, pagination, sorting, filtering) in Phases 12/13/24; backend pagination dependency `mongoose-paginate-v2` (codebase fact).
 - **Grid view** — find previous reports (§4); backed by the MUI X Data Grid dependency `@mui/x-data-grid` (codebase fact); component standards in Phase 14.
-- Search, retrieve, and review of previous reports (§2.1) are served by these views.
+- Search, retrieve, and review of previous reports (§2.1, §5.2) are served by these views.
+- **Pagination convention (§5.1, §5.2, REQ-053, BR-04):** all list endpoints use `mongoose-paginate-v2` with default page 1, default limit 10, and max limit 100.
+- **Searchability (§5.2, REQ-055):** previous reports must be searchable, updateable, retrievable, and reviewable.
 
 ### 4. CRUD Matrix
 
@@ -797,7 +841,9 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 ### 6. Lifecycle Seeds
 
 - Daily report lifecycle (detailed in Phase 35): created → recorded/transcribed → reviewed (transcription) → generated → reviewed/corrected → finalized → exported → archived/deleted/restored.
-- Multi-branch days: one daily report covers one or more branches (§2.1, REQ-014/028).
+- Multi-branch days: one daily report covers one or more branches (§2.1, §5.1, REQ-014/028/050).
+- **Generation source (§5.2, REQ-054, BR-05):** report content is generated only from the reviewed transcription, never directly from raw audio.
+- **Version preservation (§5.2, REQ-024/027):** reports remain editable after generation and preserve historical versions.
 
 ### 7. OQ Resolutions (Phase 4)
 
@@ -825,7 +871,7 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 | W-02 | System | Sends the recorded audio to Addis AI speech-to-text (detailed pipeline in Phase 20) | Transcription (raw material) | §3.3 |
 | W-03 | System | The transcription is expected to contain the needed information but is not organized as a final report | Unorganized transcription text | §3.3 |
 | W-04 | Supervisor | Reviews and edits the transcription when necessary (REQ-016) | Corrected transcription | §2.1, §3.3 |
-| W-05 | System (AI) | Processes, extracts, organizes, and rewrites the information based on the required report rules, report format, tone, and system prompt | Organized report draft | §3.3 |
+| W-05 | System (AI) | Processes, extracts, organizes, and rewrites the information based on the required report rules, report format, tone, and system prompt; generation runs only from the reviewed transcription, never directly from raw audio (§5.2) | Organized report draft | §3.3, §5.2 |
 | W-06 | System (AI) | Writes the report in Amharic, matching the tone of the provided report samples (REQ-032) | Generated Amharic report | §3.3 |
 | W-07 | Supervisor | Reviews the generated report | Review decision (satisfied / needs correction) | §3.2 |
 | W-08 | Supervisor | If something is wrong, missing, unclear, or not written in the desired way, requests a correction | Correction request | §3.2 |
@@ -936,12 +982,159 @@ The AI is responsible for (all items §3.3):
 | DR-3 | All narrations of a day merge into one daily report (AD-008); the transcription source text is the merged material. | §2.1, AD-008 |
 | DR-4 | The review–correction loop (UI-004..007) mirrors the Person 1 / Person 2 relationship: correction requests come only from the supervisor and continue until satisfied. | §3.2 |
 | DR-5 | No clarifying-question step in the first workflow; the system processes narrations as-is (OQ-007). | §3.2, OQ-007 |
+| DR-6 | Report content is generated only from the reviewed transcription, never directly from raw audio (REQ-054). | §5.2 |
+| DR-7 | The report format supports one or multiple branches; branch-specific details and per-branch time ranges (when present in the audio) are preserved (REQ-050..052). | §5.1 |
 
-### 5. Domain Expansion Markers
+### 6. Branch Context Rules (§5.1)
 
-- Phase 5 (§5 Report And Branch Domain): full report/branch domain — entities, relationships, statuses.
-- Phase 6 (§6 Report Format, Samples, And Tone): required-format reconciliation of the 14 mentionable elements with the 7 required report elements.
+- The company has more than 14 branches in Addis Ababa, Ethiopia (§5.1).
+- A supervisor may visit one or more branches in one working day (§5.1).
+- The report format must support one branch or multiple branches (§5.1, REQ-050, BR-01).
+- Multi-branch reports must preserve branch-specific details (§5.1, REQ-051, BR-02).
+- Multi-branch reports must preserve time ranges per branch when the audio contains them (§5.1, REQ-052, BR-03).
+- Branch CRUD is required so the user can manage branch records (§5.1, REQ-046; CRUD matrix in `## Report Management`).
+
+### 7. Report Context Rules (§5.2)
+
+- Daily reports belong to the correct authenticated user (§5.2, REQ-041, BR-06).
+- Reports remain editable after generation (§5.2, REQ-027, BR-07).
+- Reports preserve historical versions (§5.2, REQ-024, BR-08).
+- Report management requires list and grid views (§5.2, REQ-044).
+- Previous reports must be searchable, updateable, retrievable, and reviewable (§5.2, REQ-055, BR-09).
+- Report CRUD is required (§5.2, REQ-045).
+- Report content must be generated from the reviewed transcription, not directly from raw audio (§5.2, REQ-054, BR-05, DR-6).
+- All list endpoints use `mongoose-paginate-v2` with default page 1, default limit 10, and max limit 100 (§5.2; also §5.1, REQ-053, BR-04).
+
+### 8. Named Report Fields (§5.3)
+
+The generated report must include the following eight named fields (Amharic as recorded in the source; format and tone detail in Phase 6):
+
+| Field (Amharic) | Meaning |
+|---|---|
+| ቀን | Date |
+| ብራንች | Branch |
+| ስም | Name |
+| ስራ የገባሁበት ሰዓት | Work entry time |
+| የተሰሩ ስራዎች | Completed works (activities) |
+| መፍትሄ የሚፈሉ ጉዳዮች | Issues needing solution (unresolved issues) |
+| አጠቃላይ አስተያየት | General opinion |
+| ከስራ የወጣሁበት ሰዓት | Work exit time |
+
+Note: §2.2 lists seven required elements (date, branch, working time, completed activities, unresolved issues, general opinion, work exit time); §5.3 names eight fields — it adds ስም (name) and splits "working time" into explicit entry and exit times. Reconciliation of both lists into the final format is Phase 6 scope (REQ-056).
+
+### 9. Record Types Inventory (§5.4)
+
+The system must manage: daily supervision reports, transcriptions, AI conversations, generated reports, report version history, and reporting analytics (§5.4; REQ-057). Detailed fields for those records are not fully specified in the source and are defined in the data-modeling phase (Phase 24).
+
+### 10. Domain Expansion Markers
+
+- Phase 5 (§5 Report And Branch Domain): **DONE — branch/report context rules, named report fields, record types inventory (sections 6–9 above); data-model fields remain Phase 24 scope.**
+- Phase 6 (§6 Report Format, Samples, And Tone): required-format reconciliation of the 14 mentionable elements with the 7 required report elements and the 8 named fields (§5.3).
 - Phase 24 (§24 Data Model): persisted data model for reports, transcriptions, narrations, versions.
+
+---
+
+## Data Modeling
+
+> **Phase 5 seed — entity inventory derived from §5.4. Detailed fields are defined in Phase 24 (§5.4: "must be defined during the data-modeling phase"). Expanded in Phases 11, 20, 23, 35.**
+
+### 1. Entity Inventory (seeds)
+
+| Entity | Purpose | Source |
+|---|---|---|
+| User | The authenticated supervisor; owner of reports; profile identity appears in reports | §4, §5.2 |
+| Branch | A restaurant location under the supervisor's area; managed via Branch CRUD | §5.1 |
+| DailyReport | The daily supervision report; belongs to one user; covers one or more branches; editable after generation; preserves versions | §5.1, §5.2 |
+| Narration (audio recording) | One recorded audio explanation; one or more per day | §3, §4 |
+| Transcription | Text produced from narration audio; reviewed/corrected by the user with AI help before generation | §4, §5.2 |
+| AIConversation | Recorded exchange with the AI associated with report generation | §2.1, §5.4 |
+| GeneratedReport | The AI-produced report output; distinct from its version history | §2.1, §5.4 |
+| ReportVersion | A preserved historical version of a report after edits | §2.1, §5.2 |
+| Analytics | Basic reporting analytics (AD-007; metric set defined in Phase 31) | §2.1, AD-007 |
+
+### 2. Relationship Seeds
+
+- User 1—N DailyReport (reports belong to the correct authenticated user, §5.2).
+- DailyReport 1—N Narration; 1—N Transcription (all narrations of a day merge into one daily report, AD-008).
+- DailyReport 1—N Branch (multi-branch days, §5.1).
+- DailyReport 1—1 GeneratedReport (current); 1—N ReportVersion (version history, §5.2).
+- DailyReport 1—N AIConversation (§2.1).
+
+### 3. Field-Level Definition Marker
+
+Field-level schema (names, types, constraints, indexes, pagination keys) is Phase 24 scope per §5.4; the seeds here are entity-level only.
+
+---
+
+## Business Rules
+
+> **Phase 5 seed — rules derived from §5. Expanded in Phases 24 (data model) and 35 (lifecycle). Rule IDs: `BR-<NN>`.**
+
+| ID | Rule | Source |
+|---|---|---|
+| BR-01 | The report format must support one branch or multiple branches. | §5.1 (REQ-050) |
+| BR-02 | Multi-branch reports must preserve branch-specific details. | §5.1 (REQ-051) |
+| BR-03 | Multi-branch reports must preserve time ranges per branch when the audio contains them. | §5.1 (REQ-052) |
+| BR-04 | All list endpoints use `mongoose-paginate-v2` with default page 1, default limit 10, and max limit 100. | §5.1, §5.2 (REQ-053) |
+| BR-05 | Report content is generated from the reviewed transcription, never directly from raw audio. | §5.2 (REQ-054) |
+| BR-06 | Daily reports belong to the correct authenticated user. | §5.2 (REQ-041) |
+| BR-07 | Reports remain editable after generation. | §5.2 (REQ-027) |
+| BR-08 | Reports preserve historical versions. | §5.2 (REQ-024) |
+| BR-09 | Previous reports must be searchable, updateable, retrievable, and reviewable. | §5.2 (REQ-055) |
+| BR-10 | Branch CRUD and Report CRUD are required. | §5.1, §5.2 (REQ-045/046) |
+
+---
+
+## API Contract
+
+> **Phase 5 seed — conventions and endpoint inventory from §5. Detailed request/response schemas, paths, auth middleware, and error shapes arrive in Phases 10, 11, 18, 20, 22, 24, and 28.**
+
+### 1. Conventions (seeds)
+
+- RESTful JSON API over HTTP(S); JavaScript/Express backend (AD-002).
+- **Pagination:** every list endpoint uses `mongoose-paginate-v2` with default page `1`, default limit `10`, and max limit `100` (§5.1, §5.2, REQ-053, BR-04).
+- Single user type; endpoints are user-scoped (ownership, §5.2); auth/cookies/tokens design in Phase 11.
+- Response envelope shape is not specified in the source; it is decided in Phases 24/31 (not invented here).
+
+### 2. Endpoint Inventory (seeds)
+
+| Resource | Operations | Detail phase |
+|---|---|---|
+| Branches | list, get, create, update, delete (Branch CRUD, §5.1) | Paths/schemas: Phases 10/24 |
+| Daily reports | list, get, create, update, delete (Report CRUD, §5.2) | Paths/schemas: Phases 10/24 |
+| Narrations / audio | upload, playback, re-record support | Phase 20 |
+| Transcriptions | review/update, AI correction | Phase 20 |
+| AI conversations | list/get per report | Phases 18/21 |
+| Exports | PDF/TXT/CSV/spreadsheet generation | Phase 22 |
+
+---
+
+## Status Machine
+
+> **Phase 5 seed — report lifecycle statuses derived from the Work Flow (W-01..W-12) and §5.2. Exact state names and archive/delete/restore transitions are finalized in Phase 35.**
+
+### 1. Report States (seeds)
+
+| State | Meaning | Entered via |
+|---|---|---|
+| CREATED | Daily report opened; recording may begin | W-01 |
+| TRANSCRIBING | Narration(s) submitted to STT | W-02, W-03 |
+| TRANSCRIPTION_REVIEWED | Transcription reviewed/corrected by the supervisor | W-04 |
+| GENERATED | AI report produced from reviewed transcription | W-05, W-06 |
+| FINALIZED | Supervisor satisfied; report accepted | W-07..W-11 |
+| EXPORTED | Report delivered in an export format | W-12 |
+| ARCHIVED / DELETED | Lifecycle end states | Phase 35 |
+
+### 2. Transition Rules (seeds)
+
+- Generation happens only from TRANSCRIPTION_REVIEWED (reviewed transcription), never from raw audio (§5.2, BR-05, DR-6).
+- Review–correction loops (W-07..W-10) keep the report in GENERATED until the supervisor finalizes it (REQ-038).
+- FINALIZED reports remain editable after generation and preserve historical versions (§5.2, BR-07/08).
+- Archive/delete/restore transitions and exact state names: Phase 35.
+
+### 3. Scope
+
+The status machine covers the daily report lifecycle only; branch and user records have no status lifecycle (the source does not define one).
 
 ---
 
@@ -1048,6 +1241,6 @@ The AI is responsible for (all items §3.3):
 
 ---
 
-## End Of Phase 4 Content
+## End Of Phase 5 Content
 
-Phases 1–4 are GREEN (2026-08-01). Phase 4 built the supporting features from §4: new `## Report Management` (purpose, resource inventory, list and grid views, CRUD matrix, ownership rule, lifecycle seeds, OQ resolutions), enriched `## PRD` (section 5 workflow with playback/re-recording confirmation and AI transcription review; section 6 rebuilt around the twelve §4 features; OQ-004 and OQ-006 resolved), added REQ-039..049, added US-011..017 and extended US-007 (share or archive), extended `## Glossary` (AI transcription review, audio playback, re-recording, list view, grid view, CRUD), updated the Checklist (Report Management, Profile Management, Resource Management GREEN), and added the Phase 4 Source Trace Map. Phase 5 will build the report and branch domain (Report Domain, Data Modeling, Business Rules, API Contract, Status Machine, Report Management).
+Phases 1–5 are GREEN (2026-08-01). Phase 5 built the report and branch domain from §5: new `## Data Modeling` (entity inventory, relationship seeds, field-level marker), `## Business Rules` (BR-01..10), `## API Contract` (conventions, pagination 1/10/100, endpoint inventory), and `## Status Machine` (report states, transition rules); enriched `## Report Domain` (DR-6/7, sections 6–9: branch context rules, report context rules, the 8 named Amharic report fields incl. ስም, record types inventory), enriched `## Report Management` (pagination convention, searchability, generation-from-reviewed-transcription, version preservation), enriched `## PRD` (Real-World Context multi-branch bullet), updated Work Flow W-05 (generation only from reviewed transcription), added REQ-050..057, added US-018/019, extended `## Glossary` (pagination convention, reviewed transcription, branch-specific details, per-branch time range), and added the Phase 5 Source Trace Map. Phase 6 will build the report format, samples, and tone.
