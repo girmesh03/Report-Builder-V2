@@ -788,7 +788,7 @@ Note: Must change `"type": "commonjs"` to `"type": "module"` for ES Modules supp
 
 - 2.2 AppShell
   - **File:** `client/src/components/layout/AppShell.jsx`
-  - **Purpose:** Protected layout wrapper for all authenticated pages (Dashboard, Reports, Branches, Profile). Composes AppSidebar and MuiAppbar.
+  - **Purpose:** Protected layout wrapper for all authenticated pages (Dashboard, Reports, ReportDetails, Branches, BranchDetails, Profile, and the NotFound catch-all). Composes AppSidebar and MuiAppbar.
   - **Outer container:** `height: 100vh; overflow: hidden`
   - **Structure (horizontal flex):**
     - Left: `AppSidebar`
@@ -885,18 +885,27 @@ createBrowserRouter([
       { Component: ProtectedRoute, children: [
         { Component: AppShell, children: [
           { path: 'dashboard', Component: Dashboard },
-          ...
-        ]}
+          { path: 'reports', Component: Reports },
+          { path: 'reports/:id/details', Component: ReportDetails },
+          { path: 'branches', Component: Branches },
+          { path: 'branches/:id/details', Component: BranchDetails },
+          { path: 'profile', Component: Profile },
+          { path: '*', Component: NotFound },
+        ]},
+        { path: 'assistant', Component: Assistant },  // AppShell sibling — full-screen
       ]},
-      { path: '*', Component: NotFound },
     ]
   }
 ])
 ```
 
+- The `assistant` route is the only protected route outside AppShell (full-screen chat, 3.5.2).
+- NotFound is the catch-all inside AppShell's children; logged-out users hitting an unknown URL are redirected to `/login` instead.
+- Report editing happens in the Assistant chat — there is no `reports/:id/edit` route (3.5.1.9 is superseded).
+
 ### 12.6 Page Components
 
-Landing, Login, Register, Dashboard, BranchList, BranchForm, ReportList, ReportGrid, ReportCreate, ReportDetail, ReportReview, ReportCorrection, Profile, NotFound. All lazy-loaded via `React.lazy()`.
+Landing, Login, Register, Dashboard, Reports, ReportDetails, Branches, BranchDetails, Profile, NotFound, Assistant (AppShell sibling, full-screen). All lazy-loaded via `React.lazy()`. Each page has its own domain component folder under `client/src/components/<domain>/` — the domain folders are `landing`, `login`, `register`, `dashboard`, `report`, `branch`, `profile`, `assistant`, and `notFound` (e.g. `client/src/components/login/LoginForm.jsx`); branch editing is a dialog under `branch/`, and report editing happens in the Assistant chat.
 
 #### Landing
 
@@ -1189,7 +1198,7 @@ Landing, Login, Register, Dashboard, BranchList, BranchForm, ReportList, ReportG
     - Each card: `MuiCard` with report metadata
     - Card actions (icon buttons with MuiTooltip):
       - View (`VisibilityIcon`, primary) → navigate `/reports/:id/details` (3.6)
-      - Edit (`EditIcon`, primary) → navigate `/reports/:id/edit`
+      - Edit (`EditIcon`, primary) → opens the report in the Assistant chat (3.5.2) — new conversation for the report via the report picker
       - Archive/Restore/Delete conditional:
         - Not archived → ArchiveIcon (warning) → MuiConfirmDialog → confirm → `PATCH /api/v1/reports/:id/archive` → update UI
         - Archived → RestoreIcon (success) → MuiConfirmDialog → confirm → `PATCH /api/v1/reports/:id/restore` → update UI; DeleteIcon (error) → MuiConfirmDialog → confirm → `DELETE /api/v1/reports/:id` → update UI
@@ -1584,14 +1593,16 @@ Landing, Login, Register, Dashboard, BranchList, BranchForm, ReportList, ReportG
 
     #### 3.5.1.9 Post-Creation Flow — Review Transcription
 
-    After `POST /reports` returns successfully, Report status is `transcribed` (or `audio_attached` if STEP 5 failed — see the "Transcription fails" row in 3.5.1.10). The Reports list shows the new item with its status badge. The user clicks an "Edit" action button → navigates to `/reports/:id/edit`.
+    > **SUPERSEDED (structure correction, 2026-08-02):** the edit page detailed below is replaced by chat-based report editing in the Assistant (3.5.2). The Reports list "Edit" action and the ReportDetails "Edit Report" action open the Assistant chat for that report (new conversation via the report picker, `POST /api/v1/assistant/conversations` with `reportId`). There is no `/reports/:id/edit` route and no ReportCorrection page. The backend behaviors specified in this block — voice corrections, provider selection for generation (default `addis`), review statuses, revision history — remain valid and are exercised through the chat; the detailed chat-based review/correction UI is specified in a later pass. The block is kept below for those behaviors.
+
+    After `POST /reports` returns successfully, Report status is `transcribed` (or `audio_attached` if STEP 5 failed — see the "Transcription fails" row in 3.5.1.10). The Reports list shows the new item with its status badge; the "Edit" action opens the report in the Assistant chat (3.5.2).
 
 
-    ##### `/reports/:id/edit` Page
+    ##### `/reports/:id/edit` Page (removed — superseded)
 
     **Purpose:** review and correct the transcription of an existing report, edit its metadata, play back the recorded clips, and restore or delete past revisions.
 
-    **Page component:** `client/src/pages/ReportCorrection.jsx`. The page renders inside the protected root layout (AppShell) — AppShell is provided by routing, the page component does not render it. `/assistant` is the only protected route that lives outside AppShell (3.5.2).
+    **Page component:** (removed — superseded by the Assistant chat, see the marker at the top of 3.5.1.9). This UI now lives in the Assistant page (3.5.2), which is the only protected route outside AppShell.
 
     **Overall structure (top to bottom):**
     1. Header bar
@@ -1941,7 +1952,7 @@ Landing, Login, Register, Dashboard, BranchList, BranchForm, ReportList, ReportG
       - Left rail lists conversations (title, last message preview, relative timestamp)
       - "New Chat" button → report picker dialog: pick one of the user's reports → `POST /assistant/conversations` `{ reportId }` → welcome assistant message injects the raw transcription text + report metadata
       - Conversation title: `"Report {date}"` (e.g. "Report 30-07-2026")
-    - **Deep link:** `/assistant?conversation=<id>` — ChatBox selects that conversation and shows its message history (this is where "Open in Assistant" on the edit page lands, 3.5.1.9)
+    - **Deep link:** `/assistant?conversation=<id>` — ChatBox selects that conversation and shows its message history (this is where the ReportDetails "Edit Report" action lands, 3.6)
     - **Adapter:** `client/src/components/assistant/chatAdapter.js` (plain JS object):
       - `sendMessage(messages)` → `POST /api/v1/assistant/conversations/:id/messages` with `{ content }` → returns `response.body` (ReadableStream) consumed by ChatBox
       - `listConversations()` → `GET /api/v1/assistant/conversations`
@@ -2048,9 +2059,9 @@ Landing, Login, Register, Dashboard, BranchList, BranchForm, ReportList, ReportG
 
     **Purpose:** read-only detail view of a single report — metadata, reviewed transcription, generated report (when completed) with export actions, audio playback, and revision history.
 
-    **Page component:** `client/src/pages/ReportDetail.jsx`. The page renders inside the protected root layout (AppShell) — AppShell is provided by routing, the page component does not render it. `/assistant` is the only protected route that lives outside AppShell (3.5.2).
+    **Page component:** `client/src/pages/ReportDetails.jsx`. The page renders inside the protected root layout (AppShell) — AppShell is provided by routing, the page component does not render it. `/assistant` is the only protected route that lives outside AppShell (3.5.2).
 
-    **Route:** `{ path: 'reports/:id/details', Component: ReportDetail }` — under AppShell children.
+    **Route:** `{ path: 'reports/:id/details', Component: ReportDetails }` — under AppShell children.
 
     **Layout Context:** AppShell (2.2) + MuiPageHeader (1.12). AppShell is provided by routing; the page component does not render it.
 
@@ -2061,7 +2072,7 @@ Landing, Login, Register, Dashboard, BranchList, BranchForm, ReportList, ReportG
     - Right slot (children), fixed order — all actions icon-only on mobile with MuiTooltip labels; Edit Report renders as an icon button on mobile:
       1. **MuiStatusBadge** — renders `report.status` with color mapping: `draft` → default, `audio_attached` → warning, `transcribed` → info, `reviewed` → primary, `completed` → success. Label shows the status text. Non-interactive.
       2. **Back** — icon button (ArrowBackIcon), tooltip "Back". On click: `navigate("/reports")`.
-      3. **Edit Report** — MuiButton contained, start icon EditIcon, label "Edit Report". On click: `navigate("/reports/:id/edit")`. Hidden when the report is archived.
+      3. **Edit Report** — MuiButton contained, start icon EditIcon, label "Edit Report". On click: opens the report in the Assistant chat (3.5.2) — find or create the ChatConversation linked to this report, then `navigate("/assistant?conversation=<conversationId>")`; a missing conversation is created via `POST /api/v1/assistant/conversations` `{ reportId }`. Hidden when the report is archived.
       4. **Archive/Restore/Delete** — conditional, same flows as the Reports page card actions:
          - Not archived → ArchiveIcon (warning), tooltip "Archive" → MuiConfirmDialog → confirm → `PATCH /api/v1/reports/:id/archive` → toast "Report archived" → header refreshes to archived state (Archive replaced by Restore and Delete).
          - Archived → RestoreIcon (success), tooltip "Restore" → MuiConfirmDialog → confirm → `PATCH /api/v1/reports/:id/restore` → toast "Report restored" → header refreshes to active state; DeleteIcon (error), tooltip "Delete" → MuiConfirmDialog → confirm → `DELETE /api/v1/reports/:id` → toast "Report deleted" → `navigate("/reports")`.
@@ -2078,7 +2089,7 @@ Landing, Login, Register, Dashboard, BranchList, BranchForm, ReportList, ReportG
        - `draft` / `audio_attached`: Generate Report button disabled + helper "Waiting for transcription".
        - Generate click → `POST /api/v1/reports/:id/generate` body `{ "provider": "..." }`; button shows loading state while pending; on 200 the card renders the generated text + toast "Report generated"; on 422 toast the message and keep the card unchanged; on 429 toast "Rate limit reached, try again later"; on 502 toast "Generation failed, try again".
     4. **Audio card** — read-only, one row per `report.audio` item: label = `originalName`, duration = `duration` seconds formatted `m:ss`. Play: streams `GET /api/v1/audio/:audioId/stream` into an inline `<audio>` player. Download: `GET /api/v1/audio/:audioId/download` → file attachment with `originalName`. Empty state "No audio recorded" when `report.audio` is empty.
-    5. **History card** — read-only revision list (same data as the edit page History tab, 3.5.1.9): each entry shows reviewer (user fullName or provider string), timestamp, and status at revision time; expandable to show the text.
+    5. **History card** — read-only revision list (same data as 3.5.1.9 — transcription history): each entry shows reviewer (user fullName or provider string), timestamp, and status at revision time; expandable to show the text.
 
     **Data Flow:**
     - `GET /api/v1/reports/:id` → 200:
@@ -2159,11 +2170,43 @@ Landing, Login, Register, Dashboard, BranchList, BranchForm, ReportList, ReportG
     **Frontend reference:** §3.6 (details page generate flow + edge cases).
 
     **Setup:**
-    - `React.lazy(() => import('./pages/ReportDetail.jsx'))`
+    - `React.lazy(() => import('./pages/ReportDetails.jsx'))`
     - Tree-shaken imports
-    - `displayName` set to `"ReportDetail"`
+    - `displayName` set to `"ReportDetails"`
 
     **Backend reference:** details-page spec, response shapes, and edge cases: §3.6; generate endpoint spec: Generate Report block above; generate/audio response shapes: §3.5.1.11.
+
+
+  - 3.7 Branches Page
+
+    **File:** `client/src/pages/Branches.jsx`
+    **Route:** `{ path: 'branches', Component: Branches }` — under AppShell children.
+    **Layout Context:** AppShell (2.2) + MuiPageHeader (1.12).
+    **Purpose:** branch list/grid with create and edit dialogs (branch editing is a dialog under `client/src/components/branch/`). Detailed spec in a later phase.
+
+
+  - 3.8 BranchDetails Page
+
+    **File:** `client/src/pages/BranchDetails.jsx`
+    **Route:** `{ path: 'branches/:id/details', Component: BranchDetails }` — under AppShell children.
+    **Layout Context:** AppShell (2.2).
+    **Purpose:** detailed branch view. Detailed spec in a later phase.
+
+
+  - 3.9 Profile Page
+
+    **File:** `client/src/pages/Profile.jsx`
+    **Route:** `{ path: 'profile', Component: Profile }` — under AppShell children.
+    **Layout Context:** AppShell (2.2) + MuiPageHeader (1.12).
+    **Purpose:** user profile and settings. Detailed spec in a later phase.
+
+
+  - 3.10 NotFound Page
+
+    **File:** `client/src/pages/NotFound.jsx`
+    **Route:** `{ path: '*', Component: NotFound }` — catch-all inside AppShell children.
+    **Layout Context:** AppShell (2.2).
+    **Purpose:** renders inside AppShell; logged-out users hitting an unknown URL are redirected to `/login` instead. Detailed spec in a later phase.
 
 
 ### 12.7 Hooks
@@ -2541,7 +2584,7 @@ Landing, Login, Register, Dashboard, BranchList, BranchForm, ReportList, ReportG
     - `transcribed` → info
     - `reviewed` → primary
     - `completed` → success
-  - **Usage:** Edit Report header (3.5.1.9) and Report Details header (3.6).
+  - **Usage:** Report Details header (3.6).
   - **Setup:** Tree-shaken imports, `displayName` set to `"MuiStatusBadge"`
 
 
@@ -3103,7 +3146,7 @@ Example from report sample (2 branches visited):
 - `transcription`: single ObjectId ref. `null` at creation. Populated after transcription is complete.
 - `archivedAt`: set when report is archived. Used by TTL index for automatic deletion after 30 days.
 - `generated`: latest AI-generated report text (§6.1 format). Empty string until the first successful `POST /reports/:id/generate` (3.6, Generate Report). Set together with `status → completed`. Lives on Report (not Transcription) — generation consumes `Transcription.latest` and produces the Report output.
-- `generatedHistory[]`: appended on every successful generation — `{ provider, text, generatedAt }`. No UI in this cycle (details History card = transcription history, 3.5.1.9, History Tab). Re-generation overwrites `generated` and appends a new entry.
+- `generatedHistory[]`: appended on every successful generation — `{ provider, text, generatedAt }`. No UI in this cycle (details History card = transcription history, 3.5.1.9). Re-generation overwrites `generated` and appends a new entry.
 
 **Indexes:**
 ```js
@@ -3405,6 +3448,9 @@ Report is the hub. Audio and Transcription both point back to Report. Report hol
 
 - `client/src/main.jsx`
 - `client/src/App.jsx`
+- `client/src/pages/*` — one lazy-loaded file per page (§12.6): Landing, Login, Register, Dashboard, Reports, ReportDetails, Branches, BranchDetails, Profile, NotFound, Assistant
+- `client/src/components/layout/*` — PublicLayout, AppShell, AppSidebar (§12.2–12.3)
+- `client/src/components/<domain>/*` — domain component folders: landing, login, register, dashboard, report, branch, profile, assistant, notFound (§12.6)
 - `client/src/utils/constants.js`
 - `client/src/redux/app/store.js`
 - `client/src/redux/features/api.js`

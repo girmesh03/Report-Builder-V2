@@ -332,7 +332,7 @@ All `§` references below identify sections of the original source brief. They a
 | §12.3 | MuiAppbar variants: public (logo, theme toggle, Login, Sign Up) vs protected (top-right of content area, 64px, Search + theme toggle + avatar dropdown Profile/Logout; no title; no hamburger; avatar 32px <600px / 36px ≥600px); appbar logo → `/dashboard` if authenticated else `/` | MUI Component Standards (1), Requirements (REQ-097) |
 | §12.3 | GlobalSearchDialog: full-screen below 600px / 768px landscape (no border radius, 100vh); centered 80vh/600px (600–1200px) and 70vh/720px (>1200px); closed by back arrow, Escape, or outside click; RHF `register('search')`, fires on Enter or click, no debounce; results grouped by entity (Reports, Branches) in MuiAccordion; empty state "No results found" | MUI Component Standards (5), Requirements (REQ-099) |
 | §12.6 | Page Header pattern (MuiPageHeader, §1.12): title + subtitle left, actions right, one line; Reports page header "Reports" / "Manage daily supervision reports" with filter badge (1–3), List/Grid toggle, Create button; Dashboard renders with no Page Header | MUI Component Standards (4), UI/UX Spec (9, 10), Requirements (REQ-098) |
-| §12.5, §12.6 | Route tree: `/` App + `ErrorBoundary: AppErrorPage` → PublicRoute > PublicLayout (index Landing, login, register) → ProtectedRoute > AppShell (dashboard, reports, reports/:id/details, reports/:id/edit, ...) → `path: '*'` NotFound; `assistant` is the only protected route outside AppShell (full-screen); deep link `/assistant?conversation=<id>` | Routing Layout (2), Requirements (REQ-094) |
+| §12.5, §12.6 | Route tree: `/` App + `ErrorBoundary: AppErrorPage` → PublicRoute > PublicLayout (index Landing, login, register) → ProtectedRoute > AppShell (dashboard, reports, reports/:id/details, branches, branches/:id/details, profile, `*` NotFound) → `assistant` is the only protected route outside AppShell (full-screen); report editing happens in the Assistant chat (no `reports/:id/edit` route); deep link `/assistant?conversation=<id>` | Routing Layout (2), Requirements (REQ-094) |
 | §12.6 | Auth strategy: full page load → `GET /api/v1/auth/me` populates Redux + localStorage; 401 clears everything + redirects `/login`; SPA navigation reads Redux only — zero API calls | Frontend Architecture (5), Requirements (REQ-095) |
 | §12.6 | Page-level data-flow pattern: react-hook-form `useForm({ mode: 'onBlur' })`, `register` only; RTK Query mutation hooks (`credentials: 'include'`); 422 → `setError` per field; 401 → toast; success → `reset()` + navigate (login: `state.from?.pathname || '/dashboard'`) | Frontend Architecture (6), UI/UX Spec (7, 8) |
 | §12.6 (3.5.1, 3.5.2) | CreateReportDialog: MuiDialog `maxWidth="sm"` fullWidth, `disableEscapeKeyDown`, no-op `onClose`, closes only via Cancel or successful submit; Assistant page: ChatBox (`@mui/x-chat`), conversation rail, New Chat → report picker, `chatAdapter.js`, tool-approval UI, `aiConversationSlice` + `assistantApi.js` | MUI Component Standards (5), UI/UX Spec (11) |
@@ -364,7 +364,7 @@ All `§` references below identify sections of the original source brief. They a
 | §14.4 | Theme rules: all theme configuration lives in `client/src/theme/`; no inline theme overrides in page components; component overrides via new files in `customizations/`; `AppTheme.jsx` composes the full MUI theme with `createTheme`, `cssVariables`, color schemes, and all customizations; theme customization files and `AppTheme.jsx` use `@module`, not `@file`; the eight customization files: inputs, dataDisplay, feedback, navigation, surfaces, dataGrid, datePickers, charts | Theme Standards (1), Requirements (REQ-111) |
 | §14.4 + codebase (`client/src/theme/`) | `AppTheme.jsx` exists with `cssVariables: { colorSchemeSelector: 'data-mui-color-scheme', cssVarPrefix: 'template' }`, `colorSchemes`/`typography`/`shadows`/`shape` from `themePrimitives.js`, `components` built from the eight customization groups, and `ThemeProvider` with `disableTransitionOnChange`; `themePrimitives.js` also exports `layoutConfig`; `customizations/index.js` re-exports the eight customization groups | Theme Standards (1) |
 | §14.5 | All MUI X components — charts, date picker, data grid, and any other MUI X component — are community version only; MUI X Chat references: `https://mui.com/x/react-chat/` and `https://mui.com/x/react-chat/backend/adapters/` | MUI Component Standards (10), Requirements (REQ-111) |
-| §14 (1.1–1.13) | Component catalog: MuiAppbar (file `client/src/components/reusable/MuiAppbar.jsx`, props `position`/`elevation`/`color`/`sx` defaults, left logo → `/dashboard` if authenticated else `/`, right section conditional on auth, PublicLayout vs AppShell behaviors, avatar 32px below 600px / 36px at or above 600px, auth detection via Redux `authSlice` `useSelector`, exclusions — search dialog, user dropdown, hamburger); MuiButton; MuiDialog (title bottom divider, scrollable content, actions divider, responsive fullscreen down('sm') OR down('md')+landscape); MuiTextField; MuiSelect; MuiDatePicker (Ethiopian calendar — `client/src/utils/ethiopianDate.js` with `ethiopianToGregorian`/`gregorianToEthiopian`, custom lightweight conversion no npm package, DD-MM-YY display e.g. `25-02-18`, English day names, English month names mapped to Ethiopian months September…August + Pagume, RHF via Controller, `LocalizationProvider` + `AdapterDayjs` in `main.jsx`); MuiPagination (count = server `totalPages` from `mongoose-paginate-v2`, constants `PAGINATION_DEFAULT_PAGE=1`/`PAGINATION_DEFAULT_LIMIT=10`/`PAGINATION_MAX_LIMIT=100`); MuiDataGrid (columns in `client/src/components/columns/*.js` action column last, View/Edit/Archive/Delete icon colors via `sx`, archive→MuiConfirmDialog→restore or delete flow, `checkboxSelection` + `disableRowSelectionOnClick` + export button, `GridToolbar`, `paginationMode="server"`, `pageSizeOptions={[10, 25, 50, 100]}`, skeleton via `slotProps.loadingOverlay`, custom `noRowsOverlay`, default `sx={{ height: 400 }}`); MuiConfirmDialog; LoadingSpinner (size default 40, minHeight default `"100vh"`); GlobalSearchDialog (`useForm({ mode: 'onSubmit' })`, uncontrolled `register('search')`, ArrowBackIcon start adornment clears/resets/closes); MuiPageHeader (title + subtitle hidden on vw < 600 portrait, children right slot, `mb: 2`, bottom divider); MuiStatusBadge (statuses `draft`/`audio_attached`/`transcribed`/`reviewed`/`completed` → default/warning/info/primary/success; used in Edit Report header (3.5.1.9) and Report Details header (3.6)) | MUI Component Standards (1, 4, 5, 9), UI/UX Spec (10, 11), Requirements (REQ-109, REQ-110) |
+| §14 (1.1–1.13) | Component catalog: MuiAppbar (file `client/src/components/reusable/MuiAppbar.jsx`, props `position`/`elevation`/`color`/`sx` defaults, left logo → `/dashboard` if authenticated else `/`, right section conditional on auth, PublicLayout vs AppShell behaviors, avatar 32px below 600px / 36px at or above 600px, auth detection via Redux `authSlice` `useSelector`, exclusions — search dialog, user dropdown, hamburger); MuiButton; MuiDialog (title bottom divider, scrollable content, actions divider, responsive fullscreen down('sm') OR down('md')+landscape); MuiTextField; MuiSelect; MuiDatePicker (Ethiopian calendar — `client/src/utils/ethiopianDate.js` with `ethiopianToGregorian`/`gregorianToEthiopian`, custom lightweight conversion no npm package, DD-MM-YY display e.g. `25-02-18`, English day names, English month names mapped to Ethiopian months September…August + Pagume, RHF via Controller, `LocalizationProvider` + `AdapterDayjs` in `main.jsx`); MuiPagination (count = server `totalPages` from `mongoose-paginate-v2`, constants `PAGINATION_DEFAULT_PAGE=1`/`PAGINATION_DEFAULT_LIMIT=10`/`PAGINATION_MAX_LIMIT=100`); MuiDataGrid (columns in `client/src/components/columns/*.js` action column last, View/Edit/Archive/Delete icon colors via `sx`, archive→MuiConfirmDialog→restore or delete flow, `checkboxSelection` + `disableRowSelectionOnClick` + export button, `GridToolbar`, `paginationMode="server"`, `pageSizeOptions={[10, 25, 50, 100]}`, skeleton via `slotProps.loadingOverlay`, custom `noRowsOverlay`, default `sx={{ height: 400 }}`); MuiConfirmDialog; LoadingSpinner (size default 40, minHeight default `"100vh"`); GlobalSearchDialog (`useForm({ mode: 'onSubmit' })`, uncontrolled `register('search')`, ArrowBackIcon start adornment clears/resets/closes); MuiPageHeader (title + subtitle hidden on vw < 600 portrait, children right slot, `mb: 2`, bottom divider); MuiStatusBadge (statuses `draft`/`audio_attached`/`transcribed`/`reviewed`/`completed` → default/warning/info/primary/success; used in Report Details header (3.6)) | MUI Component Standards (1, 4, 5, 9), UI/UX Spec (10, 11), Requirements (REQ-109, REQ-110) |
 | §14 (1.13) + §5 (cross-aligned) | MuiStatusBadge status names (`draft` | `audio_attached` | `transcribed` | `reviewed` | `completed`) differ from the Phase 5 status machine (`## Status Machine`); Phase 35 (§35 Archive, Delete, And Restore Lifecycle) owns the exact report status names and their reconciliation | MUI Component Standards (9), Status Machine (Phase 35 marker) |
 
 ---
@@ -791,7 +791,7 @@ Secondary features should not distract from the core workflow of generating a bo
 | Refresh token rotation | The refresh token is rotated (replaced) on each use to prevent replay attacks. | §11 |
 | Route guard | A React component that gates route access: `ProtectedRoute` shows a spinner while initializing, calls `GET /api/v1/auth/me` on mount, and redirects unauthenticated users to `/login` preserving `state.from`; `PublicRoute` is the inverse guard, redirecting authenticated users to `/dashboard`. | §12.4 |
 | React.lazy | React's code-splitting function used to lazy-load every page module (`React.lazy(() => import('./pages/X.jsx'))`); no page is statically imported into the route tree. | §12.1, §12.6 |
-| AppShell | The protected application shell (`client/src/components/layout/AppShell.jsx`): AppSidebar + content area (protected MuiAppbar → Page Header → `<Outlet />`); provided by routing — page components never render it; `/assistant` is the only protected route that lives outside AppShell. | §12.2 |
+| AppShell | The protected application shell (`client/src/components/layout/AppShell.jsx`): AppSidebar + content area (protected MuiAppbar → Page Header → `<Outlet />`); provided by routing — page components never render it; hosts Dashboard, Reports, ReportDetails, Branches, BranchDetails, Profile, and the NotFound catch-all; `/assistant` is the only protected route that lives outside AppShell. | §12.2 |
 | baseQueryWithReauth | The RTK Query `baseQuery` wrapper that handles token refresh on 401 responses; all frontend HTTP calls pass through it. On 401 it calls `POST /api/v1/auth/refresh` and retries the original request on success; on refresh failure it clears auth state, dispatches logout, and leaves the user outside protected routes. | §13.2 |
 | injectEndpoints | The RTK Query API-slice extension pattern: each feature slice injects its own endpoint set into the central API slice (`client/src/redux/features/api.js`) instead of one monolithic definition. | §13.1 |
 | Feature slice | A Redux Toolkit slice under `client/src/redux/features/` that owns one domain's state and injects its RTK Query endpoints; the feature slices are authSlice, branchSlice, reportSlice, audioSlice, transcriptionSlice, userSlice, aiConversationSlice, and analyticsSlice. | §13.1 |
@@ -2300,7 +2300,7 @@ Project handling (REQ-129):
 
 ### 2. Provider Selection And Storage (§19)
 
-- The user selects the text-generation provider at generation time via dropdown or buttons; the default is Addis (REQ-132). The `## UI/UX Spec` ReportCorrection page seed already records generate-with-provider-selection (default `addis`).
+- The user selects the text-generation provider at generation time via dropdown or buttons; the default is Addis (REQ-132). The `## UI/UX Spec` ReportDetails seed already records generate-with-provider-selection (default `addis`; report editing happens in the Assistant chat — there is no ReportCorrection page).
 - The provider is stored per AI conversation message; different providers can be used for corrections versus initial generation (REQ-133; AI-conversation endpoint detail in `## API Contract` §2, Phases 18/21; data model in Phase 24).
 
 ### 3. Provider Fallback Chain (§19)
@@ -2437,15 +2437,18 @@ Addis AI is selected because it is specialized in Ethiopian Amharic and is expec
 
 - Page Header: left title "Reports" + subtitle "Manage daily supervision reports"; right: FilterIconButton (MuiBadge `badgeContent={activeFilterCount}`, hidden when 0), ToggleButtonGroup (ViewListIcon / ViewGridView), CreateButton (AddIcon).
 - Filter Dialog: MuiDialog `maxWidth="sm"`, title "Filter Reports"; row 1 — MuiDatePicker (left) + MuiSelectField single branch (right) in `Grid container spacing={2}`; both carry ClearIcon end adornments (`slotProps.input.endAdornment`) — clearing resets the field, decrements `activeFilterCount`, updates the badge immediately; row 2 — MuiSwitch label "Archived"; Cancel resets all filters and badge → 0; Apply sets filter state, closes, badge → count of active filters (1–3).
-- List toggle → cards: `Grid container spacing={2}`; each report a MuiCard; icon-button actions with MuiTooltip — View (VisibilityIcon, primary → `/reports/:id/details`), Edit (EditIcon, primary → `/reports/:id/edit`), Archive/Restore/Delete conditional: not archived → ArchiveIcon (warning) + MuiConfirmDialog → `PATCH /api/v1/reports/:id/archive`; archived → RestoreIcon (success) + confirm → `PATCH /api/v1/reports/:id/restore`, DeleteIcon (error) + confirm → `DELETE /api/v1/reports/:id`; below the cards MuiPagination (`page`/`count` from server `totalPages`, `onChange` refetches).
+- List toggle → cards: `Grid container spacing={2}`; each report a MuiCard; icon-button actions with MuiTooltip — View (VisibilityIcon, primary → `/reports/:id/details`), Edit (EditIcon, primary → opens the report in the Assistant chat (§11), Archive/Restore/Delete conditional: not archived → ArchiveIcon (warning) + MuiConfirmDialog → `PATCH /api/v1/reports/:id/archive`; archived → RestoreIcon (success) + confirm → `PATCH /api/v1/reports/:id/restore`, DeleteIcon (error) + confirm → `DELETE /api/v1/reports/:id`; below the cards MuiPagination (`page`/`count` from server `totalPages`, `onChange` refetches).
 - Grid toggle → MuiDataGrid: server-side pagination, toolbar, export selection, action column (same behaviors).
 - The Filter Dialog and all dialogs on this page use MuiDialog, which applies responsive fullscreen below 600px (and below 768px landscape) (`## MUI Component Standards` §5); the Page Header subtitle hides on viewport widths below 600px in portrait (§14 1.12; `## MUI Component Standards` §4).
 
-### 11. Report Detail, Correction, And Assistant Pages (§12.6)
+### 11. Report Details, Branches, Profile, NotFound, And Assistant Pages (§12.6)
 
-- **ReportDetail** (`client/src/pages/ReportDetail.jsx`, route `reports/:id/details`): renders inside AppShell — AppShell is provided by routing, page components never render it; details flow, generate flow, and edge cases per API Contract §3.6; Generate button shown only when status `reviewed`; no UI path for re-generation; the Report Details header shows the report status via MuiStatusBadge (§14 1.13; `## MUI Component Standards` §9.8).
-- **ReportCorrection** (`client/src/pages/ReportCorrection.jsx`, route `reports/:id/edit`): renders inside AppShell; tabs — Editor, Details, Audio, History; Editor supports review and correction modes; transcription missing (status `draft`) → "No transcription yet" empty state; generate via `POST /api/v1/reports/:id/generate` with provider selection (default `addis`); audio playback/download via `GET /api/v1/audio/:audioId/stream` / `GET /api/v1/audio/:audioId/download`; the Edit Report header shows the report status via MuiStatusBadge (§14 1.13, §12.6 3.5.1.9; `## MUI Component Standards` §9.8).
-- **Assistant** (`client/src/pages/Assistant.jsx`, route `assistant` — the only protected route outside AppShell; full-screen): ChatBox with `adapter={assistantAdapter}` and `features={{ conversationList: true }}`, `sx={{ height: '100vh' }}`; conversation rail (title, last message preview, relative timestamp); "New Chat" → report picker dialog → create conversation (welcome message injects raw transcription + report metadata); conversation title `"Report {date}"`; deep link `/assistant?conversation=<id>`; tool-approval UI built into ChatBox (Approve/Reject with reason; "expired" on 60s timeout); adapter file `client/src/components/assistant/chatAdapter.js` (plain JS object: `sendMessage`, `listConversations`, `listMessages`, `addToolApprovalResponse`); Redux `aiConversationSlice` + RTK Query endpoints in `assistantApi.js` (`## Redux RTK Query` §3); package `@mui/x-chat` v9.0.0-alpha.15 (already in the manifest).
+- **ReportDetails** (`client/src/pages/ReportDetails.jsx`, route `reports/:id/details`): renders inside AppShell — AppShell is provided by routing, page components never render it; details flow, generate flow, and edge cases per API Contract §3.6; Generate button shown only when status `reviewed`; no UI path for re-generation; the Report Details header shows the report status via MuiStatusBadge (§14 1.13; `## MUI Component Standards` §9.8).
+- **Branches** (`client/src/pages/Branches.jsx`, route `branches`): renders inside AppShell; branch list/grid with create and edit dialogs (under `client/src/components/branch/`); detailed spec in a later phase.
+- **BranchDetails** (`client/src/pages/BranchDetails.jsx`, route `branches/:id/details`): renders inside AppShell; detailed spec in a later phase.
+- **Profile** (`client/src/pages/Profile.jsx`, route `profile`): renders inside AppShell; detailed spec in a later phase.
+- **NotFound** (`client/src/pages/NotFound.jsx`, route `*` — catch-all inside AppShell children): renders inside AppShell; logged-out users hitting an unknown URL are redirected to `/login` instead.
+- **Assistant** (`client/src/pages/Assistant.jsx`, route `assistant` — the only protected route outside AppShell; full-screen): ChatBox with `adapter={assistantAdapter}` and `features={{ conversationList: true }}`, `sx={{ height: '100vh' }}`; conversation rail (title, last message preview, relative timestamp); "New Chat" → report picker dialog → create conversation (welcome message injects raw transcription + report metadata); conversation title `"Report {date}"`; deep link `/assistant?conversation=<id>`; tool-approval UI built into ChatBox (Approve/Reject with reason; "expired" on 60s timeout); adapter file `client/src/components/assistant/chatAdapter.js` (plain JS object: `sendMessage`, `listConversations`, `listMessages`, `addToolApprovalResponse`); Redux `aiConversationSlice` + RTK Query endpoints in `assistantApi.js` (`## Redux RTK Query` §3); package `@mui/x-chat` v9.0.0-alpha.15 (already in the manifest). Report editing happens here — the Reports list "Edit" action and the ReportDetails "Edit Report" action open the Assistant chat for that report (new conversation via the report picker, `POST /api/v1/assistant/conversations` with `reportId`); there is no report edit page.
 
 ### 12. UI Rules (§16)
 
@@ -2476,7 +2479,7 @@ Addis AI is selected because it is specialized in Ethiopian Amharic and is expec
 ### 13. Expansion Markers
 
 - Phase 12 (§12 Frontend Architecture): **DONE (Phase 12)** — shell and page specs above.
-- Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): **DONE (Phase 14)** — English-first component copy standards recorded across the reusable-component catalog; MuiStatusBadge in report detail/correction headers; MuiPageHeader subtitle rule; MuiDialog responsive fullscreen (§14).
+- Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): **DONE (Phase 14)** — English-first component copy standards recorded across the reusable-component catalog; MuiStatusBadge in report details header; MuiPageHeader subtitle rule; MuiDialog responsive fullscreen (§14).
 - Phase 15 (§15 React Hook Form Standards): **DONE (Phase 15)** — validation message language English via `formState.errors` + MUI `error`/`helperText` (see §1 and `## React Hook Form Standards` §4).
 - Phase 16 (§16 UI Rules): **DONE (Phase 16)** — general UI rules in §12 above (REQ-117..119).
 
@@ -2797,10 +2800,12 @@ client/
 └── src/
     ├── main.jsx                       # createBrowserRouter + RouterProvider; LocalizationProvider + AdapterDayjs wrap (§12.1)
     ├── App.jsx                        # Root layout: AppTheme, CssBaseline, AppErrorBoundary, AppToastContainer, <Outlet /> (§12.1)
-    ├── pages/                         # One lazy-loaded file per page (§12.6): Landing, Login, Register, Dashboard, BranchList,
-    │                                  #   BranchForm, ReportList, ReportGrid, ReportCreate, ReportDetail, ReportReview,
-    │                                  #   ReportCorrection, Profile, NotFound, Assistant (AppShell sibling, full-screen)
+    ├── pages/                         # One lazy-loaded file per page (§12.6): Landing, Login, Register, Dashboard, Reports,
+    │                                  #   ReportDetails, Branches, BranchDetails, Profile, NotFound, Assistant (AppShell sibling, full-screen)
     ├── components/
+    │   ├── <domain>/                  # One domain folder per page (§12.6): landing, login, register, dashboard, report,
+    │   │                              #   branch, profile, assistant, notFound — e.g. components/login/LoginForm.jsx;
+    │   │                              #   branch editing is a dialog under branch/, report editing happens in the Assistant chat
     │   ├── layout/
     │   │   ├── PublicLayout.jsx       # Public shell: fixed public MuiAppbar + scrollable content (§12.2)
     │   │   ├── AppShell.jsx           # Protected shell: AppSidebar + content area (MuiAppbar → Page Header → Outlet) (§12.2)
@@ -3226,17 +3231,19 @@ Pages are lazy-loaded, use tree-shaken imports, and set `displayName` (§12.6). 
 | Register | `pages/Register.jsx` | `register` (PublicLayout) | PublicLayout |
 | Dashboard | `pages/Dashboard.jsx` | `dashboard` (AppShell) | AppShell, no Page Header |
 | Reports | `pages/Reports.jsx` | `reports` (AppShell) | AppShell + Page Header |
-| ReportDetail | `pages/ReportDetail.jsx` | `reports/:id/details` (AppShell) | AppShell |
-| ReportCorrection | `pages/ReportCorrection.jsx` | `reports/:id/edit` (AppShell) | AppShell |
+| ReportDetails | `pages/ReportDetails.jsx` | `reports/:id/details` (AppShell) | AppShell |
+| Branches | `pages/Branches.jsx` | `branches` (AppShell) | AppShell + Page Header |
+| BranchDetails | `pages/BranchDetails.jsx` | `branches/:id/details` (AppShell) | AppShell |
+| Profile | `pages/Profile.jsx` | `profile` (AppShell) | AppShell + Page Header |
 | Assistant | `pages/Assistant.jsx` | `assistant` (ProtectedRoute, AppShell sibling) | Full-screen ChatBox |
-| NotFound | `AppErrorPage` | `*` | — |
+| NotFound | `pages/NotFound.jsx` | `*` (AppShell children) | AppShell |
 
-Also listed in §12.6 and lazy-loaded (detailed specs in later phases): BranchList, BranchForm, ReportList, ReportGrid, ReportCreate, ReportReview, Profile.
+Branch editing is a dialog under `client/src/components/branch/`; report editing happens in the Assistant chat (Reports list "Edit" and ReportDetails "Edit Report" open the Assistant for the report) — there are no report edit/correction pages and no legacy page names (BranchList, BranchForm, ReportList, ReportGrid, ReportCreate, ReportReview, ReportCorrection are gone; their functionality is re-expressed as domain components under `client/src/components/<domain>/`).
 
 ### 4. Layouts
 
-- `PublicLayout` (`client/src/components/layout/PublicLayout.jsx`): public pages — fixed public MuiAppbar + scrollable content (`## UI/UX Spec` §5).
-- `AppShell` (`client/src/components/layout/AppShell.jsx`): protected pages — AppSidebar + content area (protected MuiAppbar → Page Header → `<Outlet />`).
+- `PublicLayout` (`client/src/components/layout/PublicLayout.jsx`): public pages — Landing (index), Login, Register — fixed public MuiAppbar + scrollable content (`## UI/UX Spec` §5).
+- `AppShell` (`client/src/components/layout/AppShell.jsx`): protected pages — Dashboard, Reports, ReportDetails, Branches, BranchDetails, Profile, and the NotFound catch-all — AppSidebar + content area (protected MuiAppbar → Page Header → `<Outlet />`).
 - `AppSidebar` (`client/src/components/layout/AppSidebar.jsx`): navigation drawer (`## MUI Component Standards` §2).
 - The Assistant page is the only protected page outside AppShell (full-screen ChatBox) (§12.6 3.5.2).
 
@@ -3293,23 +3300,25 @@ createBrowserRouter([
         { Component: AppShell, children: [
           { path: 'dashboard', Component: Dashboard },
           { path: 'reports', Component: Reports },
-          { path: 'reports/:id/details', Component: ReportDetail },
-          { path: 'reports/:id/edit', Component: ReportCorrection },
-          ...
+          { path: 'reports/:id/details', Component: ReportDetails },
+          { path: 'branches', Component: Branches },
+          { path: 'branches/:id/details', Component: BranchDetails },
+          { path: 'profile', Component: Profile },
+          { path: '*', Component: NotFound },
         ]},
         { path: 'assistant', Component: Assistant },  // AppShell sibling — full-screen
       ]},
-      { path: '*', Component: NotFound },
     ]
   }
 ])
 ```
 
 - `assistant` is the only protected route that lives outside AppShell (full-screen chat) (§12.6 3.5.2).
-- Reports card actions navigate: View → `/reports/:id/details`, Edit → `/reports/:id/edit` (§12.6 Reports).
+- Reports card actions navigate: View → `/reports/:id/details`; Edit → opens the report in the Assistant chat (no `reports/:id/edit` route) (§12.6 Reports).
 - Assistant deep link: `/assistant?conversation=<id>` — ChatBox selects that conversation and shows its history (§12.6 3.5.2).
 - New protected routes are added as ProtectedRoute children; new public routes as PublicLayout children (§12.1).
 - Landing is the index route inside PublicLayout's children (§12.6 Landing).
+- NotFound is the catch-all inside AppShell's children (AppShell layout); logged-out users hitting an unknown URL are redirected to `/login` instead.
 
 ### 3. Route Guards
 
@@ -3505,7 +3514,7 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 - **Structure:** MUI `Chip`, `size="small"`, `label={status}`, cursor stays default.
 - **Props:** `status` (string, required — one of `draft` | `audio_attached` | `transcribed` | `reviewed` | `completed`).
 - **Color mapping:** `draft` → default; `audio_attached` → warning; `transcribed` → info; `reviewed` → primary; `completed` → success.
-- **Usage:** Edit Report header (§12.6 3.5.1.9) and Report Details header (§12.6 3.6).
+- **Usage:** Report Details header (§12.6 3.6).
 - **Reconciliation note:** these five status names differ from the Phase 5 status machine (`## Status Machine`); Phase 35 (§35 Archive, Delete, And Restore Lifecycle) owns the exact report status names and their reconciliation.
 
 ### 10. MUI X Usage (§14.5)
