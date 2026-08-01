@@ -41,7 +41,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 7 | 7. Language Rules | GREEN | AI Prompt Spec, Report Format, UI/UX Spec |
 | 8 | 8. Transcription Accuracy Requirement | GREEN | Audio Recording STT, Transcription Review, Validation Audit |
 | 9 | 9. Technical Stack And Package Rules | GREEN | Rules, Coding Conventions, Architecture, Requirements, Project Directory Structure |
-| 10 | 10. Backend Architecture | PENDING | Backend Architecture, Architecture, API Contract, Project Directory Structure |
+| 10 | 10. Backend Architecture | GREEN | Backend Architecture, Logging, Architecture, API Contract, Project Directory Structure |
 | 11 | 11. Authentication, Authorization, Cookies, And Tokens | PENDING | Auth Cookies, Security, API Contract, Data Modeling |
 | 12 | 12. Frontend Architecture | PENDING | Frontend Architecture, Routing Layout, UI/UX Spec, MUI Component Standards, Project Directory Structure |
 | 13 | 13. Redux, RTK Query, And API Client | PENDING | Redux RTK Query, Rules, Frontend Architecture |
@@ -80,11 +80,11 @@ Status of every section the target document must contain at minimum. Extra secti
 | Addis AI | 18 | PENDING |
 | AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 7 enrichment) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
-| API Contract | 5, 10, 11, 18, 20, 22, 24, 28 | GREEN (Phase 5 seed) |
-| Architecture | 9, 10, 25 | GREEN (Phase 9 seed) |
+| API Contract | 5, 10, 11, 18, 20, 22, 24, 28 | GREEN (Phase 10 enrichment) |
+| Architecture | 9, 10, 25 | GREEN (Phase 10 enrichment) |
 | Audio Recording STT | 8, 20 | GREEN (Phase 8 seed) |
 | Auth Cookies | 11 | PENDING |
-| Backend Architecture | 10 | PENDING |
+| Backend Architecture | 10 | GREEN (Phase 10 seed) |
 | Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
 | Business Rules | 5, 24, 35 | GREEN (Phase 5 seed) |
 | Checklists | 26, 30, 31 | PENDING |
@@ -101,7 +101,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Glossary | 1, 2, 34 (final) | GREEN |
 | Implementation Plan | 32 | PENDING |
 | JSDoc Standards | 26, 27 | PENDING |
-| Logging | 10, 28 | PENDING |
+| Logging | 10, 28 | GREEN (Phase 10 seed) |
 | Mock Data Seeding | 23 | PENDING |
 | MUI Component Standards | 12, 14 | PENDING |
 | Non-Functional Requirements | 31 | PENDING |
@@ -110,7 +110,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | PRD | 1, 2, 3, 4 | GREEN (Phase 4 enrichment) |
 | Problem Statement | 1, 2 | GREEN |
 | Profile Management | 4 | GREEN (Phase 4 seed) |
-| Project Directory Structure | 9, 10, 12, 25, 30 | GREEN (Phase 9 seed) |
+| Project Directory Structure | 9, 10, 12, 25, 30 | GREEN (Phase 10 enrichment) |
 | Project Overview | 1 | GREEN |
 | React Hook Form Standards | 15 | PENDING |
 | Redux RTK Query | 13 | PENDING |
@@ -284,6 +284,24 @@ All `§` references below identify sections of the original source brief. They a
 | §9.2 | `backend/package.json` and `client/package.json` are the source of truth for package versions; packages are installed; other required packages can be installed if needed | Rules (2), Architecture (4), Requirements (REQ-079) |
 | §9.3 | Backend snapshot: `"type": "module"` (reconciled — the actual manifest already changed from commonjs), 16 dependencies, morgan/nodemon devDependencies | Project Directory Structure (2), Glossary (ES Modules) |
 | §9.4 | Frontend snapshot: `"type": "module"`, 23 dependencies, 12 devDependencies | Project Directory Structure (3) |
+
+---
+
+## Source Trace Map — Phase 10 (source §10)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §10.1 | All routes mounted under `/api/v1`; route modules registered in `routes/index.js`; no routes registered directly in `app.js`; new modules created in `routes/` and mounted in `routes/index.js` | Backend Architecture (1), Architecture (5), Requirements (REQ-080) |
+| §10.2 | Error handling pipeline required; fixed global security middleware order `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit`; must not be reordered or removed; all middleware present | Backend Architecture (2), Architecture (5), Requirements (REQ-081) |
+| §10.3 | One controller file per domain (auth, branch, report, audio, transcription, ai, user, analytics); `express-async-handler` as `asyncHandler` wraps all handlers; no custom wrapper; write controllers use `try/catch/finally` with mongoose sessions and transactions (`startSession`/`startTransaction`/commit-or-abort/`endSession` in `finally`); hooks/instance/static methods support session; `backend/mock/*` injection/wipe supports session; read-only get/list skip transactions; errors via `next(error)` to the global error handler | Backend Architecture (3), Architecture (5), Project Directory Structure (4), Requirements (REQ-082) |
+| §10.4 | Pagination via `mongoose-paginate-v2` on all list endpoints; default page 1, default limit 10, max limit 100 | Backend Architecture (4), API Contract (3), Requirements (REQ-053) |
+| §10.5 | Backend constants in `backend/utils/constants.js`; client constants in `client/src/utils/constants.js`; no magic values; constants objects `Object.freeze()`-frozen; config via frozen `env` object from `config/env.js`; no direct `process.env` access outside it; validation constants in the constants file | Backend Architecture (5), Architecture (5), Project Directory Structure (4), Requirements (REQ-083) |
+| §10.6 | HTTP status codes imported by semantic name from `utils/httpStatus.js`; never hardcode numeric codes | Backend Architecture (6), API Contract (3) |
+| §10.7 | Response shape: success `{ success: true, message, data }`; error `{ success: false, message, data }` | Backend Architecture (7), API Contract (3) |
+| §10.8 | Graceful shutdown on SIGINT/SIGTERM: `server.close()`, clean up temporary audio chunk files not linked to any report, `mongoose.connection.close()`, `process.exit(1)`; must not be removed or replaced; HTTP server starts before database connection so the health endpoint is reachable without DB | Backend Architecture (8), Architecture (5), Requirements (REQ-084) |
+| §10.9 | All logging via `utils/logger.js`; Winston backend only; Morgan development only; `console.log` absolute ban; log levels; child loggers Server/DB/Auth/AI-Addis/AI-Gemini/AI-Nvidia; daily-rotated `logs/` gitignored, 30-day auto-delete; safe-logging rules; AI provider logs (provider, model, status code, timing) without bodies in production | Logging, Project Directory Structure (4), Requirements (REQ-086) |
+| §10.10 | Validators check `express-validator` results; 422 failure response `{ success: false, message, data }`; validators in `validators/*.js` one per domain; applied as route middleware before controller; auth email `normalizeEmail({ gmail_remove_dots: false })` | Backend Architecture (9), API Contract (3), Project Directory Structure (4), Requirements (REQ-085) |
+| §10.11 | No schema field combines `unique: true` with separate indexes; use `schema.index(..)`; hooks/instance methods/static methods accept session options where relevant | Backend Architecture (10) |
 
 ---
 
@@ -596,6 +614,9 @@ Secondary features should not distract from the core workflow of generating a bo
 | ES Modules | The ECMAScript module system used by the backend (`"type": "module"`); CommonJS `require()` is forbidden. | §9.1 |
 | MUI sx and styled() | The only allowed styling mechanisms; Tailwind CSS is forbidden. | §9.1 |
 | RTK Query | The Redux Toolkit data-fetching layer; uses `fetchBaseQuery` with `baseQueryWithReauth` for API calls. | §9.1 |
+| Winston | The backend-only logging library used through `backend/utils/logger.js`; Morgan is used in development mode only; `console.log` is banned in backend code. | §10.9 |
+| Graceful shutdown | The mandated backend shutdown sequence on SIGINT/SIGTERM: close the HTTP server, clean up temporary audio chunk files not linked to any report, close the mongoose connection, then exit. | §10.8 |
+| Mongoose session | A MongoDB session used for transactions; every backend write controller opens one (`startSession`/`startTransaction`), commits or aborts, and ends it in `finally`; read-only get/list endpoints skip sessions. | §10.3 |
 
 ---
 
@@ -843,6 +864,18 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-078 | HTTP client strategy: Addis AI calls use native `fetch` on the backend; all other service calls use axios; RTK Query uses `fetchBaseQuery` with `baseQueryWithReauth`. | HTTP calls follow the strategy per call site. | §9.1 |
 | REQ-079 | `backend/package.json` and `client/package.json` are the source of truth for package versions; the installed packages may be extended with additional required packages. | Manifests govern versions; new required packages may be added. | §9.2 |
 
+### Functional Requirements (Phase 10)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-080 | All routes must be mounted under the `/api/v1` prefix; each route module is registered in `backend/routes/index.js`, which imports and mounts all route modules; no routes are registered directly in `app.js`; new route modules are created in `backend/routes/`, imported, and mounted in `backend/routes/index.js`. | The `/api/v1` mount point exists; `routes/index.js` imports and mounts every route module; `app.js` registers no routes directly. | §10.1 |
+| REQ-081 | The global security middleware stack must run in the fixed order `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit`; the stack must not be reordered or removed, and all middleware must be present. | The six middleware are applied in the stated order; the order and presence are not altered. | §10.2 |
+| REQ-082 | Every backend write controller must use `try/catch/finally` with a MongoDB session and transaction (`mongoose.startSession()`, `session.startTransaction()`, commit or abort, `session.endSession()` in `finally`); model hooks, instance methods, and static methods must support the session where relevant; `backend/mock/*` data injection and wipe must support the session; read-only get/list endpoints do not need transactions. | Write handlers open, commit-or-abort, and end sessions in `finally`; read-only endpoints start no transactions. | §10.3 |
+| REQ-083 | Backend constants live in `backend/utils/constants.js` (client constants in `client/src/utils/constants.js`) as `Object.freeze()`-frozen objects; no magic values anywhere; all config comes from the frozen `env` object in `backend/config/env.js`; `process.env` is never accessed directly outside that file; validation constants are defined in the constants file, never hardcoded in validator files. | No magic values; constants files are frozen; all environment access routes through `config/env.js`. | §10.5 |
+| REQ-084 | The backend must shut down gracefully on SIGINT and SIGTERM: `server.close()`, clean up temporary audio chunk files not linked to any report, `mongoose.connection.close()`, then `process.exit(1)`; graceful shutdown must not be removed or replaced; the HTTP server starts before the database connection so the health endpoint is reachable without the DB. | The full shutdown sequence executes on both signals; the health endpoint responds without a database connection. | §10.8 |
+| REQ-085 | Validation must check `express-validator` results in separate files under `backend/validators/*.js` (one per domain), applied as route middleware before the controller handler; validation failure returns 422 with the standard error envelope; auth email validators use `normalizeEmail({ gmail_remove_dots: false })`. | Validator files exist per domain, are mounted on routes, and 422 responses match the envelope. | §10.10 |
+| REQ-086 | All backend logging must go through `backend/utils/logger.js` (Winston; backend only, Morgan in development mode only); `console.log` is absolutely banned in backend code; log files are written to a gitignored `logs/` directory, rotated daily, and auto-deleted after 30 days; production logs must not include passwords, JWT token values, raw cookies, API keys or secrets, raw audio contents, full transcription texts, or full generated report texts — message IDs or truncated previews are used instead; AI provider logs record provider, model, status code, and timing without request or response bodies in production. | All logging routes through `utils/logger.js`; no `console.log` in backend code; log file retention and safe-logging rules hold. | §10.9 |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -860,6 +893,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Language rules: **Phase 7 — DONE (REQ-066..069)**.
 - Transcription accuracy requirements: **Phase 8 — DONE (REQ-070..073)**.
 - Technical stack and package rules: **Phase 9 — DONE (REQ-074..079)**.
+- Backend architecture rules: **Phase 10 — DONE (REQ-080..086)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -1193,14 +1227,14 @@ Field-level schema (names, types, constraints, indexes, pagination keys) is Phas
 
 ## API Contract
 
-> **Phase 5 seed — conventions and endpoint inventory from §5. Detailed request/response schemas, paths, auth middleware, and error shapes arrive in Phases 10, 11, 18, 20, 22, 24, and 28.**
+> **Phase 5 seed — conventions and endpoint inventory from §5; response envelope, status codes, and validation shapes added in Phase 10 (§10). Detailed request/response schemas and paths arrive in Phases 11, 18, 20, 22, 24, and 28.**
 
 ### 1. Conventions (seeds)
 
 - RESTful JSON API over HTTP(S); JavaScript/Express backend (AD-002).
 - **Pagination:** every list endpoint uses `mongoose-paginate-v2` with default page `1`, default limit `10`, and max limit `100` (§5.1, §5.2, REQ-053, BR-04).
 - Single user type; endpoints are user-scoped (ownership, §5.2); auth/cookies/tokens design in Phase 11.
-- Response envelope shape is not specified in the source; it is decided in Phases 24/31 (not invented here).
+- Response envelope is defined in Phase 10 (§10.7): success `{ success: true, message, data }`, error `{ success: false, message, data }`; per-endpoint schemas are detailed in Phases 24/31.
 
 ### 2. Endpoint Inventory (seeds)
 
@@ -1212,6 +1246,13 @@ Field-level schema (names, types, constraints, indexes, pagination keys) is Phas
 | Transcriptions | review/update, AI correction | Phase 20 |
 | AI conversations | list/get per report | Phases 18/21 |
 | Exports | PDF/TXT/CSV/spreadsheet generation | Phase 22 |
+
+### 3. Response Envelope, Status Codes, And Validation (Phase 10)
+
+- **Response envelope (§10.7):** every successful backend response uses `{ success: true, message: "..", data: {..} }`; every error response uses `{ success: false, message: "..", data: {..} }`.
+- **HTTP status codes (§10.6):** imported by semantic name from `backend/utils/httpStatus.js`; numeric status codes are never hardcoded.
+- **Validation errors (§10.10):** `express-validator` middleware in `backend/validators/*.js` (one file per domain), applied on the route before the controller handler; failures return `422` with the standard error envelope `{ success: false, message, data }`.
+- **Pagination (§10.4):** every list endpoint uses `mongoose-paginate-v2` with default page `1`, default limit `10`, and max limit `100` (REQ-053).
 
 ---
 
@@ -1669,7 +1710,7 @@ This seed covers transcription accuracy only. Full validation and audit sections
 
 ## Architecture
 
-> **Phase 9 seed — the stack-level architecture from §9. Backend architecture arrives in Phase 10 (§10 Backend Architecture); frontend architecture in Phase 12; implementation architecture in Phase 25.**
+> **Phase 9 seed — the stack-level architecture from §9, enriched in Phase 10 with the §10 backend architecture. Frontend architecture arrives in Phase 12; implementation architecture in Phase 25.**
 
 ### 1. Repository Layout
 
@@ -1677,7 +1718,7 @@ Two independent packages at the repository root `Report-Builder-V2/`: `backend/`
 
 ### 2. Backend Stack
 
-Node.js + Express + Mongoose, ES Modules only (`"type": "module"`), JavaScript only (§9.1, REQ-074/075). Deep backend architecture (routing, middleware, controllers, models, services, error handling, logging) arrives in Phase 10.
+Node.js + Express + Mongoose, ES Modules only (`"type": "module"`), JavaScript only (§9.1, REQ-074/075). Deep backend architecture (routing, middleware, controllers, validation, error handling, logging) is defined in `## Backend Architecture` (Phase 10).
 
 ### 3. Frontend Stack
 
@@ -1687,9 +1728,18 @@ React 19, Vite 8, MUI 9, React Redux, Redux Toolkit, React Router 8, React Hook 
 
 `backend/package.json` and `client/package.json` are the source of truth for package versions (§9.2, REQ-079). The packages are already installed; other required packages can be installed if needed.
 
-### 5. Expansion Markers
+### 5. Backend Architecture (Phase 10)
 
-- Phase 10 (§10 Backend Architecture): backend layering, routing, middleware, controllers, models, services.
+Backend architecture mandated by §10 (full detail in `## Backend Architecture`):
+
+- **Layering:** routes → validators → controllers → models. All routes are mounted under `/api/v1`; `backend/routes/index.js` imports and mounts all route modules; `app.js` registers no routes directly (§10.1).
+- **Middleware:** fixed global security stack `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit`, not reorderable or removable (§10.2).
+- **Controllers:** one file per domain (auth, branch, report, audio, transcription, ai, user, analytics); `express-async-handler` as `asyncHandler` wraps all handlers; write controllers use mongoose sessions and transactions (`try/catch/finally`, commit-or-abort, `endSession` in `finally`); read-only get/list endpoints skip transactions; errors forward via `next(error)` to the global error handler (§10.3).
+- **Constants and config:** `backend/utils/constants.js` (frozen, no magic values); all environment access through the frozen `env` object in `backend/config/env.js` (§10.5).
+- **Startup:** the HTTP server starts before the database connection so the health endpoint is reachable without the DB; graceful shutdown on SIGINT/SIGTERM is mandatory and must not be removed or replaced (§10.8).
+
+### 6. Expansion Markers
+
 - Phase 25 (§25 Backend Implementation): final implementation architecture.
 
 ---
@@ -1731,7 +1781,7 @@ No automated test frameworks (§9.1, REQ-077).
 
 ## Project Directory Structure
 
-> **Phase 9 seed — the repository-level structure from §9. Backend structure arrives in Phase 10; frontend structure in Phase 12; final structure in Phase 25.**
+> **Phase 9 seed — the repository-level structure from §9, enriched in Phase 10 with the §10 backend directory structure. Frontend structure arrives in Phase 12; final structure in Phase 25.**
 
 ### 1. Repository Root
 
@@ -1818,9 +1868,34 @@ devDependencies (12): @babel/core ^7.29.7, @eslint/js ^10.0.1, @rolldown/plugin-
 
 Note: the frontend uses the React Compiler tooling (babel-plugin-react-compiler with @rolldown/plugin-babel). The `@types/react`/`@types/react-dom` packages are editor-tooling type declarations only; the project remains JavaScript-only (§9.1, REQ-074).
 
-### 4. Expansion Markers
+### 4. Backend Directory Structure (Phase 10)
 
-- Phase 10 (§10 Backend Architecture): backend directory structure.
+Future-state backend tree mandated by §10 and the phase map (source files are created during implementation; codebase currently contains only `.env`, `package.json`, `package-lock.json`):
+
+```
+backend/
+├── app.js                 # Express app assembly; /api/v1 mount point; no direct routes (§10.1–10.2)
+├── server.js              # Server bootstrap; starts before DB; graceful shutdown (§10.8)
+├── config/
+│   └── env.js             # Frozen `env` object; sole access point for process.env (§10.5)
+├── controllers/           # One file per domain: auth, branch, report, audio, transcription, ai, user, analytics (§10.3)
+├── middleware/            # Global security stack: helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit (§10.2)
+├── models/                # Mongoose schemas; hooks/instance/static methods accept sessions (§10.3, §10.11)
+├── mock/                  # Mock-data injection/wipe supporting sessions (§10.3; details in Phase 23)
+├── routes/
+│   └── index.js           # Imports and mounts all /api/v1 route modules (§10.1)
+├── utils/
+│   ├── constants.js       # Frozen constants; no magic values (§10.5)
+│   ├── httpStatus.js      # Semantic HTTP status codes (§10.6)
+│   └── logger.js          # Winston logger; backend-only logging (§10.9)
+├── validators/            # express-validator files, one per domain (§10.10)
+└── logs/                  # Winston daily-rotated logs; gitignored; 30-day auto-delete (§10.9)
+```
+
+Notes: `backend/.env` defines the environment keys (codebase fact; the full environment-variable contract is Phase 17). `backend/mock/*` is confirmed by §10.3; its seeding behavior is detailed in Phase 23.
+
+### 5. Expansion Markers
+
 - Phase 12 (§12 Frontend Architecture): frontend directory structure.
 - Phase 25 (§25 Backend Implementation): final structure.
 - Phase 30 (§30 Git Workflow): workflow structure.
@@ -1860,6 +1935,117 @@ Note: the frontend uses the React Compiler tooling (babel-plugin-react-compiler 
 - Phase 26 (§26 JSDoc Standards): documentation rules.
 - Phase 29 (§29 Security): security rules.
 - Phase 30 (§30 Git Workflow): git rules.
+
+---
+
+## Backend Architecture
+
+> **Phase 10 seed — the backend architecture from §10 (Backend Architecture). Deeper backend implementation details arrive in Phase 24 (Data Model), Phase 25 (implementation), and Phase 28 (error handling).**
+
+### 1. Routing (§10.1)
+
+- All routes are mounted under the `/api/v1` prefix.
+- Each route module is registered in `backend/routes/index.js`, which imports and mounts all route modules.
+- No routes are registered directly in `app.js`.
+- New route modules must be created in `backend/routes/`, imported, and mounted in `backend/routes/index.js` (REQ-080).
+
+### 2. Middleware (§10.2)
+
+- The error handling pipeline is required.
+- The fixed global security middleware stack order is: `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit`.
+- The security middleware stack must not be reordered or removed.
+- All middleware must be present (REQ-081).
+
+### 3. Controllers (§10.3)
+
+- One controller file per domain: auth, branch, report, audio, transcription, ai, user, analytics.
+- `express-async-handler` from npm, imported as `asyncHandler`, wraps all controller handlers; no custom async wrapper.
+- All write controllers use `try/catch/finally` with MongoDB sessions and transactions:
+  1. `mongoose.startSession()`
+  2. `session.startTransaction()`
+  3. write
+  4. commit or abort
+  5. `session.endSession()` in `finally`
+- All model hooks, instance methods, and static methods must support session where relevant.
+- `backend/mock/*` data injection and wipe must support session.
+- Read-only endpoints such as get and list do not need transactions.
+- Controllers forward errors via `next(error)`, handled automatically by `express-async-handler` to the global error handler (REQ-082).
+
+### 4. Pagination (§10.4)
+
+- Pagination uses `mongoose-paginate-v2` on all list endpoints.
+- Default page: `1`.
+- Default limit: `10`.
+- Max limit: `100` (REQ-053).
+
+### 5. Constants And Config (§10.5)
+
+- Backend constants path: `backend/utils/constants.js`.
+- Client constants path: `client/src/utils/constants.js`.
+- No magic values anywhere.
+- All constants objects are `Object.freeze()`-frozen objects.
+- New constants are added to the relevant constants file, never hardcoded anywhere.
+- All config comes via the frozen `env` object from `backend/config/env.js`.
+- `process.env` is never accessed directly outside of `config/env.js`.
+- All validation constants must be defined in the constants file, never hardcoded in validator files (REQ-083).
+
+### 6. HTTP Status Codes (§10.6)
+
+- HTTP status codes are imported from `backend/utils/httpStatus.js` by semantic name.
+- Numeric status codes are never hardcoded.
+
+### 7. Response Shape (§10.7)
+
+- All successful backend responses use `{ success: true, message: "..", data: {..} }`.
+- Error responses use `{ success: false, message: "..", data: {..} }`.
+
+### 8. Server Startup And Shutdown (§10.8)
+
+- Graceful shutdown on `SIGINT` and `SIGTERM`:
+  1. `server.close()`
+  2. Clean up temporary audio chunk files (if not linked to any report)
+  3. `mongoose.connection.close()`
+  4. `process.exit(1)`
+- Graceful shutdown must not be removed or replaced.
+- The HTTP server starts before the database connection so the health endpoint is reachable without the DB (REQ-084).
+
+### 9. Validation (§10.10)
+
+- Validators check `express-validator` results.
+- Validation failure returns `422` with `{ success: false, message: "..", data: {..} }`.
+- Validators live in separate files under `backend/validators/*.js`, one per domain.
+- Validators are applied as route middleware before the controller handler.
+- Auth email validators use `normalizeEmail({ gmail_remove_dots: false })` (REQ-085).
+
+### 10. Mongoose Schema Rules (§10.11)
+
+- No schema field combines `unique: true` with separate indexes; use `schema.index(..)`.
+- Schema hooks, instance methods, and static methods must accept session options where relevant.
+
+### 11. Expansion Markers
+
+- Phase 24 (§24 Data Model): full schema definitions.
+- Phase 25 (§25 Backend Implementation): implementation-level backend architecture.
+- Phase 28 (§28 Error Handling): global error handler detail.
+
+---
+
+## Logging
+
+> **Phase 10 seed — the logging rules from §10.9. Error-handling logging detail arrives in Phase 28 (§28 Error Handling Patterns).**
+
+- All logging goes through `backend/utils/logger.js`.
+- Winston is used on the backend only; Morgan is used in development mode only.
+- No `console.log` in backend code — absolute ban; Winston replaces it in all environments (REQ-086).
+- Log levels: error, warn, info, http, verbose, debug, silly. Development uses the debug level; production uses the info level.
+- Module labels via Winston child loggers: Server, DB, Auth, AI-Addis, AI-Gemini, AI-Nvidia.
+- Log files are written to the `logs/` directory (gitignored), rotated daily via the Winston daily-rotate-file transport, and auto-deleted after 30 days.
+- Safe logging in production: logs must not include passwords, JWT token values, raw cookies, API keys or secrets, raw audio file contents, full transcription texts, or full generated report texts — use message IDs or truncated previews instead.
+- AI provider logs: log provider, model, status code, and timing; do not log request or response bodies in production.
+
+### Expansion Markers
+
+- Phase 28 (§28 Error Handling Patterns): error-handling logging detail.
 
 ---
 
@@ -1966,7 +2152,9 @@ Note: the frontend uses the React Compiler tooling (babel-plugin-react-compiler 
 
 ---
 
-## End Of Phase 9 Content
+## End Of Phase 10 Content
+
+Phases 1–10 are GREEN (2026-08-01). Phase 10 built the backend architecture from §10: new `## Backend Architecture` seed (routing under `/api/v1` via `routes/index.js`, fixed global security middleware order `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit`, one controller file per domain with `express-async-handler` and mongoose session transactions, `mongoose-paginate-v2` pagination, frozen constants and `config/env.js` env access, semantic HTTP status codes, response envelope, graceful shutdown, `express-validator` middleware, mongoose schema rules), new `## Logging` seed (Winston backend-only, Morgan development-only, absolute `console.log` ban, log levels, child loggers, gitignored daily-rotated `logs/` with 30-day auto-delete, safe-logging rules, AI provider log fields), enriched `## Architecture` (backend layering), `## API Contract` (response envelope superseding the Phase 5 unspecified-envelope note, semantic status codes, 422 validation shape, pagination), and `## Project Directory Structure` (backend directory tree; current codebase has only `.env` and the package manifests — source files are created during implementation), added REQ-080..086, extended `## Glossary` (Winston, Graceful shutdown, Mongoose session), updated the Checklist (Backend Architecture and Logging — GREEN seeds; Architecture, API Contract, Project Directory Structure — GREEN enrichment), and added the Phase 10 Source Trace Map. Phase 11 will build authentication, authorization, cookies, and tokens.
 
 Phases 1–9 are GREEN (2026-08-01). Phase 9 built the technical stack and package rules from §9 plus the authoritative `backend/package.json` and `client/package.json`: new `## Rules` (stack rules, package source of truth, HTTP client strategy, axios gap reconciliation), new `## Coding Conventions` (JS-only, ES Modules, MUI sx/styled only, manual validation resolvers, HTTP clients, no test frameworks), new `## Architecture` (two-package repository layout, backend/frontend stacks, source of truth), new `## Project Directory Structure` (full version tables for both packages; `"type": "module"` reconciled from the §9.3 commonjs note; React Compiler tooling and @types editor-tooling notes), added REQ-074..079, extended `## Glossary` (ES Modules, MUI sx and styled(), RTK Query), updated the Checklist (Rules, Coding Conventions, Architecture, Project Directory Structure — GREEN seeds; Requirements — GREEN enrichment), and added the Phase 9 Source Trace Map. Phase 10 will build the backend architecture.
 
