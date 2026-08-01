@@ -35,7 +35,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 1 | 1. Project Identity | GREEN | Project Overview, Problem Statement, Glossary, PRD, Requirements, Decision Log |
 | 2 | 2. Problem Statement | GREEN | Problem Statement, PRD, Requirements, User Stories |
 | 3 | 3. Manual Reporting Mental Model | GREEN | PRD, Work Flow, User Interactions, Report Domain |
-| 4 | 4. Supporting Features Needed Because Of The Core Problem | PENDING | PRD, Requirements, User Stories, Report Management |
+| 4 | 4. Supporting Features Needed Because Of The Core Problem | GREEN | PRD, Requirements, User Stories, Report Management |
 | 5 | 5. Report And Branch Domain | PENDING | Report Domain, Data Modeling, Business Rules, API Contract, Status Machine, Report Management |
 | 6 | 6. Report Format, Samples, And Tone | PENDING | Report Format, AI Prompt Spec, Export Spec |
 | 7 | 7. Language Rules | PENDING | AI Prompt Spec, Report Format, UI/UX Spec |
@@ -85,7 +85,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Audio Recording STT | 8, 20 | PENDING |
 | Auth Cookies | 11 | PENDING |
 | Backend Architecture | 10 | PENDING |
-| Resource Management | 4, 35 | PENDING |
+| Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
 | Business Rules | 5, 24, 35 | PENDING |
 | Checklists | 26, 30, 31 | PENDING |
 | Coding Conventions | 9, 25, 26, 27 | PENDING |
@@ -107,17 +107,17 @@ Status of every section the target document must contain at minimum. Extra secti
 | Non-Functional Requirements | 31 | PENDING |
 | Other AI Providers | 19 | PENDING |
 | Phase Protocol | 32 | PENDING |
-| PRD | 1, 2, 3, 4 | GREEN (Phase 3 enrichment) |
+| PRD | 1, 2, 3, 4 | GREEN (Phase 4 enrichment) |
 | Problem Statement | 1, 2 | GREEN |
-| Profile Management | 4 | PENDING |
+| Profile Management | 4 | GREEN (Phase 4 seed) |
 | Project Directory Structure | 9, 10, 12, 25, 30 | PENDING |
 | Project Overview | 1 | GREEN |
 | React Hook Form Standards | 15 | PENDING |
 | Redux RTK Query | 13 | PENDING |
 | Report Domain | 3, 5, 24 | GREEN (Phase 3 seed) |
 | Report Format | 6, 7, 21 | PENDING |
-| Report Management | 4, 5, 35 | PENDING |
-| Requirements | 1, 2, 4, 9, 29, 31, 34 | GREEN (Phase 2 enrichment) |
+| Report Management | 4, 5, 35 | GREEN (Phase 4 seed) |
+| Requirements | 1, 2, 4, 9, 29, 31, 34 | GREEN (Phase 4 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
 | Routing Layout | 12 | PENDING |
 | Rules | 9, 13, 16, 17, 21, 26, 29, 30 | PENDING |
@@ -188,6 +188,25 @@ All `§` references below identify sections of the original source brief. They a
 | §3.3 | AI must process, extract, organize, and rewrite based on report rules, format, tone, and system prompt | Work Flow (W-05, W-06), Report Domain (AI responsibilities) |
 | §3.3 | AI's 12 responsibilities (extract date/branches/times/activities/issues/problems/actions/opinions; organize; write in Amharic; match sample tone; correct on request) | Report Domain (section 3), Requirements (REQ-036) |
 | §3.3 | AI must not treat the transcription as the final report; transcription is raw material, generated report is the organized final output | Work Flow (WF-1), Report Domain (DR-1), Requirements (REQ-037), Glossary (raw material, final output) |
+
+---
+
+## Source Trace Map — Phase 4 (source §4)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §4 | Authentication, so reports belong to the correct user | PRD (6), Report Management (5), Requirements (REQ-041), User Stories (US-016) |
+| §4 | Profile, so supervisor identity can appear in reports | PRD (6), Report Management (2), Requirements (REQ-042), User Stories (US-017), Glossary (Profile Management) |
+| §4 | Branch management, so visited branches can be selected | PRD (6), Report Management (2), Requirements (REQ-043), User Stories (US-014) |
+| §4 | Report management list and grid views, so previous reports can be found | PRD (6), Report Management (3), Requirements (REQ-044), User Stories (US-013), Glossary (list view, grid view) |
+| §4 | Audio recording, so the supervisor can speak instead of writing | PRD (6), Report Management (2) (same as REQ-004/015) |
+| §4 | Audio playback and re-recording, so the supervisor can confirm the recording before submission | PRD (5, 6), Report Management (2), Requirements (REQ-040), User Stories (US-012), Glossary (audio playback, re-recording) |
+| §4 | Addis AI speech-to-text, so Amharic audio becomes text | PRD (6), Report Management (2), Requirements (REQ-048) |
+| §4 | Transcription review by AI, so the user can correct raw AI transcription using AI before report generation | PRD (5, 6), Requirements (REQ-039), User Stories (US-011), Glossary (AI transcription review) |
+| §4 | Addis AI text generation, so raw transcription becomes a structured report | PRD (6), Requirements (REQ-049) |
+| §4 | Report CRUD, so the user can manage reports | PRD (6), Report Management (4), Requirements (REQ-045), User Stories (US-015) |
+| §4 | Branch CRUD, so the user can manage branches | PRD (6), Report Management (4), Requirements (REQ-046), User Stories (US-014) |
+| §4 | Export, so the report can be shared or archived | PRD (6), Report Management (2), Requirements (REQ-047), User Stories (US-007 extended) |
 
 ---
 
@@ -439,7 +458,7 @@ Secondary features should not distract from the core workflow of generating a bo
 
 ## Glossary
 
-> **Terms added in Phases 1–3. The full glossary is built in Phase 34 (§34 Glossary).**
+> **Terms added in Phases 1–4. The full glossary is built in Phase 34 (§34 Glossary).**
 
 | Term | Definition | Source |
 |---|---|---|
@@ -462,7 +481,7 @@ Secondary features should not distract from the core workflow of generating a bo
 | Telegram | A messaging tool currently used in the manual reporting process. | §2.1, §2.3.1 |
 | WhatsApp | A messaging tool currently used in the manual reporting process. | §2.1, §2.3.1 |
 | Google Docs | A conventional document editing tool used in the current process. | §2.3.1 |
-| Checklist | A per-branch activity the supervisor follows ("Follow a checklist"); whether V2 ships a checklist tool is an open question (OQ-006). | §2.2 |
+| Checklist | A per-branch activity the supervisor follows ("Follow a checklist"); V2 ships no checklist tool — the activity is reportable only (OQ-006 resolved in Phase 4). | §2.2 |
 | Narration | A spoken (audio) description of supervision activities; one or more narrations are recorded per day and merge into one daily report (AD-008). | §2.1 |
 | Transcription | The text produced from the recorded audio; it is reviewed and edited by the supervisor before report generation. | §2.1 |
 | AI conversation | A recorded exchange with the AI (prompt/history) associated with report generation; centrally managed. | §2.1 |
@@ -480,12 +499,18 @@ Secondary features should not distract from the core workflow of generating a bo
 | Raw material | The transcription produced from recorded audio; expected to contain the needed information but not organized as a final report; never treated as the final report. | §3.3 |
 | Final output | The organized, format-conformant report the AI writes from the transcription raw material. | §3.3 |
 | Correction loop | The repeated review→correction cycle between supervisor and system that continues until the supervisor is satisfied. | §3.2 |
+| AI transcription review | Correcting the raw AI transcription using AI, performed by the user before report generation. | §4 |
+| Audio playback | Playing back a recorded narration so the supervisor can confirm the recording before submission. | §4 |
+| Re-recording | Recording a narration again after listening to playback, before submission. | §4 |
+| List view | A report management view for finding previous reports. | §4 |
+| Grid view | A report management view for finding previous reports, backed by the MUI X Data Grid dependency (component standards in Phase 14). | §4 |
+| CRUD | Create, read, update, delete operations; report CRUD and branch CRUD are supporting features. | §4 |
 
 ---
 
 ## PRD
 
-> **Phase 3 state — enriched in Phase 4 (Supporting Features).**
+> **Phase 4 state — supporting-features content finalized from §4.**
 
 ### 1. Product Vision
 
@@ -511,26 +536,39 @@ The complete problem statement is in `## Problem Statement`. In summary: the sup
 
 ### 5. Core Workflow (high level)
 
-Derived from §1.4 and §2.1 (detailed interaction workflow is built in Phase 3 and Phases 20–22):
+Derived from §1.4, §2.1, §3, and §4 (detailed interaction workflow in `## Work Flow` and Phases 20–22):
 
 1. The supervisor records **one or more Amharic audio narrations** describing the day's supervision activities; all narrations of a day merge into one daily report (decision AD-008).
-2. The audio is transcribed (STT) to Amharic text.
-3. The supervisor reviews and edits the transcription when necessary.
-4. An AI model optimized for Amharic analyzes the transcription and automatically generates a professional, well-structured daily supervision report that follows the organization's reporting format.
-5. The supervisor reviews the generated report and may request corrections; corrections update only the relevant part without unnecessarily rewriting correct unrelated sections, and the review–correction cycle repeats until the supervisor is satisfied (§3.2).
-6. Reports remain editable after generation and preserve historical versions; a single working day may span multiple branches.
-7. The report is exported (PDF, TXT, CSV, spreadsheet — detailed in Phase 22).
+2. The supervisor plays back the recording and **re-records if needed**, to confirm the recording before submission (§4).
+3. The audio is transcribed (STT) to Amharic text (Addis AI speech-to-text, §4).
+4. The supervisor reviews and edits the transcription when necessary, and may correct the raw AI transcription **using AI** before report generation (§4).
+5. An AI model optimized for Amharic analyzes the transcription and automatically generates a professional, well-structured daily supervision report that follows the organization's reporting format (Addis AI text generation, §4).
+6. The supervisor reviews the generated report and may request corrections; corrections update only the relevant part without unnecessarily rewriting correct unrelated sections, and the review–correction cycle repeats until the supervisor is satisfied (§3.2).
+7. Reports remain editable after generation and preserve historical versions; a single working day may span multiple branches.
+8. The report is exported (PDF, TXT, CSV, spreadsheet — detailed in Phase 22) so it can be shared or archived (§4).
 
 ### 6. Supporting Features
 
-Derived from §2.1 (the detailed supporting-feature specification is Phase 4 scope):
+Source: §4 (the twelve supporting features) plus §2.1 (centralized management). Detailed behavior lives in `## Report Management`; pipeline mechanics arrive in Phases 11, 12, 20–22.
 
-- Centralized management of branches, daily reports, transcriptions, AI conversations, generated reports, report version history, user profile information, and reporting analytics through a unified web application.
-- Reports remain editable after generation.
-- Historical versions are preserved.
-- A single working day may cover supervision activities across multiple branches.
-- Export to multiple formats: PDF, TXT, CSV, and spreadsheet documents.
-- Reporting analytics: basic analytics in V2; the advanced analytics dashboard with detailed metrics stays deferred (decision AD-007).
+The twelve supporting features (§4):
+
+1. **Authentication** — so reports belong to the correct user (design in Phase 11).
+2. **Profile** — so supervisor identity can appear in reports.
+3. **Branch management** — so visited branches can be selected (Branch CRUD, §4).
+4. **Report management list and grid views** — so previous reports can be found.
+5. **Audio recording** — so the supervisor can speak instead of writing (pipeline in Phase 20).
+6. **Audio playback and re-recording** — so the supervisor can confirm the recording before submission.
+7. **Addis AI speech-to-text** — so Amharic audio becomes text (integration in Phase 18, pipeline in Phase 20).
+8. **Transcription review by AI** — so the user can correct raw AI transcription using AI before report generation.
+9. **Addis AI text generation** — so raw transcription becomes a structured report.
+10. **Report CRUD** — so the user can manage reports.
+11. **Branch CRUD** — so the user can manage branches.
+12. **Export** — so the report can be shared or archived (details in Phase 22).
+
+Plus centralized management from §2.1 (unified web application): daily reports, transcriptions, AI conversations, generated reports, report version history, user profile information, and basic reporting analytics (AD-007; the metric set is defined in Phase 31 — OQ-004 resolved).
+
+"Follow a checklist" (§2.2) remains a reportable activity only; V2 ships no checklist tool (OQ-006 resolved in Phase 4).
 
 ### 7. Product Principle
 
@@ -576,9 +614,9 @@ Measurable KPIs are **not specified** in the source. Recorded as an open questio
 | OQ-001 | What measurable success KPIs should the product be evaluated against (e.g., time per report, accuracy rate)? Source states outcomes only qualitatively. | To be answered by user; recorded here until then |
 | OQ-002 | Exact number of branches ("more than 14") — keep the stated "more than 14" or use a fixed count? | To be answered by user |
 | OQ-003 | Should the boss also get access to reports, or is delivery strictly through the supervisor's workflow? Source only says the supervisor "prepares a report for the boss". | To be answered by user |
-| OQ-004 | Basic reporting analytics are in V2 (AD-007); the advanced analytics dashboard stays deferred (§1.7). Confirm the basic-analytics scope when Phase 4 details supporting features. | AD-007 (Phase 2); re-checked in Phase 4 |
+| OQ-004 | Basic reporting analytics are in V2 (AD-007); the advanced analytics dashboard stays deferred (§1.7). Confirm the basic-analytics scope when Phase 4 details supporting features. | Resolved in Phase 4: AD-007 stands; the basic-analytics metric set is defined in Phase 31 |
 | OQ-005 | Multiple narrations per day merge into one daily report (AD-008). Re-confirm the exact merge/pipeline behavior when Phases 20/21 detail the audio pipeline. | AD-008 (Phase 2); re-checked in Phases 20/21 |
-| OQ-006 | "Follow a checklist" (§2.2) is a reportable activity; whether V2 ships a checklist tool is unspecified. | Re-asked in Phase 4/5 |
+| OQ-006 | "Follow a checklist" (§2.2) is a reportable activity; whether V2 ships a checklist tool is unspecified. | Resolved in Phase 4: no checklist tool in V2; "follow a checklist" is a reportable activity only |
 | OQ-007 | Person 2 (mental model) may ask WH clarifying questions; §3.3 maps only write/review/correct behavior to the app. Should the app ask clarifying questions or process narrations as-is? | Resolved in Phase 3: process narrations as-is (no clarifying-Q&A step); re-confirmed in Phases 20/21 |
 
 ### 11. Manual Reporting Mental Model (Person 1 / Person 2)
@@ -654,6 +692,22 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-037 | The system must never treat the transcription as the final report; the transcription is raw material only, and the generated report is the organized final output. | No workflow path presents the raw transcription as the final report; generation always reorganizes the material per the report rules. | §3.3 |
 | REQ-038 | The review–correction cycle must repeat until the supervisor is satisfied (Person 1 / Person 2 behavior); the report is finalized only when the supervisor accepts it. | The user can request successive corrections after each review; the cycle terminates only on explicit user acceptance/finalization. | §3.2 |
 
+### Functional Requirements (Phase 4)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-039 | The supervisor must be able to correct the raw AI transcription using AI before report generation (transcription review by AI). | An AI-assisted transcription-correction step exists and runs before report generation; the corrected text feeds generation. | §4 |
+| REQ-040 | The supervisor must be able to play back a recording and re-record it, to confirm the recording before submission. | Recorded audio is playable; re-recording is possible; confirmation happens before submission to STT. | §4 |
+| REQ-041 | Authentication must ensure reports belong to the correct user. | Each report is owned by the authenticated supervisor who created it; access is user-scoped (auth design in Phase 11). | §4 |
+| REQ-042 | The supervisor profile must be able to appear in reports. | Profile identity fields are available for use in report content (profile in Phase 4 seed, auth in Phase 11). | §4 |
+| REQ-043 | Branch management must allow visited branches to be selected. | The supervisor selects the branch(es) visited from the managed branch list when working on a daily report. | §4 |
+| REQ-044 | Report management must provide list and grid views so previous reports can be found. | Reports are reachable through a list view and a grid view (view mechanics in Phases 12/13/24). | §4 |
+| REQ-045 | The user must be able to manage reports through full CRUD. | Create, read, update, and delete of reports are supported (archive/delete semantics in Phase 35). | §4 |
+| REQ-046 | The user must be able to manage branches through full CRUD. | Create, read, update, and delete of branches are supported (branch domain rules in Phase 5). | §4 |
+| REQ-047 | Export must let the report be shared or archived. | Exported artifacts (PDF, TXT, CSV, spreadsheet) are produced for sharing/archiving (same as REQ-029; §4 states the purpose). | §4 |
+| REQ-048 | Addis AI speech-to-text must turn Amharic audio into text. | Amharic audio is transcribed via the Addis AI STT workflow (same as REQ-017/035; §4 states the purpose). | §4 |
+| REQ-049 | Addis AI text generation must turn the raw transcription into a structured report. | The generated report is produced from the transcription by the Addis AI text-generation workflow (same as REQ-017). | §4 |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -665,7 +719,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 
 - Detailed functional requirements for the full problem context: **Phase 2 — DONE (REQ-015..035)**.
 - Mental-model extraction and review-loop rules: **Phase 3 — DONE (REQ-036..038)**.
-- Supporting features requirements (centralized management, history, exports, multi-branch): **Phase 4**.
+- Supporting features requirements (the twelve §4 features): **Phase 4 — DONE (REQ-039..049)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -675,7 +729,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 
 ## User Stories
 
-> **Phase 2 seed — enriched in Phase 4 (Supporting Features).** Story IDs: `US-<NNN>`. Format: As a [user], I want [action] so that [value]. Every story carries acceptance criteria and a source trace.
+> **Phase 4 state — supporting-features stories from §4.** Story IDs: `US-<NNN>`. Format: As a [user], I want [action] so that [value]. Every story carries acceptance criteria and a source trace.
 
 | ID | User story | Acceptance criteria | Source |
 |---|---|---|---|
@@ -685,10 +739,70 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | US-004 | As an Area Supervisor, I want to review the generated report and request corrections that update only the relevant part, so that correct sections are not unnecessarily rewritten. | A correction request changes only the targeted part; unrelated correct content is preserved. | §2.3.7 |
 | US-005 | As an Area Supervisor, I want to centrally manage branches, daily reports, transcriptions, AI conversations, generated reports, and historical records, so that I can organize, search, update, retrieve, and review previous reports. | All listed resources are managed in the unified web application; previous reports are retrievable. | §2.1 |
 | US-006 | As an Area Supervisor, I want to produce one daily report covering multiple branches visited in a single day, so that one report captures the whole day. | A single daily report can reference multiple branches. | §2.1, §1.3 |
-| US-007 | As an Area Supervisor, I want to export my report to PDF, TXT, CSV, and spreadsheet formats, so that I can deliver it in the boss's preferred form. | All four formats are supported (details in Phase 22). | §2.1 |
+| US-007 | As an Area Supervisor, I want to export my report to PDF, TXT, CSV, and spreadsheet formats, so that I can deliver it in the boss's preferred form or archive it. | All four formats are supported so the report can be shared or archived (§4; details in Phase 22). | §2.1, §4 |
 | US-008 | As an Area Supervisor, I want my report to remain editable after generation and preserve historical versions, so that later edits never lose earlier versions. | Editing a report preserves version history; prior versions remain retrievable. | §2.1 |
 | US-009 | As an Area Supervisor, I want to manage my user profile information, so that my reporting context stays correct. | Profile data is viewable and editable (details in Phase 4/11). | §2.1 |
 | US-010 | As an Area Supervisor, I want basic reporting analytics, so that I can monitor reporting activity. | Basic analytics exist in V2 (AD-007); the advanced dashboard stays deferred. | §2.1, §1.7 |
+| US-011 | As an Area Supervisor, I want to correct the raw AI transcription using AI before report generation, so that the report is generated from accurate text. | An AI-assisted transcription-correction step exists and runs before generation. | §4 |
+| US-012 | As an Area Supervisor, I want to play back my recording and re-record if needed before submission, so that I can confirm the recording is correct. | Recorded audio is playable and re-recordable before submission to STT. | §4 |
+| US-013 | As an Area Supervisor, I want report management in list and grid views, so that I can find previous reports. | Both views exist and make previous reports findable. | §4 |
+| US-014 | As an Area Supervisor, I want to manage branches through CRUD, so that I can select visited branches and keep the branch list correct. | Branches can be created, read, updated, and deleted; the daily-report flow allows branch selection. | §4 |
+| US-015 | As an Area Supervisor, I want to manage reports through CRUD, so that I can organize my reports. | Reports can be created, read, updated, and deleted (archive/delete semantics in Phase 35). | §4 |
+| US-016 | As an Area Supervisor, I want my reports to belong to my authenticated account, so that reports stay correctly attributed. | Reports are user-scoped and owned by the authenticated supervisor (auth design in Phase 11). | §4 |
+| US-017 | As an Area Supervisor, I want my profile identity to appear in reports, so that the report identifies me. | Profile identity fields are usable in report content. | §4 |
+
+---
+
+## Report Management
+
+> **Phase 4 seed — the supporting-feature resource management from §4. Detailed data model, search, and lifecycle mechanics arrive in later phases (5, 11, 12, 13, 24, 35).**
+
+### 1. Purpose
+
+The supporting features exist to support the core workflow (§4): the supervisor records audio instead of writing, confirms recordings before submission, receives AI transcription and AI correction, generates the structured report, and manages everything centrally so previous reports can be found.
+
+### 2. Resource Inventory
+
+| Resource | Supporting feature | Managed in |
+|---|---|---|
+| User profile | Profile — supervisor identity appears in reports (§4) | Profile Management (Phase 4 seed); auth Phase 11 |
+| Branches | Branch management — visited branches selected; Branch CRUD (§4) | Report Management (this section); branch domain Phase 5 |
+| Daily reports | Report management list and grid views; Report CRUD (§4) | Report Management (this section); data model Phase 24 |
+| Audio narrations (recordings) | Audio recording; playback and re-recording (§4) | Report Management (this section); pipeline Phase 20 |
+| Transcriptions | Addis AI speech-to-text; transcription review by AI (§4) | Report Management (this section); pipeline Phase 20 |
+| AI conversations | Addis AI text generation (§4) | Report Management (this section); prompts Phase 21 |
+| Generated reports + versions | Report CRUD (§4); version history (§2.1) | Report Management (this section); data model Phase 24 |
+| Exports | Export — share or archive (§4) | Export Spec (Phase 22) |
+| Reporting analytics | Basic analytics (AD-007; metric set defined in Phase 31) | Analytics (Phase 31) |
+
+### 3. Report Management Views
+
+- **List view** — find previous reports (§4); mechanics (columns, pagination, sorting, filtering) in Phases 12/13/24; backend pagination dependency `mongoose-paginate-v2` (codebase fact).
+- **Grid view** — find previous reports (§4); backed by the MUI X Data Grid dependency `@mui/x-data-grid` (codebase fact); component standards in Phase 14.
+- Search, retrieve, and review of previous reports (§2.1) are served by these views.
+
+### 4. CRUD Matrix
+
+| Resource | Create | Read | Update | Delete | Notes |
+|---|---|---|---|---|---|
+| Reports | Yes (REQ-045) | Yes | Yes (editable after generation, §2.1) | Yes (archive/delete semantics in Phase 35) | REQ-027/045 |
+| Branches | Yes (REQ-046) | Yes | Yes | Yes | Branch domain rules in Phase 5 |
+| Profile | Yes (via auth registration, Phase 11) | Yes | Yes | — | REQ-025/042 |
+| Transcriptions / AI conversations | Yes (pipeline) | Yes | Yes (transcription editing, REQ-016/039) | — | Phases 20/21/24 |
+
+### 5. Ownership Rule
+
+Authentication exists so reports belong to the correct user (§4, REQ-041). All report-related resources are scoped to the authenticated supervisor; auth/cookies/tokens design arrives in Phase 11.
+
+### 6. Lifecycle Seeds
+
+- Daily report lifecycle (detailed in Phase 35): created → recorded/transcribed → reviewed (transcription) → generated → reviewed/corrected → finalized → exported → archived/deleted/restored.
+- Multi-branch days: one daily report covers one or more branches (§2.1, REQ-014/028).
+
+### 7. OQ Resolutions (Phase 4)
+
+- **OQ-004:** basic reporting analytics stays per AD-007; the metric set is defined in Phase 31.
+- **OQ-006:** no checklist tool in V2; "follow a checklist" is a reportable activity only.
 
 ---
 
@@ -927,13 +1041,13 @@ The AI is responsible for (all items §3.3):
 - Measurable success KPIs (OQ-001) — decision pending user input.
 - Branch count semantics (OQ-002) — pending user input.
 - Boss access model (OQ-003) — pending user input.
-- Reporting-analytics detail scope (OQ-004, AD-007) — re-checked in Phase 4.
+- Reporting-analytics detail scope (OQ-004, AD-007) — resolved in Phase 4: AD-007 stands; the metric set is defined in Phase 31.
 - Narration merge pipeline behavior (OQ-005, AD-008) — re-confirmed in Phases 20/21.
-- Checklist tool existence (OQ-006) — pending user input; re-asked in Phase 4/5.
+- Checklist tool existence (OQ-006) — resolved in Phase 4: no checklist tool in V2; "follow a checklist" is a reportable activity only.
 - Clarifying-question behavior (OQ-007) — resolved in Phase 3: the app processes narrations as-is; no clarifying-Q&A step; re-confirmed in Phases 20/21.
 
 ---
 
-## End Of Phase 3 Content
+## End Of Phase 4 Content
 
-Phases 1–3 are GREEN (2026-08-01). Phase 3 built the manual-reporting mental model from §3: new `## Work Flow` (core narration→report cycle W-01..W-12, work-flow rules WF-1..4, sub-flow coverage map), new `## User Interactions` (UI-001..007 with triggers, flows, and outcomes), new `## Report Domain` (Person 1 / Person 2 mapping, 14 report content elements, 12 AI responsibilities, domain rules DR-1..5, expansion markers), enriched `## PRD` (section 5 "until satisfied" loop, new section 11 Mental Model, OQ-007 resolved: process narrations as-is, re-confirmed in Phases 20/21), added REQ-036..038, extended `## Glossary` (Person 1, Person 2, raw material, final output, correction loop), and added the Phase 3 Source Trace Map. Phase 4 will build the supporting features needed because of the core problem (PRD, Requirements, User Stories, Report Management).
+Phases 1–4 are GREEN (2026-08-01). Phase 4 built the supporting features from §4: new `## Report Management` (purpose, resource inventory, list and grid views, CRUD matrix, ownership rule, lifecycle seeds, OQ resolutions), enriched `## PRD` (section 5 workflow with playback/re-recording confirmation and AI transcription review; section 6 rebuilt around the twelve §4 features; OQ-004 and OQ-006 resolved), added REQ-039..049, added US-011..017 and extended US-007 (share or archive), extended `## Glossary` (AI transcription review, audio playback, re-recording, list view, grid view, CRUD), updated the Checklist (Report Management, Profile Management, Resource Management GREEN), and added the Phase 4 Source Trace Map. Phase 5 will build the report and branch domain (Report Domain, Data Modeling, Business Rules, API Contract, Status Machine, Report Management).
