@@ -45,7 +45,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 11 | 11. Authentication, Authorization, Cookies, And Tokens | GREEN | Auth Cookies, Security, API Contract, Data Modeling |
 | 12 | 12. Frontend Architecture | GREEN | Frontend Architecture, Routing Layout, UI/UX Spec, MUI Component Standards, Project Directory Structure |
 | 13 | 13. Redux, RTK Query, And API Client | GREEN | Redux RTK Query, Rules, Frontend Architecture |
-| 14 | 14. MUI, MUI X, Theme, And Component Standards | PENDING | MUI Component Standards, Theme Standards, UI/UX Spec |
+| 14 | 14. MUI, MUI X, Theme, And Component Standards | GREEN | MUI Component Standards, Theme Standards, UI/UX Spec |
 | 15 | 15. React Hook Form Standards | PENDING | React Hook Form Standards, Validation Audit, UI/UX Spec |
 | 16 | 16. UI Rules | PENDING | UI/UX Spec, User Interactions, Rules |
 | 17 | 17. Environment Variables | PENDING | Environment Config, Security, Rules |
@@ -103,14 +103,14 @@ Status of every section the target document must contain at minimum. Extra secti
 | JSDoc Standards | 26, 27 | PENDING |
 | Logging | 10, 28 | GREEN (Phase 10 seed) |
 | Mock Data Seeding | 23 | PENDING |
-| MUI Component Standards | 12, 14 | GREEN (Phase 12 seed) |
+| MUI Component Standards | 12, 14 | GREEN (Phase 14 enrichment) |
 | Non-Functional Requirements | 31 | PENDING |
 | Other AI Providers | 19 | PENDING |
 | Phase Protocol | 32 | PENDING |
 | PRD | 1, 2, 3, 4 | GREEN (Phase 4 enrichment) |
 | Problem Statement | 1, 2 | GREEN |
 | Profile Management | 4 | GREEN (Phase 4 seed) |
-| Project Directory Structure | 9, 10, 12, 13, 25, 30 | GREEN (Phase 13 enrichment) |
+| Project Directory Structure | 9, 10, 12, 13, 25, 30 | GREEN (Phase 14 enrichment) |
 | Project Overview | 1 | GREEN |
 | React Hook Form Standards | 15 | PENDING |
 | Redux RTK Query | 13 | GREEN (Phase 13 seed) |
@@ -125,9 +125,9 @@ Status of every section the target document must contain at minimum. Extra secti
 | Source Traceability | 31 | PENDING |
 | Status Machine | 5, 35 | GREEN (Phase 5 seed) |
 | Tasks | 32 | PENDING |
-| Theme Standards | 14 | PENDING |
+| Theme Standards | 14 | GREEN (Phase 14 seed) |
 | Transcription Review | 8, 20 | GREEN (Phase 8 seed) |
-| UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 7 seed; Phase 12 enrichment) |
+| UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 14 enrichment) |
 | User Interactions | 3, 16, 22, 35 | GREEN (Phase 3 seed) |
 | User Stories | 2 (seed), 4 | GREEN (Phase 2 seed) |
 | Validation Audit | 8, 15, 28, 31 | GREEN (Phase 8 seed) |
@@ -349,6 +349,23 @@ All `§` references below identify sections of the original source brief. They a
 | §13.2 | On 401 (`result.error && result.error.status === 401`) `baseQueryWithReauth` attempts `/api/v1/auth/refresh` via `baseQuery({ url }, api, extraOptions)`; on refresh success it retries the original request (`result = await baseQuery(args, api, extraOptions)`); on refresh failure it clears everything, dispatches logout, and the user must be outside of protected routes | Redux RTK Query (2), API Contract (4), Requirements (REQ-105) |
 | §13.2 | Auth endpoints are excluded from 401 handling on public pages; proper backend response transformation is required | Redux RTK Query (2), Rules (3), Requirements (REQ-106) |
 | §13.2 + §11 (cross-aligned) | The refresh endpoint is `POST /api/v1/auth/refresh`; it rotates the refresh token and re-issues the access + refresh cookies (rotation per REQ-087) | Redux RTK Query (2), API Contract (4), Auth Cookies (1) |
+
+---
+
+## Source Trace Map — Phase 14 (source §14)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §14.1 | Tree-shaken MUI imports required (e.g. `import TextField from '@mui/material/TextField'`); never import from the `@mui/material` barrel; MUI Grid uses the `size` prop, not `item` (`<Grid size={{ xs: 12, md: 6 }}>`) | MUI Component Standards (7), Requirements (REQ-107) |
+| §14.1 | Deprecated MUI props are banned: `margin="normal"` becomes `sx={{ mb: 2 }}`; `InputProps` becomes `slotProps.input`; `Box component="form"` becomes native `<form>`; `Box component="img"` becomes native `<img>`; `Link component="button"` becomes `Link slots={{ root: 'button' }}` | MUI Component Standards (7), Requirements (REQ-107) |
+| §14.1 | Styling: MUI `sx` and `styled()` only; never Tailwind; never inline `style`; `sx` uses theme-aware tokens (`color: 'text.secondary'`, `bgcolor: 'background.paper'`, `color: 'error.main'`); never import from `themePrimitives.js` directly; grey colors via `theme.palette.grey[N]`; never `gray[50]`, `gray[800]`, or `brand[400]` directly; all `sx` color values mode-aware (`text.primary`, `background.default`, `grey.500`) | MUI Component Standards (7), Theme Standards (2), Requirements (REQ-107) |
+| §14.2 | Reusable MUI components live in `client/src/components/reusable/*`, are prefixed `Mui`; input reusable components use `forwardRef` (presentation wrappers do not); `displayName` set on wrapped components; default `size="small"` where applicable (TextField, Select, Button); pure wrappers with all standard MUI props passed through and no custom API surface; `slotProps.input` for adornments, never `InputProps`; every input element has a proper start adornment | MUI Component Standards (8), Requirements (REQ-108) |
+| §14.3 | Specific reusable-component requirements: MuiTextField handles password internally (eye toggle via `useState` + `useCallback`, `onMouseDown` prevents focus loss, no layout shift, merges caller's `slotProps.input.endAdornment`); MuiButton uses MUI native `loading` with `loadingIndicator={<CircularProgress size={20} />}` and `loadingPosition="center"`; MuiDialog defaults `disableEnforceFocus`/`disableRestoreFocus` to `true` and is always used instead of raw `@mui/material/Dialog`; MuiConfirmDialog preset props (`open`, `onClose`, `onConfirm`, `title`, `message`, `confirmText`, `cancelText`, `confirmColor`); MuiDataGrid toolbar + export selection + columns in `client/src/components/columns/*` + action column (view, update, archive, restore, delete) + archived-item flow via MuiConfirmDialog + server-side pagination + skeleton loading rows; MuiDatePicker explicit Desktop/Mobile switching via `theme.breakpoints.up('md')`, never auto; MuiSelect `MenuProps` maxHeight 300; MuiPagination `color="primary"` `shape="rounded"`, list view only; GlobalSearchDialog RHF `useForm` with `register`, uncontrolled input, ArrowBackIcon start adornment; LoadingSpinner centered CircularProgress with optional message; DataGrid action column icon colors via `sx` theme-path strings (`'primary.main'`, `'warning.main'`, `'error.main'`), never the `color` prop; always use reusable components instead of raw `@mui/material/<component>` | MUI Component Standards (9), Requirements (REQ-109) |
+| §14.4 | Theme rules: all theme configuration lives in `client/src/theme/`; no inline theme overrides in page components; component overrides via new files in `customizations/`; `AppTheme.jsx` composes the full MUI theme with `createTheme`, `cssVariables`, color schemes, and all customizations; theme customization files and `AppTheme.jsx` use `@module`, not `@file`; the eight customization files: inputs, dataDisplay, feedback, navigation, surfaces, dataGrid, datePickers, charts | Theme Standards (1), Requirements (REQ-111) |
+| §14.4 + codebase (`client/src/theme/`) | `AppTheme.jsx` exists with `cssVariables: { colorSchemeSelector: 'data-mui-color-scheme', cssVarPrefix: 'template' }`, `colorSchemes`/`typography`/`shadows`/`shape` from `themePrimitives.js`, `components` built from the eight customization groups, and `ThemeProvider` with `disableTransitionOnChange`; `themePrimitives.js` also exports `layoutConfig`; `customizations/index.js` re-exports the eight customization groups | Theme Standards (1) |
+| §14.5 | All MUI X components — charts, date picker, data grid, and any other MUI X component — are community version only; MUI X Chat references: `https://mui.com/x/react-chat/` and `https://mui.com/x/react-chat/backend/adapters/` | MUI Component Standards (10), Requirements (REQ-111) |
+| §14 (1.1–1.13) | Component catalog: MuiAppbar (file `client/src/components/reusable/MuiAppbar.jsx`, props `position`/`elevation`/`color`/`sx` defaults, left logo → `/dashboard` if authenticated else `/`, right section conditional on auth, PublicLayout vs AppShell behaviors, avatar 32px below 600px / 36px at or above 600px, auth detection via Redux `authSlice` `useSelector`, exclusions — search dialog, user dropdown, hamburger); MuiButton; MuiDialog (title bottom divider, scrollable content, actions divider, responsive fullscreen down('sm') OR down('md')+landscape); MuiTextField; MuiSelect; MuiDatePicker (Ethiopian calendar — `client/src/utils/ethiopianDate.js` with `ethiopianToGregorian`/`gregorianToEthiopian`, custom lightweight conversion no npm package, DD-MM-YY display e.g. `25-02-18`, English day names, English month names mapped to Ethiopian months September…August + Pagume, RHF via Controller, `LocalizationProvider` + `AdapterDayjs` in `main.jsx`); MuiPagination (count = server `totalPages` from `mongoose-paginate-v2`, constants `PAGINATION_DEFAULT_PAGE=1`/`PAGINATION_DEFAULT_LIMIT=10`/`PAGINATION_MAX_LIMIT=100`); MuiDataGrid (columns in `client/src/components/columns/*.js` action column last, View/Edit/Archive/Delete icon colors via `sx`, archive→MuiConfirmDialog→restore or delete flow, `checkboxSelection` + `disableRowSelectionOnClick` + export button, `GridToolbar`, `paginationMode="server"`, `pageSizeOptions={[10, 25, 50, 100]}`, skeleton via `slotProps.loadingOverlay`, custom `noRowsOverlay`, default `sx={{ height: 400 }}`); MuiConfirmDialog; LoadingSpinner (size default 40, minHeight default `"100vh"`); GlobalSearchDialog (`useForm({ mode: 'onSubmit' })`, uncontrolled `register('search')`, ArrowBackIcon start adornment clears/resets/closes); MuiPageHeader (title + subtitle hidden on vw < 600 portrait, children right slot, `mb: 2`, bottom divider); MuiStatusBadge (statuses `draft`/`audio_attached`/`transcribed`/`reviewed`/`completed` → default/warning/info/primary/success; used in Edit Report header (3.5.1.9) and Report Details header (3.6)) | MUI Component Standards (1, 4, 5, 9), UI/UX Spec (10, 11), Requirements (REQ-109, REQ-110) |
+| §14 (1.13) + §5 (cross-aligned) | MuiStatusBadge status names (`draft` | `audio_attached` | `transcribed` | `reviewed` | `completed`) differ from the Phase 5 status machine (`## Status Machine`); Phase 35 (§35 Archive, Delete, And Restore Lifecycle) owns the exact report status names and their reconciliation | MUI Component Standards (9), Status Machine (Phase 35 marker) |
 
 ---
 
@@ -673,6 +690,9 @@ Secondary features should not distract from the core workflow of generating a bo
 | baseQueryWithReauth | The RTK Query `baseQuery` wrapper that handles token refresh on 401 responses; all frontend HTTP calls pass through it. On 401 it calls `POST /api/v1/auth/refresh` and retries the original request on success; on refresh failure it clears auth state, dispatches logout, and leaves the user outside protected routes. | §13.2 |
 | injectEndpoints | The RTK Query API-slice extension pattern: each feature slice injects its own endpoint set into the central API slice (`client/src/redux/features/api.js`) instead of one monolithic definition. | §13.1 |
 | Feature slice | A Redux Toolkit slice under `client/src/redux/features/` that owns one domain's state and injects its RTK Query endpoints; the feature slices are authSlice, branchSlice, reportSlice, audioSlice, transcriptionSlice, userSlice, aiConversationSlice, and analyticsSlice. | §13.1 |
+| Ethiopian calendar | The 13-month calendar used in Ethiopia (month names September…August plus the short month Pagume), roughly 7–8 years behind the Gregorian calendar; the date picker displays Ethiopian dates in DD-MM-YY numeric form with English day and month names. | §14 (1.6) |
+| Pagume | The 13th month of the Ethiopian calendar, five days long (six in a leap year). | §14 (1.6) |
+| MUI X community edition | The free tier of the MUI X component line (charts, date pickers, data grid, and any other MUI X component); Pro and Premium features are not used. | §14.5 |
 
 ---
 
@@ -965,6 +985,16 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-105 | On a 401 response (`result.error && result.error.status === 401`) `baseQueryWithReauth` must attempt `POST /api/v1/auth/refresh` via `baseQuery({ url }, api, extraOptions)`; on refresh success it must retry the original request (`result = await baseQuery(args, api, extraOptions)`); on refresh failure it must clear everything, dispatch logout, and ensure the user is outside of protected routes. | The refresh→retry→logout sequence works end-to-end exactly as stated; a failed refresh leaves the user on a public page. | §13.2 |
 | REQ-106 | Auth endpoints must be excluded from the 401-refresh handling on public pages, and backend responses must be properly transformed — the §10.7 response envelope is unwrapped (`transformResponse`) into the shapes the UI consumes, and errors surface via the envelope (`error.data.message`). | No refresh loop occurs on public auth pages; response and error shapes are transformed consistently. | §13.2 |
 
+### Functional Requirements (Phase 14)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-107 | All MUI imports must be tree-shaken (e.g. `import TextField from '@mui/material/TextField'`); the `@mui/material` barrel is never imported; MUI Grid uses the `size` prop, not `item`; the deprecated MUI props are banned — `margin="normal"` becomes `sx={{ mb: 2 }}`, `InputProps` becomes `slotProps.input`, `Box component="form"` becomes native `<form>`, `Box component="img"` becomes native `<img>`, `Link component="button"` becomes `Link slots={{ root: 'button' }}`; styling uses MUI `sx` and `styled()` only — never Tailwind and never inline `style`; `sx` values use theme-aware tokens (`text.secondary`, `background.paper`, `error.main`); `themePrimitives.js` is never imported directly; grey colors come from `theme.palette.grey[N]`; `gray[50]`, `gray[800]`, and `brand[400]` are never used directly; all `sx` color values are mode-aware (`text.primary`, `background.default`, `grey.500`). | No barrel imports, deprecated props, Tailwind, inline styles, or direct themePrimitives/gray/brand token usage exist anywhere in the client; Grids use `size`; forms and images use native elements; sx values resolve through the theme in both color modes. | §14.1 |
+| REQ-108 | Reusable MUI components must live in `client/src/components/reusable/*`, be prefixed `Mui`, and follow the reusable-component contract: input components use `forwardRef` (presentation wrappers do not), wrapped components set `displayName`, defaults are `size="small"` where applicable (TextField, Select, Button), wrappers are pure with all standard MUI props passed through and no custom API surface, adornments use `slotProps.input` (never `InputProps`), and every input element has a proper start adornment. | The reusable components exist at the stated path with the stated contract; the client always uses them instead of raw `@mui/material/<component>`. | §14.2 |
+| REQ-109 | The reusable components must implement the §14.3 specific requirements: MuiTextField handles password type internally (eye toggle via `useState` + `useCallback`, `onMouseDown` prevents focus loss, no layout shift, caller's `slotProps.input.endAdornment` merged after the eye); MuiButton uses MUI native `loading` with `loadingIndicator={<CircularProgress size={20} />}` and `loadingPosition="center"`; MuiDialog passes or supports `disableEnforceFocus` and `disableRestoreFocus` defaulting to `true` and is always used instead of raw `@mui/material/Dialog`; MuiConfirmDialog exposes `open`/`onClose`/`onConfirm`/`title`/`message`/`confirmText` (default "Confirm")/`cancelText` (default "Cancel")/`confirmColor` (default `"primary"`, overridable to `"error"` for delete); MuiDataGrid has a toolbar, selection export, per-domain columns in `client/src/components/columns/*` with the action column last (view, update, archive, restore, delete with tooltips and `sx` theme-path icon colors — never the `color` prop — plus the archive→MuiConfirmDialog→restore-or-delete flow), server-side pagination, and skeleton loading rows; MuiSelect defaults `MenuProps` maxHeight 300; MuiPagination defaults `color="primary"` and `shape="rounded"` and is used for list-view pagination only; GlobalSearchDialog uses RHF `useForm` with an uncontrolled `register('search')` input and an `ArrowBackIcon` start adornment that clears the field, resets results, and closes the dialog; LoadingSpinner is a centered CircularProgress with an optional message. | Each stated component behaves as specified; no component is bypassed with raw MUI equivalents. | §14.3 |
+| REQ-110 | The date picker must switch explicitly between `DesktopDatePicker` on md+ (popper) and `MobileDatePicker` below md (dialog) using `theme.breakpoints.up('md')` — never relying on auto-switching — and must support Ethiopian dates: a custom conversion utility `client/src/utils/ethiopianDate.js` (`ethiopianToGregorian(ethDate)` → JS Date, `gregorianToEthiopian(jsDate)` → `{ day, month, year }`, no external npm package), display format DD-MM-YY (e.g. `25-02-18`), English day names, and English month names mapped to the Ethiopian months (September…August + Pagume); RHF integration uses `Controller`. | The date picker switches modes at the md breakpoint; Ethiopian dates convert and display as specified, including Pagume; no date-picker auto-switching. | §14 (1.6) |
+| REQ-111 | All theme configuration must live in `client/src/theme/`; theme overrides are never inlined in page components and component overrides are added via new files in `customizations/`; `AppTheme.jsx` composes the full MUI theme with `createTheme`, `cssVariables`, color schemes, and all customizations; theme customization files and `AppTheme.jsx` use `@module`, not `@file`; the eight customization files are inputs, dataDisplay, feedback, navigation, surfaces, dataGrid, datePickers, charts. All MUI X components — charts, date picker, data grid, and any other MUI X component — must be community version only; no Pro or Premium features. | Theme structure matches the stated layout with the eight customization groups; no inline page-level overrides; no MUI X Pro/Premium imports or licenses in the manifest or code. | §14.4, §14.5 |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -986,6 +1016,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Authentication, authorization, cookies, and tokens rules: **Phase 11 — DONE (REQ-087..093)**.
 - Frontend architecture rules: **Phase 12 — DONE (REQ-094..100)**.
 - Redux/RTK Query and API client rules: **Phase 13 — DONE (REQ-103..106)**.
+- MUI, MUI X, theme, and component standards rules: **Phase 14 — DONE (REQ-107..111)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -1029,6 +1060,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | US-028 | As an Area Supervisor, I want protected pages to send me to the login page and return me to my intended destination after signing in, so that I never lose my place. | Unauthenticated access to a protected page redirects to `/login` with the origin preserved (`state.from`); login navigates back to it (REQ-095). | §12.4 |
 | US-029 | As an Area Supervisor, I want the sidebar to adapt to my screen size — overlay drawer on small screens, docked full or mini drawer on desktop — so that navigation works on any device. | The three responsive drawer modes exist and switch with the breakpoints (REQ-097). | §12.2, §12.3 |
 | US-030 | As an Area Supervisor, I want my session to renew itself while I am actively using the app, so that I am never interrupted by token expiry. | A transient 401 refreshes the session and retries the request transparently; a failed refresh clears the session and lands me on `/login`; no data is lost on transient 401s. | §13.2 |
+| US-031 | As an Area Supervisor, I want the date picker to show Ethiopian calendar dates with English day and month names, so that the dates I pick match how I think about the day. | The date picker switches explicitly between desktop (md+, popper) and mobile (<md, dialog) modes; Ethiopian dates display as DD-MM-YY with English day names and English month names mapped to the Ethiopian months (September…August + Pagume); the custom conversion utility (`client/src/utils/ethiopianDate.js`) is in place (REQ-110). | §14 (1.6) |
 
 ---
 
@@ -1808,17 +1840,18 @@ Addis AI is selected because it is specialized in Ethiopian Amharic and is expec
 - Filter Dialog: MuiDialog `maxWidth="sm"`, title "Filter Reports"; row 1 — MuiDatePicker (left) + MuiSelectField single branch (right) in `Grid container spacing={2}`; both carry ClearIcon end adornments (`slotProps.input.endAdornment`) — clearing resets the field, decrements `activeFilterCount`, updates the badge immediately; row 2 — MuiSwitch label "Archived"; Cancel resets all filters and badge → 0; Apply sets filter state, closes, badge → count of active filters (1–3).
 - List toggle → cards: `Grid container spacing={2}`; each report a MuiCard; icon-button actions with MuiTooltip — View (VisibilityIcon, primary → `/reports/:id/details`), Edit (EditIcon, primary → `/reports/:id/edit`), Archive/Restore/Delete conditional: not archived → ArchiveIcon (warning) + MuiConfirmDialog → `PATCH /api/v1/reports/:id/archive`; archived → RestoreIcon (success) + confirm → `PATCH /api/v1/reports/:id/restore`, DeleteIcon (error) + confirm → `DELETE /api/v1/reports/:id`; below the cards MuiPagination (`page`/`count` from server `totalPages`, `onChange` refetches).
 - Grid toggle → MuiDataGrid: server-side pagination, toolbar, export selection, action column (same behaviors).
+- The Filter Dialog and all dialogs on this page use MuiDialog, which applies responsive fullscreen below 600px (and below 768px landscape) (`## MUI Component Standards` §5); the Page Header subtitle hides on viewport widths below 600px in portrait (§14 1.12; `## MUI Component Standards` §4).
 
 ### 11. Report Detail, Correction, And Assistant Pages (§12.6)
 
-- **ReportDetail** (`client/src/pages/ReportDetail.jsx`, route `reports/:id/details`): renders inside AppShell — AppShell is provided by routing, page components never render it; details flow, generate flow, and edge cases per API Contract §3.6; Generate button shown only when status `reviewed`; no UI path for re-generation.
-- **ReportCorrection** (`client/src/pages/ReportCorrection.jsx`, route `reports/:id/edit`): renders inside AppShell; tabs — Editor, Details, Audio, History; Editor supports review and correction modes; transcription missing (status `draft`) → "No transcription yet" empty state; generate via `POST /api/v1/reports/:id/generate` with provider selection (default `addis`); audio playback/download via `GET /api/v1/audio/:audioId/stream` / `GET /api/v1/audio/:audioId/download`.
+- **ReportDetail** (`client/src/pages/ReportDetail.jsx`, route `reports/:id/details`): renders inside AppShell — AppShell is provided by routing, page components never render it; details flow, generate flow, and edge cases per API Contract §3.6; Generate button shown only when status `reviewed`; no UI path for re-generation; the Report Details header shows the report status via MuiStatusBadge (§14 1.13; `## MUI Component Standards` §9.8).
+- **ReportCorrection** (`client/src/pages/ReportCorrection.jsx`, route `reports/:id/edit`): renders inside AppShell; tabs — Editor, Details, Audio, History; Editor supports review and correction modes; transcription missing (status `draft`) → "No transcription yet" empty state; generate via `POST /api/v1/reports/:id/generate` with provider selection (default `addis`); audio playback/download via `GET /api/v1/audio/:audioId/stream` / `GET /api/v1/audio/:audioId/download`; the Edit Report header shows the report status via MuiStatusBadge (§14 1.13, §12.6 3.5.1.9; `## MUI Component Standards` §9.8).
 - **Assistant** (`client/src/pages/Assistant.jsx`, route `assistant` — the only protected route outside AppShell; full-screen): ChatBox with `adapter={assistantAdapter}` and `features={{ conversationList: true }}`, `sx={{ height: '100vh' }}`; conversation rail (title, last message preview, relative timestamp); "New Chat" → report picker dialog → create conversation (welcome message injects raw transcription + report metadata); conversation title `"Report {date}"`; deep link `/assistant?conversation=<id>`; tool-approval UI built into ChatBox (Approve/Reject with reason; "expired" on 60s timeout); adapter file `client/src/components/assistant/chatAdapter.js` (plain JS object: `sendMessage`, `listConversations`, `listMessages`, `addToolApprovalResponse`); Redux `aiConversationSlice` + RTK Query endpoints in `assistantApi.js` (`## Redux RTK Query` §3); package `@mui/x-chat` v9.0.0-alpha.15 (already in the manifest).
 
 ### 12. Expansion Markers
 
 - Phase 12 (§12 Frontend Architecture): **DONE (Phase 12)** — shell and page specs above.
-- Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): English-first component copy standards.
+- Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): **DONE (Phase 14)** — English-first component copy standards recorded across the reusable-component catalog; MuiStatusBadge in report detail/correction headers; MuiPageHeader subtitle rule; MuiDialog responsive fullscreen (§14).
 - Phase 15 (§15 React Hook Form Standards): validation message language (English).
 - Phase 16 (§16 UI Rules): general UI rules.
 
@@ -2104,8 +2137,10 @@ client/
     │   │   └── AppSidebar.jsx         # Navigation drawer; temporary/permanent/mini modes (§12.2–12.3)
     │   ├── report/
     │   │   └── CreateReportDialog.jsx # New-report dialog (§12.6 3.5.1)
-    │   └── assistant/
-    │       └── chatAdapter.js         # Plain-JS ChatBox adapter: sendMessage/listConversations/listMessages/addToolApprovalResponse (§12.6 3.5.2)
+    │   ├── assistant/
+    │   │   └── chatAdapter.js         # Plain-JS ChatBox adapter: sendMessage/listConversations/listMessages/addToolApprovalResponse (§12.6 3.5.2)
+    │   ├── reusable/                  # Reusable Mui* components: MuiAppbar, MuiButton, MuiDialog, MuiTextField, MuiSelect, MuiDatePicker, MuiPagination, MuiDataGrid, MuiConfirmDialog, MuiPageHeader, MuiStatusBadge, LoadingSpinner, GlobalSearchDialog (§14.2–14.3)
+    │   └── columns/                   # Per-domain MuiDataGrid column sets; action column last (§14 1.8)
     ├── hooks/
     │   ├── useAuth.js                 # Auth state convenience hook (§12.7)
     │   └── useAudioRecorder.js        # MediaRecorder state/actions hook (§12.7)
@@ -2123,8 +2158,9 @@ client/
     │       ├── aiConversationSlice.js    # assistant chat (chatAdapter.js + assistantApi.js, Phase 13 detail in Phase 12 §3.5.2) (§13.1)
     │       └── analyticsSlice.js         # dashboard analytics endpoints (§13.1)
     ├── utils/
-    │   └── constants.js                  # API_CONFIG with VITE_API_BASE_URL; frozen constants (§10.5, §13.2)
-    ├── theme/                         # AppTheme.jsx, themePrimitives.js, customizations/* — exists in codebase; standards in Phase 14 (§14)
+    │   ├── constants.js                  # API_CONFIG with VITE_API_BASE_URL; frozen constants (§10.5, §13.2)
+    │   └── ethiopianDate.js              # ethiopianToGregorian/gregorianToEthiopian conversion; DD-MM-YY display (§14 1.6)
+    ├── theme/                         # AppTheme.jsx, themePrimitives.js, customizations/* — exists in codebase; standards in `## Theme Standards` (§14)
     └── assets/                        # hero.png, notFound_404.svg, react.svg, vite.svg (codebase fact)
 ```
 
@@ -2132,6 +2168,7 @@ client/
 
 - Phase 12 (§12 Frontend Architecture): **DONE (Phase 12)** — frontend directory tree above.
 - Phase 13 (§13 Redux, RTK Query, And API Client): **DONE (Phase 13)** — `redux/` subtree and `utils/constants.js` added above.
+- Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): **DONE (Phase 14)** — `components/reusable/`, `components/columns/`, and `utils/ethiopianDate.js` added above.
 - Phase 25 (§25 Backend Implementation): final structure.
 - Phase 30 (§30 Git Workflow): workflow structure.
 
@@ -2515,7 +2552,7 @@ Also listed in §12.6 and lazy-loaded (detailed specs in later phases): BranchLi
 ### 8. Expansion Markers
 
 - Phase 13 (§13 Redux, RTK Query, And API Client): **DONE (Phase 13)** — store structure, slices, RTK Query API client (`## Redux RTK Query`).
-- Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): theme and reusable components.
+- Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): **DONE (Phase 14)** — theme (`## Theme Standards`) and reusable components (`## MUI Component Standards`).
 
 ---
 
@@ -2584,7 +2621,7 @@ createBrowserRouter([
 
 ## MUI Component Standards
 
-> **Phase 12 seed — component-level standards visible from §12. Theme-level standards and the full reusable-component catalog arrive in Phase 14 (§14).**
+> **Phase 12 seed — component-level standards visible from §12. Enriched in Phase 14 with the §14 import/styling rules, the reusable-component contract and catalog, and MUI X usage; theme-level standards live in `## Theme Standards`.**
 
 ### 1. MuiAppbar
 
@@ -2594,6 +2631,18 @@ Two variants (§12.3):
 - **Protected:** sits at the top-right of the content area (beside the sidebar, not across it) — right-aligned Search icon (opens GlobalSearchDialog), Theme toggle (LightMode/DarkMode), user avatar (dropdown: Profile + Logout). No title text; no hamburger (the hamburger lives in the sidebar header). Height 64px. Avatar sizes: 32px below 600px, 36px above 600px (§12.3).
 
 Appbar logo navigates to `/dashboard` if authenticated, otherwise `/` (§12.3).
+
+Reusable component detail (§14 1.1):
+
+- **File:** `client/src/components/reusable/MuiAppbar.jsx`. Single reusable app bar configurable for both PublicLayout (full-width, top-level) and AppShell (inside the content area, beside the sidebar).
+- **Props:** `position` — MUI AppBar position, default `"fixed"`; `elevation` — shadow depth, default `1`; `color` — MUI AppBar color prop, default `"inherit"`; `sx` — additional sx overrides. All standard MUI AppBar props pass through (pure wrapper, no custom API surface).
+- **Left section:** logo icon + app name; click navigates to `/dashboard` if authenticated, `/` if not (§12.3).
+- **Right section:** rendered conditionally based on auth state.
+- **Auth detection:** reads auth state from Redux `authSlice` via `useSelector`.
+- **Public layout behavior:** full width (`width: 100%`), `position="fixed"`; unauthenticated — theme toggle, Login button, Sign Up button; authenticated — theme toggle, Logout button (icon + tooltip).
+- **Protected layout (AppShell) behavior:** sits inside the content area (not across the sidebar), `position="static"`, height `64px`, no title text; right section — Search icon (opens GlobalSearchDialog), theme toggle, user avatar (dropdown: Profile + Logout); avatar `32px` below 600px, `36px` at or above 600px (§12.3).
+- **Excluded from MuiAppbar:** search dialog content (handled via GlobalSearchDialog), the user dropdown menu (rendered inline where used), the hamburger menu (handled by the AppSidebar header).
+- **Setup:** tree-shaken import `import AppBar from '@mui/material/AppBar'`; `displayName` set to `"MuiAppbar"`.
 
 ### 2. AppSidebar (Drawer)
 
@@ -2620,6 +2669,13 @@ Appbar logo navigates to `/dashboard` if authenticated, otherwise `/` (§12.3).
 - Left: title + subtitle; right: action buttons. Renders on one line (no wrapping) (§12.6).
 - Pages: Reports has the Page Header "Reports" / "Manage daily supervision reports" with Filter + toggle + Create actions; Dashboard is the exception — no Page Header (§12.6).
 
+Reusable component detail (§14 1.12):
+
+- **File:** `client/src/components/reusable/MuiPageHeader.jsx`. Consistent page header for protected pages.
+- **Props:** `title` (string, required), `subtitle` (string, optional — hidden on viewport widths below 600px in portrait), `children` (ReactNode, optional — action elements on the right).
+- **Structure:** flex container, `justifyContent="space-between"`, `alignItems="center"`, `mb: 2`, bottom border `1px solid` divider.
+- **Setup:** tree-shaken imports; `displayName` set to `"MuiPageHeader"`.
+
 ### 5. Dialogs
 
 - **CreateReportDialog** (`client/src/components/report/CreateReportDialog.jsx`): MuiDialog `maxWidth="sm"` fullWidth; `disableEscapeKeyDown={true}`; `onClose` is a no-op (prevents close on backdrop click or Escape); closes only via the Cancel button or a successful submit; title "Create New Report" (§12.6 3.5.1).
@@ -2627,14 +2683,160 @@ Appbar logo navigates to `/dashboard` if authenticated, otherwise `/` (§12.3).
 - **MuiConfirmDialog:** used for destructive/state-changing actions (Archive/Restore/Delete) (§12.6 Reports).
 - **GlobalSearchDialog:** full-screen below 600px and below 768px landscape (no border radius, 100vh); centered on larger screens — 600–1200px: 80vh/600px, >1200px: 70vh/720px; closed by back arrow, Escape, or outside click; search input uses RHF `register('search')`, fires on Enter or click (no debounce); results grouped by entity type (Reports, Branches) in MuiAccordion sections; empty state "No results found" (§12.3).
 
+Reusable component detail (§14 1.3, 1.9, 1.11):
+
+- **MuiDialog** (`client/src/components/reusable/MuiDialog.jsx`) — structural wrapper that is always used instead of raw `@mui/material/Dialog`. Internal structure: `<Dialog>` (defaults + passthrough) → `<DialogTitle>` with bottom `borderBottom` divider (rendered only if `title` is provided) → `<DialogContent>` with `overflowY: auto` (the only scrollable section) → `<Divider />` (rendered only if `actions` is provided) → `<DialogActions>` (rendered only if `actions` is provided). `disableEnforceFocus` and `disableRestoreFocus` default to `true` (and are always supported). Responsive fullscreen via internal `useMediaQuery` checking `theme.breakpoints.down('sm')` OR `theme.breakpoints.down('md')` with landscape — when matched, `fullScreen={true}` (no border radius, 100vh); overridable by the caller passing an explicit `fullScreen` prop. Callers provide MuiButton components inside the `actions` slot (e.g. `<MuiButton variant="outlined">Cancel</MuiButton>`); GlobalSearchDialog (1.11) is the exception and does not use the actions slot. Tree-shaken imports (`Dialog`, `DialogTitle`, `DialogContent`, `DialogActions`, `Divider`); `displayName` set to `"MuiDialog"`.
+- **MuiConfirmDialog** (`client/src/components/reusable/MuiConfirmDialog.jsx`) — preset confirmation dialog built on MuiDialog. Props: `open` (visibility), `onClose` (dismiss handler), `onConfirm` (confirm action handler), `title` (e.g. "Archive Report"), `message` (e.g. "Are you sure you want to archive this report?"), `confirmText` (MuiButton label, default `"Confirm"`), `cancelText` (default `"Cancel"`), `confirmColor` (MuiButton color, default `"primary"`, overridable to `"error"` for delete). Structure: MuiDialog with title, message in content, and Cancel + Confirm MuiButtons in actions. Used by the MuiDataGrid archive/restore/delete flow and other confirm/dismiss scenarios. `displayName` set to `"MuiConfirmDialog"`.
+- **GlobalSearchDialog** (`client/src/components/reusable/GlobalSearchDialog.jsx`) — standalone; does not use MuiDialog's actions slot. `useForm({ mode: 'onSubmit' })` with `register('search')`; the search input is uncontrolled with no re-render on keystroke; start adornment `ArrowBackIcon` clears the field, resets results, and closes the dialog; fires on Enter or search icon click (no debounce) (§12.3). `displayName` set to `"GlobalSearchDialog"`.
+
 ### 6. Text And Overflow
 
 - All text uses ellipsis on overflow; no horizontal scroll anywhere (§12.6 Landing).
 - Hero headline: `h3` on md+, `h4` on xs (§12.6 Landing).
 
-### 7. Expansion Markers
+### 7. MUI Import And Styling Rules (§14.1)
 
-- Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): theme-level standards, the reusable-component catalog (MuiPageHeader, MuiConfirmDialog, etc.), and MUI X usage (DataGrid, charts, date pickers, `@mui/x-chat` v9.0.0-alpha.15).
+- Tree-shaken MUI imports are required, e.g. `import TextField from '@mui/material/TextField'`.
+- Never import from the `@mui/material` barrel.
+- MUI Grid uses the `size` prop, not `item` — e.g. `<Grid size={{ xs: 12, md: 6 }}>`.
+- Deprecated MUI props are banned; use the replacements:
+  - `margin="normal"` → `sx={{ mb: 2 }}`
+  - `InputProps` → `slotProps.input`
+  - `Box component="form"` → native `<form>`
+  - `Box component="img"` → native `<img>`
+  - `Link component="button"` → `Link slots={{ root: 'button' }}`
+- Use MUI `sx` and `styled()` for styling. Never use Tailwind. Never use inline `style`.
+- `sx` uses theme-aware tokens: `color: 'text.secondary'`, `bgcolor: 'background.paper'`, `color: 'error.main'`.
+- Never import from `themePrimitives.js` directly.
+- For grey colors, use `theme.palette.grey[N]`.
+- Never use `gray[50]`, `gray[800]`, or `brand[400]` directly.
+- All `sx` color values must be mode-aware: `text.primary`, `background.default`, `grey.500`.
+
+### 8. Reusable Component Contract (§14.2)
+
+- Reusable MUI components live in `client/src/components/reusable/*`.
+- Reusable MUI components are prefixed with `Mui` (plus `LoadingSpinner` and `GlobalSearchDialog`).
+- Input reusable components use `forwardRef`; presentation wrappers do not need `forwardRef`.
+- Set `displayName` on wrapped components.
+- Default to `size="small"` where applicable, including TextField, Select, and Button.
+- Pass through all standard MUI props — wrappers are pure wrappers with no custom API surface.
+- Use `slotProps.input` for input adornments, never `InputProps`.
+- Every input element must have a proper start adornment.
+- Always use reusable components instead of raw `@mui/material/<component>` (§14.3).
+
+### 9. Component Catalog (§14 1.1–1.13)
+
+Each reusable component wraps the MUI equivalent with safe defaults, uses tree-shaken imports, and sets `displayName`. Details for MuiAppbar, MuiPageHeader, MuiDialog, MuiConfirmDialog, and GlobalSearchDialog are in §1, §4, and §5 above.
+
+#### 9.1 MuiButton (§14 1.2)
+
+- **File:** `client/src/components/reusable/MuiButton.jsx`. Pure wrapper around MUI Button — presentation wrapper, no `forwardRef` needed.
+- **Defaults:** `size="small"`, `loadingIndicator={<CircularProgress size={20} />}`, `loadingPosition="center"`; uses MUI native `loading` prop (not a custom loading state).
+- **Prop passthrough:** all standard MUI Button props (`variant`, `color`, `disabled`, `onClick`, `type`, `startIcon`, `endIcon`, `sx`, `fullWidth`, etc.). Variants: `contained` (default), `outlined`, `text`.
+- **Form usage:** submit buttons use `type="submit"` + `size="small"` + `sx={{ flexShrink: 0 }}`; disabled via `isSubmitting` from RHF `formState`.
+- **Icon rules:** icon-only buttons use raw `@mui/material/IconButton`, not MuiButton; buttons with icons use standard `startIcon`/`endIcon` props.
+
+#### 9.2 MuiTextField (§14 1.4)
+
+- **File:** `client/src/components/reusable/MuiTextField.jsx`. Single reusable text input wrapping MUI TextField; handles all text types including password (no separate MuiPasswordField); `forwardRef` for RHF `register` compatibility.
+- **Defaults:** `size="small"`; `type` defaults to `"text"`; props `name`, `label`, `error` (bool), `helperText` (string); caller connects `error={!!errors.fieldName} helperText={errors.fieldName?.message}`.
+- **Start adornment (mandatory):** every instance passes one via `slotProps.input.startAdornment` — never deprecated `InputProps`.
+- **End adornment:** caller passes via `slotProps.input.endAdornment`.
+- **Password type handling:** internal `useState` toggles between `"password"` and `"text"`; `Visibility`/`VisibilityOff` eye icon as end adornment; `onMouseDown` on the eye icon prevents focus loss; no layout shift on toggle; the caller's `slotProps.input.endAdornment` is merged after the eye icon.
+- **Validation:** no zod — manual validation with a consistent error shape.
+
+#### 9.3 MuiSelect (§14 1.5)
+
+- **File:** `client/src/components/reusable/MuiSelect.jsx`. Reusable select input wrapping MUI Select; `forwardRef` for RHF `register` compatibility.
+- **Defaults:** `size="small"`; `MenuProps={{ slotProps: { paper: { sx: { maxHeight: 300 } } } }}` for a consistent dropdown height; props `name`, `label`, `error`, `helperText`, `value`, `onChange`.
+- **Start adornment (mandatory):** every instance passes one via `slotProps.input.startAdornment`.
+- **Children (options):** the caller provides `<MenuItem>` children rendered directly inside `<Select>`.
+- **Error display and validation:** as MuiTextField — `error`/`helperText` passed directly; no zod.
+
+#### 9.4 MuiDatePicker (§14 1.6)
+
+- **File:** `client/src/components/reusable/MuiDatePicker.jsx`. Responsive date picker for Ethiopian dates with English day/month names. Always community version.
+- **Responsive switching (explicit, never auto):** md+ (≥900px) → `DesktopDatePicker` (popper mode); below md (<900px) → `MobileDatePicker` (dialog mode); selected via `theme.breakpoints.up('md')` with `useMediaQuery`; both imported tree-shaken from `@mui/x-date-pickers`.
+- **Ethiopian calendar integration:** utility file `client/src/utils/ethiopianDate.js` with `ethiopianToGregorian(ethDate)` → JS Date and `gregorianToEthiopian(jsDate)` → `{ day, month, year }`; custom lightweight conversion, no external npm package; Ethiopian year offset ~7–8 years behind Gregorian; 13-month structure.
+- **Display format:** input/display value DD-MM-YY numeric (e.g. `25-02-18`); day names English (Monday, Tuesday, ...); month names English mapped to the Ethiopian months (September…August + Pagume); achieved via a custom `format` prop and view format.
+- **RHF integration (Controller required):** uses `Controller` because DatePicker uses a custom onChange (documented with a code comment); props `name`, `control`, `label`, `error`, `helperText`.
+- **Community edition:** `@mui/x-date-pickers` community only — no Pro features; `LocalizationProvider` + `AdapterDayjs` already wrap the app in `main.jsx` (`## Frontend Architecture` §1).
+- **Prop passthrough:** `minDate`, `maxDate`, `disabled`, `slotProps`, `sx`, etc.
+
+#### 9.5 MuiPagination (§14 1.7)
+
+- **File:** `client/src/components/reusable/MuiPagination.jsx`. Pure wrapper around MUI Pagination with safe defaults; used for list-view pagination only (not inside DataGrid).
+- **Defaults:** `color="primary"`, `shape="rounded"`.
+- **Props:** `count` — total pages (from the server response; `mongoose-paginate-v2` returns `totalPages` directly — no client-side calculation); `page` — current page; `onChange` — page change handler; all standard MUI Pagination props pass through.
+- **Constants:** `PAGINATION_DEFAULT_PAGE=1`, `PAGINATION_DEFAULT_LIMIT=10`, `PAGINATION_MAX_LIMIT=100` (`client/src/utils/constants.js`).
+
+#### 9.6 MuiDataGrid (§14 1.8)
+
+- **File:** `client/src/components/reusable/MuiDataGrid.jsx`; package `@mui/x-data-grid` — community version only.
+- **Columns:** defined per domain in `client/src/components/columns/*.js`; each file exports a `columns` array; the action column is the last column in every domain column set.
+- **Action column:** View — `Visibility` icon, `sx={{ color: 'primary.main' }}`, tooltip "View", onClick navigates to `/${resource}/${id}` via `useNavigate`; Edit — `Edit` icon, `sx={{ color: 'warning.main' }}`, tooltip "Edit"; Archive/Delete — conditionally rendered: active items show `Archive` (`sx={{ color: 'text.secondary' }}`, tooltip "Archive"), archived items show `Delete` (`sx={{ color: 'error.main' }}`, tooltip "Delete"); IconButton uses `sx` for color, never the `color` prop; each action is an IconButton in a Tooltip inside a `Stack direction="row"`.
+- **Archive/restore/delete flow:** Archive click → MuiConfirmDialog → confirm → dispatch archive → update UI; archived rows show restore + delete icons instead of archive; Restore click → MuiConfirmDialog → confirm → dispatch restore → update UI; Delete click → MuiConfirmDialog → confirm → dispatch permanent delete → update UI.
+- **Export selection:** `checkboxSelection` enabled; `disableRowSelectionOnClick={true}`; export button in the toolbar for selected rows.
+- **Toolbar:** `GridToolbar` from `@mui/x-data-grid` (columns toggle, filter, density, CSV export).
+- **Server-side pagination:** `paginationMode="server"`; `rowCount` from the server's `totalDocs`; `onPaginationModelChange` handler; `pageSizeOptions={[10, 25, 50, 100]}`; defaults page=1, pageSize=10.
+- **State coverage:** loading via the `loading` prop with skeleton `slotProps={{ loadingOverlay: { variant: 'skeleton' } }}`; empty via custom `slotProps={{ noRowsOverlay }}`.
+- **Default:** `sx={{ height: 400 }}` (overridable).
+
+#### 9.7 LoadingSpinner (§14 1.10)
+
+- **File:** `client/src/components/reusable/LoadingSpinner.jsx`. Centered full-page or full-section loading indicator.
+- **Structure:** outer `Box` with `display: flex`, `alignItems: center`, `justifyContent: center`, full available dimensions; `CircularProgress` centered; optional `message` rendered as muted `Typography` below the spinner.
+- **Props:** `message` (optional), `size` (CircularProgress size, default `40`), `minHeight` (wrapper min-height, default `"100vh"` for full-page; overridable e.g. `"400px"` for section-level); all standard Box/CircularProgress props pass through.
+- **Usage:** ProtectedRoute during `initializing`, page lazy-loading, section-level data fetch.
+
+#### 9.8 MuiStatusBadge (§14 1.13)
+
+- **File:** `client/src/components/reusable/MuiStatusBadge.jsx`. Color-coded, non-interactive status chip for `report.status` — read-only presentation; no click handling, no hover pointer; never renders inside a button.
+- **Structure:** MUI `Chip`, `size="small"`, `label={status}`, cursor stays default.
+- **Props:** `status` (string, required — one of `draft` | `audio_attached` | `transcribed` | `reviewed` | `completed`).
+- **Color mapping:** `draft` → default; `audio_attached` → warning; `transcribed` → info; `reviewed` → primary; `completed` → success.
+- **Usage:** Edit Report header (§12.6 3.5.1.9) and Report Details header (§12.6 3.6).
+- **Reconciliation note:** these five status names differ from the Phase 5 status machine (`## Status Machine`); Phase 35 (§35 Archive, Delete, And Restore Lifecycle) owns the exact report status names and their reconciliation.
+
+### 10. MUI X Usage (§14.5)
+
+- All MUI X components — charts, date picker, data grid, and any other MUI X component — are community version only; no Pro or Premium features.
+- MUI X Chat references: `https://mui.com/x/react-chat/` and `https://mui.com/x/react-chat/backend/adapters/`.
+- Manifest (codebase fact): `@mui/x-charts` `^9.9.0`, `@mui/x-data-grid` `^9.9.0`, `@mui/x-date-pickers` `^9.9.0`, `@mui/x-chat` `^9.0.0-alpha.15`.
+
+### 11. Expansion Markers
+
+- Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): **DONE (Phase 14)** — import/styling rules (§7), reusable-component contract (§8), component catalog (§9), and MUI X usage (§10) above; theme-level standards in `## Theme Standards`.
+- Phase 15 (§15 React Hook Form Standards): RHF interplay with the reusable inputs (`register` on MuiTextField/MuiSelect, `Controller` on MuiDatePicker).
+- Phase 16 (§16 UI Rules): general UI rules.
+
+---
+
+## Theme Standards
+
+> **Phase 14 seed — the theme rules from §14, verified against the existing `client/src/theme/` codebase.**
+
+### 1. Theme Configuration (§14.4)
+
+- All theme configuration lives in `client/src/theme/`.
+- Theme overrides are never inlined in page components.
+- Component overrides are added via new files in `customizations/` — never by editing `AppTheme.jsx` directly.
+- `AppTheme.jsx` composes the full MUI theme with `createTheme`, `cssVariables`, color schemes, and all customizations.
+- Theme customization files use `@module`, not `@file`; `AppTheme.jsx` also uses `@module`.
+- The eight customization files: inputs, dataDisplay, feedback, navigation, surfaces, dataGrid, datePickers, charts.
+
+### 2. Theme Tokens (codebase facts, §14.1 cross-aligned)
+
+- `themePrimitives.js` exports the raw palettes and tokens — `brand`, `gray`, `green`, `orange`, `red`, `colorSchemes`, `typography`, `shape`, `shadows`, `layoutConfig` (codebase fact). It is never imported directly by components (§14.1).
+- Grey colors use `theme.palette.grey[N]`; never `gray[50]`, `gray[800]`, or `brand[400]` directly (§14.1).
+- All `sx` color values are mode-aware — `text.primary`, `background.default`, `grey.500`, `text.secondary`, `background.paper`, `error.main` (§14.1).
+- `AppTheme.jsx` (codebase fact): `createTheme` with `cssVariables: { colorSchemeSelector: 'data-mui-color-scheme', cssVarPrefix: 'template' }`; `colorSchemes`, `typography`, `shadows`, `shape` from `themePrimitives.js`; the eight customization groups spread into `components`; `ThemeProvider` with `disableTransitionOnChange` wraps the app in `main.jsx` (`## Frontend Architecture` §1).
+- `customizations/index.js` re-exports the eight customization groups (codebase fact).
+
+### 3. Expansion Markers
+
+- Phase 16 (§16 UI Rules): styling rules (MUI sx/styled only).
+- Phase 36 (Final Consolidation): final theme review.
 
 ---
 
@@ -2741,9 +2943,11 @@ Appbar logo navigates to `/dashboard` if authenticated, otherwise `/` (§12.3).
 
 ---
 
-## End Of Phase 13 Content
+## End Of Phase 14 Content
 
-Phases 1–13 are GREEN (2026-08-01). Phase 13 built the Redux, RTK Query, and API client architecture from §13: new `## Redux RTK Query` seed (store at `client/src/redux/app/store.js`, API slice `client/src/redux/features/api.js` via `createApi` + `fetchBaseQuery` + `baseQueryWithReauth`, eight feature slices — authSlice, branchSlice, reportSlice, audioSlice, transcriptionSlice, userSlice, aiConversationSlice, analyticsSlice — each injecting endpoints via `injectEndpoints`; the Redux `<Provider store>` is the outermost wrapper in `main.jsx`, above `LocalizationProvider` + the router; `baseQueryWithReauth` uses `VITE_API_BASE_URL` from `API_CONFIG` in `client/src/utils/constants.js` and `credentials: 'include'`; on 401 it calls `POST /api/v1/auth/refresh` and retries; on refresh failure it clears everything, dispatches logout, and leaves the user outside protected routes; auth endpoints are excluded from refresh on public pages; backend response transformation required), enriched `## Rules` (Redux And RTK Query Rules), enriched `## Frontend Architecture` (store wrapper order, refresh-aware auth strategy, data-flow pattern), enriched `## API Contract` (`POST /api/v1/auth/refresh` row), enriched `## Auth Cookies` (markers), enriched `## Project Directory Structure` (redux subtree, `utils/constants.js`), added REQ-103..106, added US-030, extended `## Glossary` (baseQueryWithReauth, injectEndpoints, Feature slice), updated the Checklist (Redux RTK Query — GREEN seed; API Contract, Frontend Architecture, Project Directory Structure, Rules — GREEN enrichment), and added the Phase 13 Source Trace Map. Phase 14 will build MUI, MUI X, theme, and component standards.
+Phases 1–14 are GREEN (2026-08-01). Phase 14 built the MUI, MUI X, theme, and component standards from §14: enriched `## MUI Component Standards` (detailed MuiAppbar/Page Header/Dialogs specs; new MUI Import And Styling Rules — tree-shaken imports, never the `@mui/material` barrel, Grid `size` prop, the deprecated-props replacement table, sx/styled only, no Tailwind or inline styles, theme-aware tokens, no direct `themePrimitives.js`/`gray[50]`/`gray[800]`/`brand[400]` usage, mode-aware colors; Reusable Component Contract — `client/src/components/reusable/*`, `Mui` prefix, forwardRef inputs, `displayName`, `size="small"` defaults, pure passthrough wrappers, `slotProps.input` adornments, mandatory start adornments; Component Catalog — MuiButton native loading, MuiTextField internal password eye, MuiSelect maxHeight-300 MenuProps, MuiDatePicker explicit Desktop/Mobile switching plus the Ethiopian calendar (`utils/ethiopianDate.js`, DD-MM-YY, English day/month names incl. Pagume, RHF via Controller), MuiPagination, MuiDataGrid (columns in `components/columns/*`, action column, archive/restore/delete via MuiConfirmDialog, toolbar + export selection, server pagination, skeleton loading), MuiConfirmDialog, LoadingSpinner, MuiStatusBadge (status-name reconciliation owned by Phase 35); MUI X Usage — community edition only with the x-chat reference URLs), new `## Theme Standards` seed (theme rules from §14.4 verified against the codebase — `client/src/theme/` only, no inline overrides, overrides via `customizations/` files with `@module`, `AppTheme.jsx` composes `createTheme` + `cssVariables` + color schemes + the eight customization groups with `ThemeProvider disableTransitionOnChange`; theme tokens — never import `themePrimitives.js`, greys via `theme.palette.grey[N]`, mode-aware sx colors), enriched `## UI/UX Spec` (MuiStatusBadge in report detail/correction headers, MuiPageHeader subtitle rule, MuiDialog responsive fullscreen), cross-aligned `## Frontend Architecture` markers and `## Project Directory Structure` (`components/reusable/`, `components/columns/`, `utils/ethiopianDate.js`), added REQ-107..111, added US-031, extended `## Glossary` (Ethiopian calendar, Pagume, MUI X community edition), updated the Checklist (MUI Component Standards, UI/UX Spec, Project Directory Structure — GREEN enrichment; Theme Standards — GREEN seed), and added the Phase 14 Source Trace Map. Phase 15 will build React Hook Form and form standards.
+
+Phases 1–13 are GREEN (2026-08-01). Phase 13 built the Redux, RTK Query, and API client architecture from §13: new `## Redux RTK Query` seed (store at `client/src/redux/app/store.js`, API slice `client/src/redux/features/api.js` via `createApi` + `fetchBaseQuery` + `baseQueryWithReauth`, eight feature slices — authSlice, branchSlice, reportSlice, audioSlice, transcriptionSlice, userSlice, aiConversationSlice, analyticsSlice — each injecting endpoints via `injectEndpoints`; the Redux `<Provider store>` is the outermost wrapper in `main.jsx`, above `LocalizationProvider` + the router; `baseQueryWithReauth` uses `VITE_API_BASE_URL` from `API_CONFIG` in `client/src/utils/constants.js` and `credentials: 'include'`; on 401 it calls `POST /api/v1/auth/refresh` and retries; on refresh failure it clears everything, dispatches logout, and leaves the user outside protected routes; auth endpoints are excluded from refresh on public pages; backend response transformation required), enriched `## Rules` (Redux And RTK Query Rules), enriched `## Frontend Architecture` (store wrapper order, refresh-aware auth strategy, data-flow pattern), enriched `## API Contract` (`POST /api/v1/auth/refresh` row), enriched `## Auth Cookies` (markers), enriched `## Project Directory Structure` (redux subtree, `utils/constants.js`), added REQ-103..106, added US-030, extended `## Glossary` (baseQueryWithReauth, injectEndpoints, Feature slice), updated the Checklist (Redux RTK Query — GREEN seed; API Contract, Frontend Architecture, Project Directory Structure, Rules — GREEN enrichment), and added the Phase 13 Source Trace Map. Phase 14 built MUI, MUI X, theme, and component standards.
 
 Phases 1–12 are GREEN (2026-08-01). Phase 12 built the frontend architecture from §12: new `## Frontend Architecture` seed (React Router data mode — `createBrowserRouter` + `RouterProvider` in `main.jsx`, `Component` not `element`, `React.lazy` per module, App root layout composition, page inventory, auth strategy via `/auth/me` on load populating Redux + localStorage, RHF + RTK Query data-flow pattern, `useAuth`/`useAudioRecorder` hooks), new `## Routing Layout` (route tree with App/PublicLayout/AppShell/assistant/NotFound, `ProtectedRoute`/`PublicRoute` guards, assistant outside AppShell, Google OAuth redirect finalized as `GET /oauth/google`), new `## MUI Component Standards` seed (MuiAppbar public/protected variants, AppSidebar drawer modes and theming, Page Header pattern, dialog standards, text/overflow rules), enriched `## UI/UX Spec` (shell and scroll layout, Landing, Login/Register, Dashboard, Reports page, report detail/correction/assistant pages) and `## Project Directory Structure` (frontend directory tree), added REQ-094..100, added US-028/029, extended `## Glossary` (Route guard, React.lazy, AppShell), updated the Checklist (Frontend Architecture, Routing Layout, MUI Component Standards — GREEN seeds; UI/UX Spec, Project Directory Structure — GREEN enrichment), and added the Phase 12 Source Trace Map. Phase 13 built the Redux, RTK Query, and API client.
 
