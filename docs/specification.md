@@ -43,7 +43,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 9 | 9. Technical Stack And Package Rules | GREEN | Rules, Coding Conventions, Architecture, Requirements, Project Directory Structure |
 | 10 | 10. Backend Architecture | GREEN | Backend Architecture, Logging, Architecture, API Contract, Project Directory Structure |
 | 11 | 11. Authentication, Authorization, Cookies, And Tokens | GREEN | Auth Cookies, Security, API Contract, Data Modeling |
-| 12 | 12. Frontend Architecture | PENDING | Frontend Architecture, Routing Layout, UI/UX Spec, MUI Component Standards, Project Directory Structure |
+| 12 | 12. Frontend Architecture | GREEN | Frontend Architecture, Routing Layout, UI/UX Spec, MUI Component Standards, Project Directory Structure |
 | 13 | 13. Redux, RTK Query, And API Client | PENDING | Redux RTK Query, Rules, Frontend Architecture |
 | 14 | 14. MUI, MUI X, Theme, And Component Standards | PENDING | MUI Component Standards, Theme Standards, UI/UX Spec |
 | 15 | 15. React Hook Form Standards | PENDING | React Hook Form Standards, Validation Audit, UI/UX Spec |
@@ -96,21 +96,21 @@ Status of every section the target document must contain at minimum. Extra secti
 | Error Handling | 28 | PENDING |
 | Export Spec | 6, 22 | GREEN (Phase 6 seed) |
 | File Storage Uploads | 20 | PENDING |
-| Frontend Architecture | 12, 13, 14 | PENDING |
+| Frontend Architecture | 12, 13, 14 | GREEN (Phase 12 seed) |
 | Git Workflow | 32 | PENDING |
 | Glossary | 1, 2, 34 (final) | GREEN |
 | Implementation Plan | 32 | PENDING |
 | JSDoc Standards | 26, 27 | PENDING |
 | Logging | 10, 28 | GREEN (Phase 10 seed) |
 | Mock Data Seeding | 23 | PENDING |
-| MUI Component Standards | 12, 14 | PENDING |
+| MUI Component Standards | 12, 14 | GREEN (Phase 12 seed) |
 | Non-Functional Requirements | 31 | PENDING |
 | Other AI Providers | 19 | PENDING |
 | Phase Protocol | 32 | PENDING |
 | PRD | 1, 2, 3, 4 | GREEN (Phase 4 enrichment) |
 | Problem Statement | 1, 2 | GREEN |
 | Profile Management | 4 | GREEN (Phase 4 seed) |
-| Project Directory Structure | 9, 10, 12, 25, 30 | GREEN (Phase 10 enrichment) |
+| Project Directory Structure | 9, 10, 12, 25, 30 | GREEN (Phase 12 enrichment) |
 | Project Overview | 1 | GREEN |
 | React Hook Form Standards | 15 | PENDING |
 | Redux RTK Query | 13 | PENDING |
@@ -119,7 +119,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Report Management | 4, 5, 35 | GREEN (Phase 5 enrichment) |
 | Requirements | 1, 2, 4, 9, 29, 31, 34 | GREEN (Phase 9 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
-| Routing Layout | 12 | PENDING |
+| Routing Layout | 12 | GREEN |
 | Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 9 seed) |
 | Security | 11, 17, 18, 29 | GREEN (Phase 11 seed) |
 | Source Traceability | 31 | PENDING |
@@ -127,7 +127,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Tasks | 32 | PENDING |
 | Theme Standards | 14 | PENDING |
 | Transcription Review | 8, 20 | GREEN (Phase 8 seed) |
-| UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 7 seed) |
+| UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 7 seed; Phase 12 enrichment) |
 | User Interactions | 3, 16, 22, 35 | GREEN (Phase 3 seed) |
 | User Stories | 2 (seed), 4 | GREEN (Phase 2 seed) |
 | Validation Audit | 8, 15, 28, 31 | GREEN (Phase 8 seed) |
@@ -319,6 +319,25 @@ All `§` references below identify sections of the original source brief. They a
 | §11 | Rate limiting three tiers: global 100 requests per 15 minutes on all endpoints; auth 20 requests per 15 minutes on register and login; AI 10 requests per 1 minute on generation and correction endpoints | Auth Cookies (6), Security (3), Requirements (REQ-092) |
 | §11 | Frontend uses `credentials: 'include'` on all calls, including public pages | Auth Cookies (7), Requirements (REQ-093) |
 | §11 + §12 (cross-aligned) | Google OAuth button on login/register pages uses a Google icon start adornment and a loading spinner on click; §12 shows the OAuth browser redirect at `http://localhost:4000/api/v1/auth/google`; route naming finalized in Phase 12 | Auth Cookies (5) |
+
+## Source Trace Map — Phase 12 (source §12)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §12.1 | React Router data mode: `createBrowserRouter` + `RouterProvider` in `client/src/main.jsx`; flat route array in `main.jsx` (never `App.jsx`); no separate `AppRoutes.jsx` unless unmanageably large; route objects use `Component`, never `element`; every page lazy-loaded per module via `React.lazy`; `main.jsx` wraps the router in `LocalizationProvider` + `AdapterDayjs` | Frontend Architecture (1), Routing Layout (1), Requirements (REQ-094) |
+| §12.1 | `App.jsx` is the root layout, not the routes file: AppTheme, CssBaseline, AppErrorBoundary, AppToastContainer, `<Outlet />` | Frontend Architecture (2), Requirements (REQ-094) |
+| §12.4 | `ProtectedRoute` shows a spinner while auth state is `initializing`, calls `GET /api/v1/auth/me` on mount, clears auth state and redirects on failure, and redirects unauthenticated users with `<Navigate to="/login" state={{ from: location }}>`; `PublicRoute` is the inverse guard and redirects authenticated users to `/dashboard` | Routing Layout (3), Requirements (REQ-095), User Stories (US-028) |
+| §12.2 | Shell layout contract: outer container `height: 100vh; overflow: hidden`; chrome (app bar/sidebar) fixed; content area `overflow-y: auto`; body/html never scroll; PublicLayout = fixed public MuiAppbar + scrollable content; AppShell = AppSidebar + content column (protected MuiAppbar → Page Header → `<Outlet />`) | UI/UX Spec (5), Requirements (REQ-096) |
+| §12.2, §12.3 | AppSidebar uses MUI Drawer switching `temporary`/`permanent`: xs/sm-land temporary overlay 240px (open via header menu icon, close on backdrop/nav select/Escape); md+ permanent 240px; md+ toggled permanent mini 64px icons-only with MuiTooltip; nav theming rules; logout dispatches RTK `logout()`, clears cookies, navigates `/login` | MUI Component Standards (2, 3), UI/UX Spec (5), Requirements (REQ-097), User Stories (US-029) |
+| §12.3 | MuiAppbar variants: public (logo, theme toggle, Login, Sign Up) vs protected (top-right of content area, 64px, Search + theme toggle + avatar dropdown Profile/Logout; no title; no hamburger; avatar 32px <600px / 36px ≥600px); appbar logo → `/dashboard` if authenticated else `/` | MUI Component Standards (1), Requirements (REQ-097) |
+| §12.3 | GlobalSearchDialog: full-screen below 600px / 768px landscape (no border radius, 100vh); centered 80vh/600px (600–1200px) and 70vh/720px (>1200px); closed by back arrow, Escape, or outside click; RHF `register('search')`, fires on Enter or click, no debounce; results grouped by entity (Reports, Branches) in MuiAccordion; empty state "No results found" | MUI Component Standards (5), Requirements (REQ-099) |
+| §12.6 | Page Header pattern (MuiPageHeader, §1.12): title + subtitle left, actions right, one line; Reports page header "Reports" / "Manage daily supervision reports" with filter badge (1–3), List/Grid toggle, Create button; Dashboard renders with no Page Header | MUI Component Standards (4), UI/UX Spec (9, 10), Requirements (REQ-098) |
+| §12.5, §12.6 | Route tree: `/` App + `ErrorBoundary: AppErrorPage` → PublicRoute > PublicLayout (index Landing, login, register) → ProtectedRoute > AppShell (dashboard, reports, reports/:id/details, reports/:id/edit, ...) → `path: '*'` NotFound; `assistant` is the only protected route outside AppShell (full-screen); deep link `/assistant?conversation=<id>` | Routing Layout (2), Requirements (REQ-094) |
+| §12.6 | Auth strategy: full page load → `GET /api/v1/auth/me` populates Redux + localStorage; 401 clears everything + redirects `/login`; SPA navigation reads Redux only — zero API calls | Frontend Architecture (5), Requirements (REQ-095) |
+| §12.6 | Page-level data-flow pattern: react-hook-form `useForm({ mode: 'onBlur' })`, `register` only; RTK Query mutation hooks (`credentials: 'include'`); 422 → `setError` per field; 401 → toast; success → `reset()` + navigate (login: `state.from?.pathname || '/dashboard'`) | Frontend Architecture (6), UI/UX Spec (7, 8) |
+| §12.6 (3.5.1, 3.5.2) | CreateReportDialog: MuiDialog `maxWidth="sm"` fullWidth, `disableEscapeKeyDown`, no-op `onClose`, closes only via Cancel or successful submit; Assistant page: ChatBox (`@mui/x-chat`), conversation rail, New Chat → report picker, `chatAdapter.js`, tool-approval UI, `aiConversationSlice` + `assistantApi.js` | MUI Component Standards (5), UI/UX Spec (11) |
+| §12.7 | Hooks under `client/src/hooks/`: `useAuth` (auth state convenience hook), `useAudioRecorder` (MediaRecorder state/actions hook) | Frontend Architecture (7), Requirements (REQ-100) |
+| §12.6 + §11 (cross-aligned) | Google OAuth redirect target finalized as `GET /oauth/google` (Auth Cookies §5); the §12.6 browser URL `http://localhost:4000/api/v1/auth/google` is superseded; flow stubbed until Google credentials are configured | Routing Layout (4) |
 
 ---
 
@@ -637,6 +656,9 @@ Secondary features should not distract from the core workflow of generating a bo
 | JWT | JSON Web Token; the authentication mechanism of the app. The access token lasts `15m` and the refresh token `7d`; both are carried in httpOnly cookies. | §11 |
 | httpOnly cookie | A cookie not readable by JavaScript; both the access token and the refresh token are stored in httpOnly cookies with `secure` in production and `sameSite: lax`. | §11 |
 | Refresh token rotation | The refresh token is rotated (replaced) on each use to prevent replay attacks. | §11 |
+| Route guard | A React component that gates route access: `ProtectedRoute` shows a spinner while initializing, calls `GET /api/v1/auth/me` on mount, and redirects unauthenticated users to `/login` preserving `state.from`; `PublicRoute` is the inverse guard, redirecting authenticated users to `/dashboard`. | §12.4 |
+| React.lazy | React's code-splitting function used to lazy-load every page module (`React.lazy(() => import('./pages/X.jsx'))`); no page is statically imported into the route tree. | §12.1, §12.6 |
+| AppShell | The protected application shell (`client/src/components/layout/AppShell.jsx`): AppSidebar + content area (protected MuiAppbar → Page Header → `<Outlet />`); provided by routing — page components never render it; `/assistant` is the only protected route that lives outside AppShell. | §12.2 |
 
 ---
 
@@ -908,6 +930,18 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-092 | Rate limiting must have three tiers: global — 100 requests per 15 minutes on all endpoints; auth — 20 requests per 15 minutes on register and login; AI — 10 requests per 1 minute on generation and correction endpoints. | The three tiers apply with the stated limits to the stated endpoints. | §11 |
 | REQ-093 | The frontend must send `credentials: 'include'` on all calls, including public pages. | Every frontend API call includes credentials. | §11 |
 
+### Functional Requirements (Phase 12)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-094 | The frontend must use React Router data mode: `createBrowserRouter` + `RouterProvider` in `client/src/main.jsx`; the flat route array lives in `main.jsx` (never in `App.jsx`); route objects use `Component`, never `element`; every page module is lazy-loaded per module via `React.lazy`; `main.jsx` wraps the router in `LocalizationProvider` + `AdapterDayjs`; `App.jsx` is the root layout composing AppTheme, CssBaseline, AppErrorBoundary, AppToastContainer, and `<Outlet />`. | Routes are created with `createBrowserRouter` and rendered via `RouterProvider`; `main.jsx` holds the route array; no `element:` usage; every page uses `React.lazy`; the root layout composes the five listed elements. | §12.1, §12.5 |
+| REQ-095 | Route guards must gate access: `ProtectedRoute` shows a spinner while auth state is `initializing`, calls `GET /api/v1/auth/me` on mount, clears auth state and redirects on failure, and redirects unauthenticated users with `<Navigate to="/login" state={{ from: location }}>`; `PublicRoute` is the inverse guard and redirects authenticated users to `/dashboard`. | Both guards exist with the stated behaviors; login navigates back to `state.from.pathname` after sign-in. | §12.4 |
+| REQ-096 | The shell must follow the fixed scroll/layout contract: outer container `height: 100vh; overflow: hidden`; chrome (app bar/sidebar) fixed; content area `overflow-y: auto`; the `body`/`html` elements never scroll. | The stated layout and scroll rules hold on every page. | §12.2 |
+| REQ-097 | The AppSidebar must use MUI Drawer with variant switching: xs (<600px) and sm landscape (600–899px) temporary overlay drawer 240px (opens via the header menu icon, closes on backdrop/nav select/Escape); md+ (≥900px) permanent docked drawer 240px by default; md+ toggled permanent mini drawer 64px (icons only, MuiTooltip on hover); nav items follow the specified theming (default transparent/text.secondary; hover `action.hover` radius 8; selected `primary.main + 0.08` with `borderLeft: 3px solid primary.main` and weight 600; icons primary when selected, `action.active` by default; logout hover `error.main + 0.08`); logout dispatches RTK `logout()`, clears cookies, and navigates to `/login`. | The three responsive modes exist with the stated widths; nav theming and logout behavior match. | §12.2, §12.3 |
+| REQ-098 | Pages use the Page Header pattern (MuiPageHeader, §1.12): title + subtitle on the left, action buttons on the right, all on one line; the Dashboard page renders with no Page Header. | Every non-dashboard page has a one-line Page Header; Dashboard has none. | §12.6 |
+| REQ-099 | The GlobalSearchDialog must follow the responsive sizing rules (full-screen below 600px and below 768px landscape; centered 80vh/600px for 600–1200px; 70vh/720px above 1200px), take its input from react-hook-form `register('search')`, fire on Enter or click with no debounce, group results by entity type (Reports, Branches) in MuiAccordion sections, and show "No results found" when empty. | Sizing, input, trigger, grouping, and empty-state behaviors match. | §12.3 |
+| REQ-100 | The frontend must ship the `useAuth` hook (auth state convenience) and the `useAudioRecorder` hook (MediaRecorder state/actions) under `client/src/hooks/`. | Both hooks exist and expose the stated behaviors. | §12.7 |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -927,6 +961,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Technical stack and package rules: **Phase 9 — DONE (REQ-074..079)**.
 - Backend architecture rules: **Phase 10 — DONE (REQ-080..086)**.
 - Authentication, authorization, cookies, and tokens rules: **Phase 11 — DONE (REQ-087..093)**.
+- Frontend architecture rules: **Phase 12 — DONE (REQ-094..100)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -967,6 +1002,8 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | US-025 | As an Area Supervisor, I want to re-transcribe any recording to verify accuracy before the report is generated. | Re-transcription is available for every audio recording (REQ-072). | §8 |
 | US-026 | As an Area Supervisor, I want to register with only my email and password, so that my first and last name are derived automatically and I can start quickly. | The register form has no name field; the backend extracts firstName/lastName from the email local part (REQ-090). | §11 |
 | US-027 | As an Area Supervisor, I want to sign in with Google, so that I can log in without a password. | The OAuth flow signs in existing users by email and auto-creates new accounts with Google data; stubbed until credentials are configured (REQ-091). | §11 |
+| US-028 | As an Area Supervisor, I want protected pages to send me to the login page and return me to my intended destination after signing in, so that I never lose my place. | Unauthenticated access to a protected page redirects to `/login` with the origin preserved (`state.from`); login navigates back to it (REQ-095). | §12.4 |
+| US-029 | As an Area Supervisor, I want the sidebar to adapt to my screen size — overlay drawer on small screens, docked full or mini drawer on desktop — so that navigation works on any device. | The three responsive drawer modes exist and switch with the breakpoints (REQ-097). | §12.2, §12.3 |
 
 ---
 
@@ -1676,7 +1713,7 @@ The export feature delivers the finalized report (W-12) so it can be shared or a
 
 ## UI/UX Spec
 
-> **Phase 7 seed — the language rules from §7. Layout, routing, theme, component, form, and general UI rules arrive in Phases 12, 14, 15, and 16.**
+> **Phase 7 seed — the language rules from §7, enriched in Phase 12 with the §12 shell and page specs. Theme, component, form, and general UI rules arrive in Phases 14, 15, and 16.**
 
 ### 1. Interface Language (English)
 
@@ -1696,9 +1733,64 @@ The interface language rule (§1) applies to UI copy only; the content language 
 
 Addis AI is selected because it is specialized in Ethiopian Amharic and is expected to produce more accurate transcription and report generation than general AI tools that are not focused on Ethiopian language use cases (§7, REQ-069). Integration detail arrives in Phase 18.
 
-### 5. Expansion Markers
+### 5. Shell And Scroll Layout (§12.2)
 
-- Phase 12 (§12 Frontend Architecture): routing and layout that carry these language rules.
+- The outer app container is `height: 100vh; overflow: hidden`; the chrome (app bar, sidebar) is fixed; the content area scrolls with `overflow-y: auto`; the `body`/`html` elements never scroll.
+- `PublicLayout` (`client/src/components/layout/PublicLayout.jsx`): fixed public MuiAppbar (logo, theme toggle, Login button, Sign Up button) + scrollable content area.
+- `AppShell` (`client/src/components/layout/AppShell.jsx`): `AppSidebar` (left) + content area (right, column flex): protected MuiAppbar (64px) → Page Header → `<Outlet />`.
+
+### 6. Landing (§12.6)
+
+- Route: index route inside PublicLayout.
+- Structure: hero section only (Features section TBD), centered wrapper `max-width: 1200px`.
+- Hero: app logo/icon; headline "Build Better Reports" (`h3` on md+, `h4` on xs); subheadline "Record, transcribe, and generate professional reports with AI"; two CTAs — "Get Started" (contained → `/register`) and "Sign In" (outlined → `/login`).
+- Static page: no data fetching, no Redux; CTAs use `useNavigate()`; PublicRoute redirects authenticated users away; all text ellipsizes on overflow; no horizontal scroll.
+
+### 7. Login (§12.6)
+
+- Outer: centered flexbox — `minHeight: calc(100vh - 64px)`, `display: flex`, `alignItems: center`, `justifyContent: center`, `py: 4`.
+- Card: `Paper elevation={3} sx={{ p: 4, width: '100%', maxWidth: 420 }}`.
+- Logo/icon centered (`fontSize: 48px`, `primary.main`, `mb: 1`); title `h5` weight 600 centered "Sign In"; subtitle `body2` `text.secondary` centered `mb: 3` "Welcome back! Sign in to continue".
+- Google OAuth button: `outlined` fullWidth, GoogleIcon start adornment, loading spinner on click (stubbed until credentials configured).
+- Divider `my: 2.5` with centered "or".
+- Email field: TextField `type="email"`, EmailIcon start adornment, `required: 'Email is required'`.
+- Password field: TextField `type="password"`, LockIcon start adornment, built-in eye toggle, `required: 'Password is required'`.
+- Submit: `contained` fullWidth `size="small"` `mt: 2` `flexShrink: 0`, `loading={isSubmitting}` `loadingPosition="center"`, label "Sign In".
+- Nav link: "Don't have an account?" + text button → `/register`.
+- Data flow: RHF `useForm({ mode: 'onBlur' })`; `useLoginMutation()`; 422 → `setError('email'|'password')`; 401 → toast "Invalid email or password"; success → `reset()` + navigate to `location.state?.from?.pathname || '/dashboard'`.
+
+### 8. Register (§12.6)
+
+- Same card layout as Login; title "Sign Up"; subtitle "Create your account to get started".
+- Email + password fields identical to Login; password adds `minLength: { value: 6, message: 'At least 6 characters' }`.
+- Extra `confirmPassword` field: `type="password"`, LockIcon adornment, eye toggle, `validate: (v) => v === getValues('password') || 'Passwords must match'`.
+- Submit "Sign Up"; nav link "Already have an account?" + text button → `/login`.
+- Data flow: `useRegisterMutation()`; 422 (e.g. duplicate email) → field-level `setError`; success → toast "Account created successfully" + navigate `/dashboard`.
+
+### 9. Dashboard (§12.6)
+
+- `p: 3`, rows stacked vertically with `gap: 3`; **no Page Header**.
+- Row 1 — stat cards: 4 cards, `Grid container spacing={3}`, `size={{ xs: 12, sm: 6, md: 3 }}`; each `Paper elevation={2} sx={{ p: 3 }}` — icon + value + label. Content TBD.
+- Row 2 — charts: `Grid container spacing={3}`, `size={{ xs: 12, md: 6 }}`; BarChart (left) + PieChart (right), `@mui/x-charts`. Content TBD.
+- Row 3 — Recent Activities: title `h6` + MuiDataGrid — server-side pagination, no action column. Columns/source endpoint TBD.
+- Auth strategy: full page load → `GET /api/v1/auth/me` populates Redux + localStorage; 401 → clear everything + redirect `/login`; SPA navigation reads Redux only — zero API calls.
+
+### 10. Reports Page (§12.6)
+
+- Page Header: left title "Reports" + subtitle "Manage daily supervision reports"; right: FilterIconButton (MuiBadge `badgeContent={activeFilterCount}`, hidden when 0), ToggleButtonGroup (ViewListIcon / ViewGridView), CreateButton (AddIcon).
+- Filter Dialog: MuiDialog `maxWidth="sm"`, title "Filter Reports"; row 1 — MuiDatePicker (left) + MuiSelectField single branch (right) in `Grid container spacing={2}`; both carry ClearIcon end adornments (`slotProps.input.endAdornment`) — clearing resets the field, decrements `activeFilterCount`, updates the badge immediately; row 2 — MuiSwitch label "Archived"; Cancel resets all filters and badge → 0; Apply sets filter state, closes, badge → count of active filters (1–3).
+- List toggle → cards: `Grid container spacing={2}`; each report a MuiCard; icon-button actions with MuiTooltip — View (VisibilityIcon, primary → `/reports/:id/details`), Edit (EditIcon, primary → `/reports/:id/edit`), Archive/Restore/Delete conditional: not archived → ArchiveIcon (warning) + MuiConfirmDialog → `PATCH /api/v1/reports/:id/archive`; archived → RestoreIcon (success) + confirm → `PATCH /api/v1/reports/:id/restore`, DeleteIcon (error) + confirm → `DELETE /api/v1/reports/:id`; below the cards MuiPagination (`page`/`count` from server `totalPages`, `onChange` refetches).
+- Grid toggle → MuiDataGrid: server-side pagination, toolbar, export selection, action column (same behaviors).
+
+### 11. Report Detail, Correction, And Assistant Pages (§12.6)
+
+- **ReportDetail** (`client/src/pages/ReportDetail.jsx`, route `reports/:id/details`): renders inside AppShell — AppShell is provided by routing, page components never render it; details flow, generate flow, and edge cases per API Contract §3.6; Generate button shown only when status `reviewed`; no UI path for re-generation.
+- **ReportCorrection** (`client/src/pages/ReportCorrection.jsx`, route `reports/:id/edit`): renders inside AppShell; tabs — Editor, Details, Audio, History; Editor supports review and correction modes; transcription missing (status `draft`) → "No transcription yet" empty state; generate via `POST /api/v1/reports/:id/generate` with provider selection (default `addis`); audio playback/download via `GET /api/v1/audio/:audioId/stream` / `GET /api/v1/audio/:audioId/download`.
+- **Assistant** (`client/src/pages/Assistant.jsx`, route `assistant` — the only protected route outside AppShell; full-screen): ChatBox with `adapter={assistantAdapter}` and `features={{ conversationList: true }}`, `sx={{ height: '100vh' }}`; conversation rail (title, last message preview, relative timestamp); "New Chat" → report picker dialog → create conversation (welcome message injects raw transcription + report metadata); conversation title `"Report {date}"`; deep link `/assistant?conversation=<id>`; tool-approval UI built into ChatBox (Approve/Reject with reason; "expired" on 60s timeout); adapter file `client/src/components/assistant/chatAdapter.js` (plain JS object: `sendMessage`, `listConversations`, `listMessages`, `addToolApprovalResponse`); Redux `aiConversationSlice` + RTK Query endpoints in `assistantApi.js` (Phase 13); package `@mui/x-chat` v9.0.0-alpha.15 (already in the manifest).
+
+### 12. Expansion Markers
+
+- Phase 12 (§12 Frontend Architecture): **DONE (Phase 12)** — shell and page specs above.
 - Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): English-first component copy standards.
 - Phase 15 (§15 React Hook Form Standards): validation message language (English).
 - Phase 16 (§16 UI Rules): general UI rules.
@@ -1846,7 +1938,7 @@ No automated test frameworks (§9.1, REQ-077).
 
 ## Project Directory Structure
 
-> **Phase 9 seed — the repository-level structure from §9, enriched in Phase 10 with the §10 backend directory structure. Frontend structure arrives in Phase 12; final structure in Phase 25.**
+> **Phase 9 seed — the repository-level structure from §9, enriched in Phase 10 with the §10 backend directory structure and in Phase 12 with the §12 frontend directory structure. Final structure in Phase 25.**
 
 ### 1. Repository Root
 
@@ -1959,9 +2051,45 @@ backend/
 
 Notes: `backend/.env` defines the environment keys (codebase fact; the full environment-variable contract is Phase 17). `backend/mock/*` is confirmed by §10.3; its seeding behavior is detailed in Phase 23.
 
-### 5. Expansion Markers
+### 4. Frontend Directory Structure (Phase 12)
 
-- Phase 12 (§12 Frontend Architecture): frontend directory structure.
+Future-state frontend tree mandated by §12 and the phase map. Current codebase state: `client/src` contains only `main.jsx`, `App.jsx`, `theme/`, and `assets/` (Vite scaffolding); the rest of the tree is created during implementation:
+
+```
+client/
+├── index.html
+├── package.json
+├── eslint.config.js
+├── vite.config.js
+├── public/
+│   ├── favicon.svg
+│   └── icons.svg
+└── src/
+    ├── main.jsx                       # createBrowserRouter + RouterProvider; LocalizationProvider + AdapterDayjs wrap (§12.1)
+    ├── App.jsx                        # Root layout: AppTheme, CssBaseline, AppErrorBoundary, AppToastContainer, <Outlet /> (§12.1)
+    ├── pages/                         # One lazy-loaded file per page (§12.6): Landing, Login, Register, Dashboard, BranchList,
+    │                                  #   BranchForm, ReportList, ReportGrid, ReportCreate, ReportDetail, ReportReview,
+    │                                  #   ReportCorrection, Profile, NotFound, Assistant (AppShell sibling, full-screen)
+    ├── components/
+    │   ├── layout/
+    │   │   ├── PublicLayout.jsx       # Public shell: fixed public MuiAppbar + scrollable content (§12.2)
+    │   │   ├── AppShell.jsx           # Protected shell: AppSidebar + content area (MuiAppbar → Page Header → Outlet) (§12.2)
+    │   │   └── AppSidebar.jsx         # Navigation drawer; temporary/permanent/mini modes (§12.2–12.3)
+    │   ├── report/
+    │   │   └── CreateReportDialog.jsx # New-report dialog (§12.6 3.5.1)
+    │   └── assistant/
+    │       └── chatAdapter.js         # Plain-JS ChatBox adapter: sendMessage/listConversations/listMessages/addToolApprovalResponse (§12.6 3.5.2)
+    ├── hooks/
+    │   ├── useAuth.js                 # Auth state convenience hook (§12.7)
+    │   └── useAudioRecorder.js        # MediaRecorder state/actions hook (§12.7)
+    ├── store/                         # Redux/RTK Query structure in Phase 13 (§13)
+    ├── theme/                         # AppTheme.jsx, themePrimitives.js, customizations/* — exists in codebase; standards in Phase 14 (§14)
+    └── assets/                        # hero.png, notFound_404.svg, react.svg, vite.svg (codebase fact)
+```
+
+### 6. Expansion Markers
+
+- Phase 12 (§12 Frontend Architecture): **DONE (Phase 12)** — frontend directory tree above.
 - Phase 25 (§25 Backend Implementation): final structure.
 - Phase 30 (§30 Git Workflow): workflow structure.
 
@@ -2217,6 +2345,196 @@ Three tiers:
 - Phase 18 (§18 Addis AI Integration): AI provider security.
 - Phase 29 (§29 Security): full security section.
 
+## Frontend Architecture
+
+> **Phase 12 seed — the frontend architecture from §12. Enriched by Phase 13 (Redux, RTK Query, and API client, §13) and Phase 14 (MUI, MUI X, theme, and component standards, §14).**
+
+### 1. Routing Architecture (data mode)
+
+- The frontend uses React Router **data mode**: `createBrowserRouter([...])` + `<RouterProvider router={router} />` — both live in `client/src/main.jsx` (§12.1).
+- Routes are defined as a flat array in `main.jsx`; there is no separate `AppRoutes.jsx` component (only split out if the array grows unmanageably large) (§12.1).
+- Route objects use `Component` — never `element` (§12.1).
+- Every page is lazy-loaded per module: `React.lazy(() => import('./pages/X.jsx'))` (§12.1, §12.6).
+- `main.jsx` wraps the router in `LocalizationProvider` + `AdapterDayjs` (MUI X date pickers) (§12.1).
+- Route tree and guards: `## Routing Layout`.
+
+### 2. App Root Layout (`client/src/App.jsx`)
+
+`App.jsx` is the root layout — it never defines routes (§12.1). It composes, in order:
+
+1. `AppTheme` (MUI theme provider — Phase 14)
+2. `CssBaseline`
+3. `AppErrorBoundary` (react-error-boundary)
+4. `AppToastContainer` (react-toastify)
+5. `<Outlet />`
+
+### 3. Page Inventory
+
+Pages are lazy-loaded, use tree-shaken imports, and set `displayName` (§12.6). All route paths are in `## Routing Layout`.
+
+| Page | File | Confirmed route (§12) | Layout context |
+|---|---|---|---|
+| Landing | `pages/Landing.jsx` | index (PublicLayout) | PublicLayout |
+| Login | `pages/Login.jsx` | `login` (PublicLayout) | PublicLayout |
+| Register | `pages/Register.jsx` | `register` (PublicLayout) | PublicLayout |
+| Dashboard | `pages/Dashboard.jsx` | `dashboard` (AppShell) | AppShell, no Page Header |
+| Reports | `pages/Reports.jsx` | `reports` (AppShell) | AppShell + Page Header |
+| ReportDetail | `pages/ReportDetail.jsx` | `reports/:id/details` (AppShell) | AppShell |
+| ReportCorrection | `pages/ReportCorrection.jsx` | `reports/:id/edit` (AppShell) | AppShell |
+| Assistant | `pages/Assistant.jsx` | `assistant` (ProtectedRoute, AppShell sibling) | Full-screen ChatBox |
+| NotFound | `AppErrorPage` | `*` | — |
+
+Also listed in §12.6 and lazy-loaded (detailed specs in later phases): BranchList, BranchForm, ReportList, ReportGrid, ReportCreate, ReportReview, Profile.
+
+### 4. Layouts
+
+- `PublicLayout` (`client/src/components/layout/PublicLayout.jsx`): public pages — fixed public MuiAppbar + scrollable content (`## UI/UX Spec` §5).
+- `AppShell` (`client/src/components/layout/AppShell.jsx`): protected pages — AppSidebar + content area (protected MuiAppbar → Page Header → `<Outlet />`).
+- `AppSidebar` (`client/src/components/layout/AppSidebar.jsx`): navigation drawer (`## MUI Component Standards` §2).
+- The Assistant page is the only protected page outside AppShell (full-screen ChatBox) (§12.6 3.5.2).
+
+### 5. Auth Strategy
+
+- Full page load: `GET /api/v1/auth/me` → populate Redux + localStorage; 401 → clear everything + redirect `/login` (§12.6 Dashboard).
+- SPA navigation: ProtectedRoute reads Redux — zero API calls (§12.6 Dashboard).
+- Guard components: `## Routing Layout` §3.
+
+### 6. Data Flow Pattern (page-level)
+
+- Forms: react-hook-form `useForm({ mode: 'onBlur' })`, `register` only (§12.6 Login/Register; Phase 15).
+- Mutations: RTK Query hooks from `authSlice.injectEndpoints` (e.g. `useLoginMutation`, `useRegisterMutation`) with `credentials: 'include'` (§12.6; Phase 13).
+- Error handling: 422 → `setError(field, ...)` per field; 401 → toast; success → `reset()` + navigate (Login: `location.state?.from?.pathname || '/dashboard'`; Register: `/dashboard`) (§12.6).
+- Dashboard data: stat cards, `@mui/x-charts` BarChart/PieChart, Recent Activities MuiDataGrid (server-side pagination, no action column) — content/columns/endpoint TBD (§12.6).
+
+### 7. Hooks (`client/src/hooks/`)
+
+- `useAuth`: auth state convenience hook (§12.7).
+- `useAudioRecorder`: MediaRecorder state/actions hook (§12.7; pipeline detail in Phase 20).
+
+### 8. Expansion Markers
+
+- Phase 13 (§13 Redux, RTK Query, And API Client): store structure, slices, RTK Query API client.
+- Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): theme and reusable components.
+
+---
+
+## Routing Layout
+
+> **Phase 12 — routing and route guards from §12.**
+
+### 1. Route Definition Location
+
+- React Router data mode in `client/src/main.jsx`; flat route array; `Component` not `element`; lazy per module (`## Frontend Architecture` §1) (§12.1).
+
+### 2. Route Tree
+
+Route tree per §12.5, extended with the confirmed §12.6 routes:
+
+```
+createBrowserRouter([
+  { path: '/', Component: App, ErrorBoundary: AppErrorPage,
+    children: [
+      { Component: PublicRoute, children: [
+        { Component: PublicLayout, children: [
+          { index: true, Component: Landing },
+          { path: 'login', Component: Login },
+          { path: 'register', Component: Register },
+        ]}
+      ]},
+      { Component: ProtectedRoute, children: [
+        { Component: AppShell, children: [
+          { path: 'dashboard', Component: Dashboard },
+          { path: 'reports', Component: Reports },
+          { path: 'reports/:id/details', Component: ReportDetail },
+          { path: 'reports/:id/edit', Component: ReportCorrection },
+          ...
+        ]},
+        { path: 'assistant', Component: Assistant },  // AppShell sibling — full-screen
+      ]},
+      { path: '*', Component: NotFound },
+    ]
+  }
+])
+```
+
+- `assistant` is the only protected route that lives outside AppShell (full-screen chat) (§12.6 3.5.2).
+- Reports card actions navigate: View → `/reports/:id/details`, Edit → `/reports/:id/edit` (§12.6 Reports).
+- Assistant deep link: `/assistant?conversation=<id>` — ChatBox selects that conversation and shows its history (§12.6 3.5.2).
+- New protected routes are added as ProtectedRoute children; new public routes as PublicLayout children (§12.1).
+- Landing is the index route inside PublicLayout's children (§12.6 Landing).
+
+### 3. Route Guards
+
+`ProtectedRoute` (§12.4):
+
+- Shows a spinner while auth state is `initializing`.
+- Calls `GET /api/v1/auth/me` on mount; on failure clears auth state and redirects.
+- Redirects unauthenticated users with `<Navigate to="/login" state={{ from: location }}>`; Login navigates back to `state.from.pathname` after sign-in (§12.6 Login).
+
+`PublicRoute` (§12.4):
+
+- Inverse guard; redirects authenticated users to `/dashboard`.
+
+### 4. Google OAuth Redirect (finalized)
+
+- The frontend Google OAuth button redirects the browser to the backend OAuth start route, finalized as `GET /oauth/google` (`## Auth Cookies` §5) — the §12.6 browser URL `http://localhost:4000/api/v1/auth/google` is superseded; the flow is stubbed until Google credentials are configured (§11, §12.6; trace map row).
+
+---
+
+## MUI Component Standards
+
+> **Phase 12 seed — component-level standards visible from §12. Theme-level standards and the full reusable-component catalog arrive in Phase 14 (§14).**
+
+### 1. MuiAppbar
+
+Two variants (§12.3):
+
+- **Public:** fixed top bar across full width — logo, theme toggle, Login button, Sign Up button (PublicLayout) (§12.2 2.1).
+- **Protected:** sits at the top-right of the content area (beside the sidebar, not across it) — right-aligned Search icon (opens GlobalSearchDialog), Theme toggle (LightMode/DarkMode), user avatar (dropdown: Profile + Logout). No title text; no hamburger (the hamburger lives in the sidebar header). Height 64px. Avatar sizes: 32px below 600px, 36px above 600px (§12.3).
+
+Appbar logo navigates to `/dashboard` if authenticated, otherwise `/` (§12.3).
+
+### 2. AppSidebar (Drawer)
+
+- Uses MUI `Drawer`; variant switches between `"temporary"` and `"permanent"` (§12.2 2.3).
+- Header: menu icon + logo + app name "Report Builder"; the menu icon toggles full/mini mode on the permanent drawer (§12.3).
+- Nav items (top, `flexGrow: 1`): Dashboard, Reports, Branches, Profile — each a MuiListItemButton with icon + label; the Assistant nav item (SmartToyIcon) is highlighted when on `/assistant` (§12.3, §12.6 3.5.2).
+- Bottom: MuiDivider + Logout (MuiListItemButton). Logout dispatches `logout()` from RTK, clears cookies, navigates to `/login` (§12.3).
+- Props: `open` (boolean), `onClose` (function), `sidebarMode` (`"full"` | `"mini"`), `onToggle` (function) (§12.2 2.3).
+- Responsive modes (§12.3):
+  - `xs` (<600px) and `sm` landscape (600–899px): temporary overlay drawer, 240px — opens via the header menu icon, closes on backdrop / nav select / Escape.
+  - `md+` (≥900px) default: permanent docked drawer, 240px — full icon + text.
+  - `md+` toggled: permanent mini drawer, 64px — icons only, MuiTooltip on hover; the header shows the menu icon only.
+
+### 3. Nav Item Theming
+
+- Default: `backgroundColor: transparent`, `color: text.secondary`.
+- Hover: `backgroundColor: action.hover`, `borderRadius: 8px`.
+- Selected: `backgroundColor: primary.main + 0.08`, `color: primary.main`, `fontWeight: 600`, `borderLeft: 3px solid primary.main`.
+- Icon selected: `color: primary.main`; icon default: `color: action.active`.
+- Logout hover: `backgroundColor: error.main + 0.08`, `color: error.main`.
+
+### 4. Page Header (MuiPageHeader, §1.12)
+
+- Left: title + subtitle; right: action buttons. Renders on one line (no wrapping) (§12.6).
+- Pages: Reports has the Page Header "Reports" / "Manage daily supervision reports" with Filter + toggle + Create actions; Dashboard is the exception — no Page Header (§12.6).
+
+### 5. Dialogs
+
+- **CreateReportDialog** (`client/src/components/report/CreateReportDialog.jsx`): MuiDialog `maxWidth="sm"` fullWidth; `disableEscapeKeyDown={true}`; `onClose` is a no-op (prevents close on backdrop click or Escape); closes only via the Cancel button or a successful submit; title "Create New Report" (§12.6 3.5.1).
+- **Filter Dialog (Reports):** MuiDialog `maxWidth="sm"`; title "Filter Reports"; MuiDatePicker + MuiSelectField (single branch) with ClearIcon end adornments (clearing resets the field, decrements `activeFilterCount`, updates the badge immediately); Archived MuiSwitch; Cancel resets filters and badge → 0; Apply sets filter state and badge → 1–3; badge hidden when 0 (§12.6 Reports).
+- **MuiConfirmDialog:** used for destructive/state-changing actions (Archive/Restore/Delete) (§12.6 Reports).
+- **GlobalSearchDialog:** full-screen below 600px and below 768px landscape (no border radius, 100vh); centered on larger screens — 600–1200px: 80vh/600px, >1200px: 70vh/720px; closed by back arrow, Escape, or outside click; search input uses RHF `register('search')`, fires on Enter or click (no debounce); results grouped by entity type (Reports, Branches) in MuiAccordion sections; empty state "No results found" (§12.3).
+
+### 6. Text And Overflow
+
+- All text uses ellipsis on overflow; no horizontal scroll anywhere (§12.6 Landing).
+- Hero headline: `h3` on md+, `h4` on xs (§12.6 Landing).
+
+### 7. Expansion Markers
+
+- Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): theme-level standards, the reusable-component catalog (MuiPageHeader, MuiConfirmDialog, etc.), and MUI X usage (DataGrid, charts, date pickers, `@mui/x-chat` v9.0.0-alpha.15).
+
 ---
 
 ## Decision Log
@@ -2322,9 +2640,11 @@ Three tiers:
 
 ---
 
-## End Of Phase 11 Content
+## End Of Phase 12 Content
 
-Phases 1–11 are GREEN (2026-08-01). Phase 11 built authentication, authorization, cookies, and tokens from §11: new `## Auth Cookies` seed (JWT auth with 15m access / 7d refresh httpOnly cookies, refresh rotation against replay, no sessions MongoDB collection, `authenticate` middleware contract, bcryptjs 12-round `pre('save')` hashing and `comparePassword`, email-local-part name extraction at registration, provider-neutral Google OAuth via `oauth.service.js` stubbed until credentials, three rate-limit tiers, `credentials: 'include'`), new `## Security` seed (cookie security, replay prevention, no-plaintext passwords, rate limiting), enriched `## API Contract` (authentication endpoint inventory: register, login, me, Google OAuth start route; outcome statuses under the §10.7 envelope), enriched `## Data Modeling` (User entity seeds: name fields, `fullName` virtual, unique email, hashed password without plaintext comparison, optional avatar/position, no session/token collection), added REQ-087..093, added US-026/027, extended `## Glossary` (JWT, httpOnly cookie, Refresh token rotation), updated the Checklist (Auth Cookies and Security — GREEN seeds; API Contract and Data Modeling — GREEN enrichment), and added the Phase 11 Source Trace Map. Phase 12 will build the frontend architecture.
+Phases 1–12 are GREEN (2026-08-01). Phase 12 built the frontend architecture from §12: new `## Frontend Architecture` seed (React Router data mode — `createBrowserRouter` + `RouterProvider` in `main.jsx`, `Component` not `element`, `React.lazy` per module, App root layout composition, page inventory, auth strategy via `/auth/me` on load populating Redux + localStorage, RHF + RTK Query data-flow pattern, `useAuth`/`useAudioRecorder` hooks), new `## Routing Layout` (route tree with App/PublicLayout/AppShell/assistant/NotFound, `ProtectedRoute`/`PublicRoute` guards, assistant outside AppShell, Google OAuth redirect finalized as `GET /oauth/google`), new `## MUI Component Standards` seed (MuiAppbar public/protected variants, AppSidebar drawer modes and theming, Page Header pattern, dialog standards, text/overflow rules), enriched `## UI/UX Spec` (shell and scroll layout, Landing, Login/Register, Dashboard, Reports page, report detail/correction/assistant pages) and `## Project Directory Structure` (frontend directory tree), added REQ-094..100, added US-028/029, extended `## Glossary` (Route guard, React.lazy, AppShell), updated the Checklist (Frontend Architecture, Routing Layout, MUI Component Standards — GREEN seeds; UI/UX Spec, Project Directory Structure — GREEN enrichment), and added the Phase 12 Source Trace Map. Phase 13 will build Redux, RTK Query, and the API client.
+
+Phases 1–11 are GREEN (2026-08-01). Phase 11 built authentication, authorization, cookies, and tokens from §11: new `## Auth Cookies` seed (JWT auth with 15m access / 7d refresh httpOnly cookies, refresh rotation against replay, no sessions MongoDB collection, `authenticate` middleware contract, bcryptjs 12-round `pre('save')` hashing and `comparePassword`, email-local-part name extraction at registration, provider-neutral Google OAuth via `oauth.service.js` stubbed until credentials, three rate-limit tiers, `credentials: 'include'`), new `## Security` seed (cookie security, replay prevention, no-plaintext passwords, rate limiting), enriched `## API Contract` (authentication endpoint inventory: register, login, me, Google OAuth start route; outcome statuses under the §10.7 envelope), enriched `## Data Modeling` (User entity seeds: name fields, `fullName` virtual, unique email, hashed password without plaintext comparison, optional avatar/position, no session/token collection), added REQ-087..093, added US-026/027, extended `## Glossary` (JWT, httpOnly cookie, Refresh token rotation), updated the Checklist (Auth Cookies and Security — GREEN seeds; API Contract and Data Modeling — GREEN enrichment), and added the Phase 11 Source Trace Map. Phase 12 built the frontend architecture.
 
 Phases 1–10 are GREEN (2026-08-01). Phase 10 built the backend architecture from §10: new `## Backend Architecture` seed (routing under `/api/v1` via `routes/index.js`, fixed global security middleware order `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit`, one controller file per domain with `express-async-handler` and mongoose session transactions, `mongoose-paginate-v2` pagination, frozen constants and `config/env.js` env access, semantic HTTP status codes, response envelope, graceful shutdown, `express-validator` middleware, mongoose schema rules), new `## Logging` seed (Winston backend-only, Morgan development-only, absolute `console.log` ban, log levels, child loggers, gitignored daily-rotated `logs/` with 30-day auto-delete, safe-logging rules, AI provider log fields), enriched `## Architecture` (backend layering), `## API Contract` (response envelope superseding the Phase 5 unspecified-envelope note, semantic status codes, 422 validation shape, pagination), and `## Project Directory Structure` (backend directory tree; current codebase has only `.env` and the package manifests — source files are created during implementation), added REQ-080..086, extended `## Glossary` (Winston, Graceful shutdown, Mongoose session), updated the Checklist (Backend Architecture and Logging — GREEN seeds; Architecture, API Contract, Project Directory Structure — GREEN enrichment), and added the Phase 10 Source Trace Map. Phase 11 will build authentication, authorization, cookies, and tokens.
 
