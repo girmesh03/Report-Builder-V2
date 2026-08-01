@@ -55,7 +55,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 21 | 21. AI Prompt Requirements | GREEN | AI Prompt Spec, Report Format, Rules |
 | 22 | 22. Export | GREEN | Export Spec, API Contract, Work Flow |
 | 23 | 23. Mock Data | GREEN | Mock Data Seeding, Data Modeling, Tasks |
-| 24 | 24. Data Model | PENDING | Data Modeling, API Contract, Business Rules, Report Domain |
+| 24 | 24. Data Model | GREEN | Data Modeling, API Contract, Business Rules, Report Domain |
 | 25 | 25. Project Directory Structure | PENDING | Project Directory Structure, Coding Conventions, Architecture |
 | 26 | 26. Code Quality And Coding Conventions | PENDING | Coding Conventions, Rules, JSDoc Standards, Checklists |
 | 27 | 27. JSDoc Conventions | PENDING | JSDoc Standards, Coding Conventions |
@@ -78,19 +78,19 @@ Status of every section the target document must contain at minimum. Extra secti
 | Spec section | Produced/updated in phase | Status |
 |---|---|---|
 | Addis AI | 18 | GREEN (Phase 18 seed) |
-| AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 7, 18, 19, 21 enrichment) |
+| AI Prompt Spec | 6, 7, 18, 19, 21, 24 | GREEN (Phase 7, 18, 19, 21, 24 enrichment) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
-| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 28 | GREEN (Phase 13, 18, 20, 22 enrichment) |
+| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 28 | GREEN (Phase 13, 18, 20, 22, 24 enrichment) |
 | Architecture | 9, 10, 25 | GREEN (Phase 10 enrichment) |
-| Audio Recording STT | 8, 20 | GREEN (Phase 8 seed, Phase 20 enrichment) |
+| Audio Recording STT | 8, 20, 24 | GREEN (Phase 8 seed, Phase 20, 24 enrichment) |
 | Auth Cookies | 11 | GREEN (Phase 11 seed) |
-| Backend Architecture | 10 | GREEN (Phase 10 seed) |
+| Backend Architecture | 10, 24 | GREEN (Phase 10 seed, Phase 24 enrichment) |
 | Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
-| Business Rules | 5, 24, 35 | GREEN (Phase 5 seed) |
+| Business Rules | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
 | Checklists | 26, 30, 31 | PENDING |
 | Coding Conventions | 9, 25, 26, 27 | GREEN (Phase 9 seed) |
-| Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11, 20, 23 enrichment) |
-| Decision Log | 1, 2, 33 | GREEN |
+| Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11, 20, 23, 24 enrichment) |
+| Decision Log | 1, 2, 24, 33 | GREEN |
 | Design | consolidated across phases; finalized in 36 | PENDING |
 | Environment Config | 17, 19 | GREEN (Phase 17 seed, Phase 19 enrichment) |
 | Error Handling | 28 | PENDING |
@@ -98,14 +98,14 @@ Status of every section the target document must contain at minimum. Extra secti
 | File Storage Uploads | 20 | PENDING |
 | Frontend Architecture | 12, 13, 14 | GREEN (Phase 13 enrichment) |
 | Git Workflow | 32 | PENDING |
-| Glossary | 1, 2, 34 (final) | GREEN |
+| Glossary | 1, 2, 24, 34 (final) | GREEN |
 | Implementation Plan | 32 | PENDING |
 | JSDoc Standards | 26, 27 | PENDING |
 | Logging | 10, 28 | GREEN (Phase 10 seed) |
-| Mock Data Seeding | 23 | GREEN (Phase 23 seed) |
+| Mock Data Seeding | 23, 24 | GREEN (Phase 23 seed, Phase 24 enrichment) |
 | MUI Component Standards | 12, 14 | GREEN (Phase 14 enrichment) |
 | Non-Functional Requirements | 31 | PENDING |
-| Other AI Providers | 19 | GREEN (Phase 19 seed) |
+| Other AI Providers | 19, 24 | GREEN (Phase 19 seed, Phase 24 enrichment) |
 | Phase Protocol | 32 | PENDING |
 | PRD | 1, 2, 3, 4 | GREEN (Phase 4 enrichment) |
 | Problem Statement | 1, 2 | GREEN |
@@ -114,23 +114,23 @@ Status of every section the target document must contain at minimum. Extra secti
 | Project Overview | 1 | GREEN |
 | React Hook Form Standards | 15 | GREEN (Phase 15 seed) |
 | Redux RTK Query | 13 | GREEN (Phase 13 seed) |
-| Report Domain | 3, 5, 24 | GREEN (Phase 5 enrichment) |
+| Report Domain | 3, 5, 24 | GREEN (Phase 5, 24 enrichment) |
 | Report Format | 6, 7, 21 | GREEN (Phase 7, 21 enrichment) |
-| Report Management | 4, 5, 35 | GREEN (Phase 5 enrichment) |
-| Requirements | 1, 2, 4, 9, 29, 31, 34 | GREEN (Phase 9 enrichment) |
+| Report Management | 4, 5, 24, 35 | GREEN (Phase 5, 24 enrichment) |
+| Requirements | 1, 2, 4, 9, 24, 29, 31, 34 | GREEN (Phase 9, 24 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
 | Routing Layout | 12 | GREEN |
 | Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16, 17, 21 enrichment) |
 | Security | 11, 17, 18, 29 | GREEN (Phase 11 seed, Phase 17, 18 enrichment) |
 | Source Traceability | 31 | PENDING |
-| Status Machine | 5, 35 | GREEN (Phase 5 seed) |
+| Status Machine | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
 | Tasks | 23 (seed — content lives in ## Mock Data Seeding), 32 | PENDING |
 | Theme Standards | 14 | GREEN (Phase 14 seed) |
-| Transcription Review | 8, 20 | GREEN (Phase 8 seed, Phase 20 enrichment) |
+| Transcription Review | 8, 20, 24 | GREEN (Phase 8 seed, Phase 20, 24 enrichment) |
 | UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 15, 16 enrichment) |
 | User Interactions | 3, 16, 22, 35 | GREEN (Phase 3 seed, Phase 16 enrichment) |
 | User Stories | 2 (seed), 4 | GREEN (Phase 2 seed) |
-| Validation Audit | 8, 15, 28, 31 | GREEN (Phase 8 seed, Phase 15 enrichment) |
+| Validation Audit | 8, 15, 24, 28, 31 | GREEN (Phase 8 seed, Phase 15, 24 enrichment) |
 | Work Flow | 3, 22, 35 | GREEN (Phase 3 seed, Phase 22 enrichment) |
 
 ---
@@ -365,7 +365,7 @@ All `§` references below identify sections of the original source brief. They a
 | §14.4 + codebase (`client/src/theme/`) | `AppTheme.jsx` exists with `cssVariables: { colorSchemeSelector: 'data-mui-color-scheme', cssVarPrefix: 'template' }`, `colorSchemes`/`typography`/`shadows`/`shape` from `themePrimitives.js`, `components` built from the eight customization groups, and `ThemeProvider` with `disableTransitionOnChange`; `themePrimitives.js` also exports `layoutConfig`; `customizations/index.js` re-exports the eight customization groups | Theme Standards (1) |
 | §14.5 | All MUI X components — charts, date picker, data grid, and any other MUI X component — are community version only; MUI X Chat references: `https://mui.com/x/react-chat/` and `https://mui.com/x/react-chat/backend/adapters/` | MUI Component Standards (10), Requirements (REQ-111) |
 | §14 (1.1–1.13) | Component catalog: MuiAppbar (file `client/src/components/reusable/MuiAppbar.jsx`, props `position`/`elevation`/`color`/`sx` defaults, left logo → `/dashboard` if authenticated else `/`, right section conditional on auth, PublicLayout vs AppShell behaviors, avatar 32px below 600px / 36px at or above 600px, auth detection via Redux `authSlice` `useSelector`, exclusions — search dialog, user dropdown, hamburger); MuiButton; MuiDialog (title bottom divider, scrollable content, actions divider, responsive fullscreen down('sm') OR down('md')+landscape); MuiTextField; MuiSelect; MuiDatePicker (Ethiopian calendar — `client/src/utils/ethiopianDate.js` with `ethiopianToGregorian`/`gregorianToEthiopian`, custom lightweight conversion no npm package, DD-MM-YY display e.g. `25-02-18`, English day names, English month names mapped to Ethiopian months September…August + Pagume, RHF via Controller, `LocalizationProvider` + `AdapterDayjs` in `main.jsx`); MuiPagination (count = server `totalPages` from `mongoose-paginate-v2`, constants `PAGINATION_DEFAULT_PAGE=1`/`PAGINATION_DEFAULT_LIMIT=10`/`PAGINATION_MAX_LIMIT=100`); MuiDataGrid (columns in `client/src/components/columns/*.js` action column last, View/Edit/Archive/Delete icon colors via `sx`, archive→MuiConfirmDialog→restore or delete flow, `checkboxSelection` + `disableRowSelectionOnClick` + export button, `GridToolbar`, `paginationMode="server"`, `pageSizeOptions={[10, 25, 50, 100]}`, skeleton via `slotProps.loadingOverlay`, custom `noRowsOverlay`, default `sx={{ height: 400 }}`); MuiConfirmDialog; LoadingSpinner (size default 40, minHeight default `"100vh"`); GlobalSearchDialog (`useForm({ mode: 'onSubmit' })`, uncontrolled `register('search')`, ArrowBackIcon start adornment clears/resets/closes); MuiPageHeader (title + subtitle hidden on vw < 600 portrait, children right slot, `mb: 2`, bottom divider); MuiStatusBadge (statuses `draft`/`audio_attached`/`transcribed`/`reviewed`/`completed` → default/warning/info/primary/success; used in Report Details header (3.6)) | MUI Component Standards (1, 4, 5, 9), UI/UX Spec (10, 11), Requirements (REQ-109, REQ-110) |
-| §14 (1.13) + §5 (cross-aligned) | MuiStatusBadge status names (`draft` | `audio_attached` | `transcribed` | `reviewed` | `completed`) differ from the Phase 5 status machine (`## Status Machine`); Phase 35 (§35 Archive, Delete, And Restore Lifecycle) owns the exact report status names and their reconciliation | MUI Component Standards (9), Status Machine (Phase 35 marker) |
+| §14 (1.13) + §5 (cross-aligned) | MuiStatusBadge status names (`draft` | `audio_attached` | `transcribed` | `reviewed` | `completed`) are the Phase 24 report status enum (`## Status Machine` §3 mapping; `## Data Modeling` §4.1); Phase 35 (§35 Archive, Delete, And Restore Lifecycle) owns the archive/delete/restore lifecycle rules | MUI Component Standards (9), Status Machine (3), Data Modeling (4.1) |
 
 ---
 
@@ -447,7 +447,7 @@ All `§` references below identify sections of the original source brief. They a
 | §20.2 | Validation: at least one clip required; 50 MB max per clip (configurable); MIME whitelist; duration metadata informational; server-side ffprobe duration validation and multer type/size validation | Audio Recording STT (6), API Contract (6), Data Modeling (5), Requirements (REQ-142) |
 | §20.3 | Multer upload storage in `backend/uploads/audio/`, gitignored and never committed | Audio Recording STT (7), API Contract (6), Data Modeling (5), Requirements (REQ-143) |
 | §20.4 | Approved chunking pipeline: ffmpeg full-file WAV `pcm_s16le` 16 kHz mono in a single pass → in-memory PCM-level split via `wavSplitter.js` into ~60 s chunks (`ADDIS_AI_STT_MAX_DURATION_SEC` = 60) → chunk MIME `audio/wav` (never `audio/webm`); alternatives forbidden unless proven equivalent | Audio Recording STT (8), API Contract (6), Requirements (REQ-144) |
-| §20.5 | Re-transcription: backend accepts both `audio_recorded` and `transcribed` statuses; frontend "Re-transcribe" button on a completed transcription re-runs STT on the stored audio | Transcription Review (2), Audio Recording STT (9), API Contract (6), Data Modeling (5), Requirements (REQ-145) |
+| §20.5 | Re-transcription: backend accepts both `audio_attached` and `transcribed` statuses; frontend "Re-transcribe" button on a completed transcription re-runs STT on the stored audio (status names reconciled in Phase 24, AD-011) | Transcription Review (2), Audio Recording STT (9), API Contract (6), Data Modeling (4.1), Requirements (REQ-145) |
 | §20 + codebase (`client/package.json`, `backend/package.json`) | `react-media-recorder` ^1.7.2 and `react-player` ^3.4.0 are already installed in `client/package.json`; multer ^2.2.0 is already installed in `backend/package.json`; the `backend/uploads/audio/` directory is created during implementation | Audio Recording STT (5, 7), API Contract (6) |
 
 ## Source Trace Map — Phase 21 (source §21)
@@ -457,7 +457,7 @@ All `§` references below identify sections of the original source brief. They a
 | §21.1 | Generation system prompt exact text ("You are an expert report writer for a restaurant company's supervision department. Generate structured daily supervision reports in Amharic based on field note transcriptions.") with temperature 0.2 / maxOutputTokens 2048 — matches the frozen AI Generation constants group | AI Prompt Spec (9), Rules (6), Requirements (REQ-146) |
 | §21.2 | Correction system prompt exact text ("You are an expert report editor. The user has provided corrections to a previously generated report. Incorporate the corrections while maintaining the original structure and style.") with temperature 0.15 / maxOutputTokens 2048 — matches the frozen AI Correction constants group | AI Prompt Spec (9), Rules (6), Requirements (REQ-147) |
 | §21.3 | Voice correction flow: correction audio → STT → correction text → used in the same correction prompt | AI Prompt Spec (10), Rules (6), Requirements (REQ-148) |
-| §21.4 | Transcription correction: the AI fixes transcription errors (fills gaps, fixes misrecognized words); returns corrected text as `aiCorrectedText` in the Transcription model | AI Prompt Spec (11), Data Modeling (5), Rules (6), Requirements (REQ-149) |
+| §21.4 | Transcription correction: the AI fixes transcription errors (fills gaps, fixes misrecognized words); the corrected text is stored as `Transcription.latest` with a `history[]` entry (reviewer = provider) — the earlier `aiCorrectedText` name is superseded (AD-011) | AI Prompt Spec (11), Data Modeling (4.3), Rules (6), Requirements (REQ-149) |
 | §21.5 | The 14 Amharic generation rules the AI prompt must enforce (Amharic default, exact section structure, sample tone, reviewed transcription as source of truth, no invention, blank for missing info, separate activities from unresolved issues, branch-specific details, time ranges per branch, supervisor POV, no generation explanation, no unrelated content, correction scope, Amharic workplace transliteration) — mapped onto the PR-01..16 seeds | AI Prompt Spec (12), Rules (6), Requirements (REQ-150..153) |
 
 ## Source Trace Map — Phase 22 (source §22)
@@ -483,6 +483,19 @@ All `§` references below identify sections of the original source brief. They a
 | §25.1 | `backend/mock/*` is an explicit backend path | Project Directory Structure (4), Mock Data Seeding (6) |
 | §33 (ADR-037) | Mock Data Seeding Strategy — metadata-only audio clips: mock narration records carry clip metadata but no real audio files | Mock Data Seeding (5), Data Modeling (6), Decision Log (AD-009), Requirements (REQ-162) |
 | Codebase (`backend/`, `backend/package.json`) | No `mock/` or `seed/` directory and no seed npm script exist yet — the mock modules are created during implementation; mongoose ^9.7.4 is installed (MongoDB sessions supported) | Mock Data Seeding (6), Project Directory Structure (4) |
+
+## Source Trace Map — Phase 24 (source §24)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §24.2 | Modeling rules: hooks/instance/static methods support session options; `schema.index(..)`; no `unique: true` + separate-index combos; mongoose-paginate-v2 on all list endpoints | Data Modeling (3), Business Rules (BR-11/12), Backend Architecture (10), Requirements (REQ-165/166) |
+| §24.4 | Report schema: `user` (required ref), `date` (DD-MM-YYYY string, `createdAt` for sorting), `branches[]` with per-branch `clockIn`/`clockOut` (12-hour strings), top-level `clockIn`/`clockOut`, `audio[]`, `transcription` (default null), status enum `draft | audio_attached | transcribed | reviewed | completed` (default `draft`), `isArchived`/`archivedAt`, `generated`, `generatedHistory[]` (`{ provider, text, generatedAt }`); indexes `{ user, createdAt }`, `{ status }`, TTL 30-day partial `archivedAt`; toJSON/toObject delete `id`/`__v` | Data Modeling (4.1, 6), API Contract (8), Status Machine (3), Report Domain (9), Requirements (REQ-168/169/171) |
+| §24.5 | Audio schema: `user`/`report` refs (both required), `originalName`, `mimeType`, `filePath` (`uploads/audio/{uuid}.webm`), `fileSize` (≤ 50 MB), `duration` (≤ 900 s via ffprobe); no status field | Data Modeling (4.2), API Contract (8), Requirements (REQ-139..143) |
+| §24.6 | Transcription schema: `user`/`report` refs, `raw`, `latest` (starts empty), `history[]` (`{ instruction, reviewed, reviewer: User ObjectId | "addis" | "gemini" | "nvidia", editedAt }`); no status field; three review modes (direct edit / instruction→AI / voice→STT→AI) | Data Modeling (4.3), AI Prompt Spec (11), Rules (6), Requirements (REQ-149) |
+| §24.7 | User schema: `firstName`/`lastName` (default ""), `email` (required, lowercase, trim, unique index), `password` (required, `select: false`, bcryptjs 12-round pre-save hook when modified), `avatar`/`position` (default ""), `refreshToken`, `authProvider` (`local | google`); `fullName` virtual; `comparePassword` via `bcrypt.compare`; name extraction from email local part; toJSON deletes `password` | Data Modeling (4.4), Auth Cookies (4), Requirements (REQ-167/170) |
+| §24.8 | Branch schema: `name` (required), `location`, `isArchived`/`archivedAt`, `user` ref; unique `{ user, name }` index; TTL 30-day partial `archivedAt` | Data Modeling (4.5), API Contract (8) |
+| §24.9 | ChatConversation schema: `user`/`report` refs (required), `title` (default "New Chat"), `messages[]` (`{ id, role, status, parts (4 tool shapes), provider ("addis" | "gemini" | "nvidia"), createdAt }` — provider is the user-approved Phase 24 extension for REQ-133); index `{ user, updatedAt: -1 }`; deleting a report does not delete its conversations | Data Modeling (4.6), API Contract (8), Other AI Providers (2), Requirements (REQ-172) |
+| §24.10 | Relationship model: Report is the hub — Audio/Transcription point back to Report; bidirectional user ownership on Report, Branch, Audio, Transcription, ChatConversation | Data Modeling (2) |
 
 ---
 
@@ -758,12 +771,12 @@ Secondary features should not distract from the core workflow of generating a bo
 | WhatsApp | A messaging tool currently used in the manual reporting process. | §2.1, §2.3.1 |
 | Google Docs | A conventional document editing tool used in the current process. | §2.3.1 |
 | Checklist | A per-branch activity the supervisor follows ("Follow a checklist"); V2 ships no checklist tool — the activity is reportable only (OQ-006 resolved in Phase 4). | §2.2 |
-| Narration | A spoken (audio) description of supervision activities; one or more narrations are recorded per day and merge into one daily report (AD-008). | §2.1 |
-| Transcription | The text produced from the recorded audio; it is reviewed and edited by the supervisor before report generation. | §2.1 |
-| AI conversation | A recorded exchange with the AI (prompt/history) associated with report generation; centrally managed. | §2.1 |
-| Generated report | The AI-produced daily supervision report; distinct from its version history. | §2.1 |
-| Report version history | The preserved historical versions of a generated report after edits. | §2.1 |
-| Reporting analytics | Basic analytics in V2 (AD-007); the advanced analytics dashboard with detailed metrics is deferred. | §2.1, §1.7 |
+| Narration | A spoken (audio) description of supervision activities; one or more narrations are recorded per day and merge into one daily report (AD-008). Persisted as the `Audio` model — one document per recorded clip (`## Data Modeling` §4.2). | §2.1 |
+| Transcription | The text produced from the recorded audio; it is reviewed and edited by the supervisor before report generation. Persisted as the `Transcription` model (`raw`, `latest`, `history[]`; §4.3). | §2.1 |
+| AI conversation | A recorded exchange with the AI (prompt/history) associated with report generation; centrally managed. Persisted as the `ChatConversation` model — one conversation per report with message parts and the provider per message (§4.6). | §2.1 |
+| Generated report | The AI-produced daily supervision report. Persisted as `Report.generated` — the latest AI output lives on the Report itself (AD-010; §4.1). | §2.1 |
+| Report version history | The preserved historical versions of a generated report after edits. Persisted as `Report.generatedHistory[]` — the unified ReportVersion; there is no separate GeneratedReport/ReportVersion collection (AD-010; §4.1). | §2.1 |
+| Reporting analytics | Basic analytics in V2 (AD-007); derived on demand from Report documents — no analytics collection (AD-011); the advanced analytics dashboard with detailed metrics is deferred. | §2.1, §1.7 |
 | Transliteration | Representing English workplace terms in natural Amharic workplace transliteration, not literal translation. | §2.3.6 |
 | Working time | A required element of the end-of-day report. | §2.2 |
 | Work exit time | A required element of the end-of-day report. | §2.2 |
@@ -821,7 +834,7 @@ Secondary features should not distract from the core workflow of generating a bo
 | x-api-key | The HTTP header Addis AI REST authentication uses; it carries the `sk_`-prefixed secret key and is sent by backend services only. | §18.4 |
 | gemini-3.1-flash-lite | The Gemini text-generation model used as a fallback provider; configured via `GEMINI_API_KEY` and called through the `generateContent` endpoint. | §19.1 |
 | z-ai/glm-5.2 | The Nvidia text-generation model used as a fallback provider; configured via `NVIDIA_API_KEY` and called through the Nvidia message format with a bearer token. | §19.2 |
-| aiCorrectedText | The corrected transcription text the AI returns from transcription correction (fixing gaps and misrecognized words); stored on the Transcription model. | §21.4 |
+| aiCorrectedText | Superseded field name (Phase 24, AD-011): AI transcription corrections are stored as `Transcription.latest` plus a new `history[]` entry whose `reviewer` is the provider string (`## Data Modeling` §4.3). | §21.4 |
 | Noto Sans Ethiopic | The Amharic-capable Unicode font used to render Amharic text in the PDF export (section headers and body). | §22 |
 | Google Service Account | The server-side identity the backend uses to authenticate to the Google Docs API for the Google Docs export; configured via the optional `GOOGLE_SERVICE_ACCOUNT_EMAIL` and `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` environment variables. | §22 |
 | Mock data | Development/demo-only records injected into MongoDB via `backend/mock/*`; injection and wipe run inside MongoDB sessions, mock narrations are metadata-only (no audio files), and the commands refuse to run when `NODE_ENV` is `production` (AD-009). | §23, §33 (ADR-037) |
@@ -1189,7 +1202,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-142 | Validation: at least one clip required; max 50 MB per clip (configurable); MIME type in the whitelist; duration metadata informational; server-side ffprobe duration validation and multer type/size validation. | The upload is rejected without clips or with oversized/unwhitelisted files; ffprobe and multer validate server-side. | §20.2 |
 | REQ-143 | Uploads go through multer into `backend/uploads/audio/`, which is gitignored and never committed. | Uploaded audio lands in `backend/uploads/audio/`; the directory is not in version control. | §20.3 |
 | REQ-144 | The only approved chunking pipeline is: convert the full audio to WAV via ffmpeg in a single pass (`pcm_s16le`, 16 kHz, mono) → split in-memory at the PCM level via `wavSplitter.js` into ~60 s chunks (`ADDIS_AI_STT_MAX_DURATION_SEC` = 60) → send each chunk to Addis AI STT with MIME `audio/wav` (never `audio/webm`); alternatives are forbidden unless proven equivalent. | Chunks are always `audio/wav` from PCM-level splits of a single-pass ffmpeg WAV; no other pipeline is used. | §20.4, §18.8 (REQ-128) |
-| REQ-145 | Re-transcription: the backend accepts both `audio_recorded` and `transcribed` statuses for re-transcription; the frontend shows a "Re-transcribe" button on a completed transcription that re-runs STT on the stored audio. | Re-transcription works from both statuses; the button exists on completed transcriptions. | §20.5 |
+| REQ-145 | Re-transcription: the backend accepts both `audio_attached` and `transcribed` statuses for re-transcription (status name reconciled in Phase 24, AD-011); the frontend shows a "Re-transcribe" button on a completed transcription that re-runs STT on the stored audio. | Re-transcription works from both statuses; the button exists on completed transcriptions. | §20.5 |
 
 ### Functional Requirements (Phase 21)
 
@@ -1198,7 +1211,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-146 | The generation system prompt is exactly: "You are an expert report writer for a restaurant company's supervision department. Generate structured daily supervision reports in Amharic based on field note transcriptions." Parameters: temperature 0.2, maxOutputTokens 2048 (frozen AI Generation constants group). | The generation request carries the exact system message and the frozen generation parameters. | §21.1 |
 | REQ-147 | The correction system prompt is exactly: "You are an expert report editor. The user has provided corrections to a previously generated report. Incorporate the corrections while maintaining the original structure and style." Parameters: temperature 0.15, maxOutputTokens 2048 (frozen AI Correction constants group). | The correction request carries the exact system message and the frozen correction parameters. | §21.2 |
 | REQ-148 | Voice correction flows: correction audio → STT → correction text → the same correction prompt (REQ-147); correction STT uses the approved chunking pipeline. | A voice correction is transcribed and enters the correction prompt exactly like a typed correction. | §21.3 |
-| REQ-149 | Transcription correction uses the AI to fix transcription errors (fill gaps, fix misrecognized words) and returns the corrected text as `aiCorrectedText` in the Transcription model. | The Transcription model carries `aiCorrectedText` after AI transcription correction. | §21.4 |
+| REQ-149 | Transcription correction uses the AI to fix transcription errors (fill gaps, fix misrecognized words); the corrected text is stored on the Transcription model — written to `latest` with a new `history[]` entry whose `reviewer` is the provider string (`## Data Modeling` §4.3; the earlier `aiCorrectedText` field name is superseded, AD-011). | `Transcription.latest` carries the corrected text and `history[]` gains an entry after AI transcription correction. | §21.4 |
 | REQ-150 | The prompt enforces §21.5 rules 1–6: generate in Amharic (mixed only when the transcription is English/mixed); exact section structure (ቀን, ብራንች, ስም, ስራ የገባሁበት ሰዓት, የተሰሩ ስራዎች, መፍትሄ የሚፈሉ ጉዳዮች, አጠቃላይ አስተያየት, ከስራ የወጣሁበት ሰዓት); sample tone/style; reviewed transcription as source of truth; no invented information; blank/not-specified for missing information. | The prompt text contains all six rules. | §21.5 (rules 1–6) |
 | REQ-151 | The prompt enforces §21.5 rules 7–10: separate completed activities from unresolved issues; preserve branch-specific details for multi-branch reports; preserve time ranges per branch; write from the supervisor's point of view. | The prompt text contains all four rules. | §21.5 (rules 7–10) |
 | REQ-152 | The prompt enforces §21.5 rules 11–12: do not output an explanation of how the report was generated; do not include unrelated conversation content. | The prompt text contains both rules. | §21.5 (rules 11–12) |
@@ -1226,6 +1239,19 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-162 | Mock narrations are metadata-only records: clip metadata without real audio files; seeding never writes to `backend/uploads/audio/` and never calls the STT/AI providers. | No audio file is created by seeding; mock transcriptions exist as pre-created records. | §23, §33 (ADR-037) |
 | REQ-163 | Mock-data injection is idempotent: it wipes existing mock records before inserting the seed set. | Re-running the inject command always ends with exactly one seed set. | §23 |
 | REQ-164 | The mock-data inject and wipe commands refuse to run when `NODE_ENV` is `production`. | Running the commands with `NODE_ENV=production` exits without modifying the database. | §23 (user decision) |
+
+### Functional Requirements (Phase 24)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-165 | All model hooks, instance methods, and static methods support session options where relevant, so they behave correctly inside the write-controller transaction pattern (REQ-082). | Each model's hooks/methods accept and pass a session; writes inside transactions use `{ session }`. | §24.2 |
+| REQ-166 | No schema field combines `unique: true` with separate indexes; uniqueness and all other indexes are declared through `schema.index(..)`. | The schemas declare `schema.index` for every index; no field-level `unique: true` appears next to separate index declarations. | §24.2 |
+| REQ-167 | User passwords are hashed with bcryptjs (12 salt rounds) in a `pre('save')` hook that runs only when the password is modified; `comparePassword(candidatePassword)` compares via `bcrypt.compare`. | Registering/login flow uses `comparePassword`; saved documents never contain plaintext passwords. | §24.7, §11 |
+| REQ-168 | The Report status follows the enum `draft → audio_attached → transcribed → reviewed → completed` (default `draft`) with the §24.4 lifecycle; the upload status name is `audio_attached` (the Phase 20 `audio_recorded` name is superseded). | Report documents only ever carry the five enum values; the upload sets `audio_attached`. | §24.4 |
+| REQ-169 | Report and Branch documents carry 30-day TTL indexes on `archivedAt` (partial filter `archivedAt: { $ne: null }`) for the Phase 35 archive/delete/restore lifecycle. | Expired archived documents are automatically removed by the TTL monitor; active documents are never touched. | §24.4, §24.8 |
+| REQ-170 | User `firstName`/`lastName` are extracted from the email local part (or the Google profile name): `beza.ayalew@example.com` → firstName `"beza"`, lastName `"ayalew"`; a local part without a separator yields a single firstName and an empty lastName. | Registration stores the extracted names; profiles can be updated later. | §24.7, §11 |
+| REQ-171 | Each successful report generation appends a `generatedHistory[]` entry `{ provider, text, generatedAt }` and overwrites `Report.generated`; regeneration appends rather than replaces history. | After N generations the history array holds N entries; `generated` holds the latest text. | §24.4 (AD-010) |
+| REQ-172 | ChatConversation messages carry `{ id, role, status, parts, provider, createdAt }` — `provider` is the enum `addis | gemini | nvidia` and `parts` supports the four tool shapes. | Conversation documents store messages with a provider value and parts; the provider distinguishes corrections from initial generation (REQ-133). | §24.9 (user decision, AD-011) |
 
 ### Non-Functional Requirements (Phase 1)
 
@@ -1258,6 +1284,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - AI prompt rules: **Phase 21 — DONE (REQ-146..153)**.
 - Export rules: **Phase 22 — DONE (REQ-154..159)**.
 - Mock data rules: **Phase 23 — DONE (REQ-160..164)**.
+- Data model rules: **Phase 24 — DONE (REQ-165..172)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -1309,7 +1336,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 
 ## Report Management
 
-> **Phase 4 seed — the supporting-feature resource management from §4. Detailed data model, search, and lifecycle mechanics arrive in later phases (5, 11, 12, 13, 24, 35).**
+> **Phase 4 seed — the supporting-feature resource management from §4. Detailed data model, search, and lifecycle mechanics arrive in later phases (5, 11, 12, 13, 24, 35). Data model delivered in Phase 24 (§24 Data Model).**
 
 ### 1. Purpose
 
@@ -1321,11 +1348,11 @@ The supporting features exist to support the core workflow (§4): the supervisor
 |---|---|---|
 | User profile | Profile — supervisor identity appears in reports (§4) | Profile Management (Phase 4 seed); auth Phase 11 |
 | Branches | Branch management — visited branches selected; Branch CRUD (§4) | Report Management (this section); branch domain Phase 5 |
-| Daily reports | Report management list and grid views; Report CRUD (§4) | Report Management (this section); data model Phase 24 |
+| Daily reports | Report management list and grid views; Report CRUD (§4) | Report Management (this section); data model Phase 24 (§24 Data Model §4.1) |
 | Audio narrations (recordings) | Audio recording; playback and re-recording (§4) | Report Management (this section); pipeline Phase 20 |
 | Transcriptions | Addis AI speech-to-text; transcription review by AI (§4) | Report Management (this section); pipeline Phase 20 |
-| AI conversations | Addis AI text generation (§4) | Report Management (this section); prompts Phase 21 |
-| Generated reports + versions | Report CRUD (§4); version history (§2.1) | Report Management (this section); data model Phase 24 |
+| AI conversations | Addis AI text generation (§4) | Report Management (this section); prompts Phase 21; ChatConversation model Phase 24 (§24 Data Model §4.6) |
+| Generated reports + versions | Report CRUD (§4); version history (§2.1) | Report Management (this section); data model Phase 24 (`Report.generated` + `generatedHistory[]`, AD-010) |
 | Exports | Export — share or archive (§4) | Export Spec (Phase 22) |
 | Reporting analytics | Basic analytics (AD-007; metric set defined in Phase 31) | Analytics (Phase 31) |
 
@@ -1389,7 +1416,7 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 | W-08 | Supervisor | If something is wrong, missing, unclear, or not written in the desired way, requests a correction | Correction request | §3.2 |
 | W-09 | System (AI) | Updates the report; corrections update only the relevant part without unnecessarily rewriting correct unrelated sections (REQ-034; correction behavior §6.9) | Updated report | §2.3.7, §3.2, §6.9 |
 | W-10 | Supervisor + System | Repeats W-07..W-09 until the supervisor is satisfied (correction loop) | Satisfied report | §3.2 |
-| W-11 | Supervisor | Accepts/finalizes the report | Final report version | §3.2 (versioning: Phases 24/35) |
+| W-11 | Supervisor | Accepts/finalizes the report | Final report version | §3.2 (versioning: Phase 24 — `Report.generatedHistory[]`, AD-010; lifecycle Phase 35) |
 | W-12 | System | Delivers/exports the report (PDF, TXT, CSV, spreadsheet, or Google Docs) | Exported report | §2.1, `## Export Spec` §2–4 (details Phase 22) |
 
 ### 3. Work Flow Rules (seeds)
@@ -1512,6 +1539,7 @@ The AI is responsible for (all items §3.3):
 | DR-5 | No clarifying-question step in the first workflow; the system processes narrations as-is (OQ-007). | §3.2, OQ-007 |
 | DR-6 | Report content is generated only from the reviewed transcription, never directly from raw audio (REQ-054). | §5.2 |
 | DR-7 | The report format supports one or multiple branches; branch-specific details and per-branch time ranges (when present in the audio) are preserved (REQ-050..052). | §5.1 |
+| DR-8 | Top-level `clockIn`/`clockOut` hold the work-day entry/exit times; per-branch times live in `branches[]`. The top-level `clockIn` may differ from the first branch's `clockIn`, and the top-level `clockOut` is the final end of day even when the last branch was left earlier (mapped from the report samples; `## Data Modeling` §4.1 clock-semantics table). | §6.1, §24.4 |
 
 ### 6. Branch Context Rules (§5.1)
 
@@ -1552,91 +1580,229 @@ Note: §2.2 lists seven required elements (date, branch, working time, completed
 
 ### 9. Record Types Inventory (§5.4)
 
-The system must manage: daily supervision reports, transcriptions, AI conversations, generated reports, report version history, and reporting analytics (§5.4; REQ-057). Detailed fields for those records are not fully specified in the source and are defined in the data-modeling phase (Phase 24).
+The system must manage: daily supervision reports, transcriptions, AI conversations, generated reports, report version history, and reporting analytics (§5.4; REQ-057). Field-level definitions are delivered in `## Data Modeling` §4 (Phase 24):
+
+| Managed record | Persisted as |
+|---|---|
+| Daily supervision reports | `Report` model (`## Data Modeling` §4.1) |
+| Transcriptions | `Transcription` model (§4.3) |
+| AI conversations | `ChatConversation` model (§4.6) |
+| Generated reports | `Report.generated` — the latest AI output lives on Report (§4.1; AD-010) |
+| Report version history | `Report.generatedHistory[]` — the unified ReportVersion (§4.1; AD-010; no separate GeneratedReport/ReportVersion collections — user decision) |
+| Reporting analytics | Derived — aggregation over Report documents, computed on demand; no collection (AD-011); metric set defined in Phase 31 (AD-007) |
+| Narrations (audio) | `Audio` model, one document per clip (§4.2) |
 
 ### 10. Domain Expansion Markers
 
-- Phase 5 (§5 Report And Branch Domain): **DONE — branch/report context rules, named report fields, record types inventory (sections 6–9 above); data-model fields remain Phase 24 scope.**
+- Phase 5 (§5 Report And Branch Domain): **DONE — branch/report context rules, named report fields, record types inventory (sections 6–9 above); data-model fields delivered in Phase 24.**
 - Phase 6 (§6 Report Format, Samples, And Tone): **DONE — required format, samples, tone, strict generation rules, transliteration rule, correction behavior (`## Report Format`).**
-- Phase 24 (§24 Data Model): persisted data model for reports, transcriptions, narrations, versions.
+- Phase 24 (§24 Data Model): **DONE — persisted data model for reports, transcriptions, narrations (Audio), and versions (`## Data Modeling` §4; AD-010/011).**
 
 ---
 
 ## Data Modeling
 
-> **Phase 5 seed — entity inventory derived from §5.4. Detailed fields are defined in Phase 24 (§5.4: "must be defined during the data-modeling phase"). Expanded in Phases 11, 20, 23, 35.**
+> **Phase 5 seed — entity inventory derived from §5.4. Full field-level schema delivered in Phase 24 (§24 Data Model; §5.4: "must be defined during the data-modeling phase"). Enriched in Phases 11, 20, 23, 35.**
 
-### 1. Entity Inventory (seeds)
+### 1. Entity Inventory
 
-| Entity | Purpose | Source |
+The persisted model set (Phase 24, §24): **User, Branch, Report, Audio, Transcription, ChatConversation**. The product terms "daily report" and "narration" map to the `Report` and `Audio` models respectively. The unified `ReportVersion` (AD-010) is the inline `generated` + `generatedHistory[]` on Report — there are **no** separate `GeneratedReport` or `ReportVersion` collections (user decision, Phase 24). Reporting analytics are derived from Report documents (aggregation) — no dedicated analytics collection (user decision, AD-011); the metric set is defined in Phase 31 (AD-007).
+
+| Entity (model) | Purpose | Source |
 |---|---|---|
-| User | The authenticated supervisor; owner of reports; profile identity appears in reports | §4, §5.2 |
-| Branch | A restaurant location under the supervisor's area; managed via Branch CRUD | §5.1 |
-| DailyReport | The daily supervision report; belongs to one user; covers one or more branches; editable after generation; preserves versions | §5.1, §5.2 |
-| Narration (audio recording) | One recorded audio explanation; one or more per day | §3, §4 |
-| Transcription | Text produced from narration audio; reviewed/corrected by the user with AI help before generation | §4, §5.2 |
-| AIConversation | Recorded exchange with the AI associated with report generation | §2.1, §5.4 |
-| GeneratedReport | The AI-produced report output; distinct from its version history | §2.1, §5.4 |
-| ReportVersion | A preserved historical version of a report after edits | §2.1, §5.2 |
-| Analytics | Basic reporting analytics (AD-007; metric set defined in Phase 31) | §2.1, AD-007 |
+| User | The authenticated supervisor; owner of reports and branches; profile identity appears in reports | §4, §5.2, §24.7 |
+| Branch | A restaurant location under the supervisor's area; managed via Branch CRUD | §5.1, §24.8 |
+| Report | The daily supervision report; belongs to one user; covers one or more branches; editable after generation; preserves versions inline | §5.1, §5.2, §24.4 |
+| Audio | A recorded audio explanation (narration); one document per uploaded clip; one or more per report | §3, §4, §24.5 |
+| Transcription | Text produced from narration audio; reviewed/corrected by the user with AI help before generation | §4, §5.2, §24.6 |
+| ChatConversation | The assistant chat bound to one report (AI conversation); messages carry the text-generation provider and tool parts | §2.1, §5.4, §24.9 |
+| Analytics (derived) | Basic reporting analytics computed on demand from Report; metric set defined in Phase 31 | §2.1, AD-007 |
 
-### 2. Relationship Seeds
+### 2. Relationship Model (§24.10)
 
-- User 1—N DailyReport (reports belong to the correct authenticated user, §5.2).
-- DailyReport 1—N Narration; 1—N Transcription (all narrations of a day merge into one daily report, AD-008).
-- DailyReport 1—N Branch (multi-branch days, §5.1).
-- DailyReport 1—1 GeneratedReport (current); 1—N ReportVersion (version history, §5.2).
-- DailyReport 1—N AIConversation (§2.1).
+Report is the hub: Audio and Transcription point back to Report, and Report holds both refs for easy access. No redundant duplication.
 
-### 3. Field-Level Definition Marker
+```
+Report (1) ──→ Audio (many, via Report.audio[])
+Report (1) ──→ Transcription (1, via Report.transcription)
+Audio (1) ──→ Report (1, via Audio.report)
+Transcription (1) ──→ Report (1, via Transcription.report)
+Report (1) ──→ User (1)
+Branch (1) ──→ User (1)
+Audio (1) ──→ User (1)
+Transcription (1) ──→ User (1)
+ChatConversation (1) ──→ User (1)
+ChatConversation (1) ──→ Report (1) — deleting a report does NOT delete its conversations
+```
 
-Field-level schema (names, types, constraints, indexes, pagination keys) is Phase 24 scope per §5.4; the seeds here are entity-level only.
+Plus: User 1—N Report ownership (BR-06, REQ-041); User 1—N Branch (§5.1); Report 1—N Branch per day (multi-branch days, §5.1, §24.4 `branches[]`).
 
-### 4. User Entity Seeds (Phase 11)
+### 3. Modeling Rules (§24.2)
 
-Fields mandated by §11 (entity-level; full field-level schema remains Phase 24):
-
-| Field | Rule | Source |
+| ID | Rule | Source |
 |---|---|---|
-| firstName | Derived automatically from the email local part at registration (first segment), or from the Google profile name for OAuth accounts; optional profile updates later | §11 |
-| lastName | Derived automatically from the email local part (last segment), or from the Google profile name; optional profile updates later | §11 |
-| fullName | Schema virtual: `\`${this.firstName} ${this.lastName}\`.trim()`; schema options include `toJSON: { virtuals: true }` and `toObject: { virtuals: true }` | §12.3.3 (cross-aligned) |
-| email | Unique; the account identifier; OAuth users matched by email | §11, §10.11 |
-| password | bcryptjs-hashed (`pre('save')` hook, 12 salt rounds); required for email registration; no password required for Google OAuth-created accounts; plaintext never compared | §11 |
-| avatar | Optional profile field; set from Google profile picture for OAuth accounts; updated from the Profile page | §11 |
-| position | Optional profile field; updated from the Profile page | §11 |
+| DM-01 | All model hooks, instance methods, and static methods support session options where relevant — they behave correctly inside the write-controller transaction pattern (REQ-082, REQ-165). | §24.2 |
+| DM-02 | No schema field combines `unique: true` with separate indexes; uniqueness and all other indexes are declared through `schema.index(..)` (REQ-166). | §24.2 |
+| DM-03 | Every model uses `timestamps: true`; `toJSON` and `toObject` transforms delete `id` and `__v`; the User transform additionally deletes `password`. | §24.4–24.9 |
+| DM-04 | All list endpoints use `mongoose-paginate-v2` (default page 1, limit 10, max 100; REQ-053, BR-04); list models carry the pagination plugin. | §24.2, §5.2 |
+| DM-05 | `User.password` is hashed by a bcryptjs `pre('save')` hook with 12 salt rounds that runs only when `password` is modified; `comparePassword(candidatePassword)` uses `bcrypt.compare` (REQ-167). | §24.7, §11 |
+| DM-06 | The Report status enum is `draft | audio_attached | transcribed | reviewed | completed` (default `draft`); transitions follow the §6 lifecycle (REQ-168). | §24.4 |
+| DM-07 | Archived-at TTL indexes (30 days, partial filter `archivedAt: { $ne: null }`) exist on Report and Branch; the archive/delete/restore lifecycle rules themselves are Phase 35 scope. | §24.4, §24.8 |
 
+### 4. Field-Level Schema (Phase 24)
+
+#### 4.1 Report (§24.4)
+
+| Field | Type / constraints | Notes |
+|---|---|---|
+| `user` | ObjectId, ref User, required | Owner (BR-06) |
+| `date` | String, required | DD-MM-YYYY display value (e.g. `"30-07-2026"`), not a Date object; `createdAt` handles sorting and date math |
+| `branches[]` | Array of `{ branchId: ObjectId ref Branch, clockIn: String, clockOut: String }` | Per-branch visit times; 12-hour format strings |
+| `clockIn` | String | Top-level work-day entry time (ስራ የገባሁበት ሰዓት); the first branch's clockIn often equals it |
+| `clockOut` | String | Top-level work-day exit time (ከስራ የወጣሁበት ሰዓት); the last branch's clockOut often equals it |
+| `audio` | Array of ObjectId ref Audio, default `[]` | Starts empty; populated after audio upload |
+| `transcription` | ObjectId ref Transcription, default `null` | Populated after transcription completes |
+| `status` | String enum `draft | audio_attached | transcribed | reviewed | completed`, default `draft` | Lifecycle in §6 |
+| `isArchived` | Boolean, default `false` | Archive flag; lifecycle rules Phase 35 |
+| `archivedAt` | Date, default `null` | Set on archive; 30-day TTL index below |
+| `generated` | String, default `""` | Latest AI-generated report text (report format §6.1); empty until the first successful generation; set together with `status → completed`; lives on Report, not Transcription — generation consumes `Transcription.latest` |
+| `generatedHistory[]` | Array of `{ provider: String enum addis | gemini | nvidia required, text: String required, generatedAt: Date default now }` | The unified ReportVersion (AD-010); appended on every successful generation; re-generation overwrites `generated` and appends an entry; no UI in this cycle (the details History card is the transcription history) |
+
+**Indexes:** `schema.index({ user: 1, createdAt: -1 })` (report list ordering); `schema.index({ status: 1 })`; `schema.index({ archivedAt: 1 }, { expireAfterSeconds: 2592000, partialFilterExpression: { archivedAt: { $ne: null } } })` (30-day TTL).
+
+**Time-format rule:** all times are 12-hour format strings (e.g. `"02:30 PM"`), formatted client-side via `dayjs.format("hh:mm A")` before submit and stored as-is with no backend conversion.
+
+**Clock semantics — top-level vs per-branch (mapped from the report samples):**
+
+| Field | Maps to | Meaning |
+|---|---|---|
+| `clockIn` (top-level) | ስራ የገባሁበት ሰዓት | The time the supervisor started the work day; the first branch's clockIn often equals this |
+| `clockOut` (top-level) | ከስራ የወጣሁበት ሰዓት | The time the supervisor ended the work day; the last branch's clockOut often equals this |
+| `branches[].clockIn` | ከ[time] - [time] [branch] | The time the supervisor arrived at that branch |
+| `branches[].clockOut` | ከ[time] - [time] [branch] | The time the supervisor left that branch |
+
+- Single-branch days: branch-level and top-level times may be equal or differ — no restriction.
+- Top-level `clockIn` may differ from the first branch's `clockIn` (e.g. travel time between branches is tracked separately).
+- Top-level `clockOut` is the final end of day, even if the last branch was left earlier.
+
+#### 4.2 Audio (§24.5)
+
+One Audio document per uploaded clip (the upload accepts the full recorded clips array — multipart field `clips` — and creates one Audio document per clip).
+
+| Field | Type / constraints | Notes |
+|---|---|---|
+| `user` | ObjectId ref User, required | Who uploaded it |
+| `report` | ObjectId ref Report, required | Bidirectional ref with Report.audio |
+| `originalName` | String, required | As sent from the browser (e.g. `"clip_1.webm"`) |
+| `mimeType` | String, required | Media type from the browser (e.g. `"audio/webm;codecs=opus"`) |
+| `filePath` | String, required | Server path where multer saved the file (e.g. `uploads/audio/{crypto.randomUUID()}.webm`) |
+| `fileSize` | Number, required | Raw byte size; validated against `AUDIO_MAX_SIZE_BYTES` = 52428800 |
+| `duration` | Number, required | Seconds; validated via ffprobe against `AUDIO_MAX_DURATION_SEC` = 900 |
+
+- No `status` field on Audio — individual audio state is not tracked; Report.status covers the aggregate state.
+- The "narration" product concept maps to this model (AD-011); re-recording replaces the clips (UI-001).
+
+#### 4.3 Transcription (§24.6)
+
+| Field | Type / constraints | Notes |
+|---|---|---|
+| `user` | ObjectId ref User, required | |
+| `report` | ObjectId ref Report, required | |
+| `raw` | String, default `""` | Original STT output, concatenated from all audio clips and their chunks |
+| `latest` | String, default `""` | The current reviewed/corrected text; starts empty; populated when the user or AI completes a review |
+| `history[]` | Array of `{ instruction: String, reviewed: String, reviewer: Mixed, editedAt: Date default now }` | Ordered array tracking each review/correction iteration |
+
+- `history[].instruction`: what the user asked the AI to correct — present only when the reviewer is AI; empty string for direct user edits.
+- `history[].reviewed`: the text produced by that review iteration.
+- `history[].reviewer`: User ObjectId (manual edit) OR one of `"addis" | "gemini" | "nvidia"` (AI correction) — `Schema.Types.Mixed`.
+- No `status` field on Transcription — Report.status reflects the current state.
+- The earlier `aiCorrectedText` field name is superseded: AI corrections land in `latest` plus a `history[]` entry (AD-011).
+
+**Review modes (how history entries are created):**
+
+| Mode | `instruction` | `reviewed` | `reviewer` |
+|---|---|---|---|
+| 1. User direct edit | `""` | User-typed text | User ObjectId |
+| 2. User types instruction → AI corrects | User's instruction | AI-returned text | Provider string |
+| 3. Voice → Addis STT → fills instruction → AI corrects | STT-transcribed instruction | AI-returned text | Provider string |
+
+#### 4.4 User (§24.7, §11)
+
+| Field | Type / constraints | Notes |
+|---|---|---|
+| `firstName` | String, default `""` | Extracted from the email local part (before `@`) or from the Google profile name; optional profile updates later |
+| `lastName` | String, default `""` | Extracted from the email local part or Google profile name; empty when the local part has no separator |
+| `email` | String, required, lowercase, trim; unique via `schema.index({ email: 1 }, { unique: true })` | The account identifier; OAuth users matched by email |
+| `password` | String, required, `select: false` | bcryptjs-hashed via the `pre('save')` hook (12 rounds, skipped when unmodified); required for email registration; no password required for Google OAuth-created accounts; plaintext never compared; deleted from all JSON output |
+| `avatar` | String, default `""` | Optional; set from Google profile picture for OAuth accounts; updated from the Profile page |
+| `position` | String, default `""` | Optional; updated from the Profile page |
+| `refreshToken` | String | Refresh-token rotation storage (REQ-087) |
+| `authProvider` | String enum `local | google`, default `local` | Registration origin |
+
+- Virtual: `fullName` = `\`${this.firstName} ${this.lastName}\`.trim()`; schema options include `toJSON: { virtuals: true }` and `toObject: { virtuals: true }` (§12.3.3 cross-aligned).
+- Hook: `pre('save')` — `if (!this.isModified("password")) return next(); this.password = await bcrypt.hash(this.password, 12); next();` (bcryptjs).
+- Method: `comparePassword(candidatePassword)` → `bcrypt.compare(candidatePassword, this.password)`.
+- Email extraction (registration via email+password or Google): `beza.ayalew@example.com` → firstName `"beza"`, lastName `"ayalew"`; `bezaayalew@example.com` → firstName `"bezaayalew"`, lastName `""` (REQ-170).
 - No sessions MongoDB collection and no token collection: nothing beyond the User document is stored for auth (REQ-087).
-- User 1—N DailyReport ownership relationship per §2 Relationship Seeds (BR-06, REQ-041).
 
-### 5. Narration And Transcription Seeds (Phase 20)
+#### 4.5 Branch (§24.8)
 
-Entity-level seeds from the recording/STT pipeline (§20; field-level schema remains Phase 24):
+| Field | Type / constraints | Notes |
+|---|---|---|
+| `name` | String, required | |
+| `location` | String | |
+| `isArchived` | Boolean, default `false` | Archive flag; lifecycle rules Phase 35 |
+| `archivedAt` | Date, default `null` | 30-day TTL index below |
+| `user` | ObjectId ref User | Owner |
 
-**Narration (audio recording):**
-- Holds the clips array (one or more MediaRecorder clips recorded per day, submitted as multipart field `clips`; §20.1, REQ-140).
-- Per-clip constraints: max 15 min (`AUDIO_MAX_DURATION_SEC`) and max 50 MB (`AUDIO_MAX_SIZE_BYTES`); MIME from the whitelist (`audio/webm;codecs=opus`, `audio/webm`, `audio/mp4`, browser default); duration metadata informational (§20.1/§20.2; REQ-139, REQ-141).
-- Stored under `backend/uploads/audio/` (multer, gitignored; §20.3; REQ-143).
-- Status: `audio_recorded` once uploaded (status names reconciled in Phase 35); re-recording replaces the clips (UI-001).
+**Indexes:** `schema.index({ user: 1, name: 1 }, { unique: true })`; `schema.index({ archivedAt: 1 }, { expireAfterSeconds: 2592000, partialFilterExpression: { archivedAt: { $ne: null } } })` (30-day TTL).
 
-**Transcription:**
-- Text produced from narration audio via the Addis AI STT endpoint (language code `am`; `## Addis AI` §7); status `transcribed`, then `reviewed` after supervisor review/correction (W-04; `## Transcription Review` §2).
-- Re-transcription re-runs STT on the stored audio for accuracy verification; the backend accepts both `audio_recorded` and `transcribed` statuses for the re-transcription endpoint (§20.5; `## API Contract` §6; REQ-145).
+#### 4.6 ChatConversation (§24.9)
 
-### 6. Mock Data Seeds (Phase 23)
+| Field | Type / constraints | Notes |
+|---|---|---|
+| `user` | ObjectId ref User, required | |
+| `report` | ObjectId ref Report, required | Deleting a report does NOT delete its conversations (the conversation keeps the `report` id for deep links) |
+| `title` | String, default `"New Chat"` | |
+| `messages[]` | Array of message objects | See below |
 
-Entity-level mock-data seeding rules from §23 (exact records deferred to Phase 24):
+**Message shape:** `{ id: String (uuid), role: String ("user" | "assistant"), status: String ("streaming" | "complete" | "failed"), parts: [Mixed], provider: String enum addis | gemini | nvidia, createdAt: Date }`.
 
-- The `backend/mock/*` injection and wipe run inside MongoDB sessions with the write-controller transaction pattern (REQ-082; `## Mock Data Seeding` §2).
-- Seeded entities: User, Branch, DailyReport, Narration, Transcription, AIConversation, GeneratedReport, ReportVersion — the §1 inventory (`## Mock Data Seeding` §4).
-- Mock narrations are metadata-only records — clip metadata without audio files; mock transcriptions are pre-created (ADR-037; `## Mock Data Seeding` §5).
-- Injection is idempotent (wipe-before-inject) and development/demo-only — the commands refuse to run when `NODE_ENV` is `production` (REQ-163, REQ-164).
+- `parts` shapes (Mixed): `{ type: "text", text }` | `{ type: "tool-input-available", toolCallId, toolName, input }` | `{ type: "tool-approval-request", toolCallId, toolName, input }` | `{ type: "tool-output-available", toolCallId, output }`.
+- `provider` is the user-approved Phase 24 extension satisfying REQ-133 — the text-generation provider is stored per AI conversation message (AD-011); different providers can be used for corrections versus initial generation (REQ-133).
+- Created via the assistant conversations endpoint (`## API Contract` §8; `POST /assistant/conversations` flow).
+- **Index:** `schema.index({ user: 1, updatedAt: -1 })`.
+
+### 5. Phase Enrichment Seeds (11, 20, 23 — superseded by §4)
+
+- **Phase 11 (User Entity Seeds):** the field-level User definition now lives in §4.4, including `refreshToken`, `authProvider`, the unique email index, the `fullName` virtual, bcryptjs pre-save hashing (12 rounds), `comparePassword`, and email-local-part name extraction (REQ-087..093).
+- **Phase 20 (Narration And Transcription Seeds):** narration/audio and transcription field-level definitions now live in §4.2/§4.3. Status names reconciled in Phase 24: the upload status is `audio_attached` (not `audio_recorded`) per the §24.4 enum (AD-011, REQ-168); re-transcription accepts `audio_attached` and `transcribed` statuses (REQ-145). Per-clip constraints (15 min / 50 MB, MIME whitelist), storage under `backend/uploads/audio/`, and re-record/re-transcribe behavior are unchanged (REQ-139..145).
+- **Phase 23 (Mock Data Seeds):** the seeded entity set is User, Branch, Report, Audio (metadata-only, ADR-037), Transcription, ChatConversation — the §1 inventory (`## Mock Data Seeding` §4); exact seed records and field values are defined there (Phase 24).
+
+### 6. Report Status Lifecycle (§24.4)
+
+| Status | Meaning |
+|---|---|
+| `draft` | Report metadata created; no audio uploaded yet |
+| `audio_attached` | Audio files uploaded and linked to Report; ready for transcription |
+| `transcribed` | All audio clips transcribed; raw text available |
+| `reviewed` | Transcription reviewed (by user or AI); ready for report generation |
+| `completed` | AI generated the final report |
+
+Lifecycle: `draft → audio_attached → transcribed → reviewed → completed` (REQ-168). The work-flow state mapping lives in `## Status Machine` §3.
+
+### 7. Expansion Markers
+
+- Phase 11 (§11 Authentication): **DONE — field-level User definition in §4.4.**
+- Phase 20 (§20 Audio Recording And STT Pipeline): **DONE — field-level Audio/Transcription definitions in §4.2/§4.3 and the status reconciliation in §5.**
+- Phase 23 (§23 Mock Data): **DONE — seeded entity set reconciled in §5; exact seed records in `## Mock Data Seeding` §4.**
+- Phase 35 (Archive, Delete, And Restore Lifecycle): archive/delete/restore lifecycle rules and the final status-machine state names.
 
 ---
 
 ## Business Rules
 
-> **Phase 5 seed — rules derived from §5. Expanded in Phases 24 (data model) and 35 (lifecycle). Rule IDs: `BR-<NN>`.**
+> **Phase 5 seed — rules derived from §5. Phase 24 delivered the data-model rules from §24.2/§24.4/§24.7 (BR-11..14). Phase 35 adds the lifecycle rules. Rule IDs: `BR-<NN>`.**
 
 | ID | Rule | Source |
 |---|---|---|
@@ -1650,12 +1816,16 @@ Entity-level mock-data seeding rules from §23 (exact records deferred to Phase 
 | BR-08 | Reports preserve historical versions. | §5.2 (REQ-024) |
 | BR-09 | Previous reports must be searchable, updateable, retrievable, and reviewable. | §5.2 (REQ-055) |
 | BR-10 | Branch CRUD and Report CRUD are required. | §5.1, §5.2 (REQ-045/046) |
+| BR-11 | All model hooks, instance methods, and static methods support session options where relevant. | §24.2 (REQ-165) |
+| BR-12 | No schema field combines `unique: true` with separate indexes; uniqueness and other indexes are declared through `schema.index(..)`. | §24.2 (REQ-166) |
+| BR-13 | User passwords are hashed with bcryptjs (12 salt rounds) in a `pre('save')` hook; `comparePassword` compares via `bcrypt.compare`. | §24.7 (REQ-167) |
+| BR-14 | The Report status follows the enum `draft → audio_attached → transcribed → reviewed → completed`. | §24.4 (REQ-168) |
 
 ---
 
 ## API Contract
 
-> **Phase 5 seed — conventions and endpoint inventory from §5; response envelope, status codes, and validation shapes added in Phase 10 (§10); authentication endpoints added in Phase 11 (§11). Detailed request/response schemas and paths arrive in Phases 12, 18, 20, 22, 24, and 28.**
+> **Phase 5 seed — conventions and endpoint inventory from §5; response envelope, status codes, and validation shapes added in Phase 10 (§10); authentication endpoints added in Phase 11 (§11); model-driven request/response schemas added in Phase 24 (§24 Data Model). Detailed request/response schemas and paths continue in Phases 12, 18, 20, 22, and 28.**
 
 ### 1. Conventions (seeds)
 
@@ -1668,11 +1838,11 @@ Entity-level mock-data seeding rules from §23 (exact records deferred to Phase 
 
 | Resource | Operations | Detail phase |
 |---|---|---|
-| Branches | list, get, create, update, delete (Branch CRUD, §5.1) | Paths/schemas: Phases 10/24 |
-| Daily reports | list, get, create, update, delete (Report CRUD, §5.2) | Paths/schemas: Phases 10/24 |
+| Branches | list, get, create, update, delete (Branch CRUD, §5.1) | Paths: Phase 10; schemas: Phase 24 (§8) |
+| Daily reports | list, get, create, update, delete (Report CRUD, §5.2) | Paths: Phase 10; schemas: Phase 24 (§8) |
 | Narrations / audio | upload, playback, re-record support | Phase 20 |
 | Transcriptions | review/update, AI correction | Phase 20 |
-| AI conversations | list/get per report | Phases 18/21 |
+| AI conversations | list/get per report; message schemas Phase 24 (§8) | Phases 18/21 |
 | Exports | PDF/TXT/CSV/spreadsheet generation | Phase 22 |
 
 ### 3. Response Envelope, Status Codes, And Validation (Phase 10)
@@ -1714,8 +1884,8 @@ Entity-level mock-data seeding rules from §23 (exact records deferred to Phase 
 
 ### 6. Audio Upload And Re-Transcription Endpoints (Phase 20)
 
-- **Upload endpoint** — accepts the full recorded clips array as the multipart field `clips` (§20.1; REQ-140): multer storage in `backend/uploads/audio/` (gitignored), 50 MB max per clip (`AUDIO_MAX_SIZE_BYTES`), server-side ffprobe duration validation and type/size validation (§20.2/§20.3; REQ-142, REQ-143); success sets the report status `audio_recorded` (status names reconciled in Phase 35).
-- **Re-transcription endpoint** — re-runs STT on the stored audio for accuracy verification (§20.5; REQ-145): the backend must accept both `audio_recorded` and `transcribed` statuses; the STT call itself always targets the Addis AI `v2/stt` endpoint with chunking per `## Audio Recording STT` §8 (REQ-128, REQ-144).
+- **Upload endpoint** — accepts the full recorded clips array as the multipart field `clips` (§20.1; REQ-140): multer storage in `backend/uploads/audio/` (gitignored), 50 MB max per clip (`AUDIO_MAX_SIZE_BYTES`), server-side ffprobe duration validation and type/size validation (§20.2/§20.3; REQ-142, REQ-143); success sets the report status `audio_attached` (§24.4 enum, AD-011, REQ-168).
+- **Re-transcription endpoint** — re-runs STT on the stored audio for accuracy verification (§20.5; REQ-145): the backend must accept both `audio_attached` and `transcribed` statuses (status name reconciled in Phase 24, AD-011); the STT call itself always targets the Addis AI `v2/stt` endpoint with chunking per `## Audio Recording STT` §8 (REQ-128, REQ-144).
 
 ### 7. Export (Phase 22)
 
@@ -1723,11 +1893,40 @@ Entity-level mock-data seeding rules from §23 (exact records deferred to Phase 
 - **Google Docs export — the only backend export** — the backend authenticates to the Google Docs API with a Google Service Account using the optional `GOOGLE_SERVICE_ACCOUNT_EMAIL` and `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` environment variables (`## Environment Config` §2, REQ-121), creates the document from the report content, sets the sharing permission to "Anyone with link can view", and returns the document URL (REQ-158). The exact path is defined at implementation (Phase 25 `backend/controllers`), consistent with the Phase 10 precedent of finalizing paths in later phases; responses use the §10.7 envelope. The frontend opens the returned URL in a new tab (`## Work Flow` §5, REQ-158).
 - Google service account credentials are server-side only and must never be exposed to the client (REQ-158).
 
+### 8. Model-Driven Contracts (Phase 24, §24 Data Model)
+
+Request and response bodies map field-for-field to the `## Data Modeling` §4 schemas; list endpoints return the §10.4 paginated shape; all responses use the §10.7 envelope; User output excludes `password` (toJSON transform, §24.7).
+
+**Report documents:**
+
+| Field | Request (`POST /reports`) | Response (document) | Notes |
+|---|---|---|---|
+| `user` | — (from auth) | ObjectId | Never client-settable |
+| `date` | String `DD-MM-YYYY` | String | Required; client formats via `dayjs` |
+| `branches[]` | `[{ branchId, clockIn, clockOut }]` | Same | Required; branchId must reference an owned Branch |
+| `clockIn` | String (12-hour) | String | Optional at creation; may default from first branch |
+| `clockOut` | String (12-hour) | String | Optional at creation; may default from last branch |
+| `audio` | — (separate upload) | Array of Audio | Empty at creation |
+| `transcription` | — | ObjectId or `null` | Set by the pipeline |
+| `status` | — (computed) | enum `draft | audio_attached | transcribed | reviewed | completed` | Lifecycle in `## Data Modeling` §6 |
+| `isArchived` / `archivedAt` | — | Boolean / Date | Lifecycle rules Phase 35 |
+| `generated` / `generatedHistory[]` | — | String / Array | Set by generation; see `## AI Prompt Spec` §11 |
+
+**Branch documents:** `{ name (required), location, isArchived, archivedAt, user }` — create/update bodies carry only `name` and `location`; `user` is taken from auth; uniqueness is enforced on `{ user, name }` (DM-02, REQ-166).
+
+**Audio upload response (Phase 20 §6):** returns the created Audio documents (one per clip): `{ user, report, originalName, mimeType, filePath, fileSize, duration }` — plus `AUDIO_MAX_SIZE_BYTES` = 52428800 and `AUDIO_MAX_DURATION_SEC` = 900 constants enforced server-side (REQ-139..143).
+
+**Transcription correction payload (Phase 20 §6):** the review/correction body carries the review mode inputs — direct user edit: `{ reviewed }`; AI instruction: `{ instruction }` — and the controller writes the matching `history[]` entry per `## Data Modeling` §4.3 (reviewer = User ObjectId for direct edits, provider string for AI corrections; AD-011).
+
+**ChatConversation messages (Phase 24):** each message is `{ id, role ("user" | "assistant"), status ("streaming" | "complete" | "failed"), parts ([Mixed] — 4 tool shapes), provider ("addis" | "gemini" | "nvidia"), createdAt }` — `provider` records the text-generation provider that produced the message (REQ-133, AD-011).
+
+**Pagination/sort keys (per model, DM-04):** Report list sorts by `{ user: 1, createdAt: -1 }`; Branch list by `{ user: 1, name: 1 }`; ChatConversation list by `{ user: 1, updatedAt: -1 }` (§24.4, §24.8, §24.9).
+
 ---
 
 ## Status Machine
 
-> **Phase 5 seed — report lifecycle statuses derived from the Work Flow (W-01..W-12) and §5.2. Exact state names and archive/delete/restore transitions are finalized in Phase 35.**
+> **Phase 5 seed — report lifecycle statuses derived from the Work Flow (W-01..W-12) and §5.2. State names reconciled with the Phase 24 model enum (§24.4); the archive/delete/restore transitions and their naming remain Phase 35.**
 
 ### 1. Report States (seeds)
 
@@ -1746,9 +1945,26 @@ Entity-level mock-data seeding rules from §23 (exact records deferred to Phase 
 - Generation happens only from TRANSCRIPTION_REVIEWED (reviewed transcription), never from raw audio (§5.2, BR-05, DR-6).
 - Review–correction loops (W-07..W-10) keep the report in GENERATED until the supervisor finalizes it (REQ-038).
 - FINALIZED reports remain editable after generation and preserve historical versions (§5.2, BR-07/08).
-- Archive/delete/restore transitions and exact state names: Phase 35.
+- Archive/delete/restore transitions and their exact naming: Phase 35.
 
-### 3. Scope
+### 3. Work-Flow To Model-Enum Mapping (Phase 24)
+
+The work-flow states (seeds, §1) map to the `Report.status` enum (`## Data Modeling` §4.1, §6; AD-011):
+
+| Work-flow state | Report.status enum | Notes |
+|---|---|---|
+| CREATED | `draft` | Report metadata created; audio not yet uploaded |
+| — (audio uploaded) | `audio_attached` | Replaces the Phase 20 `audio_recorded` name (AD-011, REQ-168) |
+| TRANSCRIBING | — (transient) | No enum value; the transcription step is async and brief |
+| TRANSCRIPTION_REVIEWED | `reviewed` | Reviewed/corrected text lives in `Transcription.latest` + `history[]` |
+| GENERATED | `completed` | `Report.generated` set; `generatedHistory[]` appended (AD-010) |
+| FINALIZED | — (work-flow only) | No model field; satisfies "reports remain editable after generation" (BR-07/08) |
+| EXPORTED | — (work-flow only) | Export formats are client-side (Phase 22) |
+| ARCHIVED / DELETED | — (Phase 35) | `isArchived`/`archivedAt` exist on the model; lifecycle rules Phase 35 |
+
+The `transcribed` enum value maps to the in-flight STT completion: once all clips are transcribed (`Transcription.raw` populated), the status moves from `audio_attached` to `transcribed`, and after review to `reviewed` (REQ-168).
+
+### 4. Scope
 
 The status machine covers the daily report lifecycle only; branch and user records have no status lifecycle (the source does not define one).
 
@@ -2104,7 +2320,7 @@ Delivery wiring (§7, §8): for Addis AI the assembled directive text (§1–5 s
 ### 11. Transcription Correction (§21.4)
 
 - The system fixes transcription errors — fills gaps, fixes misrecognized words (REQ-149).
-- Returns the corrected text as `aiCorrectedText` in the Transcription model (field detail Phase 24; entity seed in `## Data Modeling` §5).
+- The correction result is stored on the Transcription model: the AI-returned text is written to `latest` and a new `history[]` entry is appended with `reviewer` = the provider string (`## Data Modeling` §4.3 review modes; AD-011). The earlier `aiCorrectedText` field name is superseded.
 - Distinct from report correction (§9): transcription correction fixes the source material before generation; report correction fixes the generated report.
 
 ### 12. Amharic Generation Rules Enforced In The Prompt (§21.5)
@@ -2362,7 +2578,7 @@ Project handling (REQ-129):
 ### 6. Expansion Markers
 
 - Phase 21 (§21 AI Prompt Requirements): final prompt construction delivered through Gemini `contents`/`systemInstruction` and the Nvidia message format.
-- Phase 24 (§24 Data Model): provider field stored per AI conversation message.
+- Phase 24 (§24 Data Model): **DONE — the provider field is stored per AI conversation message (`## Data Modeling` §4.6 `messages[].provider`; `## API Contract` §8; REQ-133, AD-011).**
 - Phase 28 (§28 Error Handling): unified error handling across all three providers.
 
 ---
@@ -2568,13 +2784,14 @@ The only approved chunking pipeline (cross-aligned with `## Addis AI` §7; REQ-1
 
 ### 9. Re-Transcription (§20.5)
 
-- The backend must accept both `audio_recorded` and `transcribed` statuses for re-transcription.
+- The backend must accept both `audio_attached` and `transcribed` statuses for re-transcription (status name reconciled in Phase 24, AD-011; REQ-145, REQ-168).
 - The frontend shows a "Re-transcribe" button on a completed transcription that re-runs STT on the stored audio (flow in `## Transcription Review` §2).
 
 ### 10. Expansion Markers
 
 - Phase 18 (§18 Addis AI Integration): **DONE — STT endpoint, constraints, and retry rules are in `## Addis AI` §7.**
 - Phase 20 (§20 Audio Recording And STT Pipeline): **DONE — MediaRecorder, MIME priority, wavSplitter chunking, language code, re-transcription endpoint, error handling and retries (sections 5–9; REQ-139..145).**
+- Phase 24 (§24 Data Model): **DONE — the upload status name is `audio_attached` (`## Data Modeling` §4.1; AD-011, REQ-168).**
 - Phase 28 (§28 Error Handling): STT error states.
 
 ---
@@ -2589,7 +2806,7 @@ The supervisor reviews the transcription and, if needed, corrects it with AI hel
 
 ### 2. Re-Transcription For Accuracy Verification (§8)
 
-Re-transcription must be available to verify accuracy on every audio recording (§8, REQ-072): the supervisor can re-run STT on the stored audio and confirm the transcription matches the recording before generation. Re-transcription is the accuracy safeguard for the review step. Mechanics (`## Audio Recording STT` §9): the backend accepts both `audio_recorded` and `transcribed` statuses for re-transcription, and the frontend shows a "Re-transcribe" button on a completed transcription that re-runs STT on the stored audio (REQ-145).
+Re-transcription must be available to verify accuracy on every audio recording (§8, REQ-072): the supervisor can re-run STT on the stored audio and confirm the transcription matches the recording before generation. Re-transcription is the accuracy safeguard for the review step. Mechanics (`## Audio Recording STT` §9): the backend accepts both `audio_attached` and `transcribed` statuses for re-transcription (status name reconciled in Phase 24, AD-011), and the frontend shows a "Re-transcribe" button on a completed transcription that re-runs STT on the stored audio (REQ-145).
 
 ### 3. Expansion Markers
 
@@ -2936,7 +3153,7 @@ client/
 - The generation system prompt is the exact §21.1 text and the correction system prompt is the exact §21.2 text (REQ-146, REQ-147; `## AI Prompt Spec` §9).
 - Generation parameters are temperature 0.2 / maxOutputTokens 2048 (frozen AI Generation group); correction parameters are temperature 0.15 / maxOutputTokens 2048 (frozen AI Correction group) — never hardcoded (REQ-124, REQ-127).
 - Voice corrections flow correction audio → STT → correction text → the same correction prompt (REQ-148; `## AI Prompt Spec` §10); correction STT uses the approved chunking pipeline (`## Audio Recording STT` §8).
-- Transcription correction fixes transcription errors (fills gaps, fixes misrecognized words) and returns the corrected text as `aiCorrectedText` in the Transcription model (REQ-149; `## AI Prompt Spec` §11; schema Phase 24).
+- Transcription correction fixes transcription errors (fills gaps, fixes misrecognized words); the corrected text is stored as `Transcription.latest` with a new `history[]` entry (`reviewer` = provider string) per `## Data Modeling` §4.3 (REQ-149; `## AI Prompt Spec` §11; the earlier `aiCorrectedText` field name is superseded — AD-011).
 - The prompt enforces the 14 §21.5 Amharic generation rules (REQ-150..153; `## AI Prompt Spec` §12): rules 1–6 (Amharic default, exact section structure, sample tone, reviewed transcription as source of truth, no invention, blank for missing info), rules 7–10 (separate activities from unresolved issues, branch-specific details, time ranges per branch, supervisor point of view), rules 11–12 (no generation explanation, no unrelated content), rules 13–14 (corrections update only the relevant part; Amharic workplace transliteration).
 
 ### 7. Expansion Markers
@@ -3037,7 +3254,7 @@ client/
 
 ### 11. Expansion Markers
 
-- Phase 24 (§24 Data Model): full schema definitions.
+- Phase 24 (§24 Data Model): **DONE — full schema definitions delivered in `## Data Modeling` §4 (Report, Audio, Transcription, User, Branch, ChatConversation).**
 - Phase 25 (§25 Backend Implementation): implementation-level backend architecture.
 - Phase 28 (§28 Error Handling): global error handler detail.
 
@@ -3091,23 +3308,21 @@ client/
 
 ### 4. Seeded Entity Set
 
-Entity-level seed set; the exact records and field values are defined in Phase 24 (field-level schema per §5.4):
+The seed set follows the `## Data Modeling` §1 inventory (Phase 24). Entity-level seed set; the exact records and field values are defined here (Phase 24, §24 Data Model):
 
 | Entity | Seeded as | Source |
 |---|---|---|
-| User | A demo supervisor account; created through the model so the bcrypt `pre('save')` hook hashes the password | §11, §23 |
-| Branch | Multiple branches under the demo supervisor's area | §5.1, §23 |
-| DailyReport | Reports covering the statuses of `## Status Machine` (status-name reconciliation owned by Phase 35) | §5, §23 |
-| Narration | Metadata-only records (§5) | §23, ADR-037 |
-| Transcription | Reviewed/corrected transcriptions linked to the mock narrations and reports | §20, §23 |
-| AIConversation | Conversation records associated with mock report generation | §2.1, §23 |
-| GeneratedReport | Generated-report records with their content | §2.1, §23 |
-| ReportVersion | Version-history records for the mock reports | §5.2, §23 |
+| User | A demo supervisor account; created through the model so the bcrypt `pre('save')` hook hashes the password | §11, §23, `## Data Modeling` §4.4 |
+| Branch | Multiple branches under the demo supervisor's area | §5.1, §23, §4.5 |
+| Report | Reports covering the `## Data Modeling` §6 statuses (`draft`, `audio_attached`, `transcribed`, `reviewed`, `completed`) | §5, §23, §4.1 |
+| Audio | Metadata-only records (§5) | §23, ADR-037, §4.2 |
+| Transcription | Reviewed/corrected transcriptions linked to the mock audio and reports (`raw` + `latest` + `history[]`) | §20, §23, §4.3 |
+| ChatConversation | Conversation records associated with mock report generation (messages with `provider` + parts) | §2.1, §23, §4.6 |
 
 ### 5. Metadata-Only Audio Rule
 
-- Mock narrations exist as metadata-only records (ADR-037): they carry clip metadata (MIME, duration) but no real audio files.
-- Seeding does not populate `backend/uploads/audio/` and makes no STT call for mock narrations; mock transcriptions are pre-created records (REQ-162).
+- Mock Audio records exist as metadata-only records (ADR-037): they carry clip metadata (MIME, duration, original name) but no real audio files.
+- Seeding does not populate `backend/uploads/audio/` and makes no STT call for mock audio; mock transcriptions are pre-created records (REQ-162).
 
 ### 6. Entry Points
 
@@ -3126,9 +3341,9 @@ Task seeds for the Tasks And Implementation Plan section (Phase 32):
 
 ### 8. Expansion Markers
 
-- Phase 24 (§24 Data Model): exact seed records and field values.
+- Phase 24 (§24 Data Model): **DONE — the seeded entity set and its field-level definitions are delivered in §4 above (`## Data Modeling` §4).**
 - Phase 32 (Tasks And Implementation Plan): the §7 tasks are consolidated into the section.
-- Phase 35 (Archive, Delete, And Restore Lifecycle): status-name reconciliation may adjust the seeded report statuses.
+- Phase 35 (Archive, Delete, And Restore Lifecycle): the archive/delete/restore lifecycle rules may adjust the seeded report statuses.
 
 ---
 
@@ -3920,6 +4135,24 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 - **Consequences:** Seeded narrations have no playable audio and seeding never touches `backend/uploads/audio/` or the AI providers; exact seed records arrive in Phase 24.
 - **Source:** §23, §33 (ADR-037).
 
+#### AD-010 — Unified ReportVersion (inline generated + generatedHistory)
+
+- **Date:** 2026-08-02. **Status:** Accepted (user decision, Phase 24).
+- **Context:** §5.4 requires the system to manage "generated reports" and "report version history"; the Phase 5 seeds treated them as separate entities (GeneratedReport, ReportVersion); §24.4 defines a single `Report` model with `generated` and `generatedHistory[]` fields.
+- **Decision:** The unified ReportVersion lives inline on the `Report` model: `generated` holds the latest AI output and `generatedHistory[]` preserves every generation (`{ provider, text, generatedAt }`, appended on regeneration). There are no separate `GeneratedReport` or `ReportVersion` collections.
+- **Rationale:** Matches the §24.4 schema exactly (single model, no version-entity split); avoids redundant documents and joins; the user approved this reading in Phase 24.
+- **Consequences:** Report generation writes `generated` and appends to `generatedHistory`; the Record Types Inventory, Mock Data Seeding entity set, and Glossary now reference the inline fields.
+- **Source:** §24.4, §5.4 (REQ-057, REQ-171).
+
+#### AD-011 — Phase 24 reconciliations (status names, aiCorrectedText, provider, derived analytics)
+
+- **Date:** 2026-08-02. **Status:** Accepted (user decision, Phase 24).
+- **Context:** §24 defines the authoritative data model, and four earlier-phase facts need reconciliation: the Phase 20 upload status `audio_recorded` vs the §24.4 enum `audio_attached`; the `aiCorrectedText` field vs the §24.6 `latest` + `history[]` review modes; the missing provider field on chat messages (REQ-133); and the Phase 5 "Analytics" entity vs the §24 model set.
+- **Decision:** (1) The upload status is `audio_attached` everywhere (Status Machine mapping, API Contract, Audio STT §9, Transcription Review §2, REQ-145); archive/delete/restore naming remains Phase 35. (2) `aiCorrectedText` is superseded — AI transcription corrections write `Transcription.latest` with a `history[]` entry whose `reviewer` is the provider string (REQ-149). (3) `ChatConversation.messages[]` gains `provider` (`addis | gemini | nvidia`) — user-approved extension satisfying REQ-133. (4) Reporting analytics are derived on demand via aggregation over Report documents — no analytics collection; the metric set stays Phase 31 (AD-007).
+- **Rationale:** §24 is the authoritative schema; keeping one status vocabulary, one correction storage, and one message shape avoids divergent models; derived analytics keep the model set minimal per §24.
+- **Consequences:** All spec sections now use `audio_attached`; transcription corrections store `latest` + `history`; assistant messages record the provider; no Analytics collection is created in Phase 25.
+- **Source:** §24.4, §24.6, §24.9, §20.5, §21.4, §19 (REQ-133, REQ-145, REQ-149, REQ-168, REQ-172).
+
 ### Decision Log open items
 
 - Measurable success KPIs (OQ-001) — decision pending user input.
@@ -4023,3 +4256,7 @@ Phases 1–22 are GREEN (2026-08-01). Phase 22 built the export mechanics from �
 ## End Of Phase 23 Content
 
 Phases 1–23 are GREEN (2026-08-02). Phase 23 built the mock data rules from §23: new `## Mock Data Seeding` seed (development/demo-only scope with the `NODE_ENV` production guard — user decision; session contract mirroring the write-controller transaction pattern of REQ-082 — `startSession`/`startTransaction`/commit-or-abort/`endSession` in `finally` with `{ session }` on every write, all-or-nothing runs; transactional wipe across the seeded collections; idempotent wipe-before-inject; seeded entity set — User (created through the model so the bcrypt `pre('save')` hook applies), Branch, DailyReport (statuses of `## Status Machine`, reconciliation owned by Phase 35), Narration, Transcription, AIConversation, GeneratedReport, ReportVersion; metadata-only audio rule from ADR-037 — clip metadata without audio files, `backend/uploads/audio/` untouched, no STT calls, mock transcriptions pre-created; entry points under `backend/mock/*` with module and npm script names defined at implementation — no `mock/`/`seed/` directory or seed script exists in `backend/` today (codebase fact); implementation task seeds T-MOCK-01..04 for the Phase 32 Tasks And Implementation Plan section; expansion markers for Phases 24, 32, 35), enriched `## Data Modeling` (new §6 Mock Data Seeds — entity-level seeding rules, metadata-only narrations, session-based inject/wipe, Phase 24 deferral), added REQ-160..164 (inject session, wipe session, metadata-only mock audio, idempotent injection, production guard), added AD-009 (Mock Data Seeding Strategy), extended `## Glossary` (Mock data), flipped the Phase 23 forward markers in `## Project Directory Structure` (the `mock/` tree comment and the backend-directory note) to reference `## Mock Data Seeding`, added the missing Phase 22 export marker to the requirement expansion markers, updated the Checklist (Mock Data Seeding — GREEN seed; Data Modeling — GREEN Phase 23 enrichment; Tasks — Phase 23 seed, content lives in `## Mock Data Seeding`, consolidated in Phase 32), and added the Phase 23 Source Trace Map with the `backend/` and `backend/package.json` codebase facts (no `mock/`/`seed/` directory, no seed script, mongoose ^9.7.4). Phase 24 will build the data model.
+
+## End Of Phase 24 Content
+
+Phases 1–24 are GREEN (2026-08-02). Phase 24 built the data model from §24: rewrote `## Data Modeling` (new §1 inventory — six persisted models (User, Branch, Report, Audio, Transcription, ChatConversation) plus derived analytics with no collection; new §2 relationship diagram and rules — Report is the hub, Audio/Transcription point back to Report, bidirectional user ownership, report deletion keeps conversations; new §3 modeling rules — session-capable hooks/instance/static methods, `schema.index(..)`-only indexes, no `unique: true` plus separate-index combos, mongoose-paginate-v2 on all list endpoints; new §4 field-level schemas — Report with `branches[]` per-branch clockIn/clockOut, top-level clockIn/clockOut (DR-8 clock semantics), `audio[]`, `transcription`, status enum `draft | audio_attached | transcribed | reviewed | completed` (lifecycle, AD-011), `isArchived`/`archivedAt` TTL 30-day partial index, `generated` plus `generatedHistory[]` (unified report-version model, AD-010); Audio one doc per clip (`uploads/audio/{uuid}.webm`, fileSize ≤ 50 MB, duration ≤ 900 s via ffprobe, no status field); Transcription (`raw`, `latest`, `history[]` with reviewer User ObjectId or provider string, three review modes, no status field — AD-011); User (bcryptjs 12-round pre-save skip-if-unmodified, `comparePassword`, unique email via `schema.index`, `fullName` virtual, toJSON deletes password); Branch (unique `{user, name}` index, TTL archive); ChatConversation (messages `{ id, role, status, parts (4 tool shapes), provider "addis" | "gemini" | "nvidia" }`, index `{user, updatedAt: -1}`); new §5 Phase enrichment superseding note; new §6 Report Status Lifecycle; new §7 expansion markers — Phases 11/20/23 DONE, 35 pending), enriched `## Business Rules` (BR-11..14), enriched `## API Contract` (new §8 Model-Driven Contracts — Report/Branch request-response tables, Audio constants, transcription correction payload, ChatConversation message shape, pagination/sort keys), enriched `## Status Machine` (new §3 work-flow → enum mapping), enriched `## Report Domain` (DR-8 clock-semantics rule; §9 record types map to models), enriched `## Mock Data Seeding` (§4 entity set → final models, §5 metadata-only rule), enriched `## Other AI Providers` (§6 conversation message provider), `## Audio Recording STT` (§9, §10 markers), `## AI Prompt Spec` (§11 corrected transcription storage), `## Transcription Review` (§2 status semantics), reworded `## Rules` (§6 AI Prompt Rules), extended `## Glossary` (Narration, AI conversation, Generated report, Report version history, Analytics; `aiCorrectedText` superseded note), reworded REQ-145/REQ-149, added REQ-165..172, added AD-010 (Unified Report Version) and AD-011 (Phase 24 Reconciliations), updated the Checklist (Data Modeling, API Contract, Business Rules, Report Domain, Status Machine, Glossary, Requirements, Mock Data Seeding, Other AI Providers, Audio Recording STT, Transcription Review, Validation Audit, Backend Architecture — GREEN Phase 24 enrichment), and added the Phase 24 Source Trace Map. Phase 35 will build the archive/delete/restore lifecycle.
