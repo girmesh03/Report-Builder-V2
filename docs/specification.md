@@ -37,7 +37,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 3 | 3. Manual Reporting Mental Model | GREEN | PRD, Work Flow, User Interactions, Report Domain |
 | 4 | 4. Supporting Features Needed Because Of The Core Problem | GREEN | PRD, Requirements, User Stories, Report Management |
 | 5 | 5. Report And Branch Domain | GREEN | Report Domain, Data Modeling, Business Rules, API Contract, Status Machine, Report Management |
-| 6 | 6. Report Format, Samples, And Tone | PENDING | Report Format, AI Prompt Spec, Export Spec |
+| 6 | 6. Report Format, Samples, And Tone | GREEN | Report Format, AI Prompt Spec, Export Spec |
 | 7 | 7. Language Rules | PENDING | AI Prompt Spec, Report Format, UI/UX Spec |
 | 8 | 8. Transcription Accuracy Requirement | PENDING | Audio Recording STT, Transcription Review, Validation Audit |
 | 9 | 9. Technical Stack And Package Rules | PENDING | Rules, Coding Conventions, Architecture, Requirements, Project Directory Structure |
@@ -78,7 +78,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Spec section | Produced/updated in phase | Status |
 |---|---|---|
 | Addis AI | 18 | PENDING |
-| AI Prompt Spec | 6, 7, 18, 19, 21 | PENDING |
+| AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 6 seed) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
 | API Contract | 5, 10, 11, 18, 20, 22, 24, 28 | GREEN (Phase 5 seed) |
 | Architecture | 9, 10, 25 | PENDING |
@@ -94,7 +94,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Design | consolidated across phases; finalized in 36 | PENDING |
 | Environment Config | 17 | PENDING |
 | Error Handling | 28 | PENDING |
-| Export Spec | 6, 22 | PENDING |
+| Export Spec | 6, 22 | GREEN (Phase 6 seed) |
 | File Storage Uploads | 20 | PENDING |
 | Frontend Architecture | 12, 13, 14 | PENDING |
 | Git Workflow | 32 | PENDING |
@@ -115,7 +115,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | React Hook Form Standards | 15 | PENDING |
 | Redux RTK Query | 13 | PENDING |
 | Report Domain | 3, 5, 24 | GREEN (Phase 5 enrichment) |
-| Report Format | 6, 7, 21 | PENDING |
+| Report Format | 6, 7, 21 | GREEN (Phase 6 build) |
 | Report Management | 4, 5, 35 | GREEN (Phase 5 enrichment) |
 | Requirements | 1, 2, 4, 9, 29, 31, 34 | GREEN (Phase 4 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
@@ -228,6 +228,23 @@ All `§` references below identify sections of the original source brief. They a
 | §5.2 | Report content generated from reviewed transcription, not directly from raw audio | Report Domain (DR-6), Business Rules (BR-05), Work Flow (W-05), Requirements (REQ-054), Glossary (reviewed transcription) |
 | §5.3 | Eight named report fields: ቀን, ብራንች, ስም, ስራ የገባሁበት ሰዓት, የተሰሩ ስራዎች, መፍትሄ የሚፈሉ ጉዳዮች, አጠቃላይ አስተያየት, ከስራ የወጣሁበት ሰዓት | Report Domain (8), Requirements (REQ-056) |
 | §5.4 | Manage: daily supervision reports, transcriptions, AI conversations, generated reports, report version history, reporting analytics; fields defined in the data-modeling phase | Report Domain (9), Data Modeling, Requirements (REQ-057) |
+
+---
+
+## Source Trace Map — Phase 6 (source §6)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §6.1 | Required report structure: the eight Amharic sections (ቀን, ብራንች, ስም, ስራ የገባሁበት ሰዓት, የተሰሩ ስራዎች, መፍትሄ የሚፈሉ ጉዳዮች, አጠቃላይ አስተያየት, ከስራ የወጣሁበት ሰዓት) | Report Format (1), Requirements (REQ-058) |
+| §6.1 | Format supports one or multiple branches; working-time section shows the time range for each branch when multiple branches are visited | Report Format (1), Requirements (REQ-060), Business Rules (BR-01) |
+| §6.2–6.4 | Three report output samples: two-branch, three-branch, one-branch | Report Format (3) |
+| §6.5 | Required tone: professional, direct, clear, work-report oriented, supervisor perspective, natural Amharic; not conversational/casual/chatbot-like; conversation is transformed into report language | Report Format (4), AI Prompt Spec (2), Requirements (REQ-064), Glossary (report tone) |
+| §6.6 | Sixteen strict AI generation rules | Report Format (5), AI Prompt Spec (PR-01..16), Requirements (REQ-059/062/063/065) |
+| §6.6 (rule 6) | Missing info: leave blank or mark not specified per chosen prompt rule — **chosen: leave blank** | AI Prompt Spec (PR-06), Requirements (REQ-062), OQ-009 |
+| §6.7 | English/technical words written in common Amharic workplace transliteration (deep fryer → ዲፕ ፍራየር), not English spelling, not literal translation (ጥልቅ መጥበሻ); examples locker → ሎከር, kitchen → ኪችን, exhaust fan → ኤግዝስት ፋን, technician → ቴክኒሻን, store → ስቶር | Report Format (6), AI Prompt Spec (3), Requirements (REQ-061), Glossary (Amharic workplace transliteration) |
+| §6.8 | The transcription is raw material only — not organized, polished, or formatted; cannot be used directly as the report | Report Format (7), Report Domain (DR-1), Requirements (REQ-037) |
+| §6.9 | Correction/update behavior: update only the relevant part; example correction requests | Report Format (8), AI Prompt Spec (PR-16), Requirements (REQ-034) |
+| §6.10–6.11 | Before/after example: conversational transcription → organized report | Report Format (9), AI Prompt Spec (4) |
 
 ---
 
@@ -479,7 +496,7 @@ Secondary features should not distract from the core workflow of generating a bo
 
 ## Glossary
 
-> **Terms added in Phases 1–5. The full glossary is built in Phase 34 (§34 Glossary).**
+> **Terms added in Phases 1–6. The full glossary is built in Phase 34 (§34 Glossary).**
 
 | Term | Definition | Source |
 |---|---|---|
@@ -530,6 +547,9 @@ Secondary features should not distract from the core workflow of generating a bo
 | Reviewed transcription | The transcription text the supervisor has reviewed (and, if needed, corrected with AI help) before report generation; report content is generated only from it, never directly from raw audio. | §5.2 |
 | Branch-specific details | The per-branch information (activities, issues, times) that multi-branch reports must preserve. | §5.1 |
 | Per-branch time range | The time range spent at a branch; preserved in multi-branch reports when the audio contains it. | §3.1, §5.1 |
+| Required report format | The exact eight-field Amharic report structure (ቀን, ብራንች, ስም, ስራ የገባሁበት ሰዓት, የተሰሩ ስራዎች, መፍትሄ የሚፈሉ ጉዳዮች, አጠቃላይ አስተያየት, ከስራ የወጣሁበት ሰዓት) defined in §6.1 and `## Report Format`. | §5.3, §6.1 |
+| Report tone | The required style of generated reports: professional, direct, clear, work-report oriented, from the supervisor's perspective, natural Amharic; not conversational, casual, or chatbot-like. | §6.5 |
+| Amharic workplace transliteration | Writing English or technical words in their common Amharic workplace pronunciation (e.g., deep fryer → ዲፕ ፍራየር) instead of English spelling or literal translation. | §6.7 |
 
 ---
 
@@ -559,6 +579,7 @@ The complete problem statement is in `## Problem Statement`. In summary: the sup
 - **Per-branch supervision activities** (source: §2.2): check daily operational activities; check cleanliness; check employee readiness; follow a checklist; observe urgent branch problems; communicate with staff or responsible people; follow up on previously reported issues; take action or give instructions; form an opinion about branch performance; identify things that need immediate attention; identify things that can make the branch better.
 - **End-of-day report must explain** (source: §2.2): date, branch, working time, completed activities, unresolved issues, general opinion, work exit time.
 - **Report format supports one or multiple branches** (source: §5.1); multi-branch reports preserve branch-specific details and per-branch time ranges when the audio contains them.
+- **Required report tone** (source: §6.5): professional, direct, clear, work-report oriented, from the supervisor's perspective, natural Amharic — not conversational, not casual, not chatbot-like.
 
 ### 5. Core Workflow (high level)
 
@@ -568,8 +589,8 @@ Derived from §1.4, §2.1, §3, and §4 (detailed interaction workflow in `## Wo
 2. The supervisor plays back the recording and **re-records if needed**, to confirm the recording before submission (§4).
 3. The audio is transcribed (STT) to Amharic text (Addis AI speech-to-text, §4).
 4. The supervisor reviews and edits the transcription when necessary, and may correct the raw AI transcription **using AI** before report generation (§4).
-5. An AI model optimized for Amharic analyzes the transcription and automatically generates a professional, well-structured daily supervision report that follows the organization's reporting format (Addis AI text generation, §4).
-6. The supervisor reviews the generated report and may request corrections; corrections update only the relevant part without unnecessarily rewriting correct unrelated sections, and the review–correction cycle repeats until the supervisor is satisfied (§3.2).
+5. An AI model optimized for Amharic analyzes the transcription and automatically generates a professional, well-structured daily supervision report that follows the organization's reporting format (Addis AI text generation, §4; required format in `## Report Format` §6.1, tone §6.5, transliteration rule §6.7).
+6. The supervisor reviews the generated report and may request corrections; corrections update only the relevant part without unnecessarily rewriting correct unrelated sections, and the review–correction cycle repeats until the supervisor is satisfied (§3.2; correction/update behavior in `## Report Format` §6.9).
 7. Reports remain editable after generation and preserve historical versions; a single working day may span multiple branches.
 8. The report is exported (PDF, TXT, CSV, spreadsheet — detailed in Phase 22) so it can be shared or archived (§4).
 
@@ -587,7 +608,7 @@ The twelve supporting features (§4):
 6. **Audio playback and re-recording** — so the supervisor can confirm the recording before submission.
 7. **Addis AI speech-to-text** — so Amharic audio becomes text (integration in Phase 18, pipeline in Phase 20).
 8. **Transcription review by AI** — so the user can correct raw AI transcription using AI before report generation.
-9. **Addis AI text generation** — so raw transcription becomes a structured report.
+9. **Addis AI text generation** — so raw transcription becomes a structured report (format and tone in `## Report Format`, Phase 6).
 10. **Report CRUD** — so the user can manage reports.
 11. **Branch CRUD** — so the user can manage branches.
 12. **Export** — so the report can be shared or archived (details in Phase 22).
@@ -747,6 +768,19 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-056 | The generated report must include the eight named fields: ቀን, ብራንች, ስም, ስራ የገባሁበት ሰዓት, የተሰሩ ስራዎች, መፍትሄ የሚፈሉ ጉዳዮች, አጠቃላይ አስተያየት, ከስራ የወጣሁበት ሰዓት. | Each named field is present in the generated report structure (format detail in Phase 6). | §5.3 |
 | REQ-057 | The system must manage daily supervision reports, transcriptions, AI conversations, generated reports, report version history, and reporting analytics. | Each record type is managed; detailed fields are defined in the data-modeling phase (Phase 24). | §5.4 |
 
+### Functional Requirements (Phase 6)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-058 | The generated report must follow the exact section structure of the required report format, in this order: ቀን, ብራንች, ስም, ስራ የገባሁበት ሰዓት, የተሰሩ ስራዎች, መፍትሄ የሚፈሉ ጉዳዮች, አጠቃላይ አስተያየት, ከስራ የወጣሁበት ሰዓት. | Generated output uses the §6.1 template structure with all eight sections. | §6.1 |
+| REQ-059 | The generated report must be written in Amharic. | Output is Amharic. | §6.6 (rule 1) |
+| REQ-060 | When multiple branches are visited, the working-time section must show the time range for each branch. | Per-branch ranges appear in the report (e.g., ከ02:30 - 07:40 መድኃኒዓለም ብራንች). | §6.1 |
+| REQ-061 | English or technical words in the audio must be written in common Amharic workplace transliteration (e.g., deep fryer → ዲፕ ፍራየር), never in English spelling and never as literal translations (e.g., not ጥልቅ መጥበሻ). | All English/technical words in output follow the transliteration style. | §6.7 |
+| REQ-062 | The AI must not invent missing dates, branch names, times, actions, people, problems, or opinions; missing required information leaves the field blank (OQ-009). | Output contains only transcription-sourced facts; missing fields are blank, never fabricated. | §6.6 (rules 5–6), OQ-009 |
+| REQ-063 | The AI must not output an explanation of how the report was generated, must not include unrelated conversation content, and must not include Person 2's questions unless the answer contains report information. | Output is the report only. | §6.6 (rules 13–15) |
+| REQ-064 | The generated report must match the required tone: professional, direct, clear, work-report oriented, from the supervisor's perspective, natural in Amharic, not overly decorative, not conversational, not casual, not like a chatbot answer. | Output tone conforms to the §6.5 attributes (detail of REQ-032). | §6.5 |
+| REQ-065 | The AI must separate completed activities from unresolved issues, put urgent problems under መፍትሄ የሚፈሉ ጉዳዮች, and put general or improvement opinions under አጠቃላይ አስተያየት. | Content is placed in the correct sections per §6.6 rules 7–9. | §6.6 (rules 7–9) |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -760,6 +794,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Mental-model extraction and review-loop rules: **Phase 3 — DONE (REQ-036..038)**.
 - Supporting features requirements (the twelve §4 features): **Phase 4 — DONE (REQ-039..049)**.
 - Report and branch domain rules: **Phase 5 — DONE (REQ-050..057)**.
+- Report format, samples, and tone rules: **Phase 6 — DONE (REQ-058..065)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -792,6 +827,8 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | US-017 | As an Area Supervisor, I want my profile identity to appear in reports, so that the report identifies me. | Profile identity fields are usable in report content. | §4 |
 | US-018 | As an Area Supervisor, I want multi-branch daily reports that preserve branch-specific details and per-branch time ranges, so that each branch's part of the day is accurately represented. | Branch-specific details stay attributed per branch; per-branch time ranges appear when the audio contains them. | §5.1 |
 | US-019 | As an Area Supervisor, I want previous reports to be searchable, updateable, retrievable, and reviewable, so that I can find and rework old reports. | Search, update, retrieval, and review of previous reports work (REQ-055). | §5.2 |
+| US-020 | As an Area Supervisor, I want the generated report to follow the exact required format and tone, so that the report looks like the samples I expect. | Output conforms to the §6.1 structure and §6.5 tone (REQ-058/064). | §6.1, §6.5 |
+| US-021 | As an Area Supervisor, I want English and technical words written in the usual Amharic workplace style, so that the report reads naturally. | Technical words appear transliterated (e.g., ዲፕ ፍራየር), not in English spelling or literal translation (REQ-061). | §6.7 |
 
 ---
 
@@ -871,11 +908,11 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 | W-02 | System | Sends the recorded audio to Addis AI speech-to-text (detailed pipeline in Phase 20) | Transcription (raw material) | §3.3 |
 | W-03 | System | The transcription is expected to contain the needed information but is not organized as a final report | Unorganized transcription text | §3.3 |
 | W-04 | Supervisor | Reviews and edits the transcription when necessary (REQ-016) | Corrected transcription | §2.1, §3.3 |
-| W-05 | System (AI) | Processes, extracts, organizes, and rewrites the information based on the required report rules, report format, tone, and system prompt; generation runs only from the reviewed transcription, never directly from raw audio (§5.2) | Organized report draft | §3.3, §5.2 |
-| W-06 | System (AI) | Writes the report in Amharic, matching the tone of the provided report samples (REQ-032) | Generated Amharic report | §3.3 |
+| W-05 | System (AI) | Processes, extracts, organizes, and rewrites the information based on the required report rules, report format, tone, and system prompt; generation runs only from the reviewed transcription, never directly from raw audio (§5.2); required format per §6.1 | Organized report draft | §3.3, §5.2, §6.1 |
+| W-06 | System (AI) | Writes the report in Amharic, matching the tone of the provided report samples (REQ-032; tone attributes §6.5) | Generated Amharic report | §3.3, §6.5 |
 | W-07 | Supervisor | Reviews the generated report | Review decision (satisfied / needs correction) | §3.2 |
 | W-08 | Supervisor | If something is wrong, missing, unclear, or not written in the desired way, requests a correction | Correction request | §3.2 |
-| W-09 | System (AI) | Updates the report; corrections update only the relevant part without unnecessarily rewriting correct unrelated sections (REQ-034) | Updated report | §2.3.7, §3.2 |
+| W-09 | System (AI) | Updates the report; corrections update only the relevant part without unnecessarily rewriting correct unrelated sections (REQ-034; correction behavior §6.9) | Updated report | §2.3.7, §3.2, §6.9 |
 | W-10 | Supervisor + System | Repeats W-07..W-09 until the supervisor is satisfied (correction loop) | Satisfied report | §3.2 |
 | W-11 | Supervisor | Accepts/finalizes the report | Final report version | §3.2 (versioning: Phases 24/35) |
 | W-12 | System | Delivers/exports the report (PDF, TXT, CSV, spreadsheet) | Exported report | §2.1 (details Phase 22) |
@@ -912,10 +949,10 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 |---|---|---|---|---|---|---|
 | UI-001 | Supervisor explains the day | Supervisor starts a new daily report | Supervisor records Amharic audio narration; may mention date, branch(es) visited, entry time, exit time, time range per branch, activities performed, checklist-based work completed, urgent issues/problems, actions taken, people contacted, follow-up needed, general opinions, opinions about issues, suggestions | Audio recording(s) captured for the day | Recording not captured; supervisor retries or re-records (controls detailed in Phase 20) | §3.1, §3.3 |
 | UI-002 | System listens and processes | Audio sent to STT | System transcribes via Addis AI; transcription contains the needed information but is not organized as a final report; system does not ask clarifying questions (OQ-007) | Transcription produced (raw material) | STT failure; error state and retry (Phase 20) | §3.2, §3.3 |
-| UI-003 | System writes the report | Transcription available | AI extracts, organizes, and rewrites information per report rules/format/tone/system prompt; writes in Amharic matching sample tone | Generated Amharic report presented to the supervisor | Generation failure; error state (Phases 21/28) | §3.2, §3.3 |
+| UI-003 | System writes the report | Transcription available | AI extracts, organizes, and rewrites information per report rules/format/tone/system prompt; writes in Amharic matching sample tone (§6.1 structure, §6.5 tone, §6.7 transliteration) | Generated Amharic report presented to the supervisor | Generation failure; error state (Phases 21/28) | §3.2, §3.3, §6 |
 | UI-004 | Supervisor reviews the report | Generated report shown | Supervisor reads the report; judges completeness, clarity, and desired style | Review decision made (accept or request correction) | Report regenerated on request (W-09) | §3.2 |
 | UI-005 | Supervisor requests a correction | Report not satisfactory | Supervisor states what is wrong, missing, unclear, or not written in the desired way | Correction request captured and routed to the AI | Request not submitted; retry | §3.2, §2.3.7 |
-| UI-006 | System updates the report | Correction request received | AI updates only the relevant part; correct unrelated sections are not unnecessarily rewritten | Updated report shown for re-review | Update failure; previous version intact (versioning Phases 24/35) | §3.2, §2.3.7 |
+| UI-006 | System updates the report | Correction request received | AI updates only the relevant part; correct unrelated sections are not unnecessarily rewritten (behavior §6.9) | Updated report shown for re-review | Update failure; previous version intact (versioning Phases 24/35) | §3.2, §2.3.7, §6.9 |
 | UI-007 | Supervisor finalizes | Report satisfies the supervisor | Supervisor accepts the report; the correction loop ends | Final report version stored | — | §3.2 |
 
 **Later-phase interaction markers:** recording start/stop/re-record and file-size validation (Phase 20), transcription review/edit UI (Phase 20), export flow (Phase 22), login/logout and protected routes (Phase 11), branch/report/transcription/AI-conversation/profile CRUD (Phase 4), archive/delete/restore (Phase 35), loading/error/empty/unauthenticated states (Phases 16, 28).
@@ -1020,7 +1057,7 @@ The generated report must include the following eight named fields (Amharic as r
 | አጠቃላይ አስተያየት | General opinion |
 | ከስራ የወጣሁበት ሰዓት | Work exit time |
 
-Note: §2.2 lists seven required elements (date, branch, working time, completed activities, unresolved issues, general opinion, work exit time); §5.3 names eight fields — it adds ስም (name) and splits "working time" into explicit entry and exit times. Reconciliation of both lists into the final format is Phase 6 scope (REQ-056).
+Note: §2.2 lists seven required elements (date, branch, working time, completed activities, unresolved issues, general opinion, work exit time); §5.3 names eight fields — it adds ስም (name) and splits "working time" into explicit entry and exit times. **Resolved in Phase 6:** the canonical structure is the §6.1 template with the eight named fields in fixed order (`## Report Format` §2; REQ-058).
 
 ### 9. Record Types Inventory (§5.4)
 
@@ -1029,7 +1066,7 @@ The system must manage: daily supervision reports, transcriptions, AI conversati
 ### 10. Domain Expansion Markers
 
 - Phase 5 (§5 Report And Branch Domain): **DONE — branch/report context rules, named report fields, record types inventory (sections 6–9 above); data-model fields remain Phase 24 scope.**
-- Phase 6 (§6 Report Format, Samples, And Tone): required-format reconciliation of the 14 mentionable elements with the 7 required report elements and the 8 named fields (§5.3).
+- Phase 6 (§6 Report Format, Samples, And Tone): **DONE — required format, samples, tone, strict generation rules, transliteration rule, correction behavior (`## Report Format`).**
 - Phase 24 (§24 Data Model): persisted data model for reports, transcriptions, narrations, versions.
 
 ---
@@ -1138,6 +1175,317 @@ The status machine covers the daily report lifecycle only; branch and user recor
 
 ---
 
+## Report Format
+
+> **Phase 6 build — the required Amharic report format, samples, and tone from §6. Language rules continue in Phase 7; prompt construction in Phase 21; export mechanics in Phase 22.**
+
+### 1. Required Report Structure (§6.1)
+
+The generated report must follow this Amharic structure:
+
+```text
+ቀን: [ቀን]
+ብራንች: [ብራንች ስም]
+ስም: [ሙሉ ስም]
+ስራ የገባሁበት ሰዓት: [ሰዓት]
+
+የተሰሩ ስራዎች:
+ - [ስራ 1]
+ - [ስራ 2]
+ - [ስራ 3]
+
+መፍትሄ የሚፈሉ ጉዳዮች:
+ - [ችግር 1]
+ - [ችግር 2]
+
+አጠቃላይ አስተያየት:
+ - [አስተያየት 1]
+ - [አስተያየት 2]
+
+ከስራ የወጣሁበት ሰዓት፡ [ሰዓት]
+```
+
+- Eight sections, in fixed order (REQ-058): ቀን, ብራንች, ስም, ስራ የገባሁበት ሰዓት, የተሰሩ ስራዎች, መፍትሄ የሚፈሉ ጉዳዮች, አጠቃላይ አስተያየት, ከስራ የወጣሁበት ሰዓት.
+- **One or multiple branches:** the format must support one branch or multiple branches (§5.1, REQ-050). When multiple branches are visited, the working-time section shows the time range for each branch (§6.1, REQ-060).
+- Example of the multi-branch working-time section:
+
+```text
+ስራ የገባሁበት ሰዓት:
+ከ02:30 - 07:40 መድኃኒዓለም ብራንች
+ከ07:55 - 12:20 ኤርፖርት ብራንች
+```
+
+> **Source punctuation note (not invented here):** the §6.1 template writes the exit-time label as `ከስራ የወጣሁበት ሰዓት፡` (Ethiopic `፡`) while the §6.2–6.4 samples write it as `ከስራ የወጣሁበት ሰዓት:`. Both forms are recorded above as in the source; the exact punctuation rule is fixed in Phase 21 (prompt requirements).
+
+### 2. Field Reconciliation
+
+- §2.2 requires seven elements (date, branch, working time, completed activities, unresolved issues, general opinion, work exit time — REQ-030).
+- §5.3 names eight fields (REQ-056), adding ስም (name) and splitting "working time" into explicit entry and exit times.
+- §3.1 lists fourteen mentionable items the narration may contain; these map into the eight sections (activities → የተሰሩ ስራዎች, urgent problems → መፍትሄ የሚፈሉ ጉዳዮች, opinions → አጠቃላይ አስተያየት, times → entry/exit and per-branch ranges, branches → ብራንች).
+- **Canonical result:** the §6.1 template with the eight named fields in fixed order is the required format (REQ-058). Both earlier lists are satisfied by it; nothing beyond the eight sections may be added to the structure (REQ-063).
+
+### 3. Report Output Samples (§6.2–6.4)
+
+The AI must match the tone and writing style of these samples (REQ-032). All three samples are reproduced from the source:
+
+**Sample 1 — two branches (source §6.2):**
+
+```text
+ቀን: 29-10-18
+ብራንች: መድኃኒዓለም / ኤርፖርት
+ስም: ቤዛ አያሌው
+ስራ የገባሁበት ሰዓት: 2:30
+ከ02:30 - 07:40 መድኃኒዓለም ብራንች
+ከ07:55 - 12:20 ኤርፖርት ብራንች
+
+የተሰሩ ስራዎች:
+በመድኃኒዓለምና በኤርፖርት ቅርንጫፎች በቼክሊስቱ መሰረት የዕለት ተዕለት የአሰራር ሂደቶችን፣ የንፅህና ሁኔታዎችን እና የሰራተኞችን ዝግጁነት አረጋግጫለሁ።
+በመድኃኒዓለም ብራንች ትናንት ሪፖርት የተደረጉት ሁሉም የጥገና ችግሮች አሁን ላይ ተስተካክለዋል።
+በኤርፖርት ቅርንጫፍ የአዲሶቹ ሶፋዎች እግሮች መሰበራቸውን ለቶማስ አሳውቄው፤ እሱም ነገ ቴክኒሻን እንደሚልክ ገልጾልኛል።
+
+መፍትሄ የሚፈሉ ጉዳዮች:
+በኤርፖርት ቅርንጫፍ፡ የወንዶች ሎከር ጣሪያ አሁንም እያፈሰሰ ነው፤ ይህ ችግር ከዚህ ቀደም (13-10-18) ሪፖርት የተደረገ ሲሆን እልባት አላገኝም። በተጨማሪም በኪችን ውስጥ ያለው የጭስ ማስወጫ ኤግዝስት ፋን መጽዳት ይፈልጋል፣ የበርገር ሥጋው መጠኑ አነስተኛ ሲሆን ከዳቦ ጋር የተመጣጠነ አይደለም። ስለሆነም እነዚህ ችግሮች መፍትሄ እንዲያገኙ እጠይቃለሁ።
+
+አጠቃላይ አስተያየት:
+በሁለቱም ቅርንጫፎች የሥራ እንቅስቃሴው ጥሩ ነበር።
+
+ከስራ የወጣሁበት ሰዓት: 12:20
+```
+
+**Sample 2 — three branches (source §6.3):**
+
+```text
+ቀን: 26-10-18
+ብራንች: ኤርፖርት / መድኃኒዓለም / ቡልቡላ
+ስም: ቤዛ አያሌው
+ስራ የገባሁበት ሰዓት:
+ከ01:50 - 04:10 ኤርፖርት ብራንች
+ከ04:20 - 07:30 መድኃኔዓለም ብራንች
+ከ08:05 - 12:30 ቡልቡላ ብራንች
+
+የተሰሩ ስራዎች:
+በኤርፖርትና በመድኃኒዓለም ብራንቾች በቼክሊስቱ መሠረት የዕለት ተዕለት የአሠራር ሂደቶችን፣ የንፅህና ሁኔታዎችን እና የሠራተኞችን ዝግጁነት አረጋግጫለሁ።
+በቡልቡላ ብራንች በተዘጋጀው የካሸሮች ሥልጠና ላይ ተሳትፌያለሁ።
+
+መፍትሄ የሚፈሉ ጉዳዮች:
+ለሳምቡሳ ዝግጅት የሚያስፈልጉ ግብዓቶች ስቶር ባለመኖራቸው፣ ወደ ብራንቹ ሳምቡሳ አልተላከም። ስለዚህ በተቻለ ፍጥነት ግብዓቶቹ እንዲሟሉ እጠይቃለሁ።
+በመድኃኒዓለም ብራንች የግሪሉ ግማሽ ክፍል አይሠራም። በመሆኑም ማቲያስ በተቻለ ፍጥነት እንዲጠግነው ጥሪ አድርጌ ነበር፤ ነገር ግን ሥራ እንደበዛበት አስታውቆኛል፣ ቢሆንም አሁንም እንዲስተካከል እጠይቃለሁ።
+
+አጠቃላይ አስተያየት:
+በአጠቃላይ በሦስቱም ቅርንጫፎች የሥራ እንቅስቃሴው ጥሩ ነበር።
+
+ከስራ የወጣሁበት ሰዓት: 12:30
+```
+
+**Sample 3 — one branch (source §6.4):**
+
+```text
+ቀን: 22-10-18
+ብራንች: መድኃኒዓለም
+ስም: ቤዛ አያሌው
+ስራ የገባሁበት ሰዓት: 01:55
+
+የተሰሩ ስራዎች:
+በቼክሊስቱ መሰረት በመድኃኒዓለም ቅርንጫፍ የሚከናወኑ መደበኛ የአሰራር ሂደቶች፣ የንፅህና አጠባበቅ ሁኔታ እና የሰራተኞች ዝግጁነት በተገቢው መልኩ መሆናቸውን አረጋግጫለሁ።
+ኤፍሬም በህመም እረፍት ላይ ስለነበር የእሱን የሥራ ቦታ ሸፍኜያለሁ።
+
+መፍትሄ የሚፈሉ ጉዳዮች:
+በዋናው መግቢያ በር ላይ የሚቀመጠው ምንጣፍ (ካርፔት) እንዲገዛልን ቀደም ሲል ጠይቄ የነበረ ሲሆን አሁንም በተቻለ ፍጥነት እንዲሟላልን እጠይቃለሁ።
+
+አጠቃላይ አስተያየት:
+በአጠቃላይ የሥራ እንቅስቃሴው ጥሩ ነበር።
+
+ከስራ የወጣሁበት ሰዓት: 09:30
+```
+
+Sample observations (source-factual, for the AI prompt and validation):
+
+- Branch line lists all visited branches separated by `/` (e.g., `መድኃኒዓለም / ኤርፖርት`).
+- When multiple branches are visited, `ስራ የገባሁበት ሰዓት:` is followed by one time-range line per branch (`ከ[from] - [to] [branch] ብራንች`), preserving branch-specific details and per-branch time ranges (REQ-051/052/060).
+- Completed activities are written as full sentences, not bullet fragments; unresolved issues and opinions are likewise prose under their section headings.
+- The report contains only the eight sections; no explanations or extra commentary (REQ-063).
+
+### 4. Required Report Tone (§6.5)
+
+The generated report must sound like the samples above. The tone must be:
+
+- Professional.
+- Direct.
+- Clear.
+- Work-report oriented.
+- Written from the supervisor's perspective.
+- Suitable to present to a boss.
+- Natural in Amharic.
+- Not overly decorative.
+- Not conversational.
+- Not casual.
+- Not like a chatbot answer.
+
+The AI must transform conversation into report language. Example: if the audio says something conversational like `እኔ ዛሬ መድኃኒዓለም ሄጄ ቼክሊስቱን አይቼ ነበር`, the report must not simply repeat the conversation. It must write in the report style:
+
+```text
+በቼክሊስቱ መሰረት በመድኃኒዓለም ቅርንጫፍ የሚከናወኑ መደበኛ የአሰራር ሂደቶችን አረጋግጫለሁ።
+```
+
+### 5. Strict Generation Rules (§6.6)
+
+The AI must follow these rules when generating the report (each becomes a prompt-rule seed in `## AI Prompt Spec`, PR-01..16):
+
+1. Generate the report in Amharic (REQ-059).
+2. Use the exact section structure required by the report format (REQ-058).
+3. Match the tone and writing style of the provided samples (REQ-032/064).
+4. Use the reviewed transcription as the source of truth (REQ-054).
+5. Do not invent missing dates, branch names, times, actions, people, problems, or opinions (REQ-062).
+6. If required information is missing, leave it blank (**OQ-009: chosen rule — leave blank**, no invented wording).
+7. Separate completed activities from unresolved issues (REQ-065).
+8. Put urgent problems under `መፍትሄ የሚፈሉ ጉዳዮች` (REQ-065).
+9. Put general branch opinion or improvement opinion under `አጠቃላይ አስተያየት` (REQ-065).
+10. Preserve branch-specific details when multiple branches are mentioned (REQ-051).
+11. Preserve time ranges per branch when the audio contains them (REQ-052).
+12. Write from the supervisor's point of view (REQ-064).
+13. Do not output an explanation of how the report was generated (REQ-063).
+14. Do not include unrelated conversation content (REQ-063).
+15. Do not include Person 2's questions unless the answer contains report information (REQ-063).
+16. When the user asks for correction or update after review, update the report according to the user's instruction without changing unrelated correct content (REQ-034; §6.9).
+
+### 6. English And Technical Words In The Audio (§6.7)
+
+The audio conversation is Amharic, but it may include English or technical workplace words. The AI must not translate such words literally into unnatural Amharic, and must not leave them in English spelling if the expected report style uses Amharic phonetic writing.
+
+Instead, the AI must write English or technical words in the common Amharic workplace pronunciation/transliteration style (REQ-061). Example: if the audio mentions `deep fryer`, the report must not write `deep fryer` and must not translate it literally as `ጥልቅ መጥበሻ`. It must write `ዲፕ ፍራየር`. This rule applies to all English or technical words.
+
+More examples:
+
+- `locker` → `ሎከር`
+- `kitchen` → `ኪችን`
+- `exhaust fan` → `ኤግዝስት ፋን`
+- `technician` → `ቴክኒሻን`
+- `store` → `ስቶር`
+
+(The broader Amharic language rules arrive in Phase 7.)
+
+### 7. What The Transcription Represents (§6.8)
+
+The transcription is not the final report. The transcription is only the raw Amharic text version of the recorded conversation or spoken explanation. It may include repetition, unordered information, questions and answers, informal wording, clarifications, corrections, side comments, and mixed technical terms. When someone reads the transcription, they should be able to understand the information. But the transcription itself cannot be used directly as the report because it is not organized, polished, or formatted. The AI must process the transcription and convert it into the required report structure. (Aligns with DR-1 and REQ-037.)
+
+### 8. Correction And Update Behavior (§6.9)
+
+After the AI generates the report, the supervisor must be able to review it. Example correction requests (Amharic, from the source):
+
+- `ይህን ችግር ወደ መፍትሄ የሚፈሉ ጉዳዮች አስገባው`
+- `የመውጫ ሰዓቱን 12:30 አድርገው`
+- `ይህን አስተያየት አጠቃላይ አስተያየት ውስጥ አስገባው`
+- `ይህን ክፍል አጥፋው`
+- `ቃሉን እንደዚህ ቀይረው`
+
+The AI must update only the relevant part of the generated report. It must not rewrite correct unrelated sections unnecessarily (REQ-034; W-09, UI-006).
+
+### 9. Before/After Example (§6.10–6.11)
+
+The following pair shows a conversational transcription before AI organization and the organized report after it. It is the reference example for the AI prompt (few-shot seed).
+
+**Raw transcription (source §6.10):**
+
+```text
+ቀን 09 11 18 ብራንች ጎላጉል እና ብስራተ ገብርኤል ብራንች ጎላጉል እና ብስራተ ገብርኤል ስም ቤዛ አያሌው ስም ቤዛ አያሌው ስራ የገባሁበት ሰዓት ከ አንድ ሰአት ከአምስት እስከ ሁለት ሰአት ከሃያ ጎላጉል ብራንች ከሶስት ሰአት ከ ሶስት ሰአት ከሰላሳ እስከ ዘጠኝ ሰአት ከሃያ በስራተ ገብርኤል ከዘጠኝ ሰአት ከሃምሳ አምስት እስከ አስራ ሁለት ሰአት ጎላጉል ብራንች የተሰራ ስራ በቴክ ሊስቱ መሰረት በቼክ ሊስቱ መሰረት በሁለቱም ብራንቾች የሚከናወኑ ስራዎችን በአግባቡ መሆናቸውን አረጋግጫለሁ። ሌላ የተሰራ ስራ አንዳንድ ሰራተኞች ብራንቹ የት ነበር? በጎላጎል ብራንድ ያሉ አንዳንድ ሰራተኞች ላይ የአሰራር ስርዓት ክፍተት ስለነበረ እነዚህ የአሰራር ስርዓት ያለባቸውን ሰራተኞችን እና ሱፐርቫይዘሩን ጨምሮ ያየሁትን የስራ አሰራር ክፍተት በድጋሚ እንዳይፈጽሙት መመሪያ ሰጥቻቸዋለሁ። በጎላጉል ቅርንጫፍ ማክሰኞ ሪፖርት ተደርጎ የነበረው የእቃ ማጠቢያ ሲንክ ድሬኔጅ እንዲስተካከል ጠይቄ የነበረው ማትያስ መጥቶ አስተካክሎታል። በብስራተ ገብርኤል ከዚህ በፊት ተጠይቆ የነበረው ኢንሴክት ኪለር በማትያስ አማካኝነት እንዲሰቀል አድርጌያለሁ።ሌላ ኢሹ ወይም አፋጣኝ መፍትሄ የሚፈልግ ጉዳዮች  አፋጣኝ መፍትሄ የሚፈሉ ጉዳዮች በብስራተ ገብርኤል ያለው ዲፕ ፍራየር ኮንታክተር ችግር ነበረበት እሱ እንዲስተካከል ማትያስን አናግሬዋለሁ ስለዚህ ነገ መጥቶ ያስተካክለዋል ወይም እንደሚያስተካክለው አረጋግጦልኛል ሌላ በብስራተ ግብረ ኤል ያለ አፋጣኝ መፍትሄ የሚፈልግ ችግር በእግር ተረግጦ ኦፕሬት የሚደረግ እጅ መታጠቢያ አለ ይህ እጅ መታጠቢያ በቢውልዲንጉ ወይም ደግሞ በህንፃው ላይ ያሉ ሰራተኞች ወይም የሌላ ድርጅት ሰራተኞች አብረውን ስለሚጠቀሙ የከፍተኛ የሆነ የሳሙና እና የውሃ በክነት አለ የሆነ የሳሙና እና የውሃ ብክነት አለ። እጅ መታጠቢያውም ቶሎ ቶሎ እየተበላሸ ነው። ስለዚህ ይሄ ከህንፃው አሰራሮች ከህንፃው አሰራሮች ጋራ በመነጋገር አፋጣኝ መፍትሄ ይፈልጋል። እ ሌላ በጎላጉል ብራንች አፋጣኝ መፍትሄ የሚፈልግ ጉዳይ እ ሶኬት እና ማብሪያ ማጥፊያዎች የላሉ መስተካከል ያለባቸው ልክ ያልሆኑ አሉ። እነሱን እንደ እንዲያስተካክል ማቲያስን አናግሬው ነገ መጥቶ እንደሚያስተካክል አሳውቆኛል አጠቃላይ አስተያየት በሁለቱም ብራንቾች ያለው የስራ እንቅስቃሴ ጥሩ ነው
+```
+
+**Organized report (source §6.11):**
+
+```text
+ቀን: 09-11-18
+ብራንች: ጎላጉል እና ብስራተ ገብርኤል ብራንች
+ስም: ቤዛ አያሌው
+ስራ የገባሁበት ሰዓት:
+ከ1:05 እስከ 2:20 በጎላጉል ብራንች
+ከ3:30 እስከ 9:20 በብስራተ ገብርኤል ብራንች
+ከ9:55 እስከ 12:00 በጎላጉል ብራንች
+
+የተሰሩ ስራዎች:
+በጎላጉል እና በብስራተ ገብርኤል ብራንቾች በቼክሊስቱ መሰረት የሚከናወኑ የዕለት ተዕለት ተግባራትን፣ የአሰራር ሂደቶችን፣ የንጽህና አጠባበቅ ሁኔታዎችን እና የሰራተኞችን ዝግጁነት ተከታትዬ አረጋግጫለሁ።
+በጎላጉል ብራንች በአንዳንድ ሰራተኞች ላይ የአሰራር ስርዓት ክፍተት ስለነበረ፤ እነዚህን ሰራተኞች እና ሱፐርቫይዘሩን ጨምሮ ያየሁትን የስራ አሰራር ክፍተት በድጋሚ እንዳይፈጽሙ መመሪያ ሰጥቻቸዋለሁ።
+በጎላጉል ብራንች ማክሰኞ ሪፖርት ተደርጎ የነበረውን የእቃ ማጠቢያ ሲንክ ድሬኔጅ (ሲንፎን) በማትያስ አማካኝነት እንዲስተካከል አድርጌያለሁ።
+በብስራተ ገብርኤል ብራንች ከዚህ ቀደም ተጠይቆ የነበረውን ኢንሴክት ኪለር በማትያስ አማካኝነት እንዲሰቀል አድርጌያለሁ።
+
+መፍትሄ የሚፈሉ ጉዳዮች:
+በብስራተ ገብርኤል ብራንች ያለው የዲፕ ፍራየር ኮንታክተር ተበላሽቶ ስለነበር ለማትያስ አሳውቄዋለሁ፤ ነገ መጥቶ እንደሚያስተካክለው አረጋግጦልኛል።
+በብስራተ ገብርኤል በእግር ተረግጦ የሚሰራው የእጅ መታጠቢያ በህንፃው ላይ ባሉ የሌሎች ድርጅት ሰራተኞች ጭምር ጥቅም ላይ እየዋለ ይገኛል። በዚህም የተነሳ ከፍተኛ የሳሙና እና የውሃ ብክነት ከመኖሩም በላይ እጅ መታጠቢያው ቶሎ ቶሎ እየተበላሸ በመሆኑ፣ ከህንፃው አስተዳደር ጋር በመነጋገር አፋጣኝ መፍትሄ ሊሰጠው ይገባል።
+በጎላጉል ብራንች የላሉ ሶኬቶች እና ማብሪያ ማጥፊያዎች ስላሉ ለማትያስ አሳውቄዋለሁ፤ ነገ መጥቶ እንደሚያስተካክል ነግሮኛል።
+
+አጠቃላይ አስተያየት:
+በአጠቃላይ በሁለቱም ብራንቾች ያለው የስራ እንቅስቃሴ ጥሩ ነው።
+
+ከስራ የወጣሁበት ሰዓት: 12:00
+```
+
+### 10. Expansion Markers
+
+- Phase 7 (§7 Language Rules): broader Amharic language rules (this section already carries the §6.7 transliteration rule).
+- Phase 21 (§21 AI Prompt Requirements): prompt construction, the missing-info punctuation rule, and few-shot wiring built on these seeds.
+- Phase 22 (§22 Export): export mechanics for this format.
+
+---
+
+## AI Prompt Spec
+
+> **Phase 6 seed — prompt directives derived from §6 (generation rules, tone, transliteration, few-shot example). Full prompt construction arrives in Phase 21; Addis AI integration in Phase 18; other-provider fallbacks in Phase 19. Seed IDs: `PR-<NN>`.**
+
+### 1. Generation Rule Seeds (from §6.6)
+
+| ID | Prompt rule seed | Source |
+|---|---|---|
+| PR-01 | Generate the report in Amharic. | §6.6 (rule 1) |
+| PR-02 | Use the exact section structure required by the report format (`## Report Format` §1). | §6.6 (rule 2) |
+| PR-03 | Match the tone and writing style of the provided samples (`## Report Format` §3–4). | §6.6 (rule 3) |
+| PR-04 | Use the reviewed transcription as the source of truth; never generate from raw audio. | §6.6 (rule 4), §5.2 |
+| PR-05 | Do not invent missing dates, branch names, times, actions, people, problems, or opinions. | §6.6 (rule 5) |
+| PR-06 | If required information is missing, leave the field blank — no invented wording (OQ-009). | §6.6 (rule 6), OQ-009 |
+| PR-07 | Separate completed activities from unresolved issues. | §6.6 (rule 7) |
+| PR-08 | Put urgent problems under `መፍትሄ የሚፈሉ ጉዳዮች`. | §6.6 (rule 8) |
+| PR-09 | Put general branch opinion or improvement opinion under `አጠቃላይ አስተያየት`. | §6.6 (rule 9) |
+| PR-10 | Preserve branch-specific details when multiple branches are mentioned. | §6.6 (rule 10) |
+| PR-11 | Preserve time ranges per branch when the audio contains them. | §6.6 (rule 11) |
+| PR-12 | Write from the supervisor's point of view. | §6.6 (rule 12) |
+| PR-13 | Do not output an explanation of how the report was generated. | §6.6 (rule 13) |
+| PR-14 | Do not include unrelated conversation content. | §6.6 (rule 14) |
+| PR-15 | Do not include Person 2's questions unless the answer contains report information. | §6.6 (rule 15) |
+| PR-16 | On correction or update requests, update only the relevant part without changing unrelated correct content. | §6.6 (rule 16), §6.9 |
+
+### 2. Tone Directive Seeds (from §6.5)
+
+The prompt must instruct the model that the report tone is: professional, direct, clear, work-report oriented, from the supervisor's perspective, suitable for a boss, natural Amharic, not overly decorative, not conversational, not casual, and not like a chatbot answer. Conversation must be transformed into report language (example in `## Report Format` §4).
+
+### 3. Transliteration Directive Seed (from §6.7)
+
+The prompt must instruct the model to write English or technical words in common Amharic workplace transliteration (e.g., deep fryer → ዲፕ ፍራየር; locker → ሎከር; kitchen → ኪችን; exhaust fan → ኤግዝስት ፋን; technician → ቴክኒሻን; store → ስቶር), never in English spelling and never as literal translations.
+
+### 4. Few-Shot Seed
+
+The prompt should include the §6.10 → §6.11 before/after pair (`## Report Format` §9) as the reference transformation example, plus the §6.2–6.4 samples as tone/format references.
+
+### 5. Expansion Markers
+
+- Phase 7 (§7 Language Rules): additional language directives.
+- Phase 18 (§18 Addis AI Integration): how these seeds are delivered to the Addis AI endpoint.
+- Phase 19 (§19 Other AI Providers): provider fallback behavior.
+- Phase 21 (§21 AI Prompt Requirements): final prompt construction, system-prompt structure, and the missing-info punctuation rule.
+
+---
+
+## Export Spec
+
+> **Phase 6 seed — export context from §6; full export mechanics (formats, naming, API, UI, files) arrive in Phase 22 (§22 Export).**
+
+### 1. Purpose (seed)
+
+The export feature delivers the finalized report (W-12) so it can be shared or archived (§4, REQ-047). The exported artifact is the report in the required §6.1 format (`## Report Format`), supporting formats: PDF, TXT, CSV, and spreadsheet (REQ-047; detail in Phase 22).
+
+### 2. Expansion Markers
+
+- Phase 22 (§22 Export): full export specification — format details per file type, file naming, content mapping, API endpoints (`## API Contract`), UI flow (W-12), and error handling.
+
+---
+
 ## Decision Log
 
 > **Built in Phases 1–2 — the ADR format and further decisions are finalized in Phase 33 (§33 Decision Log (ADRs)).** Entries are appended as phases complete. No decision recorded here may contradict a later GREEN decision without a superseding ADR.
@@ -1241,6 +1589,6 @@ The status machine covers the daily report lifecycle only; branch and user recor
 
 ---
 
-## End Of Phase 5 Content
+## End Of Phase 6 Content
 
-Phases 1–5 are GREEN (2026-08-01). Phase 5 built the report and branch domain from §5: new `## Data Modeling` (entity inventory, relationship seeds, field-level marker), `## Business Rules` (BR-01..10), `## API Contract` (conventions, pagination 1/10/100, endpoint inventory), and `## Status Machine` (report states, transition rules); enriched `## Report Domain` (DR-6/7, sections 6–9: branch context rules, report context rules, the 8 named Amharic report fields incl. ስም, record types inventory), enriched `## Report Management` (pagination convention, searchability, generation-from-reviewed-transcription, version preservation), enriched `## PRD` (Real-World Context multi-branch bullet), updated Work Flow W-05 (generation only from reviewed transcription), added REQ-050..057, added US-018/019, extended `## Glossary` (pagination convention, reviewed transcription, branch-specific details, per-branch time range), and added the Phase 5 Source Trace Map. Phase 6 will build the report format, samples, and tone.
+Phases 1–6 are GREEN (2026-08-01). Phase 6 built the report format, samples, and tone from §6: new `## Report Format` (required Amharic structure, field reconciliation, three verbatim samples, required tone, sixteen strict generation rules, transliteration rule, transcription-is-not-the-report, correction/update behavior, before/after example), new `## AI Prompt Spec` (PR-01..16 seeds, tone/transliteration/few-shot seeds, OQ-009 resolution), new `## Export Spec` (Phase 6 seed); enriched `## PRD` (tone bullet, workflow steps 5–6, text-generation feature), enriched `## Report Domain` (reconciliation resolved), enriched Work Flow (W-05/W-06/W-09) and User Interactions (UI-003/UI-006), added REQ-058..065, added US-020/021, extended `## Glossary` (required report format, report tone, Amharic workplace transliteration), updated the Checklist (Report Format, AI Prompt Spec, Export Spec GREEN), and added the Phase 6 Source Trace Map. OQ-009 resolved (missing information → leave blank). Phase 7 will build the language rules.
