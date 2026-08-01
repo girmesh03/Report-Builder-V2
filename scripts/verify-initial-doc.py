@@ -6,7 +6,7 @@ and self-aligned:
   1. no references to the deleted/retired working drafts anywhere
      (temp.md / temp.wav / standalone "temp" — prose like "temp audio files"
      is exempt)
-  2. top-level sections "## 1 .. ## 34" present, in order
+  2. top-level sections "## 1 .. ## 35" present, in order
   3. no duplicate heading numbers (real "#" headings only)
   4. every internal ref (N.M[.K][, Title]) and every self §N.M[.K] resolves
      to an existing heading number or a numbered bullet ("- N.M ...").
@@ -57,6 +57,7 @@ SECTION_ORDER = [
     "## 32. Git And Phase Protocol",
     "## 33. Decision Log (ADRs)",
     "## 34. Glossary",
+    "## 35. Archive, Delete, And Restore Lifecycle",
 ]
 
 NUM_HEADING_RE = re.compile(r"^\s*#{1,6}\s*(\d+(?:\.\d+)*)\.?\s+(.*)$")
@@ -106,7 +107,7 @@ def main():
     elif positions != sorted(positions):
         errors.append("sections out of order")
     else:
-        print(f"[OK] sections ## 1 .. ## 34 present, in order ({len(SECTION_ORDER)} sections)")
+        print(f"[OK] sections ## 1 .. ## 35 present, in order ({len(SECTION_ORDER)} sections)")
 
     headings = []       # (num, title, line) — headings AND numbered bullets
     numbered = []       # real "#" heading numbers only (duplicate check)

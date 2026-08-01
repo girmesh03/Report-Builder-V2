@@ -1190,13 +1190,13 @@ Landing, Login, Register, Dashboard, BranchList, BranchForm, ReportList, ReportG
     - Card actions (icon buttons with MuiTooltip):
       - View (`VisibilityIcon`, primary) → navigate `/reports/:id/details` (3.6)
       - Edit (`EditIcon`, primary) → navigate `/reports/:id/edit`
-      - Archive/Delete conditional:
+      - Archive/Restore/Delete conditional:
         - Not archived → ArchiveIcon (warning) → MuiConfirmDialog → confirm → `PATCH /api/v1/reports/:id/archive` → update UI
-        - Archived → DeleteIcon (error) → MuiConfirmDialog → confirm → `DELETE /api/v1/reports/:id` → update UI
+        - Archived → RestoreIcon (success) → MuiConfirmDialog → confirm → `PATCH /api/v1/reports/:id/restore` → update UI; DeleteIcon (error) → MuiConfirmDialog → confirm → `DELETE /api/v1/reports/:id` → update UI
     - Below cards: MuiPagination (1.7), `page` and `count` from server `totalPages`, `onChange` refetches list for the selected page
   - **MuiDataGrid View (Grid toggle):**
     - Standard MuiDataGrid (1.8) — server-side pagination, toolbar, export selection
-    - Action column: view, edit, archive/delete (same behavior as cards)
+    - Action column: view, edit, archive/restore/delete (same behavior as cards)
   - **Data Flow (Reports List):**
     - **Endpoint:** `GET /api/v1/reports?page=1&limit=10&date=&branch=&isArchived=`
     - **Success Response (200):**
@@ -2062,9 +2062,9 @@ Landing, Login, Register, Dashboard, BranchList, BranchForm, ReportList, ReportG
       1. **MuiStatusBadge** — renders `report.status` with color mapping: `draft` → default, `audio_attached` → warning, `transcribed` → info, `reviewed` → primary, `completed` → success. Label shows the status text. Non-interactive.
       2. **Back** — icon button (ArrowBackIcon), tooltip "Back". On click: `navigate("/reports")`.
       3. **Edit Report** — MuiButton contained, start icon EditIcon, label "Edit Report". On click: `navigate("/reports/:id/edit")`. Hidden when the report is archived.
-      4. **Archive/Delete** — conditional, same flows as the Reports page card actions:
-         - Not archived → ArchiveIcon (warning), tooltip "Archive" → MuiConfirmDialog → confirm → `PATCH /api/v1/reports/:id/archive` → toast "Report archived" → header refreshes to archived state (Archive replaced by Delete).
-         - Archived → DeleteIcon (error), tooltip "Delete" → MuiConfirmDialog → confirm → `DELETE /api/v1/reports/:id` → toast "Report deleted" → `navigate("/reports")`.
+      4. **Archive/Restore/Delete** — conditional, same flows as the Reports page card actions:
+         - Not archived → ArchiveIcon (warning), tooltip "Archive" → MuiConfirmDialog → confirm → `PATCH /api/v1/reports/:id/archive` → toast "Report archived" → header refreshes to archived state (Archive replaced by Restore and Delete).
+         - Archived → RestoreIcon (success), tooltip "Restore" → MuiConfirmDialog → confirm → `PATCH /api/v1/reports/:id/restore` → toast "Report restored" → header refreshes to active state; DeleteIcon (error), tooltip "Delete" → MuiConfirmDialog → confirm → `DELETE /api/v1/reports/:id` → toast "Report deleted" → `navigate("/reports")`.
       5. **Copy** — icon button (ContentCopyIcon), tooltip "Copy report". Enabled only when generated text exists. Copies the generated report text to the clipboard; on clipboard failure falls back to legacy `execCommand("copy")`; toast "Copied".
       6. **Print** — icon button (PrintIcon), tooltip "Print / Save as PDF". Enabled only when generated text exists. Calls `window.print()` with print CSS that hides AppShell chrome and header actions, leaving the page title and the generated report.
 
@@ -2125,7 +2125,7 @@ Landing, Login, Register, Dashboard, BranchList, BranchForm, ReportList, ReportG
 
     **Edge Cases:**
     - Report 404 (deleted or bad id) → toast "Report not found" + navigate to `/reports`.
-    - Archived report → header shows only Delete (Edit Report, Copy, Print, Archive hidden); Generate Report disabled.
+    - Archived report → header shows only Restore and Delete (Edit Report, Copy, Print, Archive hidden); Generate Report disabled.
     - Generate on archived report (API) → 403 → toast "Report is archived", card unchanged.
     - Generate invoked with empty `latest` → 422 → toast "Review the transcription before generating", card unchanged.
     - Provider rate limit (429) → toast "Rate limit reached, try again later", card unchanged.
@@ -2242,8 +2242,8 @@ Landing, Login, Register, Dashboard, BranchList, BranchForm, ReportList, ReportG
 - `MuiTextField`: Handles password type internally (no separate MuiPasswordField). Eye toggle via `useState` and `useCallback`. `onMouseDown` prevents focus loss. No layout shift. Merges caller's `slotProps.input.endAdornment`.
 - `MuiButton`: Uses MUI native `loading`. Uses `loadingIndicator={<CircularProgress size={20} />}`. Uses `loadingPosition="center"`. Defaults `size="small"`.
 - `MuiDialog`: Must pass or support `disableEnforceFocus` and `disableRestoreFocus`. Defaults both to `true`. Always use reusable `MuiDialog` instead of raw `@mui/material/Dialog`.
-- `MuiConfirmDialog`: Preset confirmation dialog built on MuiDialog. Props: `open`, `onClose`, `onConfirm`, `title`, `message`, `confirmText`, `cancelText`, `confirmColor`. Used by MuiDataGrid archive/delete flow and other confirm/dismiss scenarios.
-- `MuiDataGrid`: Must have toolbar. Export selection required. Columns must be defined in `client/src/components/columns/*`. Action column includes tooltip and icon with proper color. Action column supports view, update, and archive. Archived item flow: archived -> MuiConfirmDialog -> delete -> update UI. Server-side pagination. Skeleton loading rows.
+- `MuiConfirmDialog`: Preset confirmation dialog built on MuiDialog. Props: `open`, `onClose`, `onConfirm`, `title`, `message`, `confirmText`, `cancelText`, `confirmColor`. Used by MuiDataGrid archive/restore/delete flow and other confirm/dismiss scenarios.
+- `MuiDataGrid`: Must have toolbar. Export selection required. Columns must be defined in `client/src/components/columns/*`. Action column includes tooltip and icon with proper color. Action column supports view, update, archive, restore, and delete. Archived item flow: archived -> MuiConfirmDialog -> restore or delete -> update UI. Server-side pagination. Skeleton loading rows.
 - `MuiDatePicker`: Must explicitly switch between `DesktopDatePicker` on `md+` with popper and `MobileDatePicker` below `md` with dialog. Must use `theme.breakpoints.up('md')`. Never rely on DatePicker auto-switching.
 - `MuiSelect`: Defaults `MenuProps={{ slotProps: { paper: { sx: { maxHeight: 300 } } } }}` for consistent dropdown height.
 - `MuiPagination`: Defaults `color="primary"` and `shape="rounded"`. Used for list view pagination only.
@@ -2448,9 +2448,10 @@ Landing, Login, Register, Dashboard, BranchList, BranchForm, ReportList, ReportG
       - Archived items show `Delete` icon, `sx={{ color: 'error.main' }}`, tooltip "Delete"
     - IconButton uses `sx` for color, never the `color` prop
     - Each action is an `IconButton` in `Tooltip` wrapper inside a `Stack direction="row"`
-  - **Archive/Delete Flow:**
+  - **Archive/Restore/Delete Flow:**
     - Archive click → `MuiConfirmDialog` → confirm → dispatch archive → update UI
-    - Archived row shows delete icon instead of archive
+    - Archived row shows restore and delete icons instead of archive
+    - Restore click → `MuiConfirmDialog` → confirm → dispatch restore → update UI
     - Delete click → `MuiConfirmDialog` → confirm → dispatch permanent delete → update UI
   - **Export Selection:**
     - `checkboxSelection` enabled
@@ -3748,3 +3749,106 @@ This protocol is mandatory for every phase. No shortcuts allowed. No exceptions 
 | httpOnly            | Cookie flag that prevents JavaScript access (prevents XSS token theft)     |
 | baseQueryWithReauth | RTK Query wrapper that handles token refresh on 401 responses              |
 | Two-Path Deletion   | Archive then permanent delete (user-initiated or after 30 days)            |
+
+---
+
+## 35. Archive, Delete, And Restore Lifecycle
+
+### 35.1 Two-Path Deletion Model
+
+Every archivable resource (Report (24.4), Branch (24.8)) follows the two-path deletion lifecycle. Archiving is always the first step; permanent deletion is only reachable from the archived state.
+
+```
+Path 1 (user-initiated):  Active → Archive → User clicks Delete → MuiConfirmDialog → Cascade hard-delete
+Path 2 (automatic):       Active → Archive → 30-day wait → Auto cascade hard-delete
+```
+
+- **Archive** — the resource is marked `isArchived: true` and `archivedAt` is set to the current time. An archived resource is hidden from selection lists (branch picker, global search, default list queries). All list and selection endpoints default to returning only active resources (`isArchived: false`) unless the caller explicitly requests archived ones (the Reports list endpoint already supports an explicit `isArchived` query parameter (12.6)).
+- **Restore** — the resource is put back into active use: `isArchived: false` and `archivedAt: null`. Restore is only possible while the resource is archived and before the 30-day deletion deadline (35.4) and (35.6). It cannot be invoked on an active resource.
+- **Permanent delete** — a cascade hard-delete that removes the resource and all of its dependents (35.2). It is never reachable from the active state; it only runs after archive, through Path 1 or Path 2.
+
+### 35.2 Archivable Resources And Cascade Scope
+
+- **Report** cascade hard-delete removes, in one transaction:
+  - the Report document itself (including its embedded `generatedHistory`)
+  - its Transcription document (24.6)
+  - its Audio documents (24.5) plus their physical files on disk (`filePath`)
+  - all ChatConversation documents linked to the report (24.9)
+- **Branch** cascade hard-delete removes only the Branch document (24.8). Reports that reference the branch are **never** deleted: branch data is embedded in each report's `branches[]` entries (branchId + name snapshot) and remains fully readable (12.6).
+- No other model is archivable. A model becomes archivable only when it is explicitly added here, gains `isArchived` / `archivedAt` fields, a TTL-compatible `archivedAt` index, and the same lifecycle.
+
+### 35.3 Endpoints
+
+All endpoints below are authenticated, mounted under `/api/v1`, registered in `routes/index.js` (10.1), and take no request body.
+
+- **Report**
+  - `PATCH /api/v1/reports/:id/archive` → 200 `{ success: true, message: "Report archived", data: { report } }`
+  - `PATCH /api/v1/reports/:id/restore` → 200 `{ success: true, message: "Report restored", data: { report } }`
+  - `DELETE /api/v1/reports/:id` → 200 `{ success: true, message: "Report deleted", data: null }`
+- **Branch**
+  - `PATCH /api/v1/branches/:id/archive` → 200 `{ success: true, message: "Branch archived", data: { branch } }`
+  - `PATCH /api/v1/branches/:id/restore` → 200 `{ success: true, message: "Branch restored", data: { branch } }`
+  - `DELETE /api/v1/branches/:id` → 200 `{ success: true, message: "Branch deleted", data: null }`
+
+### 35.4 Preconditions And Status Codes
+
+Guards are checked in this order inside every archive / restore / delete controller:
+
+1. Resource exists — else 404 `{ success: false, message: "Report not found" | "Branch not found", data: null }` (existing 404 wording (12.6)).
+2. Lifecycle precondition (else 409 Conflict, `{ success: false, message, data: null }`):
+   - Archive an already-archived resource → `"Report is already archived"` / `"Branch is already archived"`
+   - Restore a non-archived resource → `"Report is not archived"` / `"Branch is not archived"`
+   - Delete a non-archived resource → `"Archive the report before deleting"` / `"Archive the branch before deleting"`
+   - Restore a resource whose 30-day deadline has already passed → `"Report can no longer be restored; the 30-day deletion window has passed"` / `"Branch can no longer be restored; the 30-day deletion window has passed"`
+3. Proceed with the operation.
+
+- 409 is already an established code in this project (duplicate key 11000, register duplicate email). Status codes are imported from `utils/httpStatus.js` by semantic name; add `CONFLICT: 409` there if it is not already present (10.6).
+- Archived-state blocking for other operations is unchanged: operating on an archived resource that is not archive/restore/delete returns 403 (e.g. generate (12.6)).
+- The automatic path deletes the same way as Path 1 but is triggered by the sweeper (35.6), never by the user.
+
+### 35.5 Session And Transaction Requirements
+
+- Archive, restore, and cascade delete always run inside a Mongoose session with a transaction: `startSession → startTransaction → writes → commitTransaction → catch → abortTransaction → finally → endSession` (10.3) and (29.10); ADR-018.
+- Model hooks, instance methods, and static methods used by these flows accept a `session` option where relevant (10.11).
+- Cascade delete executes inside a single transaction: all dependents (35.2) and the parent document are removed together — no partial deletes.
+- Physical audio file removal (`fs.unlink` of each deleted `Audio.filePath`) runs **after** `commitTransaction`, as best-effort post-commit cleanup. File removal failures never roll back or block the transaction; they are logged via Winston (`logger.warn`) and retried by the orphan sweep (35.6). This is the only step of the flow that is not transactional.
+- Read-only endpoints (get, list) do not need transactions (10.3).
+
+### 35.6 Automatic 30-Day Path
+
+- The deadline for every archived resource is `archivedAt + 30 days` (30 × 24 × 60 × 60 = 2592000 seconds, the same value used by the TTL indexes (24.4) and (24.8)).
+- An app-level **cleanup sweeper** enforces the automatic path:
+  - Runs periodically on an interval defined in `backend/utils/constants.js` (10.5) — no magic values; a per-hour run is the default.
+  - Started alongside the HTTP server and stopped during graceful shutdown (10.8).
+  - **Expired sweep** — finds resources with `isArchived: true` and `archivedAt` at or before the deadline, then performs the same cascade delete (35.5) for each one, each in its own transaction.
+  - **Orphan sweep** — finds dependent documents whose report no longer exists (or whose report passed the deadline) and removes them: Audio documents + physical files, Transcription documents, ChatConversation documents. This covers the case where the TTL safety net fired before the sweeper.
+- The TTL indexes on `archivedAt` (24.4 Report, 24.8 Branch) remain as the MongoDB-internal safety net: if the app is down when the deadline passes, MongoDB deletes the parent document automatically after 30 days. TTL deletion runs server-side, cannot cascade dependents, and cannot use a Mongoose session — it is the single documented exception to 35.5, and the orphan sweep exists precisely to clean up after it.
+- When both mechanisms race, the sweeper wins: it deletes the parent inside a transaction first, so the TTL index never fires for that document.
+
+### 35.7 Frontend Flows
+
+The flows below apply to every surface that lists or shows an archivable resource: Reports list cards (12.6), Reports MuiDataGrid action column, and the Report Details page header (12.6).
+
+- **Active resource** — shows Archive only (ArchiveIcon, warning, tooltip "Archive"):
+  - Click → MuiConfirmDialog (title "Archive Report" / "Archive Branch", message "Are you sure you want to archive this report?" / "Are you sure you want to archive this branch?", confirmText "Archive") → confirm → dispatch `PATCH /:id/archive` → toast "Report archived" / "Branch archived" → the item moves to the archived state in the UI.
+- **Archived resource** — shows Restore and Delete (Restore replaces Archive):
+  - **Restore** — RestoreIcon (success), tooltip "Restore" → MuiConfirmDialog (title "Restore Report" / "Restore Branch", message "Restore this report to active use?" / "Restore this branch to active use?", confirmText "Restore") → confirm → dispatch `PATCH /:id/restore` → toast "Report restored" / "Branch restored" → the item returns to the active state in the UI.
+  - **Delete** — DeleteIcon (error), tooltip "Delete" → MuiConfirmDialog (title "Delete Report" / "Delete Branch", message "This permanently deletes the report, its transcription, audio files, and chat history. This cannot be undone." / "This permanently deletes this branch. This cannot be undone.", confirmText "Delete", confirmColor "error") → confirm → dispatch `DELETE /:id` → toast "Report deleted" / "Branch deleted".
+- On the Report Details page, after a successful delete the page navigates to `/reports` (existing behavior (12.6)); after a successful restore the header refreshes to the active state (Edit Report, Copy, Print, Archive reappear).
+- On failure, the API message is toasted and the UI stays unchanged: 409 → the lifecycle message; 404 → "Report not found" / "Branch not found".
+- Archived resources appear in lists only when the user explicitly filters for archived ones, and are shown with an "Archived" indicator.
+
+### 35.8 Edge Cases
+
+- **Restore after deadline but before the sweeper ran** — the resource still exists but restore returns 409 with the 30-day window message (35.4). The resource is deleted on the next sweeper run.
+- **Double delete or delete/restore race with the sweeper** — the second request returns 404; the UI toasts "Report not found" / "Branch not found" and refreshes (existing 404 handling (12.6)).
+- **Sweeper crash mid-transaction** — the transaction aborts, nothing is partially deleted, and the next run retries.
+- **TTL fires before the sweeper** — the parent document is gone; the orphan sweep removes its dependents on the next run; any open UI shows the existing 404 behavior.
+- **Physical file deletion fails after commit** — database state is already consistent; the failure is logged and the orphan sweep retries the file removal.
+- **Archived branch** — reports keep their embedded branch snapshot and stay fully readable; the branch picker and selection lists simply stop offering the archived branch (35.1).
+
+### 35.9 Consistency Notes
+
+- ADR-015 (Two-Path Deletion Lifecycle) and ADR-018 (Session-Based Transactions) remain authoritative and are implemented by this section.
+- The glossary term "Two-Path Deletion" is unchanged.
+- The existing statements that `archivedAt` "is used by TTL index for automatic deletion after 30 days" (24.4 field notes) remain true — the TTL index is the safety net, the sweeper is the primary in-app mechanism (35.6).
