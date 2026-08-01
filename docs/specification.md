@@ -51,7 +51,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 17 | 17. Environment Variables | GREEN | Environment Config, Security, Rules |
 | 18 | 18. Addis AI Integration | GREEN | Addis AI, AI Prompt Spec, API Contract, Security |
 | 19 | 19. Other AI Providers | GREEN | Other AI Providers, Addis AI, AI Prompt Spec, Environment Config |
-| 20 | 20. Audio Recording And STT Pipeline | PENDING | Audio Recording STT, Transcription Review, API Contract, Data Modeling |
+| 20 | 20. Audio Recording And STT Pipeline | GREEN | Audio Recording STT, Transcription Review, API Contract, Data Modeling |
 | 21 | 21. AI Prompt Requirements | PENDING | AI Prompt Spec, Report Format, Rules |
 | 22 | 22. Export | PENDING | Export Spec, API Contract, Work Flow |
 | 23 | 23. Mock Data | PENDING | Mock Data Seeding, Data Modeling, Tasks |
@@ -80,16 +80,16 @@ Status of every section the target document must contain at minimum. Extra secti
 | Addis AI | 18 | GREEN (Phase 18 seed) |
 | AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 7, 18, 19 enrichment) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
-| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 28 | GREEN (Phase 13, 18 enrichment) |
+| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 28 | GREEN (Phase 13, 18, 20 enrichment) |
 | Architecture | 9, 10, 25 | GREEN (Phase 10 enrichment) |
-| Audio Recording STT | 8, 20 | GREEN (Phase 8 seed) |
+| Audio Recording STT | 8, 20 | GREEN (Phase 8 seed, Phase 20 enrichment) |
 | Auth Cookies | 11 | GREEN (Phase 11 seed) |
 | Backend Architecture | 10 | GREEN (Phase 10 seed) |
 | Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
 | Business Rules | 5, 24, 35 | GREEN (Phase 5 seed) |
 | Checklists | 26, 30, 31 | PENDING |
 | Coding Conventions | 9, 25, 26, 27 | GREEN (Phase 9 seed) |
-| Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11 enrichment) |
+| Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11, 20 enrichment) |
 | Decision Log | 1, 2, 33 | GREEN |
 | Design | consolidated across phases; finalized in 36 | PENDING |
 | Environment Config | 17, 19 | GREEN (Phase 17 seed, Phase 19 enrichment) |
@@ -126,7 +126,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Status Machine | 5, 35 | GREEN (Phase 5 seed) |
 | Tasks | 32 | PENDING |
 | Theme Standards | 14 | GREEN (Phase 14 seed) |
-| Transcription Review | 8, 20 | GREEN (Phase 8 seed) |
+| Transcription Review | 8, 20 | GREEN (Phase 8 seed, Phase 20 enrichment) |
 | UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 15, 16 enrichment) |
 | User Interactions | 3, 16, 22, 35 | GREEN (Phase 3 seed, Phase 16 enrichment) |
 | User Stories | 2 (seed), 4 | GREEN (Phase 2 seed) |
@@ -438,6 +438,17 @@ All `§` references below identify sections of the original source brief. They a
 | §19.1 | Gemini: model `gemini-3.1-flash-lite`; endpoint `:generateContent?key=${GEMINI_API_KEY}`; request `{ contents, systemInstruction, generationConfig (0.2, 2048, 0.9, 40) }`; no streaming; network failure retry 3x exponential backoff; provider error returns 502 | Other AI Providers (4), AI Prompt Spec (8), Requirements (REQ-136) |
 | §19.2 | Nvidia: model `z-ai/glm-5.2`; Nvidia API message format with `Authorization: Bearer` token; same retry pattern as Gemini | Other AI Providers (5), AI Prompt Spec (8), Requirements (REQ-137) |
 | §19 + codebase (`backend/.env`, `backend/package.json`) | `backend/.env` holds real Nvidia (`nvapi-` prefixed) and Gemini (`AIzaSy` prefixed) keys plus `NVIDIA_API_BASE_URL`/`GEMINI_API_BASE_URL` `change me` placeholders; the spec records the keys as placeholders only (REQ-123); axios is absent from `backend/package.json` — added during implementation (REQ-138) | Other AI Providers (1, 4, 5), Environment Config (2), Requirements (REQ-138) |
+
+## Source Trace Map — Phase 20 (source §20)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §20.1 | Browser MediaRecorder records each clip into a local-state array via a custom hook; the full array submits as the multipart field `clips`; blobs never persisted to Redux/redux-persist/localStorage; limits max 15 min/clip (`AUDIO_MAX_DURATION_SEC` = 900) and max 50 MB/clip (`AUDIO_MAX_SIZE_BYTES` = 52428800) enforced client-side after recording stops; a clip over 50 MB blocks submit with a warning and asks for a re-record; MIME priority `audio/webm;codecs=opus` → `audio/webm` → `audio/mp4` → browser default | Audio Recording STT (5), Requirements (REQ-139..141) |
+| §20.2 | Validation: at least one clip required; 50 MB max per clip (configurable); MIME whitelist; duration metadata informational; server-side ffprobe duration validation and multer type/size validation | Audio Recording STT (6), API Contract (6), Data Modeling (5), Requirements (REQ-142) |
+| §20.3 | Multer upload storage in `backend/uploads/audio/`, gitignored and never committed | Audio Recording STT (7), API Contract (6), Data Modeling (5), Requirements (REQ-143) |
+| §20.4 | Approved chunking pipeline: ffmpeg full-file WAV `pcm_s16le` 16 kHz mono in a single pass → in-memory PCM-level split via `wavSplitter.js` into ~60 s chunks (`ADDIS_AI_STT_MAX_DURATION_SEC` = 60) → chunk MIME `audio/wav` (never `audio/webm`); alternatives forbidden unless proven equivalent | Audio Recording STT (8), API Contract (6), Requirements (REQ-144) |
+| §20.5 | Re-transcription: backend accepts both `audio_recorded` and `transcribed` statuses; frontend "Re-transcribe" button on a completed transcription re-runs STT on the stored audio | Transcription Review (2), Audio Recording STT (9), API Contract (6), Data Modeling (5), Requirements (REQ-145) |
+| §20 + codebase (`client/package.json`, `backend/package.json`) | `react-media-recorder` ^1.7.2 and `react-player` ^3.4.0 are already installed in `client/package.json`; multer ^2.2.0 is already installed in `backend/package.json`; the `backend/uploads/audio/` directory is created during implementation | Audio Recording STT (5, 7), API Contract (6) |
 
 ---
 
@@ -1130,6 +1141,18 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-137 | Nvidia integration uses model `z-ai/glm-5.2` with the Nvidia API message format and `Authorization: Bearer` token; network failures retry 3 times with exponential backoff; provider errors return 502. | The Nvidia service builds the documented message format; retries and the 502 mapping behave per contract. | §19.2 |
 | REQ-138 | Gemini and Nvidia calls use axios (echo of REQ-078); axios is absent from `backend/package.json` and is added during implementation. | All Gemini/Nvidia calls go through axios; axios appears in `backend/package.json` during implementation. | §19, §9.1 (REQ-078) |
 
+### Functional Requirements (Phase 20)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-139 | Recording limits: max 15 minutes per clip (`AUDIO_MAX_DURATION_SEC` = 900) and max 50 MB per clip (`AUDIO_MAX_SIZE_BYTES` = 52428800), enforced client-side after recording stops; a clip over 50 MB blocks the submit with a warning and asks for a re-record. | Clips over 50 MB cannot be submitted; the supervisor is told to re-record; limits match the constants. | §20.1 |
+| REQ-140 | Each clip is recorded with the browser MediaRecorder API into a local-state array via a custom hook; the full array is submitted as the multipart field `clips`; audio blobs are never persisted to Redux, redux-persist, or localStorage. | Multiple clips submit together; blobs exist in component state only. | §20.1 |
+| REQ-141 | MIME priority: `audio/webm;codecs=opus` → `audio/webm` → `audio/mp4` → browser default. | The recorder selects the first supported type in priority order. | §20.1 |
+| REQ-142 | Validation: at least one clip required; max 50 MB per clip (configurable); MIME type in the whitelist; duration metadata informational; server-side ffprobe duration validation and multer type/size validation. | The upload is rejected without clips or with oversized/unwhitelisted files; ffprobe and multer validate server-side. | §20.2 |
+| REQ-143 | Uploads go through multer into `backend/uploads/audio/`, which is gitignored and never committed. | Uploaded audio lands in `backend/uploads/audio/`; the directory is not in version control. | §20.3 |
+| REQ-144 | The only approved chunking pipeline is: convert the full audio to WAV via ffmpeg in a single pass (`pcm_s16le`, 16 kHz, mono) → split in-memory at the PCM level via `wavSplitter.js` into ~60 s chunks (`ADDIS_AI_STT_MAX_DURATION_SEC` = 60) → send each chunk to Addis AI STT with MIME `audio/wav` (never `audio/webm`); alternatives are forbidden unless proven equivalent. | Chunks are always `audio/wav` from PCM-level splits of a single-pass ffmpeg WAV; no other pipeline is used. | §20.4, §18.8 (REQ-128) |
+| REQ-145 | Re-transcription: the backend accepts both `audio_recorded` and `transcribed` statuses for re-transcription; the frontend shows a "Re-transcribe" button on a completed transcription that re-runs STT on the stored audio. | Re-transcription works from both statuses; the button exists on completed transcriptions. | §20.5 |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -1157,6 +1180,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Environment config rules: **Phase 17 — DONE (REQ-120..124)**.
 - Addis AI integration rules: **Phase 18 — DONE (REQ-125..131)**.
 - Other AI providers rules: **Phase 19 — DONE (REQ-132..138)**.
+- Audio recording and STT pipeline rules: **Phase 20 — DONE (REQ-139..145)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -1493,6 +1517,20 @@ Fields mandated by §11 (entity-level; full field-level schema remains Phase 24)
 - No sessions MongoDB collection and no token collection: nothing beyond the User document is stored for auth (REQ-087).
 - User 1—N DailyReport ownership relationship per §2 Relationship Seeds (BR-06, REQ-041).
 
+### 5. Narration And Transcription Seeds (Phase 20)
+
+Entity-level seeds from the recording/STT pipeline (§20; field-level schema remains Phase 24):
+
+**Narration (audio recording):**
+- Holds the clips array (one or more MediaRecorder clips recorded per day, submitted as multipart field `clips`; §20.1, REQ-140).
+- Per-clip constraints: max 15 min (`AUDIO_MAX_DURATION_SEC`) and max 50 MB (`AUDIO_MAX_SIZE_BYTES`); MIME from the whitelist (`audio/webm;codecs=opus`, `audio/webm`, `audio/mp4`, browser default); duration metadata informational (§20.1/§20.2; REQ-139, REQ-141).
+- Stored under `backend/uploads/audio/` (multer, gitignored; §20.3; REQ-143).
+- Status: `audio_recorded` once uploaded (status names reconciled in Phase 35); re-recording replaces the clips (UI-001).
+
+**Transcription:**
+- Text produced from narration audio via the Addis AI STT endpoint (language code `am`; `## Addis AI` §7); status `transcribed`, then `reviewed` after supervisor review/correction (W-04; `## Transcription Review` §2).
+- Re-transcription re-runs STT on the stored audio for accuracy verification; the backend accepts both `audio_recorded` and `transcribed` statuses for the re-transcription endpoint (§20.5; `## API Contract` §6; REQ-145).
+
 ---
 
 ## Business Rules
@@ -1572,6 +1610,11 @@ Fields mandated by §11 (entity-level; full field-level schema remains Phase 24)
 | `wss://relay.addisassistant.com/ws?apiKey=<API_KEY>` | Realtime relay; never with a real key in the browser; not part of the first workflow | §18.12, `## Addis AI` §11 (REQ-130) |
 
 - All calls send the `x-api-key` header (REQ-126); errors map through `## Addis AI` §12 (REQ-129); the AI rate-limit tier 10/1min applies (REQ-092).
+
+### 6. Audio Upload And Re-Transcription Endpoints (Phase 20)
+
+- **Upload endpoint** — accepts the full recorded clips array as the multipart field `clips` (§20.1; REQ-140): multer storage in `backend/uploads/audio/` (gitignored), 50 MB max per clip (`AUDIO_MAX_SIZE_BYTES`), server-side ffprobe duration validation and type/size validation (§20.2/§20.3; REQ-142, REQ-143); success sets the report status `audio_recorded` (status names reconciled in Phase 35).
+- **Re-transcription endpoint** — re-runs STT on the stored audio for accuracy verification (§20.5; REQ-145): the backend must accept both `audio_recorded` and `transcribed` statuses; the STT call itself always targets the Addis AI `v2/stt` endpoint with chunking per `## Audio Recording STT` §8 (REQ-128, REQ-144).
 
 ---
 
@@ -2294,7 +2337,7 @@ Addis AI is selected because it is specialized in Ethiopian Amharic and is expec
 
 ## Audio Recording STT
 
-> **Phase 8 seed — the transcription accuracy requirements from §8. The full recording and STT pipeline (MediaRecorder, chunking via wavSplitter, MIME validation, Addis AI endpoint, re-transcription flow) arrives in Phase 20 (§20 Audio Recording And STT Pipeline).**
+> **Phase 8 seed — the transcription accuracy requirements from §8, enriched with the full recording and STT pipeline from §20 (MediaRecorder, chunking via wavSplitter, MIME validation, Addis AI endpoint, re-transcription flow) in Phase 20 (sections 5–9).**
 
 ### 1. Accuracy Is The Foundation
 
@@ -2306,23 +2349,55 @@ Every implementation decision related to chunking strategy, format conversion, M
 
 ### 3. Critical Safeguards
 
-The chunking pipeline and the correct MIME type per chunk are critical safeguards (§8, REQ-072). Re-transcription must be available to verify accuracy on every audio recording (§8, REQ-072; flow in `## Transcription Review` §2, mechanics in Phase 20).
+The chunking pipeline and the correct MIME type per chunk are critical safeguards (§8, REQ-072). Re-transcription must be available to verify accuracy on every audio recording (§8, REQ-072; flow in `## Transcription Review` §2, mechanics in section 9).
 
 ### 4. Accuracy Regression Rule
 
 Accuracy regression is a blocking defect (§8, REQ-073). Any change to the STT pipeline — including chunking, format conversion, MIME type, language code, or provider endpoint — that degrades transcription quality must be reverted immediately. Accuracy must be verified with real Amharic audio before merging (§8, REQ-073; gate in `## Validation Audit` §1).
 
-### 5. Expansion Markers
+### 5. Audio Recording Rules (§20.1)
+
+- Each clip is recorded with the browser MediaRecorder API into a local-state array via a custom hook (`useState`/`useRef`); the full array is submitted together as the multipart field `clips`.
+- Limits: max 15 minutes per clip (`AUDIO_MAX_DURATION_SEC` = 900, `## Environment Config` §5) and max 50 MB per clip (`AUDIO_MAX_SIZE_BYTES` = 52428800), enforced client-side after recording stops; a clip over 50 MB blocks the submit with a warning and asks the supervisor to re-record.
+- Audio blobs are never persisted to Redux, redux-persist, or localStorage; they live in component state only.
+- MIME priority: `audio/webm;codecs=opus` → `audio/webm` → `audio/mp4` → browser default.
+- `react-media-recorder` and `react-player` are already installed in `client/package.json`.
+
+### 6. Audio Validation (§20.2)
+
+- At least one clip is required before submit.
+- Max 50 MB per clip (configurable via `AUDIO_MAX_SIZE_BYTES`); the MIME type must be in the whitelist (the four types in section 5); duration metadata is informational only.
+- Server-side: ffprobe duration validation and multer type/size validation.
+
+### 7. Upload Storage (§20.3)
+
+- Uploads go through multer into `backend/uploads/audio/`, which is gitignored and never committed.
+
+### 8. Approved Chunking Pipeline (§20.4)
+
+The only approved chunking pipeline (cross-aligned with `## Addis AI` §7; REQ-128):
+
+1. Convert the full audio file to WAV via ffmpeg in a single pass: `pcm_s16le`, 16 kHz, mono — never re-encode per segment (Opus decoder priming artifacts degrade accuracy).
+2. Split in-memory at the PCM level via `wavSplitter.js` into ~60 s chunks (configurable `ADDIS_AI_STT_MAX_DURATION_SEC` = 60, `## Environment Config` §5).
+3. Each chunk is sent to the Addis AI STT endpoint with MIME `audio/wav` — never `audio/webm`.
+4. Alternatives are forbidden unless proven equivalent (§8 priority rule; REQ-071, REQ-072).
+
+### 9. Re-Transcription (§20.5)
+
+- The backend must accept both `audio_recorded` and `transcribed` statuses for re-transcription.
+- The frontend shows a "Re-transcribe" button on a completed transcription that re-runs STT on the stored audio (flow in `## Transcription Review` §2).
+
+### 10. Expansion Markers
 
 - Phase 18 (§18 Addis AI Integration): **DONE — STT endpoint, constraints, and retry rules are in `## Addis AI` §7.**
-- Phase 20 (§20 Audio Recording And STT Pipeline): MediaRecorder, MIME priority, wavSplitter chunking, language code, re-transcription endpoint, error handling and retries.
+- Phase 20 (§20 Audio Recording And STT Pipeline): **DONE — MediaRecorder, MIME priority, wavSplitter chunking, language code, re-transcription endpoint, error handling and retries (sections 5–9; REQ-139..145).**
 - Phase 28 (§28 Error Handling): STT error states.
 
 ---
 
 ## Transcription Review
 
-> **Phase 8 seed — accuracy verification from §8 on top of the Phase 3 review loop (W-04). Detailed review/correction UI and re-transcription mechanics arrive in Phase 20.**
+> **Phase 8 seed — accuracy verification from §8 on top of the Phase 3 review loop (W-04), enriched with the review/correction UI and re-transcription mechanics from §20 in Phase 20.**
 
 ### 1. Review Loop (from §3)
 
@@ -2330,11 +2405,11 @@ The supervisor reviews the transcription and, if needed, corrects it with AI hel
 
 ### 2. Re-Transcription For Accuracy Verification (§8)
 
-Re-transcription must be available to verify accuracy on every audio recording (§8, REQ-072): the supervisor can re-run STT on the stored audio and confirm the transcription matches the recording before generation. Re-transcription is the accuracy safeguard for the review step; mechanics arrive in Phase 20.
+Re-transcription must be available to verify accuracy on every audio recording (§8, REQ-072): the supervisor can re-run STT on the stored audio and confirm the transcription matches the recording before generation. Re-transcription is the accuracy safeguard for the review step. Mechanics (`## Audio Recording STT` §9): the backend accepts both `audio_recorded` and `transcribed` statuses for re-transcription, and the frontend shows a "Re-transcribe" button on a completed transcription that re-runs STT on the stored audio (REQ-145).
 
 ### 3. Expansion Markers
 
-- Phase 20 (§20 Audio Recording And STT Pipeline): review/correction UI (UI-004), re-transcription mechanics, editing with AI help.
+- Phase 20 (§20 Audio Recording And STT Pipeline): **DONE — review/correction UI (UI-004), re-transcription mechanics, editing with AI help (sections 2; REQ-145).**
 
 ---
 
@@ -3654,4 +3729,8 @@ Phases 1–18 are GREEN (2026-08-01). Phase 18 built the Addis AI integration fr
 
 ## End Of Phase 19 Content
 
-Phases 1–19 are GREEN (2026-08-01). Phase 19 built the other AI providers from §19: new `## Other AI Providers` seed (provider set and free-AI rule — three providers, STT always uses Addis AI, free-only with no credit card or subscription, models `gemini-3.1-flash-lite` and `z-ai/glm-5.2`, axios for Gemini/Nvidia; provider selection and storage — user picks at generation time via dropdown or buttons, default Addis, provider stored per AI conversation message, corrections may use a different provider; provider fallback chain Addis → Gemini → Nvidia; Gemini integration — `generateContent` contract with `contents`/`systemInstruction`/`generationConfig` and the `key` query parameter; Nvidia integration — Nvidia message format with `Authorization: Bearer`; both with 3x exponential-backoff retries and 502 provider errors), enriched `## AI Prompt Spec` (new §8 Provider Fallback And Delivery — PR-01..18 seeds deliver via Gemini `systemInstruction`/`contents` and the Nvidia message format), flipped the Phase 19 forward markers in `## AI Prompt Spec`, `## Addis AI`, and `## Environment Config` to DONE, added REQ-132..138, extended `## Glossary` (gemini-3.1-flash-lite, z-ai/glm-5.2), updated the Checklist (Other AI Providers — GREEN seed; AI Prompt Spec and Environment Config — GREEN enrichment), and added the Phase 19 Source Trace Map with the `backend/.env` and `backend/package.json` codebase facts. Phase 20 will build the audio recording and STT pipeline.
+Phases 1–19 are GREEN (2026-08-01). Phase 19 built the other AI providers from §19: new `## Other AI Providers` seed (provider set and free-AI rule — three providers, STT always uses Addis AI, free-only with no credit card or subscription, models `gemini-3.1-flash-lite` and `z-ai/glm-5.2`, axios for Gemini/Nvidia; provider selection and storage — user picks at generation time via dropdown or buttons, default Addis, provider stored per AI conversation message, corrections may use a different provider; provider fallback chain Addis → Gemini → Nvidia; Gemini integration — `generateContent` contract with `contents`/`systemInstruction`/`generationConfig` and the `key` query parameter; Nvidia integration — Nvidia message format with `Authorization: Bearer`; both with 3x exponential-backoff retries and 502 provider errors), enriched `## AI Prompt Spec` (new §8 Provider Fallback And Delivery — PR-01..18 seeds deliver via Gemini `systemInstruction`/`contents` and the Nvidia message format), flipped the Phase 19 forward markers in `## AI Prompt Spec`, `## Addis AI`, and `## Environment Config` to DONE, added REQ-132..138, extended `## Glossary` (gemini-3.1-flash-lite, z-ai/glm-5.2), updated the Checklist (Other AI Providers — GREEN seed; AI Prompt Spec and Environment Config — GREEN enrichment), and added the Phase 19 Source Trace Map with the `backend/.env` and `backend/package.json` codebase facts.
+
+## End Of Phase 20 Content
+
+Phases 1–20 are GREEN (2026-08-01). Phase 20 built the audio recording and STT pipeline from §20: enriched `## Audio Recording STT` (new §5 Audio Recording Rules — MediaRecorder clips into a local-state array via a custom hook, full array submits as the multipart field `clips`, blobs never persisted to Redux/redux-persist/localStorage, 15 min/50 MB limits via `AUDIO_MAX_DURATION_SEC`/`AUDIO_MAX_SIZE_BYTES` enforced client-side after recording stops, over-50-MB blocks submit with a warning and a re-record request, MIME priority `audio/webm;codecs=opus` → `audio/webm` → `audio/mp4` → browser default, react-media-recorder and react-player already installed; new §6 Audio Validation — at least one clip, 50 MB max, MIME whitelist, informational duration, server-side ffprobe + multer type/size validation; new §7 Upload Storage — multer into `backend/uploads/audio/` gitignored; new §8 Approved Chunking Pipeline — single-pass ffmpeg WAV `pcm_s16le` 16 kHz mono → in-memory PCM split via `wavSplitter.js` into ~60 s chunks (`ADDIS_AI_STT_MAX_DURATION_SEC` = 60) → chunk MIME `audio/wav` never `audio/webm`, alternatives forbidden unless proven equivalent; new §9 Re-Transcription — backend accepts `audio_recorded` and `transcribed` statuses, Re-transcribe button on completed transcriptions), enriched `## Transcription Review` (re-transcription mechanics — statuses accepted, Re-transcribe button, cross-ref to `## Audio Recording STT` §9), enriched `## API Contract` (new §6 Audio Upload And Re-Transcription Endpoints), enriched `## Data Modeling` (new §5 Narration And Transcription Seeds — clips array, per-clip constraints, storage path, `audio_recorded`/`transcribed`/`reviewed` statuses, re-record/re-transcribe behavior), flipped the Phase 20 forward markers in `## Audio Recording STT` and `## Transcription Review` to DONE, added REQ-139..145, updated the Checklist (Audio Recording STT and Transcription Review — GREEN enrichment; API Contract and Data Modeling — GREEN Phase 20 enrichment), and added the Phase 20 Source Trace Map with the `client/package.json` and `backend/package.json` codebase facts.
