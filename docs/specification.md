@@ -44,7 +44,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 10 | 10. Backend Architecture | GREEN | Backend Architecture, Logging, Architecture, API Contract, Project Directory Structure |
 | 11 | 11. Authentication, Authorization, Cookies, And Tokens | GREEN | Auth Cookies, Security, API Contract, Data Modeling |
 | 12 | 12. Frontend Architecture | GREEN | Frontend Architecture, Routing Layout, UI/UX Spec, MUI Component Standards, Project Directory Structure |
-| 13 | 13. Redux, RTK Query, And API Client | PENDING | Redux RTK Query, Rules, Frontend Architecture |
+| 13 | 13. Redux, RTK Query, And API Client | GREEN | Redux RTK Query, Rules, Frontend Architecture |
 | 14 | 14. MUI, MUI X, Theme, And Component Standards | PENDING | MUI Component Standards, Theme Standards, UI/UX Spec |
 | 15 | 15. React Hook Form Standards | PENDING | React Hook Form Standards, Validation Audit, UI/UX Spec |
 | 16 | 16. UI Rules | PENDING | UI/UX Spec, User Interactions, Rules |
@@ -80,7 +80,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Addis AI | 18 | PENDING |
 | AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 7 enrichment) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
-| API Contract | 5, 10, 11, 18, 20, 22, 24, 28 | GREEN (Phase 11 enrichment) |
+| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 28 | GREEN (Phase 13 enrichment) |
 | Architecture | 9, 10, 25 | GREEN (Phase 10 enrichment) |
 | Audio Recording STT | 8, 20 | GREEN (Phase 8 seed) |
 | Auth Cookies | 11 | GREEN (Phase 11 seed) |
@@ -96,7 +96,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Error Handling | 28 | PENDING |
 | Export Spec | 6, 22 | GREEN (Phase 6 seed) |
 | File Storage Uploads | 20 | PENDING |
-| Frontend Architecture | 12, 13, 14 | GREEN (Phase 12 seed) |
+| Frontend Architecture | 12, 13, 14 | GREEN (Phase 13 enrichment) |
 | Git Workflow | 32 | PENDING |
 | Glossary | 1, 2, 34 (final) | GREEN |
 | Implementation Plan | 32 | PENDING |
@@ -110,17 +110,17 @@ Status of every section the target document must contain at minimum. Extra secti
 | PRD | 1, 2, 3, 4 | GREEN (Phase 4 enrichment) |
 | Problem Statement | 1, 2 | GREEN |
 | Profile Management | 4 | GREEN (Phase 4 seed) |
-| Project Directory Structure | 9, 10, 12, 25, 30 | GREEN (Phase 12 enrichment) |
+| Project Directory Structure | 9, 10, 12, 13, 25, 30 | GREEN (Phase 13 enrichment) |
 | Project Overview | 1 | GREEN |
 | React Hook Form Standards | 15 | PENDING |
-| Redux RTK Query | 13 | PENDING |
+| Redux RTK Query | 13 | GREEN (Phase 13 seed) |
 | Report Domain | 3, 5, 24 | GREEN (Phase 5 enrichment) |
 | Report Format | 6, 7, 21 | GREEN (Phase 7 enrichment) |
 | Report Management | 4, 5, 35 | GREEN (Phase 5 enrichment) |
 | Requirements | 1, 2, 4, 9, 29, 31, 34 | GREEN (Phase 9 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
 | Routing Layout | 12 | GREEN |
-| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 9 seed) |
+| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13 enrichment) |
 | Security | 11, 17, 18, 29 | GREEN (Phase 11 seed) |
 | Source Traceability | 31 | PENDING |
 | Status Machine | 5, 35 | GREEN (Phase 5 seed) |
@@ -338,6 +338,17 @@ All `§` references below identify sections of the original source brief. They a
 | §12.6 (3.5.1, 3.5.2) | CreateReportDialog: MuiDialog `maxWidth="sm"` fullWidth, `disableEscapeKeyDown`, no-op `onClose`, closes only via Cancel or successful submit; Assistant page: ChatBox (`@mui/x-chat`), conversation rail, New Chat → report picker, `chatAdapter.js`, tool-approval UI, `aiConversationSlice` + `assistantApi.js` | MUI Component Standards (5), UI/UX Spec (11) |
 | §12.7 | Hooks under `client/src/hooks/`: `useAuth` (auth state convenience hook), `useAudioRecorder` (MediaRecorder state/actions hook) | Frontend Architecture (7), Requirements (REQ-100) |
 | §12.6 + §11 (cross-aligned) | Google OAuth redirect target finalized as `GET /oauth/google` (Auth Cookies §5); the §12.6 browser URL `http://localhost:4000/api/v1/auth/google` is superseded; flow stubbed until Google credentials are configured | Routing Layout (4) |
+
+## Source Trace Map — Phase 13 (source §13)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §13.1 | Use `@reduxjs/toolkit` and `@reduxjs/toolkit/query/react`; store path `client/src/redux/app/store.js`; API slice path `client/src/redux/features/api.js`; feature slice pattern `client/src/redux/features/<name>Slice.js`; feature slices: authSlice, branchSlice, reportSlice, audioSlice, transcriptionSlice, userSlice, aiConversationSlice, analyticsSlice; use `fetchBaseQuery`, `baseQueryWithReauth`, `createApi`, `injectEndpoints`; the Redux store wraps `App.jsx` in `main.jsx` | Redux RTK Query (1), Requirements (REQ-103) |
+| §13.1 + §12.1 (cross-aligned) | `main.jsx` wrapper order: Redux `<Provider store>` is the outermost wrapper; `LocalizationProvider` + `AdapterDayjs` wrap the router inside it | Redux RTK Query (1), Frontend Architecture (1), Requirements (REQ-103) |
+| §13.2 | All HTTP calls go through `baseQueryWithReauth` in `client/src/redux/features/api.js`; it calls `fetchBaseQuery`, which uses `VITE_API_BASE_URL` from `API_CONFIG` in `utils/constants.js` and `credentials: 'include'` | Redux RTK Query (2), Rules (3), Requirements (REQ-104) |
+| §13.2 | On 401 (`result.error && result.error.status === 401`) `baseQueryWithReauth` attempts `/api/v1/auth/refresh` via `baseQuery({ url }, api, extraOptions)`; on refresh success it retries the original request (`result = await baseQuery(args, api, extraOptions)`); on refresh failure it clears everything, dispatches logout, and the user must be outside of protected routes | Redux RTK Query (2), API Contract (4), Requirements (REQ-105) |
+| §13.2 | Auth endpoints are excluded from 401 handling on public pages; proper backend response transformation is required | Redux RTK Query (2), Rules (3), Requirements (REQ-106) |
+| §13.2 + §11 (cross-aligned) | The refresh endpoint is `POST /api/v1/auth/refresh`; it rotates the refresh token and re-issues the access + refresh cookies (rotation per REQ-087) | Redux RTK Query (2), API Contract (4), Auth Cookies (1) |
 
 ---
 
@@ -659,6 +670,9 @@ Secondary features should not distract from the core workflow of generating a bo
 | Route guard | A React component that gates route access: `ProtectedRoute` shows a spinner while initializing, calls `GET /api/v1/auth/me` on mount, and redirects unauthenticated users to `/login` preserving `state.from`; `PublicRoute` is the inverse guard, redirecting authenticated users to `/dashboard`. | §12.4 |
 | React.lazy | React's code-splitting function used to lazy-load every page module (`React.lazy(() => import('./pages/X.jsx'))`); no page is statically imported into the route tree. | §12.1, §12.6 |
 | AppShell | The protected application shell (`client/src/components/layout/AppShell.jsx`): AppSidebar + content area (protected MuiAppbar → Page Header → `<Outlet />`); provided by routing — page components never render it; `/assistant` is the only protected route that lives outside AppShell. | §12.2 |
+| baseQueryWithReauth | The RTK Query `baseQuery` wrapper that handles token refresh on 401 responses; all frontend HTTP calls pass through it. On 401 it calls `POST /api/v1/auth/refresh` and retries the original request on success; on refresh failure it clears auth state, dispatches logout, and leaves the user outside protected routes. | §13.2 |
+| injectEndpoints | The RTK Query API-slice extension pattern: each feature slice injects its own endpoint set into the central API slice (`client/src/redux/features/api.js`) instead of one monolithic definition. | §13.1 |
+| Feature slice | A Redux Toolkit slice under `client/src/redux/features/` that owns one domain's state and injects its RTK Query endpoints; the feature slices are authSlice, branchSlice, reportSlice, audioSlice, transcriptionSlice, userSlice, aiConversationSlice, and analyticsSlice. | §13.1 |
 
 ---
 
@@ -942,6 +956,15 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-099 | The GlobalSearchDialog must follow the responsive sizing rules (full-screen below 600px and below 768px landscape; centered 80vh/600px for 600–1200px; 70vh/720px above 1200px), take its input from react-hook-form `register('search')`, fire on Enter or click with no debounce, group results by entity type (Reports, Branches) in MuiAccordion sections, and show "No results found" when empty. | Sizing, input, trigger, grouping, and empty-state behaviors match. | §12.3 |
 | REQ-100 | The frontend must ship the `useAuth` hook (auth state convenience) and the `useAudioRecorder` hook (MediaRecorder state/actions) under `client/src/hooks/`. | Both hooks exist and expose the stated behaviors. | §12.7 |
 
+### Functional Requirements (Phase 13)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-103 | The frontend must use Redux Toolkit: the store lives at `client/src/redux/app/store.js`; the API slice lives at `client/src/redux/features/api.js` and is created with `createApi` + `fetchBaseQuery` + `baseQueryWithReauth`; feature slices follow `client/src/redux/features/<name>Slice.js` — authSlice, branchSlice, reportSlice, audioSlice, transcriptionSlice, userSlice, aiConversationSlice, analyticsSlice — each injecting its endpoints into the API slice via `injectEndpoints`; the Redux `<Provider store>` wraps the app in `main.jsx` as the outermost wrapper (above `LocalizationProvider` + the router). | Store, API slice, and the eight feature slices exist at the stated paths; every slice uses `injectEndpoints`; the Provider is the outermost wrapper in `main.jsx`. | §13.1 |
+| REQ-104 | All frontend HTTP calls must go through `baseQueryWithReauth` in `client/src/redux/features/api.js`, which calls `fetchBaseQuery` configured with `baseUrl` = `VITE_API_BASE_URL` (from `API_CONFIG` in `client/src/utils/constants.js`) and `credentials: 'include'`. | No raw `fetch`/axios calls exist in the client; every call goes through the API slice with the stated base URL and credentials. | §13.2, §10.5, REQ-093 |
+| REQ-105 | On a 401 response (`result.error && result.error.status === 401`) `baseQueryWithReauth` must attempt `POST /api/v1/auth/refresh` via `baseQuery({ url }, api, extraOptions)`; on refresh success it must retry the original request (`result = await baseQuery(args, api, extraOptions)`); on refresh failure it must clear everything, dispatch logout, and ensure the user is outside of protected routes. | The refresh→retry→logout sequence works end-to-end exactly as stated; a failed refresh leaves the user on a public page. | §13.2 |
+| REQ-106 | Auth endpoints must be excluded from the 401-refresh handling on public pages, and backend responses must be properly transformed — the §10.7 response envelope is unwrapped (`transformResponse`) into the shapes the UI consumes, and errors surface via the envelope (`error.data.message`). | No refresh loop occurs on public auth pages; response and error shapes are transformed consistently. | §13.2 |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -962,6 +985,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Backend architecture rules: **Phase 10 — DONE (REQ-080..086)**.
 - Authentication, authorization, cookies, and tokens rules: **Phase 11 — DONE (REQ-087..093)**.
 - Frontend architecture rules: **Phase 12 — DONE (REQ-094..100)**.
+- Redux/RTK Query and API client rules: **Phase 13 — DONE (REQ-103..106)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -1004,6 +1028,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | US-027 | As an Area Supervisor, I want to sign in with Google, so that I can log in without a password. | The OAuth flow signs in existing users by email and auto-creates new accounts with Google data; stubbed until credentials are configured (REQ-091). | §11 |
 | US-028 | As an Area Supervisor, I want protected pages to send me to the login page and return me to my intended destination after signing in, so that I never lose my place. | Unauthenticated access to a protected page redirects to `/login` with the origin preserved (`state.from`); login navigates back to it (REQ-095). | §12.4 |
 | US-029 | As an Area Supervisor, I want the sidebar to adapt to my screen size — overlay drawer on small screens, docked full or mini drawer on desktop — so that navigation works on any device. | The three responsive drawer modes exist and switch with the breakpoints (REQ-097). | §12.2, §12.3 |
+| US-030 | As an Area Supervisor, I want my session to renew itself while I am actively using the app, so that I am never interrupted by token expiry. | A transient 401 refreshes the session and retries the request transparently; a failed refresh clears the session and lands me on `/login`; no data is lost on transient 401s. | §13.2 |
 
 ---
 
@@ -1351,8 +1376,10 @@ Fields mandated by §11 (entity-level; full field-level schema remains Phase 24)
 | `POST /api/v1/auth/login` | Sign in; body `{ email, password }`; 200 success; backend sets the `accessToken` (15m) and `refreshToken` (7d) as httpOnly cookies via `Set-Cookie` | §11; paths/schemas detail in Phase 12 |
 | `GET /api/v1/auth/me` | Current authenticated user; used by the frontend route guards on mount | §12.4 (route guards); detail in Phase 12 |
 | `GET /oauth/google` | Google OAuth start route; `googleOAuth` controller using `getGoogleOAuthUrl()` service; stubbed until `env.OAUTH_GOOGLE_*` credentials are configured | §11; §12 shows the browser redirect at `http://localhost:4000/api/v1/auth/google` — route naming finalized in Phase 12 |
+| `POST /api/v1/auth/refresh` | Refresh-token rotation endpoint; called by the frontend `baseQueryWithReauth` on 401; rotates the refresh token and re-issues the access (15m) + refresh (7d) httpOnly cookies | §13.2; rotation per REQ-087 |
 
 - All auth endpoints are mounted under the `/api/v1` prefix per §10.1 (REQ-080).
+- The frontend calls these endpoints only through `baseQueryWithReauth` in `client/src/redux/features/api.js` — no direct `fetch`/axios calls on the client (REQ-104).
 - Outcome statuses: `401` invalid credentials, `422` validation failure, `429` rate limited — all with the §10.7 envelope (`{ success: false, message, data }`).
 - Rate limits per tier: global 100/15min (all endpoints), auth 20/15min (register, login), AI 10/1min (generation, correction) (REQ-092).
 
@@ -1786,7 +1813,7 @@ Addis AI is selected because it is specialized in Ethiopian Amharic and is expec
 
 - **ReportDetail** (`client/src/pages/ReportDetail.jsx`, route `reports/:id/details`): renders inside AppShell — AppShell is provided by routing, page components never render it; details flow, generate flow, and edge cases per API Contract §3.6; Generate button shown only when status `reviewed`; no UI path for re-generation.
 - **ReportCorrection** (`client/src/pages/ReportCorrection.jsx`, route `reports/:id/edit`): renders inside AppShell; tabs — Editor, Details, Audio, History; Editor supports review and correction modes; transcription missing (status `draft`) → "No transcription yet" empty state; generate via `POST /api/v1/reports/:id/generate` with provider selection (default `addis`); audio playback/download via `GET /api/v1/audio/:audioId/stream` / `GET /api/v1/audio/:audioId/download`.
-- **Assistant** (`client/src/pages/Assistant.jsx`, route `assistant` — the only protected route outside AppShell; full-screen): ChatBox with `adapter={assistantAdapter}` and `features={{ conversationList: true }}`, `sx={{ height: '100vh' }}`; conversation rail (title, last message preview, relative timestamp); "New Chat" → report picker dialog → create conversation (welcome message injects raw transcription + report metadata); conversation title `"Report {date}"`; deep link `/assistant?conversation=<id>`; tool-approval UI built into ChatBox (Approve/Reject with reason; "expired" on 60s timeout); adapter file `client/src/components/assistant/chatAdapter.js` (plain JS object: `sendMessage`, `listConversations`, `listMessages`, `addToolApprovalResponse`); Redux `aiConversationSlice` + RTK Query endpoints in `assistantApi.js` (Phase 13); package `@mui/x-chat` v9.0.0-alpha.15 (already in the manifest).
+- **Assistant** (`client/src/pages/Assistant.jsx`, route `assistant` — the only protected route outside AppShell; full-screen): ChatBox with `adapter={assistantAdapter}` and `features={{ conversationList: true }}`, `sx={{ height: '100vh' }}`; conversation rail (title, last message preview, relative timestamp); "New Chat" → report picker dialog → create conversation (welcome message injects raw transcription + report metadata); conversation title `"Report {date}"`; deep link `/assistant?conversation=<id>`; tool-approval UI built into ChatBox (Approve/Reject with reason; "expired" on 60s timeout); adapter file `client/src/components/assistant/chatAdapter.js` (plain JS object: `sendMessage`, `listConversations`, `listMessages`, `addToolApprovalResponse`); Redux `aiConversationSlice` + RTK Query endpoints in `assistantApi.js` (`## Redux RTK Query` §3); package `@mui/x-chat` v9.0.0-alpha.15 (already in the manifest).
 
 ### 12. Expansion Markers
 
@@ -2082,7 +2109,21 @@ client/
     ├── hooks/
     │   ├── useAuth.js                 # Auth state convenience hook (§12.7)
     │   └── useAudioRecorder.js        # MediaRecorder state/actions hook (§12.7)
-    ├── store/                         # Redux/RTK Query structure in Phase 13 (§13)
+    ├── redux/                            # Redux/RTK Query structure (§13)
+    │   ├── app/
+    │   │   └── store.js                  # configureStore; exported store (§13.1)
+    │   └── features/
+    │       ├── api.js                    # createApi + fetchBaseQuery + baseQueryWithReauth; baseUrl = API_CONFIG.VITE_API_BASE_URL, credentials: 'include' (§13.1–13.2)
+    │       ├── authSlice.js              # useLoginMutation, useRegisterMutation, ... (§12.6, §13.1)
+    │       ├── branchSlice.js            # branch CRUD endpoints (§13.1)
+    │       ├── reportSlice.js            # report list/create/details/update/archive/restore/delete/generate (§13.1)
+    │       ├── audioSlice.js             # audio upload, re-transcription (§13.1; pipeline in Phase 20)
+    │       ├── transcriptionSlice.js     # transcription list/update/AI correction (§13.1)
+    │       ├── userSlice.js              # profile endpoints (§13.1)
+    │       ├── aiConversationSlice.js    # assistant chat (chatAdapter.js + assistantApi.js, Phase 13 detail in Phase 12 §3.5.2) (§13.1)
+    │       └── analyticsSlice.js         # dashboard analytics endpoints (§13.1)
+    ├── utils/
+    │   └── constants.js                  # API_CONFIG with VITE_API_BASE_URL; frozen constants (§10.5, §13.2)
     ├── theme/                         # AppTheme.jsx, themePrimitives.js, customizations/* — exists in codebase; standards in Phase 14 (§14)
     └── assets/                        # hero.png, notFound_404.svg, react.svg, vite.svg (codebase fact)
 ```
@@ -2090,6 +2131,7 @@ client/
 ### 6. Expansion Markers
 
 - Phase 12 (§12 Frontend Architecture): **DONE (Phase 12)** — frontend directory tree above.
+- Phase 13 (§13 Redux, RTK Query, And API Client): **DONE (Phase 13)** — `redux/` subtree and `utils/constants.js` added above.
 - Phase 25 (§25 Backend Implementation): final structure.
 - Phase 30 (§30 Git Workflow): workflow structure.
 
@@ -2119,9 +2161,17 @@ client/
 - The packages are already installed.
 - Other required packages can be installed if needed (REQ-079).
 
-### 3. Expansion Markers
+### 3. Redux And RTK Query Rules (§13)
 
-- Phase 13 (§13 Redux RTK Query): RTK Query rules (fetchBaseQuery + baseQueryWithReauth).
+- All frontend HTTP calls go through `baseQueryWithReauth` in `client/src/redux/features/api.js`; raw `fetch`/axios calls are forbidden in the client (REQ-104).
+- `baseQueryWithReauth` wraps `fetchBaseQuery`, which uses `baseUrl` = `VITE_API_BASE_URL` from `API_CONFIG` in `client/src/utils/constants.js` (§10.5, REQ-083) and `credentials: 'include'` (REQ-093).
+- The API slice uses `createApi` + `injectEndpoints`: each feature slice injects its own endpoint set into the central API slice (REQ-103).
+- Auth endpoints are excluded from the 401-refresh handling on public pages (REQ-106).
+- Backend responses must be properly transformed into the shapes the UI consumes (REQ-106).
+
+### 4. Expansion Markers
+
+- Phase 13 (§13 Redux RTK Query): **DONE (Phase 13)** — Redux and RTK Query rules in §3 above.
 - Phase 16 (§16 UI Rules): styling rules (MUI sx/styled only).
 - Phase 17 (§17 Environment Config): environment rules.
 - Phase 21 (§21 AI Prompt Requirements): AI prompt rules.
@@ -2310,12 +2360,12 @@ Three tiers:
 
 ### 7. Frontend Credentials (§11)
 
-- The frontend uses `credentials: 'include'` on all calls, including public pages (REQ-093; RTK Query `baseQueryWithReauth` detail in Phase 13).
+- The frontend uses `credentials: 'include'` on all calls, including public pages (REQ-093; the cookie-aware client `baseQueryWithReauth` is specified in `## Redux RTK Query` §2).
 
 ### 8. Expansion Markers
 
-- Phase 12 (§12 Frontend Architecture): login/register page behavior, OAuth redirect handling, route guards.
-- Phase 13 (§13 Redux, RTK Query, And API Client): `baseQueryWithReauth`, cookie-aware client.
+- Phase 12 (§12 Frontend Architecture): **DONE (Phase 12)** — login/register page behavior, OAuth redirect handling, route guards.
+- Phase 13 (§13 Redux, RTK Query, And API Client): **DONE (Phase 13)** — `baseQueryWithReauth`, cookie-aware client (`## Redux RTK Query` §2).
 - Phase 17 (§17 Environment Variables): `JWT_*` and `OAUTH_GOOGLE_*` env contract.
 - Phase 29 (§29 Security): deep security rules.
 
@@ -2345,6 +2395,56 @@ Three tiers:
 - Phase 18 (§18 Addis AI Integration): AI provider security.
 - Phase 29 (§29 Security): full security section.
 
+---
+
+## Redux RTK Query
+
+> **Phase 13 seed — Redux, RTK Query, and the API client from §13. Error-handling patterns on queries/mutations (the `onQueryStarted` `if (error)` pattern, per-field `error.data.data.errors`, toast notifications) arrive in Phase 28; endpoint set details arrive with their feature phases (15, 20, 21, 22).**
+
+### 1. Redux Structure (§13.1)
+
+- Libraries: `@reduxjs/toolkit` and `@reduxjs/toolkit/query/react` (installed; versions per `client/package.json` — source of truth, REQ-079).
+- Store: `client/src/redux/app/store.js` — created with `configureStore`; the Redux store wraps `App.jsx` in `main.jsx`.
+- API slice: `client/src/redux/features/api.js` — created with `createApi` + `fetchBaseQuery` + `baseQueryWithReauth`.
+- Feature slice pattern: `client/src/redux/features/<name>Slice.js` — one file per domain; each feature slice injects its endpoints into the API slice via `injectEndpoints` (REQ-103).
+- Feature slices (eight, REQ-103): `authSlice`, `branchSlice`, `reportSlice`, `audioSlice`, `transcriptionSlice`, `userSlice`, `aiConversationSlice`, `analyticsSlice`.
+- `main.jsx` wrapper order (cross-aligned with `## Frontend Architecture` §1): `<Provider store={store}>` is the outermost wrapper; inside it, `LocalizationProvider` + `AdapterDayjs` wrap the router (REQ-103).
+
+### 2. API Client — baseQueryWithReauth (§13.2)
+
+- All frontend HTTP calls go through `baseQueryWithReauth` in `client/src/redux/features/api.js` — no direct `fetch`/axios calls on the client (REQ-104).
+- `baseQueryWithReauth` calls `fetchBaseQuery`, configured with:
+  - `baseUrl`: `VITE_API_BASE_URL` from `API_CONFIG` in `client/src/utils/constants.js` (§10.5, REQ-083).
+  - `credentials: 'include'` (REQ-093).
+- On 401 (`result.error && result.error.status === 401`), `baseQueryWithReauth` attempts `POST /api/v1/auth/refresh` via `baseQuery({ url }, api, extraOptions)` (REQ-105).
+- On refresh success: retry the original request — `result = await baseQuery(args, api, extraOptions)`; the backend re-issues the access + refresh httpOnly cookies, so the retry runs authenticated (REQ-105).
+- On refresh failure: clear everything (Redux auth state, localStorage), dispatch logout, and the user must be outside of protected routes — guards redirect to `/login` (REQ-105).
+- Auth endpoints (register, login, me, refresh) are excluded from the 401-refresh handling on public pages — no refresh loop (REQ-106).
+- Backend response transformation is required: success responses unwrap the §10.7 envelope (`{ success, message, data }`) via `transformResponse` into the shapes the UI consumes; errors surface through the envelope (`error.data.message`), with the §28 onQueryStarted error pattern (REQ-106).
+
+### 3. Endpoint Set Inventory (seeds)
+
+| Feature slice | Endpoint set (seeds) | Detail arrives in |
+|---|---|---|
+| authSlice | register, login, me, refresh (via `injectEndpoints`; `useLoginMutation`, `useRegisterMutation` used by Login/Register) | §12.6, §13.1 |
+| branchSlice | Branch CRUD endpoints | Branch pages (Phase 12 §12.6; Phase 16) |
+| reportSlice | Report list/create/details/update/archive/restore/delete/generate | §12.6; Phases 20/21/22 |
+| audioSlice | Audio upload and re-transcription | Phase 20 |
+| transcriptionSlice | Transcription list/update and AI correction | Phases 20/21 |
+| userSlice | Profile endpoints | Phase 4; Profile page |
+| aiConversationSlice | Assistant chat endpoints (`assistantApi.js` consumed by `chatAdapter.js`) | §12.6 (3.5.2); Phases 18/21 |
+| analyticsSlice | Dashboard analytics endpoints | Phase 4; Phase 31 |
+
+### 4. Expansion Markers
+
+- Phase 15 (§15 React Hook Form Standards): form/RTK Query interplay.
+- Phase 20 (§20 Audio Recording And STT Pipeline): audio/transcription endpoint sets.
+- Phase 21 (§21 AI Prompt Requirements): AI correction/generation endpoint sets.
+- Phase 22 (§22 Export): export endpoint set.
+- Phase 28 (§28 Error Handling Patterns): `onQueryStarted` error pattern, per-field `error.data.data.errors`, toast notifications.
+
+---
+
 ## Frontend Architecture
 
 > **Phase 12 seed — the frontend architecture from §12. Enriched by Phase 13 (Redux, RTK Query, and API client, §13) and Phase 14 (MUI, MUI X, theme, and component standards, §14).**
@@ -2355,7 +2455,7 @@ Three tiers:
 - Routes are defined as a flat array in `main.jsx`; there is no separate `AppRoutes.jsx` component (only split out if the array grows unmanageably large) (§12.1).
 - Route objects use `Component` — never `element` (§12.1).
 - Every page is lazy-loaded per module: `React.lazy(() => import('./pages/X.jsx'))` (§12.1, §12.6).
-- `main.jsx` wraps the router in `LocalizationProvider` + `AdapterDayjs` (MUI X date pickers) (§12.1).
+- `main.jsx` wraps the router in `LocalizationProvider` + `AdapterDayjs` (MUI X date pickers) (§12.1); the Redux `<Provider store={store}>` is the outermost wrapper, above both (REQ-103; `## Redux RTK Query` §1).
 - Route tree and guards: `## Routing Layout`.
 
 ### 2. App Root Layout (`client/src/App.jsx`)
@@ -2397,12 +2497,13 @@ Also listed in §12.6 and lazy-loaded (detailed specs in later phases): BranchLi
 
 - Full page load: `GET /api/v1/auth/me` → populate Redux + localStorage; 401 → clear everything + redirect `/login` (§12.6 Dashboard).
 - SPA navigation: ProtectedRoute reads Redux — zero API calls (§12.6 Dashboard).
+- Transient 401s during SPA usage: `baseQueryWithReauth` refreshes (`POST /api/v1/auth/refresh`) and retries the original request; on refresh failure it clears everything + dispatches logout and the guards redirect to `/login` (§13.2; REQ-105; `## Redux RTK Query` §2).
 - Guard components: `## Routing Layout` §3.
 
 ### 6. Data Flow Pattern (page-level)
 
 - Forms: react-hook-form `useForm({ mode: 'onBlur' })`, `register` only (§12.6 Login/Register; Phase 15).
-- Mutations: RTK Query hooks from `authSlice.injectEndpoints` (e.g. `useLoginMutation`, `useRegisterMutation`) with `credentials: 'include'` (§12.6; Phase 13).
+- Mutations and queries: RTK Query hooks from each feature slice's `injectEndpoints` (e.g. `useLoginMutation`, `useRegisterMutation` from `authSlice`) with `credentials: 'include'` (§12.6; `## Redux RTK Query` §1, §3).
 - Error handling: 422 → `setError(field, ...)` per field; 401 → toast; success → `reset()` + navigate (Login: `location.state?.from?.pathname || '/dashboard'`; Register: `/dashboard`) (§12.6).
 - Dashboard data: stat cards, `@mui/x-charts` BarChart/PieChart, Recent Activities MuiDataGrid (server-side pagination, no action column) — content/columns/endpoint TBD (§12.6).
 
@@ -2413,7 +2514,7 @@ Also listed in §12.6 and lazy-loaded (detailed specs in later phases): BranchLi
 
 ### 8. Expansion Markers
 
-- Phase 13 (§13 Redux, RTK Query, And API Client): store structure, slices, RTK Query API client.
+- Phase 13 (§13 Redux, RTK Query, And API Client): **DONE (Phase 13)** — store structure, slices, RTK Query API client (`## Redux RTK Query`).
 - Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): theme and reusable components.
 
 ---
@@ -2640,9 +2741,11 @@ Appbar logo navigates to `/dashboard` if authenticated, otherwise `/` (§12.3).
 
 ---
 
-## End Of Phase 12 Content
+## End Of Phase 13 Content
 
-Phases 1–12 are GREEN (2026-08-01). Phase 12 built the frontend architecture from §12: new `## Frontend Architecture` seed (React Router data mode — `createBrowserRouter` + `RouterProvider` in `main.jsx`, `Component` not `element`, `React.lazy` per module, App root layout composition, page inventory, auth strategy via `/auth/me` on load populating Redux + localStorage, RHF + RTK Query data-flow pattern, `useAuth`/`useAudioRecorder` hooks), new `## Routing Layout` (route tree with App/PublicLayout/AppShell/assistant/NotFound, `ProtectedRoute`/`PublicRoute` guards, assistant outside AppShell, Google OAuth redirect finalized as `GET /oauth/google`), new `## MUI Component Standards` seed (MuiAppbar public/protected variants, AppSidebar drawer modes and theming, Page Header pattern, dialog standards, text/overflow rules), enriched `## UI/UX Spec` (shell and scroll layout, Landing, Login/Register, Dashboard, Reports page, report detail/correction/assistant pages) and `## Project Directory Structure` (frontend directory tree), added REQ-094..100, added US-028/029, extended `## Glossary` (Route guard, React.lazy, AppShell), updated the Checklist (Frontend Architecture, Routing Layout, MUI Component Standards — GREEN seeds; UI/UX Spec, Project Directory Structure — GREEN enrichment), and added the Phase 12 Source Trace Map. Phase 13 will build Redux, RTK Query, and the API client.
+Phases 1–13 are GREEN (2026-08-01). Phase 13 built the Redux, RTK Query, and API client architecture from §13: new `## Redux RTK Query` seed (store at `client/src/redux/app/store.js`, API slice `client/src/redux/features/api.js` via `createApi` + `fetchBaseQuery` + `baseQueryWithReauth`, eight feature slices — authSlice, branchSlice, reportSlice, audioSlice, transcriptionSlice, userSlice, aiConversationSlice, analyticsSlice — each injecting endpoints via `injectEndpoints`; the Redux `<Provider store>` is the outermost wrapper in `main.jsx`, above `LocalizationProvider` + the router; `baseQueryWithReauth` uses `VITE_API_BASE_URL` from `API_CONFIG` in `client/src/utils/constants.js` and `credentials: 'include'`; on 401 it calls `POST /api/v1/auth/refresh` and retries; on refresh failure it clears everything, dispatches logout, and leaves the user outside protected routes; auth endpoints are excluded from refresh on public pages; backend response transformation required), enriched `## Rules` (Redux And RTK Query Rules), enriched `## Frontend Architecture` (store wrapper order, refresh-aware auth strategy, data-flow pattern), enriched `## API Contract` (`POST /api/v1/auth/refresh` row), enriched `## Auth Cookies` (markers), enriched `## Project Directory Structure` (redux subtree, `utils/constants.js`), added REQ-103..106, added US-030, extended `## Glossary` (baseQueryWithReauth, injectEndpoints, Feature slice), updated the Checklist (Redux RTK Query — GREEN seed; API Contract, Frontend Architecture, Project Directory Structure, Rules — GREEN enrichment), and added the Phase 13 Source Trace Map. Phase 14 will build MUI, MUI X, theme, and component standards.
+
+Phases 1–12 are GREEN (2026-08-01). Phase 12 built the frontend architecture from §12: new `## Frontend Architecture` seed (React Router data mode — `createBrowserRouter` + `RouterProvider` in `main.jsx`, `Component` not `element`, `React.lazy` per module, App root layout composition, page inventory, auth strategy via `/auth/me` on load populating Redux + localStorage, RHF + RTK Query data-flow pattern, `useAuth`/`useAudioRecorder` hooks), new `## Routing Layout` (route tree with App/PublicLayout/AppShell/assistant/NotFound, `ProtectedRoute`/`PublicRoute` guards, assistant outside AppShell, Google OAuth redirect finalized as `GET /oauth/google`), new `## MUI Component Standards` seed (MuiAppbar public/protected variants, AppSidebar drawer modes and theming, Page Header pattern, dialog standards, text/overflow rules), enriched `## UI/UX Spec` (shell and scroll layout, Landing, Login/Register, Dashboard, Reports page, report detail/correction/assistant pages) and `## Project Directory Structure` (frontend directory tree), added REQ-094..100, added US-028/029, extended `## Glossary` (Route guard, React.lazy, AppShell), updated the Checklist (Frontend Architecture, Routing Layout, MUI Component Standards — GREEN seeds; UI/UX Spec, Project Directory Structure — GREEN enrichment), and added the Phase 12 Source Trace Map. Phase 13 built the Redux, RTK Query, and API client.
 
 Phases 1–11 are GREEN (2026-08-01). Phase 11 built authentication, authorization, cookies, and tokens from §11: new `## Auth Cookies` seed (JWT auth with 15m access / 7d refresh httpOnly cookies, refresh rotation against replay, no sessions MongoDB collection, `authenticate` middleware contract, bcryptjs 12-round `pre('save')` hashing and `comparePassword`, email-local-part name extraction at registration, provider-neutral Google OAuth via `oauth.service.js` stubbed until credentials, three rate-limit tiers, `credentials: 'include'`), new `## Security` seed (cookie security, replay prevention, no-plaintext passwords, rate limiting), enriched `## API Contract` (authentication endpoint inventory: register, login, me, Google OAuth start route; outcome statuses under the §10.7 envelope), enriched `## Data Modeling` (User entity seeds: name fields, `fullName` virtual, unique email, hashed password without plaintext comparison, optional avatar/position, no session/token collection), added REQ-087..093, added US-026/027, extended `## Glossary` (JWT, httpOnly cookie, Refresh token rotation), updated the Checklist (Auth Cookies and Security — GREEN seeds; API Contract and Data Modeling — GREEN enrichment), and added the Phase 11 Source Trace Map. Phase 12 built the frontend architecture.
 
