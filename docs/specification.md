@@ -38,7 +38,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 4 | 4. Supporting Features Needed Because Of The Core Problem | GREEN | PRD, Requirements, User Stories, Report Management |
 | 5 | 5. Report And Branch Domain | GREEN | Report Domain, Data Modeling, Business Rules, API Contract, Status Machine, Report Management |
 | 6 | 6. Report Format, Samples, And Tone | GREEN | Report Format, AI Prompt Spec, Export Spec |
-| 7 | 7. Language Rules | PENDING | AI Prompt Spec, Report Format, UI/UX Spec |
+| 7 | 7. Language Rules | GREEN | AI Prompt Spec, Report Format, UI/UX Spec |
 | 8 | 8. Transcription Accuracy Requirement | PENDING | Audio Recording STT, Transcription Review, Validation Audit |
 | 9 | 9. Technical Stack And Package Rules | PENDING | Rules, Coding Conventions, Architecture, Requirements, Project Directory Structure |
 | 10 | 10. Backend Architecture | PENDING | Backend Architecture, Architecture, API Contract, Project Directory Structure |
@@ -78,7 +78,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Spec section | Produced/updated in phase | Status |
 |---|---|---|
 | Addis AI | 18 | PENDING |
-| AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 6 seed) |
+| AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 7 enrichment) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
 | API Contract | 5, 10, 11, 18, 20, 22, 24, 28 | GREEN (Phase 5 seed) |
 | Architecture | 9, 10, 25 | PENDING |
@@ -115,7 +115,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | React Hook Form Standards | 15 | PENDING |
 | Redux RTK Query | 13 | PENDING |
 | Report Domain | 3, 5, 24 | GREEN (Phase 5 enrichment) |
-| Report Format | 6, 7, 21 | GREEN (Phase 6 build) |
+| Report Format | 6, 7, 21 | GREEN (Phase 7 enrichment) |
 | Report Management | 4, 5, 35 | GREEN (Phase 5 enrichment) |
 | Requirements | 1, 2, 4, 9, 29, 31, 34 | GREEN (Phase 4 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
@@ -127,7 +127,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Tasks | 32 | PENDING |
 | Theme Standards | 14 | PENDING |
 | Transcription Review | 8, 20 | PENDING |
-| UI/UX Spec | 7, 12, 14, 15, 16 | PENDING |
+| UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 7 seed) |
 | User Interactions | 3, 16, 22, 35 | GREEN (Phase 3 seed) |
 | User Stories | 2 (seed), 4 | GREEN (Phase 2 seed) |
 | Validation Audit | 8, 15, 28, 31 | PENDING |
@@ -245,6 +245,18 @@ All `§` references below identify sections of the original source brief. They a
 | §6.8 | The transcription is raw material only — not organized, polished, or formatted; cannot be used directly as the report | Report Format (7), Report Domain (DR-1), Requirements (REQ-037) |
 | §6.9 | Correction/update behavior: update only the relevant part; example correction requests | Report Format (8), AI Prompt Spec (PR-16), Requirements (REQ-034) |
 | §6.10–6.11 | Before/after example: conversational transcription → organized report | Report Format (9), AI Prompt Spec (4) |
+
+---
+
+## Source Trace Map — Phase 7 (source §7)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §7 | App shell, navigation, labels, buttons, validation messages, helper text, and everything else in the application interface must be English | UI/UX Spec (1), Requirements (REQ-066), User Stories (US-022), Glossary (interface language rule) |
+| §7 | Audio, transcription, AI chat, and report content can be Amharic, English, or mixed | UI/UX Spec (2), AI Prompt Spec (PR-17), Report Format (10), Requirements (REQ-067) |
+| §7 | Do not force translation unless the user explicitly chooses it | UI/UX Spec (2), AI Prompt Spec (PR-17), Report Format (10), Requirements (REQ-067), User Stories (US-023), Glossary (content language flexibility) |
+| §7 | The conversation language in recorded audio is always Amharic | UI/UX Spec (2), AI Prompt Spec (PR-18), Requirements (REQ-068) |
+| §7 | Addis AI selected because it is specialized in Ethiopian Amharic; expected more accurate transcription and report generation than general AI tools | UI/UX Spec (4), Requirements (REQ-069), PRD (6) |
 
 ---
 
@@ -496,7 +508,7 @@ Secondary features should not distract from the core workflow of generating a bo
 
 ## Glossary
 
-> **Terms added in Phases 1–6. The full glossary is built in Phase 34 (§34 Glossary).**
+> **Terms added in Phases 1–7. The full glossary is built in Phase 34 (§34 Glossary).**
 
 | Term | Definition | Source |
 |---|---|---|
@@ -550,6 +562,8 @@ Secondary features should not distract from the core workflow of generating a bo
 | Required report format | The exact eight-field Amharic report structure (ቀን, ብራንች, ስም, ስራ የገባሁበት ሰዓት, የተሰሩ ስራዎች, መፍትሄ የሚፈሉ ጉዳዮች, አጠቃላይ አስተያየት, ከስራ የወጣሁበት ሰዓት) defined in §6.1 and `## Report Format`. | §5.3, §6.1 |
 | Report tone | The required style of generated reports: professional, direct, clear, work-report oriented, from the supervisor's perspective, natural Amharic; not conversational, casual, or chatbot-like. | §6.5 |
 | Amharic workplace transliteration | Writing English or technical words in their common Amharic workplace pronunciation (e.g., deep fryer → ዲፕ ፍራየር) instead of English spelling or literal translation. | §6.7 |
+| Interface language rule | The application shell, navigation, labels, buttons, validation messages, and helper text must all be English, while content may be Amharic, English, or mixed. | §7 |
+| Content language flexibility | Audio, transcription, AI chat, and report content may be Amharic, English, or mixed; translation is never forced unless the user explicitly chooses it. | §7 |
 
 ---
 
@@ -579,6 +593,7 @@ The complete problem statement is in `## Problem Statement`. In summary: the sup
 - **Per-branch supervision activities** (source: §2.2): check daily operational activities; check cleanliness; check employee readiness; follow a checklist; observe urgent branch problems; communicate with staff or responsible people; follow up on previously reported issues; take action or give instructions; form an opinion about branch performance; identify things that need immediate attention; identify things that can make the branch better.
 - **End-of-day report must explain** (source: §2.2): date, branch, working time, completed activities, unresolved issues, general opinion, work exit time.
 - **Report format supports one or multiple branches** (source: §5.1); multi-branch reports preserve branch-specific details and per-branch time ranges when the audio contains them.
+- **Language rules** (source: §7): the interface is English; audio, transcription, AI chat, and report content may be Amharic, English, or mixed; translation is never forced unless the user explicitly chooses it; the recorded conversation is always Amharic.
 - **Required report tone** (source: §6.5): professional, direct, clear, work-report oriented, from the supervisor's perspective, natural Amharic — not conversational, not casual, not chatbot-like.
 
 ### 5. Core Workflow (high level)
@@ -606,7 +621,7 @@ The twelve supporting features (§4):
 4. **Report management list and grid views** — so previous reports can be found.
 5. **Audio recording** — so the supervisor can speak instead of writing (pipeline in Phase 20).
 6. **Audio playback and re-recording** — so the supervisor can confirm the recording before submission.
-7. **Addis AI speech-to-text** — so Amharic audio becomes text (integration in Phase 18, pipeline in Phase 20).
+7. **Addis AI speech-to-text** — so Amharic audio becomes text (integration in Phase 18, pipeline in Phase 20); Addis AI is chosen for its Ethiopian Amharic specialization (§7).
 8. **Transcription review by AI** — so the user can correct raw AI transcription using AI before report generation.
 9. **Addis AI text generation** — so raw transcription becomes a structured report (format and tone in `## Report Format`, Phase 6).
 10. **Report CRUD** — so the user can manage reports.
@@ -780,6 +795,10 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-063 | The AI must not output an explanation of how the report was generated, must not include unrelated conversation content, and must not include Person 2's questions unless the answer contains report information. | Output is the report only. | §6.6 (rules 13–15) |
 | REQ-064 | The generated report must match the required tone: professional, direct, clear, work-report oriented, from the supervisor's perspective, natural in Amharic, not overly decorative, not conversational, not casual, not like a chatbot answer. | Output tone conforms to the §6.5 attributes (detail of REQ-032). | §6.5 |
 | REQ-065 | The AI must separate completed activities from unresolved issues, put urgent problems under መፍትሄ የሚፈሉ ጉዳዮች, and put general or improvement opinions under አጠቃላይ አስተያየት. | Content is placed in the correct sections per §6.6 rules 7–9. | §6.6 (rules 7–9) |
+| REQ-066 | The application interface must be English: app shell, navigation, labels, buttons, validation messages, helper text, and everything else in the interface. | All UI copy is English; no Amharic UI strings. | §7 |
+| REQ-067 | Audio, transcription, AI chat, and report content may be Amharic, English, or mixed, and translation must not be forced unless the user explicitly chooses it. | Content in any of the three forms is accepted and kept; no automatic translation. | §7 |
+| REQ-068 | The conversation language in recorded audio is always Amharic. | Recordings are Amharic conversations (STT language handling arrives in Phases 8 and 20). | §7 |
+| REQ-069 | Addis AI must be used for transcription and report generation because it is specialized in Ethiopian Amharic and expected to produce more accurate results than general AI tools. | Addis AI is the provider for STT and text generation (rationale re-affirming REQ-017/035/048/049). | §7 |
 
 ### Non-Functional Requirements (Phase 1)
 
@@ -795,6 +814,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Supporting features requirements (the twelve §4 features): **Phase 4 — DONE (REQ-039..049)**.
 - Report and branch domain rules: **Phase 5 — DONE (REQ-050..057)**.
 - Report format, samples, and tone rules: **Phase 6 — DONE (REQ-058..065)**.
+- Language rules: **Phase 7 — DONE (REQ-066..069)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -829,6 +849,8 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | US-019 | As an Area Supervisor, I want previous reports to be searchable, updateable, retrievable, and reviewable, so that I can find and rework old reports. | Search, update, retrieval, and review of previous reports work (REQ-055). | §5.2 |
 | US-020 | As an Area Supervisor, I want the generated report to follow the exact required format and tone, so that the report looks like the samples I expect. | Output conforms to the §6.1 structure and §6.5 tone (REQ-058/064). | §6.1, §6.5 |
 | US-021 | As an Area Supervisor, I want English and technical words written in the usual Amharic workplace style, so that the report reads naturally. | Technical words appear transliterated (e.g., ዲፕ ፍራየር), not in English spelling or literal translation (REQ-061). | §6.7 |
+| US-022 | As an Area Supervisor, I want the application interface in English, so that I can navigate and understand the controls. | All UI copy (shell, navigation, labels, buttons, validation messages, helper text) is English (REQ-066). | §7 |
+| US-023 | As an Area Supervisor, I want my audio, transcription, AI chat, and report content to stay in the language I used, without forced translation. | Content is not translated automatically unless the user explicitly chooses translation (REQ-067). | §7 |
 
 ---
 
@@ -1362,7 +1384,7 @@ More examples:
 - `technician` → `ቴክኒሻን`
 - `store` → `ስቶር`
 
-(The broader Amharic language rules arrive in Phase 7.)
+(The broader Amharic language rules arrive in Phase 7 — completed in §10 below.)
 
 ### 7. What The Transcription Represents (§6.8)
 
@@ -1418,9 +1440,13 @@ The following pair shows a conversational transcription before AI organization a
 ከስራ የወጣሁበት ሰዓት: 12:00
 ```
 
-### 10. Expansion Markers
+### 10. Language Flexibility (§7)
 
-- Phase 7 (§7 Language Rules): broader Amharic language rules (this section already carries the §6.7 transliteration rule).
+Report content may be Amharic, English, or mixed, following the language of the transcription; translation is never forced unless the user explicitly chooses it (§7, REQ-067). The report defaults to Amharic generation (REQ-059, §6.6 rule 1) with English or technical words transliterated (§6.7, REQ-061); the exact precedence wording between the Amharic default and the §7 mixed-language allowance is finalized in Phase 21 (AI prompt construction). UI copy rules are separate and live in `## UI/UX Spec` §1 (REQ-066).
+
+### 11. Expansion Markers
+
+- Phase 7 (§7 Language Rules): **DONE — language flexibility recorded in §10; the §6.7 transliteration rule remains.**
 - Phase 21 (§21 AI Prompt Requirements): prompt construction, the missing-info punctuation rule, and few-shot wiring built on these seeds.
 - Phase 22 (§22 Export): export mechanics for this format.
 
@@ -1428,7 +1454,7 @@ The following pair shows a conversational transcription before AI organization a
 
 ## AI Prompt Spec
 
-> **Phase 6 seed — prompt directives derived from §6 (generation rules, tone, transliteration, few-shot example). Full prompt construction arrives in Phase 21; Addis AI integration in Phase 18; other-provider fallbacks in Phase 19. Seed IDs: `PR-<NN>`.**
+> **Phase 7 seed — prompt directives derived from §6 (generation rules, tone, transliteration, few-shot example) and §7 (language rules). Full prompt construction arrives in Phase 21; Addis AI integration in Phase 18; other-provider fallbacks in Phase 19. Seed IDs: `PR-<NN>`.**
 
 ### 1. Generation Rule Seeds (from §6.6)
 
@@ -1459,16 +1485,25 @@ The prompt must instruct the model that the report tone is: professional, direct
 
 The prompt must instruct the model to write English or technical words in common Amharic workplace transliteration (e.g., deep fryer → ዲፕ ፍራየር; locker → ሎከር; kitchen → ኪችን; exhaust fan → ኤግዝስት ፋን; technician → ቴክኒሻን; store → ስቶር), never in English spelling and never as literal translations.
 
-### 4. Few-Shot Seed
+### 4. Language Directive Seeds (from §7)
+
+| ID | Prompt rule seed | Source |
+|---|---|---|
+| PR-17 | Report content may be Amharic, English, or mixed, following the language of the transcription; never force translation unless the user explicitly chooses it. | §7 |
+| PR-18 | The conversation language in recorded audio is always Amharic. | §7 |
+
+Note: PR-01 (generate in Amharic, §6.6 rule 1) stays the default per the required format and samples; §7 permits English or mixed content when the transcription itself is English or mixed. The exact prompt wording for the default-vs-mixed precedence is finalized in Phase 21 — recorded as a marker, not resolved here.
+
+### 5. Few-Shot Seed
 
 The prompt should include the §6.10 → §6.11 before/after pair (`## Report Format` §9) as the reference transformation example, plus the §6.2–6.4 samples as tone/format references.
 
-### 5. Expansion Markers
+### 6. Expansion Markers
 
-- Phase 7 (§7 Language Rules): additional language directives.
+- Phase 7 (§7 Language Rules): **DONE — language directive seeds added (PR-17/18); the Amharic-default vs mixed-content precedence note is recorded for Phase 21.**
 - Phase 18 (§18 Addis AI Integration): how these seeds are delivered to the Addis AI endpoint.
 - Phase 19 (§19 Other AI Providers): provider fallback behavior.
-- Phase 21 (§21 AI Prompt Requirements): final prompt construction, system-prompt structure, and the missing-info punctuation rule.
+- Phase 21 (§21 AI Prompt Requirements): final prompt construction, system-prompt structure, the missing-info punctuation rule, and the PR-01/PR-17 precedence wording.
 
 ---
 
@@ -1483,6 +1518,37 @@ The export feature delivers the finalized report (W-12) so it can be shared or a
 ### 2. Expansion Markers
 
 - Phase 22 (§22 Export): full export specification — format details per file type, file naming, content mapping, API endpoints (`## API Contract`), UI flow (W-12), and error handling.
+
+---
+
+## UI/UX Spec
+
+> **Phase 7 seed — the language rules from §7. Layout, routing, theme, component, form, and general UI rules arrive in Phases 12, 14, 15, and 16.**
+
+### 1. Interface Language (English)
+
+The app shell, navigation, labels, buttons, validation messages, helper text, and everything else in the application interface must be English (§7, REQ-066). No Amharic UI copy.
+
+### 2. Content Language (Amharic / English / Mixed)
+
+- Audio, transcription, AI chat, and report content can be Amharic, English, or mixed (§7, REQ-067).
+- The app must not force translation unless the user explicitly chooses it (§7, REQ-067).
+- The conversation language in recorded audio is always Amharic (§7, REQ-068).
+
+### 3. Language Boundary
+
+The interface language rule (§1) applies to UI copy only; the content language rule (§2) applies to user and AI content. The app never translates user content automatically.
+
+### 4. Addis AI Language Rationale
+
+Addis AI is selected because it is specialized in Ethiopian Amharic and is expected to produce more accurate transcription and report generation than general AI tools that are not focused on Ethiopian language use cases (§7, REQ-069). Integration detail arrives in Phase 18.
+
+### 5. Expansion Markers
+
+- Phase 12 (§12 Frontend Architecture): routing and layout that carry these language rules.
+- Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): English-first component copy standards.
+- Phase 15 (§15 React Hook Form Standards): validation message language (English).
+- Phase 16 (§16 UI Rules): general UI rules.
 
 ---
 
@@ -1589,6 +1655,6 @@ The export feature delivers the finalized report (W-12) so it can be shared or a
 
 ---
 
-## End Of Phase 6 Content
+## End Of Phase 7 Content
 
-Phases 1–6 are GREEN (2026-08-01). Phase 6 built the report format, samples, and tone from §6: new `## Report Format` (required Amharic structure, field reconciliation, three verbatim samples, required tone, sixteen strict generation rules, transliteration rule, transcription-is-not-the-report, correction/update behavior, before/after example), new `## AI Prompt Spec` (PR-01..16 seeds, tone/transliteration/few-shot seeds, OQ-009 resolution), new `## Export Spec` (Phase 6 seed); enriched `## PRD` (tone bullet, workflow steps 5–6, text-generation feature), enriched `## Report Domain` (reconciliation resolved), enriched Work Flow (W-05/W-06/W-09) and User Interactions (UI-003/UI-006), added REQ-058..065, added US-020/021, extended `## Glossary` (required report format, report tone, Amharic workplace transliteration), updated the Checklist (Report Format, AI Prompt Spec, Export Spec GREEN), and added the Phase 6 Source Trace Map. OQ-009 resolved (missing information → leave blank). Phase 7 will build the language rules.
+Phases 1–7 are GREEN (2026-08-01). Phase 7 built the language rules from §7: new `## UI/UX Spec` seed (interface language English, content language Amharic/English/mixed, no forced translation, Amharic conversation audio, Addis AI language rationale), enriched `## AI Prompt Spec` (PR-17/18 language seeds, Amharic-default vs mixed-content precedence noted for Phase 21), enriched `## Report Format` (§10 language flexibility), enriched `## PRD` (language-rules bullet, Addis AI rationale in supporting feature 7), added REQ-066..069, added US-022/023, extended `## Glossary` (interface language rule, content language flexibility), updated the Checklist (UI/UX Spec seed, AI Prompt Spec enrichment, Report Format enrichment — all GREEN), and added the Phase 7 Source Trace Map. Phase 8 will build the transcription accuracy requirement.
