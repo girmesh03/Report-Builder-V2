@@ -47,7 +47,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 13 | 13. Redux, RTK Query, And API Client | GREEN | Redux RTK Query, Rules, Frontend Architecture |
 | 14 | 14. MUI, MUI X, Theme, And Component Standards | GREEN | MUI Component Standards, Theme Standards, UI/UX Spec |
 | 15 | 15. React Hook Form Standards | GREEN | React Hook Form Standards, Validation Audit, UI/UX Spec |
-| 16 | 16. UI Rules | PENDING | UI/UX Spec, User Interactions, Rules |
+| 16 | 16. UI Rules | GREEN | UI/UX Spec, User Interactions, Rules |
 | 17 | 17. Environment Variables | PENDING | Environment Config, Security, Rules |
 | 18 | 18. Addis AI Integration | PENDING | Addis AI, AI Prompt Spec, API Contract, Security |
 | 19 | 19. Other AI Providers | PENDING | Other AI Providers, Addis AI, AI Prompt Spec |
@@ -120,15 +120,15 @@ Status of every section the target document must contain at minimum. Extra secti
 | Requirements | 1, 2, 4, 9, 29, 31, 34 | GREEN (Phase 9 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
 | Routing Layout | 12 | GREEN |
-| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13 enrichment) |
+| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16 enrichment) |
 | Security | 11, 17, 18, 29 | GREEN (Phase 11 seed) |
 | Source Traceability | 31 | PENDING |
 | Status Machine | 5, 35 | GREEN (Phase 5 seed) |
 | Tasks | 32 | PENDING |
 | Theme Standards | 14 | GREEN (Phase 14 seed) |
 | Transcription Review | 8, 20 | GREEN (Phase 8 seed) |
-| UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 15 enrichment) |
-| User Interactions | 3, 16, 22, 35 | GREEN (Phase 3 seed) |
+| UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 15, 16 enrichment) |
+| User Interactions | 3, 16, 22, 35 | GREEN (Phase 3 seed, Phase 16 enrichment) |
 | User Stories | 2 (seed), 4 | GREEN (Phase 2 seed) |
 | Validation Audit | 8, 15, 28, 31 | GREEN (Phase 8 seed, Phase 15 enrichment) |
 | Work Flow | 3, 22, 35 | GREEN (Phase 3 seed) |
@@ -385,6 +385,18 @@ All `§` references below identify sections of the original source brief. They a
 | §15 (rule 13) | All reusable Mui input components must use `forwardRef` | React Hook Form Standards (3), MUI Component Standards (8), Requirements (REQ-113) |
 | §15 (1.2) + §4 (cross-aligned) | GlobalSearchDialog uses `useForm({ mode: 'onSubmit' })` — the explicit search-dialog exception to the default `onBlur` mode (search fires on Enter or click, no debounce) | React Hook Form Standards (1), MUI Component Standards (5), Requirements (REQ-099) |
 | §15 + codebase (`client/package.json`) | `react-hook-form` `^7.81.0` installed (package manifest is the source of truth, REQ-079); no forms exist in `client/src` yet — the `## React Hook Form Standards` section defines the contract every future form follows | React Hook Form Standards (1) |
+
+---
+
+## Source Trace Map — Phase 16 (source §16)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §16 (rules 1–3) | The app shell, navigation, labels, buttons, validation messages, and helper text are English; audio, transcription, AI chat, and report content can be Amharic, English, or mixed; translation is never forced unless the user explicitly chooses it | UI/UX Spec (1–3, 12), AI Prompt Spec (PR-17/18), Requirements (REQ-066/067) — echo of GREEN Phase 7 |
+| §16 (rules 4–5) | Form submit buttons use `size="small"` and must not shrink on flex — `flexShrink: 0` | UI/UX Spec (7, 12), Rules (4), React Hook Form Standards (7), Requirements (REQ-117) |
+| §16 (rules 6–7) | Icons are always used at `vw < 600` and at `vw < 768 && landscape` — small-screen and landscape action buttons carry icons | UI/UX Spec (12), Rules (4), User Interactions (UI-008), Requirements (REQ-118), User Stories (US-033) |
+| §16 (rules 8–9) | Text must never overflow or overlap at mobile or desktop widths; all text uses ellipsis after a certain character count — no horizontal scroll anywhere | UI/UX Spec (6, 12), Rules (4), MUI Component Standards (7), Frontend Architecture (12.6), Requirements (REQ-119) |
+| §16 + codebase (`client/src`) | `client/src` contains only `App.jsx`, `assets/`, `main.jsx`, and `theme/` — no `components/`, `layouts/`, or `pages/` yet; the Phase 16 UI rules define the contract every future component and layout follows | UI/UX Spec (12), Rules (4) |
 
 ---
 
@@ -715,6 +727,8 @@ Secondary features should not distract from the core workflow of generating a bo
 | react-hook-form (RHF) | The form library every form uses, with `register` by default and `useForm({ mode: 'onBlur' })`; installed as `react-hook-form` `^7.81.0` (`client/package.json`). | §15 |
 | Controller (React Hook Form) | The RHF wrapper used only when `register` cannot work — MUI X DatePicker and TimePicker, which deliver custom onChange values instead of native events; every `Controller` use documents why with a code comment. | §15 |
 | formState | The RHF object exposing `errors` (validation messages keyed by field name) and `isSubmitting` (true while the async submit handler runs); it drives MUI `error`/`helperText` display and submit-button loading. | §15 |
+| Icon-first rule | Action buttons always show icons at `vw < 600` and at `vw < 768 && landscape`, so every button remains identifiable on small screens and landscape phones. | §16 |
+| Ellipsis rule | Text never overflows or overlaps at any width; long text truncates with an ellipsis after a certain character count; the app never scrolls horizontally. | §16 |
 
 ---
 
@@ -1027,6 +1041,14 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-115 | Submission rules: `handleSubmit(onSubmit)` with try/catch; `reset()` runs only after success; backend validation errors surface via `setError('fieldName', { message: error.data?.data?.errors?.[0]?.message })`; `isSubmitting` disables the submit button and shows the spinner. | Failed submissions never reset the form; backend 422s land under the offending field via `setError`; the submit button shows `isSubmitting` loading. | §15 |
 | REQ-116 | Schema validation must use a manual resolver with a consistent error shape; zod is never used. | No zod dependency or usage; validation is manual with a uniform error shape. | §15 |
 
+### Functional Requirements (Phase 16)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-117 | All form submit buttons must use `size="small"` and must not shrink on flex — `flexShrink: 0` — so the button keeps its size in every layout. | Every submit button is `size="small"` with `flexShrink: 0`; no submit button shrinks inside flex containers. | §16 |
+| REQ-118 | Icons are always used on action buttons at `vw < 600` and at `vw < 768 && landscape`; small-screen and landscape buttons never lose their icons. | Action buttons on those viewport conditions render with icons; icon-free action buttons do not appear there. | §16 |
+| REQ-119 | Text must never overflow or overlap at mobile or desktop widths; all text uses ellipsis after a certain character count — no horizontal scroll anywhere. | No text overflow or overlap at any width; long text ellipsizes; the app never scrolls horizontally. | §16 |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -1050,6 +1072,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Redux/RTK Query and API client rules: **Phase 13 — DONE (REQ-103..106)**.
 - MUI, MUI X, theme, and component standards rules: **Phase 14 — DONE (REQ-107..111)**.
 - React Hook Form standards rules: **Phase 15 — DONE (REQ-112..116)**.
+- UI rules: **Phase 16 — DONE (REQ-117..119)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -1095,6 +1118,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | US-030 | As an Area Supervisor, I want my session to renew itself while I am actively using the app, so that I am never interrupted by token expiry. | A transient 401 refreshes the session and retries the request transparently; a failed refresh clears the session and lands me on `/login`; no data is lost on transient 401s. | §13.2 |
 | US-031 | As an Area Supervisor, I want the date picker to show Ethiopian calendar dates with English day and month names, so that the dates I pick match how I think about the day. | The date picker switches explicitly between desktop (md+, popper) and mobile (<md, dialog) modes; Ethiopian dates display as DD-MM-YY with English day names and English month names mapped to the Ethiopian months (September…August + Pagume); the custom conversion utility (`client/src/utils/ethiopianDate.js`) is in place (REQ-110). | §14 (1.6) |
 | US-032 | As an Area Supervisor, I want validation errors to appear under each form field in English as soon as I leave it, with the submit button disabled and showing a spinner while the form submits, so that I never lose my report data to a failed submission. | `useForm({ mode: 'onBlur' })`; errors render under their fields via MUI `error`/`helperText` from `formState.errors`; cross-field rules (e.g. confirm password) validate via `getValues`; `isSubmitting` disables the submit button and shows the spinner; `reset()` runs only after a successful submission; backend 422s surface under the offending field via `setError`; no zod (REQ-112..116). | §15 |
+| US-033 | As an Area Supervisor, I want action buttons on my phone and small screens to keep their icons, so that I can always tell what each button does while I am away from a desktop. | Action buttons always render icons at `vw < 600` and at `vw < 768 && landscape`; submit buttons are `size="small"` with `flexShrink: 0`; no text overflows or overlaps at any width (REQ-117..119). | §16 |
 
 ---
 
@@ -1203,13 +1227,13 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 | Export to PDF/TXT/CSV/spreadsheet | Phase 22 | W-12 |
 | Supporting-resource flows (branches, history, analytics) | Phase 4 | (parallel flows) |
 | Archive, delete, restore lifecycle | Phase 35 | W-11 onward |
-| Error states and loading states | Phases 16, 28 | all steps |
+| Error states and loading states | Phase 28 | all steps |
 
 ---
 
 ## User Interactions
 
-> **Phase 3 seed — the mental-model interactions from §3. Later-phase interactions (recording controls, transcription editor, export dialogs, auth, resource CRUD, lifecycle actions) are added in their mapped phases (11, 16, 20, 22, 35). Interaction IDs: `UI-<NNN>`.**
+> **Phase 3 seed — the mental-model interactions from §3. Later-phase interactions (recording controls, transcription editor, export dialogs, auth, resource CRUD, lifecycle actions) are added in their mapped phases (11, 16 — DONE, 20, 22, 35). Interaction IDs: `UI-<NNN>`.**
 
 | ID | Interaction | Trigger | Main flow | Success outcome | Failure outcome | Source |
 |---|---|---|---|---|---|---|
@@ -1220,8 +1244,9 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 | UI-005 | Supervisor requests a correction | Report not satisfactory | Supervisor states what is wrong, missing, unclear, or not written in the desired way | Correction request captured and routed to the AI | Request not submitted; retry | §3.2, §2.3.7 |
 | UI-006 | System updates the report | Correction request received | AI updates only the relevant part; correct unrelated sections are not unnecessarily rewritten (behavior §6.9) | Updated report shown for re-review | Update failure; previous version intact (versioning Phases 24/35) | §3.2, §2.3.7, §6.9 |
 | UI-007 | Supervisor finalizes | Report satisfies the supervisor | Supervisor accepts the report; the correction loop ends | Final report version stored | — | §3.2 |
+| UI-008 | Supervisor uses the app on a small screen | Viewport below 600px, or below 768px in landscape | Action buttons keep their icons (`vw < 600` / `vw < 768 && landscape`); long text ellipsizes instead of overflowing | Every action stays identifiable and no text overflows or overlaps | Icons or ellipsis missing; the app never scrolls horizontally (Phase 28 error states) | §16 |
 
-**Later-phase interaction markers:** recording start/stop/re-record and file-size validation (Phase 20), transcription review/edit UI (Phase 20), export flow (Phase 22), login/logout and protected routes (Phase 11), branch/report/transcription/AI-conversation/profile CRUD (Phase 4), archive/delete/restore (Phase 35), loading/error/empty/unauthenticated states (Phases 16, 28).
+**Later-phase interaction markers:** recording start/stop/re-record and file-size validation (Phase 20), transcription review/edit UI (Phase 20), export flow (Phase 22), login/logout and protected routes (Phase 11), branch/report/transcription/AI-conversation/profile CRUD (Phase 4), archive/delete/restore (Phase 35), loading/error/empty/unauthenticated states (Phase 28). Phase 16 is DONE — the UI rules interaction (UI-008: icon-first on small screens, ellipsis) is recorded above.
 
 ---
 
@@ -1806,7 +1831,7 @@ The export feature delivers the finalized report (W-12) so it can be shared or a
 
 ## UI/UX Spec
 
-> **Phase 7 seed — the language rules from §7, enriched in Phase 12 with the §12 shell and page specs. Theme and component rules arrived in Phase 14; form rules arrived in Phase 15; general UI rules arrive in Phase 16.**
+> **Phase 7 seed — the language rules from §7, enriched in Phase 12 with the §12 shell and page specs. Theme and component rules arrived in Phase 14; form rules arrived in Phase 15; general UI rules built in Phase 16.**
 
 ### 1. Interface Language (English)
 
@@ -1882,12 +1907,38 @@ Addis AI is selected because it is specialized in Ethiopian Amharic and is expec
 - **ReportCorrection** (`client/src/pages/ReportCorrection.jsx`, route `reports/:id/edit`): renders inside AppShell; tabs — Editor, Details, Audio, History; Editor supports review and correction modes; transcription missing (status `draft`) → "No transcription yet" empty state; generate via `POST /api/v1/reports/:id/generate` with provider selection (default `addis`); audio playback/download via `GET /api/v1/audio/:audioId/stream` / `GET /api/v1/audio/:audioId/download`; the Edit Report header shows the report status via MuiStatusBadge (§14 1.13, §12.6 3.5.1.9; `## MUI Component Standards` §9.8).
 - **Assistant** (`client/src/pages/Assistant.jsx`, route `assistant` — the only protected route outside AppShell; full-screen): ChatBox with `adapter={assistantAdapter}` and `features={{ conversationList: true }}`, `sx={{ height: '100vh' }}`; conversation rail (title, last message preview, relative timestamp); "New Chat" → report picker dialog → create conversation (welcome message injects raw transcription + report metadata); conversation title `"Report {date}"`; deep link `/assistant?conversation=<id>`; tool-approval UI built into ChatBox (Approve/Reject with reason; "expired" on 60s timeout); adapter file `client/src/components/assistant/chatAdapter.js` (plain JS object: `sendMessage`, `listConversations`, `listMessages`, `addToolApprovalResponse`); Redux `aiConversationSlice` + RTK Query endpoints in `assistantApi.js` (`## Redux RTK Query` §3); package `@mui/x-chat` v9.0.0-alpha.15 (already in the manifest).
 
-### 12. Expansion Markers
+### 12. UI Rules (§16)
+
+#### 12.1 Language And Content (§16 1–3)
+
+- The interface — app shell, navigation, labels, buttons, validation messages, helper text, and everything else — is always English (§16, REQ-066; echoes §1).
+- Audio, transcription, AI chat, and report content can be Amharic, English, or mixed (§16, REQ-067; echoes §2).
+- Translation is never forced unless the user explicitly chooses it (§16, REQ-067; echoes §2–3).
+- These are §7 language rules restated so the UI rule set is self-contained; they do not add new rules.
+
+#### 12.2 Form Submit Buttons (§16 4–5)
+
+- Every form submit button uses `size="small"` (REQ-117) — covered by the reusable MuiButton default (`## MUI Component Standards` §9.1) and already specified for Login (§7).
+- Submit buttons must not shrink on flex — `flexShrink: 0` on the button `sx` (REQ-117; Login submit already sets it, §7). This applies to every planned form (Login/Register §7–8, report editor, filter dialogs).
+
+#### 12.3 Icons On Small Screens (§16 6–7)
+
+- Action buttons always include icons at `vw < 600` and at `vw < 768 && landscape` (REQ-118).
+- Desktop buttons may keep or drop icons per design; small-screen and landscape buttons never render icon-free.
+- Implemented with a `useMediaQuery` based on the MUI breakpoints (`theme.breakpoints.down('sm')`; `down('md')` + `orientation: 'landscape'`), per component (`## MUI Component Standards`).
+
+#### 12.4 Text Overflow And Ellipsis (§16 8–9)
+
+- Text never overflows or overlaps at mobile or desktop widths (REQ-119).
+- All text ellipsizes after a certain character count: `textOverflow: 'ellipsis'`, `overflow: 'hidden'`, `whiteSpace: 'nowrap'` on the text element.
+- No horizontal scroll anywhere (echoes §6 Landing and `## Frontend Architecture` §12.6 Landing; cross-ref `## MUI Component Standards` §7).
+
+### 13. Expansion Markers
 
 - Phase 12 (§12 Frontend Architecture): **DONE (Phase 12)** — shell and page specs above.
 - Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): **DONE (Phase 14)** — English-first component copy standards recorded across the reusable-component catalog; MuiStatusBadge in report detail/correction headers; MuiPageHeader subtitle rule; MuiDialog responsive fullscreen (§14).
 - Phase 15 (§15 React Hook Form Standards): **DONE (Phase 15)** — validation message language English via `formState.errors` + MUI `error`/`helperText` (see §1 and `## React Hook Form Standards` §4).
-- Phase 16 (§16 UI Rules): general UI rules.
+- Phase 16 (§16 UI Rules): **DONE (Phase 16)** — general UI rules in §12 above (REQ-117..119).
 
 ---
 
@@ -2223,7 +2274,7 @@ client/
 
 ## Rules
 
-> **Phase 9 seed — the technical stack rules from §9. Rules deepen in Phases 13 (Redux), 16 (UI rules), 17 (environment config), 21 (AI prompts), 26 (JSDoc), 29 (security), 30 (git).**
+> **Phase 9 seed — the technical stack rules from §9. Rules deepened in Phases 13 (Redux) and 16 (UI rules); further rules arrive in Phases 17 (environment config), 21 (AI prompts), 26 (JSDoc), 29 (security), 30 (git).**
 
 ### 1. Stack Rules (§9.1)
 
@@ -2253,10 +2304,17 @@ client/
 - Auth endpoints are excluded from the 401-refresh handling on public pages (REQ-106).
 - Backend responses must be properly transformed into the shapes the UI consumes (REQ-106).
 
-### 4. Expansion Markers
+### 4. UI Rules (§16)
+
+- All form submit buttons use `size="small"` (REQ-117).
+- Form submit buttons never shrink on flex — `flexShrink: 0` (REQ-117).
+- Action buttons always show icons at `vw < 600` and at `vw < 768 && landscape` (REQ-118).
+- Text never overflows or overlaps at any width; all text ellipsizes after a certain character count; no horizontal scroll anywhere (REQ-119).
+
+### 5. Expansion Markers
 
 - Phase 13 (§13 Redux RTK Query): **DONE (Phase 13)** — Redux and RTK Query rules in §3 above.
-- Phase 16 (§16 UI Rules): styling rules (MUI sx/styled only).
+- Phase 16 (§16 UI Rules): **DONE (Phase 16)** — UI rules in §4 above.
 - Phase 17 (§17 Environment Config): environment rules.
 - Phase 21 (§21 AI Prompt Requirements): AI prompt rules.
 - Phase 26 (§26 JSDoc Standards): documentation rules.
@@ -2855,7 +2913,7 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 
 - Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): **DONE (Phase 14)** — import/styling rules (§7), reusable-component contract (§8), component catalog (§9), and MUI X usage (§10) above; theme-level standards in `## Theme Standards`.
 - Phase 15 (§15 React Hook Form Standards): **DONE (Phase 15)** — `register` on the forwardRef inputs (MuiTextField/MuiSelect), `Controller` only for MuiDatePicker/TimePicker with an explanatory comment (§15; `## React Hook Form Standards` §3).
-- Phase 16 (§16 UI Rules): general UI rules.
+- Phase 16 (§16 UI Rules): **DONE (Phase 16)** — general UI rules (submit-button size/flexShrink, icons on small screens, ellipsis; `## UI/UX Spec` §12, `## Rules` §4).
 
 ---
 
@@ -2882,14 +2940,14 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 
 ### 3. Expansion Markers
 
-- Phase 16 (§16 UI Rules): styling rules (MUI sx/styled only).
+- Phase 16 (§16 UI Rules): **DONE (Phase 16)** — styling rules (MUI sx/styled only).
 - Phase 36 (Final Consolidation): final theme review.
 
 ---
 
 ## React Hook Form Standards
 
-> **Phase 15 seed — the React Hook Form standards from §15. `react-hook-form` `^7.81.0` is installed (`client/package.json`, source of truth — REQ-079); no forms exist in `client/src` yet, so these rules define the contract every future form follows. Error-handling patterns on form submissions arrive in Phase 28; general UI rules arrive in Phase 16.**
+> **Phase 15 seed — the React Hook Form standards from §15. `react-hook-form` `^7.81.0` is installed (`client/package.json`, source of truth — REQ-079); no forms exist in `client/src` yet, so these rules define the contract every future form follows. Error-handling patterns on form submissions arrive in Phase 28; general UI rules built in Phase 16.**
 
 ### 1. Form Setup (§15 1–2)
 
@@ -2939,7 +2997,7 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 
 ### 9. Expansion Markers
 
-- Phase 16 (§16 UI Rules): general UI rules.
+- Phase 16 (§16 UI Rules): **DONE (Phase 16)** — general UI rules; submit buttons are `size="small"` with `flexShrink: 0` (see §7).
 - Phase 28 (§28 Error Handling Patterns): form error patterns, `onQueryStarted` error handling.
 
 ---
@@ -3049,7 +3107,11 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 
 ## End Of Phase 15 Content
 
-Phases 1–15 are GREEN (2026-08-01). Phase 15 built the React Hook Form standards from §15: new `## React Hook Form Standards` seed (every form uses `react-hook-form` `^7.81.0` — `client/package.json` — with `register` by default and `useForm({ mode: 'onBlur' })`; no `watch` — `getValues` inside validate functions for cross-field validation, with the confirm-password example; `register` first, `Controller` only for the MUI X DatePicker/TimePicker with a code comment documenting why; reusable Mui inputs stay `forwardRef`; `formState.errors` drives display via MUI `error`/`helperText` with English messages; never debounce input or use `useDebounce` — direct register integration only; backend validation via `setError('fieldName', { message: error.data?.data?.errors?.[0]?.message })`; `handleSubmit(onSubmit)` with try/catch and `reset()` only after success, `isSubmitting` disables the submit button and shows the spinner; schema validation via a manual resolver with a consistent error shape — no zod), enriched `## Validation Audit` (new form validation rules gate), enriched `## UI/UX Spec` (formState/error/helperText validation display cross-ref), cross-aligned `## Redux RTK Query` (forms submit via mutation hooks; 422 → field-level setError; isSubmitting drives MuiButton loading) and `## MUI Component Standards` (`register` on forwardRef inputs, `Controller` only for MuiDatePicker), added REQ-112..116, added US-032, extended `## Glossary` (react-hook-form, Controller, formState), updated the Checklist (React Hook Form Standards — GREEN seed; Validation Audit, UI/UX Spec — GREEN enrichment), and added the Phase 15 Source Trace Map. Phase 16 will build the UI rules.
+Phases 1–15 are GREEN (2026-08-01). Phase 15 built the React Hook Form standards from §15: new `## React Hook Form Standards` seed (every form uses `react-hook-form` `^7.81.0` — `client/package.json` — with `register` by default and `useForm({ mode: 'onBlur' })`; no `watch` — `getValues` inside validate functions for cross-field validation, with the confirm-password example; `register` first, `Controller` only for the MUI X DatePicker/TimePicker with a code comment documenting why; reusable Mui inputs stay `forwardRef`; `formState.errors` drives display via MUI `error`/`helperText` with English messages; never debounce input or use `useDebounce` — direct register integration only; backend validation via `setError('fieldName', { message: error.data?.data?.errors?.[0]?.message })`; `handleSubmit(onSubmit)` with try/catch and `reset()` only after success, `isSubmitting` disables the submit button and shows the spinner; schema validation via a manual resolver with a consistent error shape — no zod), enriched `## Validation Audit` (new form validation rules gate), enriched `## UI/UX Spec` (formState/error/helperText validation display cross-ref), cross-aligned `## Redux RTK Query` (forms submit via mutation hooks; 422 → field-level setError; isSubmitting drives MuiButton loading) and `## MUI Component Standards` (`register` on forwardRef inputs, `Controller` only for MuiDatePicker), added REQ-112..116, added US-032, extended `## Glossary` (react-hook-form, Controller, formState), updated the Checklist (React Hook Form Standards — GREEN seed; Validation Audit, UI/UX Spec — GREEN enrichment), and added the Phase 15 Source Trace Map. Phase 16 built the UI rules.
+
+## End Of Phase 16 Content
+
+Phases 1–16 are GREEN (2026-08-01). Phase 16 built the UI rules from §16: enriched `## UI/UX Spec` (new UI Rules section — language-and-content echo of §7, form submit buttons `size="small"` with `flexShrink: 0`, icons always used at `vw < 600` and `vw < 768 && landscape`, text-overflow/ellipsis rule with no horizontal scroll), enriched `## Rules` (new UI Rules section mapped to REQ-117..119), enriched `## User Interactions` (UI-008 — small-screen icon-first and ellipsis interaction; Phase 16 marker DONE), cross-aligned the forward markers in `## MUI Component Standards` and `## Theme Standards`, added REQ-117..119, added US-033, extended `## Glossary` (Icon-first rule, Ellipsis rule), updated the Checklist (Rules, UI/UX Spec, User Interactions — GREEN enrichment), and added the Phase 16 Source Trace Map with the `client/src` codebase fact (only `App.jsx`, `assets/`, `main.jsx`, `theme/` exist — no `components/` or `layouts/` yet). Phase 17 will build the environment variables.
 
 Phases 1–14 are GREEN (2026-08-01). Phase 14 built the MUI, MUI X, theme, and component standards from §14: enriched `## MUI Component Standards` (detailed MuiAppbar/Page Header/Dialogs specs; new MUI Import And Styling Rules — tree-shaken imports, never the `@mui/material` barrel, Grid `size` prop, the deprecated-props replacement table, sx/styled only, no Tailwind or inline styles, theme-aware tokens, no direct `themePrimitives.js`/`gray[50]`/`gray[800]`/`brand[400]` usage, mode-aware colors; Reusable Component Contract — `client/src/components/reusable/*`, `Mui` prefix, forwardRef inputs, `displayName`, `size="small"` defaults, pure passthrough wrappers, `slotProps.input` adornments, mandatory start adornments; Component Catalog — MuiButton native loading, MuiTextField internal password eye, MuiSelect maxHeight-300 MenuProps, MuiDatePicker explicit Desktop/Mobile switching plus the Ethiopian calendar (`utils/ethiopianDate.js`, DD-MM-YY, English day/month names incl. Pagume, RHF via Controller), MuiPagination, MuiDataGrid (columns in `components/columns/*`, action column, archive/restore/delete via MuiConfirmDialog, toolbar + export selection, server pagination, skeleton loading), MuiConfirmDialog, LoadingSpinner, MuiStatusBadge (status-name reconciliation owned by Phase 35); MUI X Usage — community edition only with the x-chat reference URLs), new `## Theme Standards` seed (theme rules from §14.4 verified against the codebase — `client/src/theme/` only, no inline overrides, overrides via `customizations/` files with `@module`, `AppTheme.jsx` composes `createTheme` + `cssVariables` + color schemes + the eight customization groups with `ThemeProvider disableTransitionOnChange`; theme tokens — never import `themePrimitives.js`, greys via `theme.palette.grey[N]`, mode-aware sx colors), enriched `## UI/UX Spec` (MuiStatusBadge in report detail/correction headers, MuiPageHeader subtitle rule, MuiDialog responsive fullscreen), cross-aligned `## Frontend Architecture` markers and `## Project Directory Structure` (`components/reusable/`, `components/columns/`, `utils/ethiopianDate.js`), added REQ-107..111, added US-031, extended `## Glossary` (Ethiopian calendar, Pagume, MUI X community edition), updated the Checklist (MUI Component Standards, UI/UX Spec, Project Directory Structure — GREEN enrichment; Theme Standards — GREEN seed), and added the Phase 14 Source Trace Map. Phase 15 built the React Hook Form standards.
 
