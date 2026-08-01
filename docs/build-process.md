@@ -132,6 +132,7 @@ Once I approve your plan, you enter build mode. You run this loop for every phas
 10. If project version wording refers to an older version, use V2.
 11. After the generated specification exists, `docs/initial-doc.md` must no longer be needed for implementation. Every fact from it must be copied into `docs/specification.md`. Never delete `docs/initial-doc.md` unless I explicitly ask you to.
 12. The specification is not to withhold information; instead it is a single source of truth that will be used by the AI for implementation of the project without a single deviation. Therefore, the specification must be exhaustive, strict, answer every single question and cover every single detail so the AI can implement the project using the specification alone, without making a single mistake.
+13. `docs/specification.md` is standalone. It must never mention, reference, or depend on any other file under `docs/` — including `docs/initial-doc.md` and `docs/build-process.md`. No file name or file path of any other `docs/*` document may ever appear in `docs/specification.md`; the source brief is referenced by section number only (e.g., `§1.4`) for traceability. The specification must remain complete, correct, and usable alone even if every other file under `docs/` is deleted. Every GREEN cycle and the Phase 36 final consolidation must validate that `docs/specification.md` contains no reference to any other `docs/*` file.
 
 ## Target Document: docs/specification.md
 
@@ -444,7 +445,7 @@ Do not start implementation. The output is documentation only.
 
 Every section of the generated specification document must:
 
-- Be complete enough for a future AI implementation agent to follow without returning to `docs/initial-doc.md`.
+- Be complete enough for a future AI implementation agent to follow without returning to `docs/initial-doc.md` or any other file under `docs/`.
 - Preserve all relevant facts from `docs/initial-doc.md`.
 - Avoid invented details; instead ask the user if it is necessary.
 - Use clear headings.
@@ -523,3 +524,4 @@ When all phases 1–35 are GREEN and committed, run the consolidation phase:
 - **No implementation.** This process is documentation only, from the first phase to the last.
 - **Ask, don't invent.** Any required detail missing from `docs/initial-doc.md` or the codebase is a question to me, never a guess.
 - **V2 terminology everywhere.**
+- **`docs/specification.md` is standalone.** It never references any other file under `docs/` (no paths, no file names); only section-number traces (e.g., `§N.M`) are allowed.
