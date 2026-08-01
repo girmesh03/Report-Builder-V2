@@ -57,7 +57,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 23 | 23. Mock Data | GREEN | Mock Data Seeding, Data Modeling, Tasks |
 | 24 | 24. Data Model | GREEN | Data Modeling, API Contract, Business Rules, Report Domain |
 | 25 | 25. Project Directory Structure | GREEN | Project Directory Structure, Coding Conventions, Architecture |
-| 26 | 26. Code Quality And Coding Conventions | PENDING | Coding Conventions, Rules, JSDoc Standards, Checklists |
+| 26 | 26. Code Quality And Coding Conventions | GREEN | Coding Conventions, Rules, JSDoc Standards, Checklists |
 | 27 | 27. JSDoc Conventions | PENDING | JSDoc Standards, Coding Conventions |
 | 28 | 28. Error Handling Patterns | PENDING | Error Handling, API Contract, Validation Audit |
 | 29 | 29. Security | PENDING | Security, Requirements, Environment Config, Rules |
@@ -87,8 +87,8 @@ Status of every section the target document must contain at minimum. Extra secti
 | Backend Architecture | 10, 24, 25 | GREEN (Phase 10 seed, Phase 24, 25 enrichment) |
 | Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
 | Business Rules | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
-| Checklists | 26, 30, 31 | PENDING |
-| Coding Conventions | 9, 25, 26, 27 | GREEN (Phase 9 seed, Phase 25 enrichment) |
+| Checklists | 26, 30, 31 | GREEN (Phase 26 seed) |
+| Coding Conventions | 9, 25, 26, 27 | GREEN (Phase 9 seed, Phase 25, 26 enrichment) |
 | Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11, 20, 23, 24 enrichment) |
 | Decision Log | 1, 2, 24, 33 | GREEN |
 | Design | consolidated across phases; finalized in 36 | PENDING |
@@ -100,7 +100,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Git Workflow | 32 | PENDING |
 | Glossary | 1, 2, 24, 34 (final) | GREEN |
 | Implementation Plan | 32 | PENDING |
-| JSDoc Standards | 26, 27 | PENDING |
+| JSDoc Standards | 26, 27 | GREEN (Phase 26 seed) |
 | Logging | 10, 28 | GREEN (Phase 10 seed) |
 | Mock Data Seeding | 23, 24 | GREEN (Phase 23 seed, Phase 24 enrichment) |
 | MUI Component Standards | 12, 14, 24 | GREEN (Phase 14, 24 enrichment) |
@@ -120,7 +120,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Requirements | 1, 2, 4, 9, 24, 25, 29, 31, 34 | GREEN (Phase 9, 24, 25 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
 | Routing Layout | 12 | GREEN |
-| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16, 17, 21 enrichment) |
+| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16, 17, 21, 26 enrichment) |
 | Security | 11, 17, 18, 25, 29 | GREEN (Phase 11 seed, Phase 17, 18, 25 enrichment) |
 | Source Traceability | 31 | PENDING |
 | Status Machine | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
@@ -512,6 +512,21 @@ All `§` references below identify sections of the original source brief. They a
 | Phase 25 | Mock entry points finalized: `backend/mock/seed.js` and `backend/mock/wipe.js`, npm scripts `mock:seed`/`mock:wipe` with the `NODE_ENV` production guard — resolves the Phase 23 deferral | Mock Data Seeding (6), Project Directory Structure (4) |
 | Codebase (`backend/`, `client/`) | `backend/` holds only `.env`, `package.json`, `package-lock.json`; `client/src` holds only `main.jsx`, `App.jsx`, `theme/`, `assets/` — the rest of the tree is created during implementation | Project Directory Structure (1, 4, 5, 6) |
 
+## Source Trace Map — Phase 26 (source §26)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §26 | Formatting rules: ES Modules only (`"type": "module"` + `import`/`export`); no `console.log` in backend (Winston replaces it in all environments; `console.log` allowed frontend); no zod — manual resolvers with a consistent error shape; semicolons required, single quotes, trailing commas, 2-space indentation, 100-character width, LF line endings, UTF-8 encoding | Coding Conventions (7), Rules (7), Requirements (REQ-178) |
+| §26 | Naming conventions: camelCase variables and functions, PascalCase classes and components, kebab-case file names, UPPER_SNAKE_CASE constants and environment variables | Coding Conventions (8), Rules (7), Requirements (REQ-179) |
+| §26 | Import conventions: built-in → npm → local, alphabetical within groups; named imports for utilities and functions; default import for React components; never `*` imports | Coding Conventions (9), Rules (7), Requirements (REQ-180) |
+| §26 | No unused imports, no unused exports, no dead code; unused parameters carry the `_` prefix (`_req`, `_res`, `_next`) | Coding Conventions (10), Rules (7), Requirements (REQ-181) |
+| §26 | Frontend conventions: functional components with hooks, props destructured in the function signature, `handle`-prefixed event handlers | Coding Conventions (12), Rules (7), Requirements (REQ-182) |
+| §26 | Backend convention: user IDs via `req.user._id.toString()` | Coding Conventions (11), Rules (7), Requirements (REQ-183) |
+| §26 | Build and lint gates: `npx vite build` with 0 errors; lint passes — the source lists `npx eslint src/` (client-side), implemented as `npm run lint` (`eslint .` with the flat config) | Coding Conventions (13), Rules (7), Checklists (2), Requirements (REQ-184) |
+| §26 | JSDoc: a JSDoc block comment at the top of every file or module; `@module` on all public modules; `@param`, `@returns`, `@throws` on functions; `@type` on constants; JSDoc on exports; no unused exports — every exported function or constant is imported elsewhere | JSDoc Standards (1), Coding Conventions (10), Requirements (REQ-185/186) |
+| Codebase (`client/eslint.config.js`, `client/package.json`) | ESLint 10 flat config (`@eslint/js` recommended + react-hooks flat recommended + react-refresh vite, browser globals, JSX, ignores `dist`); `lint` script is `eslint .`; no ESLint config or lint script exists in `backend/` — lint is scoped to the frontend (codebase fact) | Coding Conventions (13), Rules (7), Checklists (2) |
+| Codebase (`client/src/theme/*`, `client/src/main.jsx`, `client/src/App.jsx`) | Theme files already carry `@module <path>` JSDoc blocks (Phase 14-aligned); `main.jsx` and `App.jsx` are Vite template remnants (no JSDoc, double quotes) — replaced during implementation per REQ-175 | JSDoc Standards (2), Requirements (REQ-175, REQ-185) |
+
 ---
 
 ## Project Overview
@@ -853,6 +868,8 @@ Secondary features should not distract from the core workflow of generating a bo
 | Noto Sans Ethiopic | The Amharic-capable Unicode font used to render Amharic text in the PDF export (section headers and body). | §22 |
 | Google Drive export | The Google Docs export mechanism (Phase 25 user decision): the backend creates the document with the user's own Google OAuth token — the login flow extended with the `drive.file` scope — so the document lands in the user's own Google Drive, fully owned and editable by the user. | §22 |
 | Mock data | Development/demo-only records injected into MongoDB via `backend/mock/*`; injection and wipe run inside MongoDB sessions, mock narrations are metadata-only (no audio files), and the commands refuse to run when `NODE_ENV` is `production` (AD-009). | §23, §33 (ADR-037) |
+| JSDoc | JavaScript documentation comments: a JSDoc block comment at the top of every file or module, plus `@module` on public modules, `@param`/`@returns`/`@throws` on functions, `@type` on constants, and JSDoc on exports (REQ-185/186). | §26 |
+| Dead code | Code that is never executed or never used: unused imports, unused exports, unused constants/variables/methods; unused parameters carry the `_` prefix (`_req`, `_res`, `_next`) (REQ-181). | §26 |
 
 ---
 
@@ -1272,6 +1289,15 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-175 | The explicit §25.2 frontend paths exist and are used: `client/src/main.jsx`, `App.jsx`, lazy-loaded `pages/*`, `components/layout/*`, `components/<domain>/*`, `utils/constants.js`, `redux/app/store.js`, `redux/features/api.js` and `<name>Slice.js` files, `components/reusable/*`, `components/columns/*`, and `theme/*`. | All listed paths exist in the implemented client and serve their documented role. | §25.2 |
 | REQ-176 | Backend per-domain files follow the `<domain>.controller.js` / `<domain>.routes.js` / `<domain>.validator.js` / `<domain>.model.js` naming pattern with one controller file per domain (auth, branch, report, audio, transcription, ai, user, analytics); external integrations live in `services/*.service.js`; cross-cutting concerns live in `middleware/*.middleware.js`. | The implemented backend matches the `## Project Directory Structure` §4 tree file for file. | §10.3, §25.1 |
 | REQ-177 | The Google Docs export creates the document with the user's own Google OAuth token — the Google login flow extended with the `drive.file` scope — so the document lands in the user's own Google Drive, fully owned and editable by the user; no Google Service Account is used. | The exported document appears in the user's Google Drive and is owned, editable, shareable, and downloadable by them; no service-account credentials exist in the environment contract. | §22 (Phase 25 user decision) |
+| REQ-178 | All code follows the §26 formatting rules: semicolons required; single quotes; trailing commas; 2-space indentation; 100-character width; LF line endings; UTF-8 encoding. | A code review of the implemented codebase finds no formatting violations. | §26 |
+| REQ-179 | Naming conventions: camelCase variables and functions; PascalCase classes and components; kebab-case file names; UPPER_SNAKE_CASE constants and environment variables. | A code review finds file names, identifiers, constants, and environment variables following the convention. | §26 |
+| REQ-180 | Import conventions: order built-in modules → npm packages → local modules, alphabetical within each group; named imports for utilities and functions; default import for React components; never `*` imports. | A code review of imports finds the ordering and import-style rules satisfied. | §26 |
+| REQ-181 | No dead code: no unused imports (every import referenced in the file body), no unused exports (every exported function or constant imported elsewhere), no unused constants/variables/methods; unused parameters carry the `_` prefix (`_req`, `_res`, `_next`). | A code review finds no unused imports/exports/dead code; intentionally unused parameters are `_`-prefixed. | §26 |
+| REQ-182 | Frontend components are functional components with hooks; props are destructured in the function signature; event handlers are prefixed with `handle`. | A code review of client components finds the component patterns followed. | §26 |
+| REQ-183 | Backend user IDs are obtained with the `req.user._id.toString()` pattern. | A code review finds user IDs consistently extracted via `req.user._id.toString()`. | §26 |
+| REQ-184 | The frontend passes `npx vite build` with 0 errors and passes lint (`eslint .` with the existing `client/eslint.config.js`). §26 mandates no backend lint. | Running the build and lint commands in `client/` succeeds without errors. | §26 |
+| REQ-185 | Every single file or module carries a JSDoc block comment at the top of the file. | A file sweep finds no source file without a JSDoc block comment. | §26 |
+| REQ-186 | JSDoc tags: `@module` on all public modules; `@param`, `@returns`, and `@throws` on functions; `@type` on constants; JSDoc on exports. | A documentation audit finds public modules and functions documented per the tag contract (deepened in Phase 27). | §26 |
 
 ### Non-Functional Requirements (Phase 1)
 
@@ -1305,6 +1331,8 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Export rules: **Phase 22 — DONE (REQ-154..159)**.
 - Mock data rules: **Phase 23 — DONE (REQ-160..164)**.
 - Data model rules: **Phase 24 — DONE (REQ-165..172)**.
+- Project directory structure rules: **Phase 25 — DONE (REQ-173..177)**.
+- Code quality rules: **Phase 26 — DONE (REQ-178..186)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -2858,15 +2886,53 @@ A form that does not follow the `register`-first RHF contract is a review failur
 
 ### 3. Scope Note
 
-This seed covers transcription accuracy and form validation. Full validation and audit sections arrive in later phases: Phases 26 (JSDoc Standards), 28 (Error Handling), 31 (Validation And Audit — checklists, source traceability, non-functional requirements), 32 (Git Workflow).
+This seed covers transcription accuracy and form validation. Full validation and audit sections arrive in later phases: Phases 28 (Error Handling), 31 (Validation And Audit — checklists, source traceability, non-functional requirements), 32 (Git Workflow); the Phase 26 code documentation audit landed in `## JSDoc Standards` and `## Checklists`.
 
 ### 4. Expansion Markers
 
 - Phase 15 (§15 React Hook Form Standards): **DONE (Phase 15)** — form validation rules in §2 above.
-- Phase 26 (§26 JSDoc Standards): code documentation audit.
+- Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — code documentation audit rules in `## JSDoc Standards` and `## Checklists`.
 - Phase 28 (§28 Error Handling): error handling audit.
 - Phase 31 (§31 Validation And Audit): full validation audit, checklists, source traceability, non-functional requirements.
 - Phase 32 (§32 Git Workflow): branch/commit rules that carry the accuracy gate.
+
+---
+
+## Checklists
+
+> **Phase 26 seed — the code-quality and build-gate checklists from §26 (Code Quality And Coding Conventions). Expanded in Phases 30 (New File Creation Rules) and 31 (Validation And Audit).**
+
+### 1. Code Quality Checklist (Phase 26)
+
+Every source file must satisfy all of the following (REQ-178..186; `## Coding Conventions` §§7–13, `## JSDoc Standards` §1):
+
+- [ ] Backend files use ES Modules only — `import`/`export`, never `require()`/`module.exports` (REQ-075).
+- [ ] No `console.log` in backend code (REQ-086); `console.log` is allowed in frontend code.
+- [ ] No zod — manual resolvers with a consistent error shape (REQ-077).
+- [ ] Formatting: semicolons required, single quotes, trailing commas, 2-space indentation, 100-character width, LF line endings, UTF-8 encoding (REQ-178).
+- [ ] Naming: camelCase variables/functions, PascalCase classes/components, kebab-case file names, UPPER_SNAKE_CASE constants and environment variables (REQ-179).
+- [ ] Import order: built-in → npm → local, alphabetical within groups (REQ-180).
+- [ ] Named imports for utilities and functions; default import for React components; no `*` imports (REQ-180).
+- [ ] No unused imports — every import is referenced in the file body (REQ-181).
+- [ ] No unused exports — every exported function or constant is imported elsewhere (REQ-181).
+- [ ] No dead code — no unused constants, variables, or methods (REQ-181).
+- [ ] Unused parameters carry the `_` prefix (`_req`, `_res`, `_next`) (REQ-181).
+- [ ] Every file or module carries a JSDoc block comment at the top (REQ-185).
+- [ ] Public modules carry `@module`; functions carry `@param`/`@returns`/`@throws`; constants carry `@type`; exports carry JSDoc (REQ-186).
+- [ ] Frontend components are functional with hooks; props destructured in the function signature; event handlers prefixed with `handle` (REQ-182).
+- [ ] Backend user IDs use `req.user._id.toString()` (REQ-183).
+
+### 2. Frontend Build And Lint Gate (Phase 26)
+
+- [ ] `npx vite build` completes with 0 errors (REQ-184).
+- [ ] `npm run lint` (`eslint .`) passes with `client/eslint.config.js` (REQ-184).
+- No backend lint gate: §26 mandates lint for the frontend only (codebase fact).
+
+### 3. Expansion Markers
+
+- Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — checklists in §§1–2.
+- Phase 30 (§30 New File Creation Rules): new-file-creation checklist.
+- Phase 31 (§31 Validation And Audit): full validation and audit checklists.
 
 ---
 
@@ -2909,7 +2975,7 @@ Backend architecture mandated by §10 (full detail in `## Backend Architecture`)
 
 ## Coding Conventions
 
-> **Phase 9 seed — the code-level conventions from §9. Backend file-organization conventions arrived in Phase 25; deeper code conventions arrive in Phases 26 (JSDoc) and 27 (frontend).**
+> **Phase 9 seed — the code-level conventions from §9. Backend file-organization conventions arrived in Phase 25; the §26 code-level conventions (formatting, naming, imports, dead code, backend/frontend conventions, build and lint gates) arrived in Phase 26; JSDoc sample conventions arrive in Phase 27 (§27 JSDoc Conventions).**
 
 ### 1. Language And Modules
 
@@ -2936,7 +3002,7 @@ No automated test frameworks (§9.1, REQ-077).
 
 ### 6. Backend File Organization (Phase 25)
 
-Structure-scoped conventions from §25 and §10 (code-level conventions arrive in Phase 26):
+Structure-scoped conventions from §25 and §10 (code-level conventions live in §§7–13):
 
 - Backend file names are kebab-case, following the §25.1 explicit names (`env.js`, `oauth.service.js`, `notFound.middleware.js`); per-domain files follow the `<domain>.controller.js`, `<domain>.routes.js`, `<domain>.validator.js`, and `<domain>.model.js` patterns (REQ-176).
 - One controller file per domain: auth, branch, report, audio, transcription, ai, user, analytics (§10.3, REQ-176).
@@ -2944,11 +3010,83 @@ Structure-scoped conventions from §25 and §10 (code-level conventions arrive i
 - Every file created during implementation must land in the `## Project Directory Structure` §4/§5 subtrees; new paths must be recorded there (REQ-173).
 - New route modules are created in `backend/routes/`, imported, and mounted in `backend/routes/index.js` (REQ-080).
 
-### 7. Expansion Markers
+### 7. Formatting (Phase 26)
+
+- Semicolons are required.
+- Single quotes (`'`), never double quotes.
+- Trailing commas on multi-line arrays, objects, and function parameter lists.
+- 2-space indentation.
+- 100-character line width.
+- LF line endings; UTF-8 encoding (REQ-178).
+
+### 8. Naming (Phase 26)
+
+- camelCase for variables and functions.
+- PascalCase for classes and components.
+- kebab-case for file names.
+- UPPER_SNAKE_CASE for constants and environment variables (REQ-179).
+
+### 9. Imports (Phase 26)
+
+- Import order: built-in modules → npm packages → local modules, alphabetical within each group.
+- Named imports for utilities and functions; default import for React components; never `*` imports (REQ-180).
+
+### 10. Dead Code And Unused Parameters (Phase 26)
+
+- No unused imports — every `import X from Y` must be referenced in the file body.
+- No unused exports — every exported function or constant must be imported elsewhere.
+- No dead code — unused constants, variables, and methods are removed.
+- Unused parameters use the `_` prefix — `_req`, `_res`, `_next` — to signal intentional non-use (REQ-181).
+
+### 11. Backend Conventions (Phase 26)
+
+- Backend code uses ES Modules only (`import`/`export`, never `require()`/`module.exports`); `backend/package.json` carries `"type": "module"` (§1, REQ-075).
+- No `console.log` in backend code — the absolute ban from `## Logging` (REQ-086); Winston replaces it in all environments. `console.log` is allowed in frontend code.
+- User IDs are obtained with the `req.user._id.toString()` pattern (REQ-183).
+
+### 12. Frontend Conventions (Phase 26)
+
+- Components are functional components with hooks.
+- Props are destructured in the function signature.
+- Event handlers are prefixed with `handle` (e.g. `handleSubmit`, `handleClick`), except when a `register`-first RHF field directly binds the input (REQ-182).
+
+### 13. Build And Lint Gates (Phase 26)
+
+- The frontend must pass `npx vite build` with 0 errors.
+- The frontend must also pass lint — `npm run lint` runs `eslint .` with the existing `client/eslint.config.js` flat config (ESLint 10: `@eslint/js` recommended + `eslint-plugin-react-hooks` flat recommended + `eslint-plugin-react-refresh` vite preset, browser globals, JSX, `dist` ignored).
+- There is no backend lint requirement: §26 mandates lint for the frontend only; `backend/` has no ESLint config and no lint script (codebase fact) (REQ-184).
+
+### 14. Expansion Markers
 
 - Phase 25 (§25 Project Directory Structure): **DONE (Phase 25)** — backend file organization in §6.
-- Phase 26 (§26 JSDoc Standards): JSDoc conventions.
-- Phase 27 (§27 Frontend Implementation): frontend conventions.
+- Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — code-level conventions in §§7–13; the JSDoc rules live in `## JSDoc Standards` (REQ-178..186).
+- Phase 27 (§27 JSDoc Conventions): JSDoc sample conventions (`## JSDoc Standards` §3).
+
+---
+
+## JSDoc Standards
+
+> **Phase 26 seed — the JSDoc rules from §26 (Code Quality And Coding Conventions). The detailed §27 conventions — Express/Mongoose types, `@typedef` model shapes, component/middleware JSDoc — and sample documented files arrive in Phase 27.**
+
+### 1. Mandatory Documentation (Phase 26)
+
+- Every single file or module carries a JSDoc block comment at the top of the file (REQ-185).
+- JSDoc on all public modules with `@module` (REQ-186).
+- JSDoc on functions with `@param`, `@returns`, and `@throws` (REQ-186).
+- JSDoc on constants with `@type` (REQ-186).
+- JSDoc on exports (REQ-186).
+
+The tag-level detail — `@module path/name` form, `import('express').Request` types, Mongoose `@returns {Promise<void>}`, component `@param {Object} props`, model `@typedef`/`@property`, middleware req/res/next triple, and the no-TypeScript typing rules — is Phase 27 scope (§27).
+
+### 2. Codebase Facts (Phase 26)
+
+- `client/src/theme/*` (`AppTheme.jsx`, `themePrimitives.js`, `customizations/*`) already carry `@module <path>` JSDoc blocks — matching the §27 rule that theme customizations use `@module`, not `@file` (Phase 14-aligned).
+- `client/src/main.jsx` and `App.jsx` are Vite template remnants with no JSDoc; they are replaced during implementation per `## Project Directory Structure` §5 (REQ-175), so no current file is exempted from the mandatory-documentation rule.
+
+### 3. Expansion Markers
+
+- Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — mandatory documentation rules in §1 (REQ-185/186).
+- Phase 27 (§27 JSDoc Conventions): the full §27 tag conventions and sample documented files.
 
 ---
 
@@ -3211,7 +3349,7 @@ client/
 
 ## Rules
 
-> **Phase 9 seed — the technical stack rules from §9. Rules deepened in Phases 13 (Redux), 16 (UI rules), and 17 (environment config); further rules arrive in Phases 21 (AI prompts), 26 (JSDoc), 29 (security), 30 (git).**
+> **Phase 9 seed — the technical stack rules from §9. Rules deepened in Phases 13 (Redux), 16 (UI rules), 17 (environment config), 21 (AI prompts), and 26 (code quality); further rules arrive in Phases 29 (security) and 30 (git).**
 
 ### 1. Stack Rules (§9.1)
 
@@ -3265,13 +3403,25 @@ client/
 - Transcription correction fixes transcription errors (fills gaps, fixes misrecognized words); the corrected text is stored as `Transcription.latest` with a new `history[]` entry (`reviewer` = provider string) per `## Data Modeling` §4.3 (REQ-149; `## AI Prompt Spec` §11; the earlier `aiCorrectedText` field name is superseded — AD-011).
 - The prompt enforces the 14 §21.5 Amharic generation rules (REQ-150..153; `## AI Prompt Spec` §12): rules 1–6 (Amharic default, exact section structure, sample tone, reviewed transcription as source of truth, no invention, blank for missing info), rules 7–10 (separate activities from unresolved issues, branch-specific details, time ranges per branch, supervisor point of view), rules 11–12 (no generation explanation, no unrelated content), rules 13–14 (corrections update only the relevant part; Amharic workplace transliteration).
 
-### 7. Expansion Markers
+### 7. Code Quality Rules (Phase 26)
+
+- All code follows the §26 formatting rules: semicolons required, single quotes, trailing commas, 2-space indentation, 100-character width, LF line endings, UTF-8 encoding (REQ-178).
+- Naming: camelCase variables and functions, PascalCase classes and components, kebab-case file names, UPPER_SNAKE_CASE constants and environment variables (REQ-179).
+- Import order: built-in modules → npm packages → local modules, alphabetical within groups; named imports for utilities and functions, default import for React components, never `*` imports (REQ-180).
+- No unused imports, no unused exports, no dead code; unused parameters carry the `_` prefix (`_req`, `_res`, `_next`) (REQ-181).
+- Frontend components are functional components with hooks, props destructured in the function signature, event handlers prefixed with `handle` (REQ-182).
+- Backend user IDs use the `req.user._id.toString()` pattern (REQ-183).
+- No `console.log` in backend code — Winston replaces it in all environments (`## Logging`, REQ-086); `console.log` is allowed in frontend code.
+- The frontend must pass `npx vite build` with 0 errors and must pass lint (`eslint .` with `client/eslint.config.js`); §26 mandates no backend lint — `backend/` has no ESLint config or lint script (REQ-184).
+- JSDoc rules live in `## JSDoc Standards` (REQ-185/186).
+
+### 8. Expansion Markers
 
 - Phase 13 (§13 Redux RTK Query): **DONE (Phase 13)** — Redux and RTK Query rules in §3 above.
 - Phase 16 (§16 UI Rules): **DONE (Phase 16)** — UI rules in §4 above.
 - Phase 17 (§17 Environment Config): **DONE (Phase 17)** — environment rules in §5 above.
 - Phase 21 (§21 AI Prompt Requirements): **DONE (Phase 21)** — AI prompt rules in §6 above (REQ-146..153).
-- Phase 26 (§26 JSDoc Standards): documentation rules.
+- Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — code quality rules in §7 above (REQ-178..186).
 - Phase 29 (§29 Security): security rules.
 - Phase 30 (§30 Git Workflow): git rules.
 
@@ -4390,3 +4540,7 @@ Phases 1–24 are GREEN (2026-08-02). Phase 24 built the data model from §24: r
 ## End Of Phase 25 Content
 
 Phases 1–25 are GREEN (2026-08-02). Phase 25 built the project directory structure from §25: rewrote `## Project Directory Structure` (new §1 Repository Root — `Report-Builder-V2/` with `.gitignore` (first line `.env`), `README.md`, `backend/`, `client/`, `docs/`, `scripts/verify-initial-doc.py`; new §4 Backend Directory Structure — the complete future-state backend tree from §25.3: `app.js`, `server.js`, `config/env.js` + `config/db.js`, per-domain `controllers/*.js` (8 files incl. `report.controller.js` with the `exportReport` Google Drive export), `middleware/{authenticate,notFound,error}.middleware.js` (notFound → `CustomError(404)` → `next()`), the five models, `mock/{seed,wipe}.js`, `routes/index.js` + 8 per-domain route modules, `services/{oauth,addis,gemini,nvidia,googleDocs}.service.js`, `uploads/audio/` (runtime-created, gitignored `{uuid}.webm` clips), `utils/{constants,httpStatus,logger,wavSplitter}.js`, 8 per-domain `validators/*.js`, `logs/`; new §5 Frontend Directory Structure — the complete future-state client tree: `main.jsx`, `App.jsx`, lazy-loaded `pages/*`, `components/layout/*`, `components/<domain>/*`, `redux/app/store.js` + `redux/features/{api,assistantApi,<name>Slice}.js`, `components/{reusable,columns}/*`, `utils/{constants,ethiopianDate}.js`, `theme/*`; new §6 Final Structure Rules — §25.3 completeness (REQ-173), kebab-case per-domain naming (REQ-176), new paths recorded in the tree; new §7 Expansion Markers — Phases 12/13/14 DONE, 25 DONE (final structure), 30 pending; the duplicate-heading numbering of the old tree (two `### 4.`, skipped `### 5.`) is fixed; the `## Mock Data Seeding` §6 Entry Points deferral is resolved — `mock/seed.js`/`mock/wipe.js` with the `mock:seed`/`mock:wipe` npm scripts and the `NODE_ENV` production guard (REQ-164); the export path is finalized — `POST /api/v1/reports/:reportId/export`, `exportReport` in `report.controller.js`, `services/googleDocs.service.js`), enriched `## Architecture` (header blockquote + §5 Backend Architecture — the services layer (`oauth.service.js` with the `drive.file` scope, `addis`/`gemini`/`nvidia`/`googleDocs` services, thin controllers), middleware, config; §6 markers — Phase 25 DONE), enriched `## Coding Conventions` (new §6 Backend File Organization — per-domain `<domain>.controller.js`/`<domain>.routes.js`/`<domain>.validator.js`/`<domain>.model.js` naming, services layer, middleware roles; §7 markers — Phase 25 DONE), enriched `## Backend Architecture` (header blockquote; expansion markers — Phase 25 DONE with the full file tree), amended the Google Docs export by user decision (AD-012): `## Export Spec` §4 rewritten — the backend creates the document with the user's own Google OAuth token (login flow extended with the `drive.file` scope) directly in the user's own Google Drive, user owns/edits/shares/downloads the document, no sharing-permission step, token stored/refreshed server-side only, service-account mechanism retired; `## API Contract` §7 — export path `POST /api/v1/reports/:reportId/export`, handler and service named; `## Work Flow` §5 — E-03..E-05 now describe the user's own Drive; `## Environment Config` §2 — `GOOGLE_SERVICE_ACCOUNT_EMAIL`/`GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` rows removed, note added that the export reuses the optional `OAUTH_GOOGLE_*` keys; `## Security` — service-account bullet replaced with the user-token server-side rule; `## Glossary` — "Google Service Account" entry replaced with "Google Drive export"; REQ-121 optional-var phrase trimmed; REQ-158 rewritten (user-OAuth mechanism); REQ-159 unchanged; the service-files decision (AD-013) recorded; added REQ-173..177 (complete tree, §25.1 backend paths, §25.2 frontend paths, per-domain/services/middleware naming, user-OAuth export with no service account), added AD-012 and AD-013 to the `## Decision Log`, updated the Checklist (Project Directory Structure, Architecture, Coding Conventions, Backend Architecture, Export Spec, API Contract, Work Flow, Environment Config, Security, Requirements — GREEN Phase 25 enrichment), reconciled the Phase 17/22 Source Trace Map rows with the Phase 25 retirement notes, aligned the initial source brief with the Google Docs decision (§17.2 env table rows removed + note; §22 export rewritten), and added the Phase 25 Source Trace Map. Phase 26 will build the code quality and coding conventions.
+
+## End Of Phase 26 Content
+
+Phases 1–26 are GREEN (2026-08-02). Phase 26 built the code quality and coding conventions from §26: enriched `## Coding Conventions` (header blockquote updated; new §7 Formatting — ES Modules only with `"type": "module"` and `import`/`export` (cross-ref REQ-075), no `console.log` in backend code (Winston replaces it in all environments, cross-ref `## Logging` REQ-086; `console.log` allowed frontend), no zod — manual resolvers with a consistent error shape (cross-ref REQ-077), semicolons required, single quotes, trailing commas, 2-space indentation, 100-character width, LF line endings, UTF-8 encoding; new §8 Naming — camelCase variables/functions, PascalCase classes/components, kebab-case file names, UPPER_SNAKE_CASE constants and environment variables; new §9 Imports — built-in → npm → local alphabetical, named imports for utilities and functions, default import for React components, never `*` imports; new §10 Dead Code And Unused Parameters — no unused imports/exports/dead code, `_`-prefixed unused parameters (`_req`, `_res`, `_next`); new §11 Backend Conventions — `req.user._id.toString()` for user IDs (REQ-183); new §12 Frontend Conventions — functional components with hooks, props destructured in the function signature, `handle`-prefixed event handlers (REQ-182); new §13 Build And Lint Gates — `npx vite build` 0 errors, lint passes, lint scoped to the frontend with the no-backend-lint codebase fact; new §14 Expansion Markers — Phases 25/26 DONE, Phase 27 pending with JSDoc samples), added new `## JSDoc Standards` (header blockquote; §1 Mandatory Documentation — JSDoc block comment at the top of every file/module (REQ-185), `@module` on public modules, `@param`/`@returns`/`@throws` on functions, `@type` on constants, JSDoc on exports (REQ-186), tag-level detail deferred to Phase 27; §2 Codebase Facts — theme files already carry `@module <path>` JSDoc (Phase 14-aligned), `main.jsx`/`App.jsx` are template remnants replaced per REQ-175; §3 Expansion Markers — Phase 26 DONE, Phase 27 pending), enriched `## Rules` (new §7 Code Quality Rules — REQ-178..186 with cross-refs to `## Coding Conventions`, `## JSDoc Standards`, `## Logging`, and the no-backend-lint codebase fact; §8 markers — Phase 26 DONE), added new `## Checklists` (header blockquote; §1 Code Quality Checklist — checkbox list covering every §26 rule incl. the no-unused-exports rule "every exported function or constant is imported elsewhere"; §2 Frontend Build And Lint Gate — vite build 0 errors, `npm run lint` passes, no backend lint; §3 Expansion Markers — Phases 26 DONE, 30/31 pending), flipped the `## Validation Audit` markers (Phase 26 DONE; scope note now references `## JSDoc Standards` and `## Checklists`), added REQ-178..186 (formatting, naming, imports, dead code/unused parameters, frontend conventions, `req.user._id.toString()`, build+lint gates with no backend lint, every-file JSDoc, JSDoc tag contract), extended `## Glossary` (JSDoc, Dead code), updated the Checklist (Coding Conventions, JSDoc Standards, Rules, Checklists — GREEN Phase 26 seed/enrichment; Validation Audit — GREEN Phase 26 enrichment), added the missing Phase 25 requirement-expansion marker, and added the Phase 26 Source Trace Map with the codebase facts (`client/eslint.config.js` ESLint 10 flat config with `@eslint/js` recommended + react-hooks flat recommended + react-refresh vite, browser globals, JSX, ignores `dist`; `client/package.json` `lint: "eslint ."`; no ESLint config or lint script in `backend/` — lint scoped to the frontend; theme `@module` JSDoc evidence; `main.jsx`/`App.jsx` template-remnant facts). Phase 27 will build the JSDoc samples and full JSDoc conventions.
