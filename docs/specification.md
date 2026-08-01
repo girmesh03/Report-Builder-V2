@@ -42,7 +42,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 8 | 8. Transcription Accuracy Requirement | GREEN | Audio Recording STT, Transcription Review, Validation Audit |
 | 9 | 9. Technical Stack And Package Rules | GREEN | Rules, Coding Conventions, Architecture, Requirements, Project Directory Structure |
 | 10 | 10. Backend Architecture | GREEN | Backend Architecture, Logging, Architecture, API Contract, Project Directory Structure |
-| 11 | 11. Authentication, Authorization, Cookies, And Tokens | PENDING | Auth Cookies, Security, API Contract, Data Modeling |
+| 11 | 11. Authentication, Authorization, Cookies, And Tokens | GREEN | Auth Cookies, Security, API Contract, Data Modeling |
 | 12 | 12. Frontend Architecture | PENDING | Frontend Architecture, Routing Layout, UI/UX Spec, MUI Component Standards, Project Directory Structure |
 | 13 | 13. Redux, RTK Query, And API Client | PENDING | Redux RTK Query, Rules, Frontend Architecture |
 | 14 | 14. MUI, MUI X, Theme, And Component Standards | PENDING | MUI Component Standards, Theme Standards, UI/UX Spec |
@@ -80,16 +80,16 @@ Status of every section the target document must contain at minimum. Extra secti
 | Addis AI | 18 | PENDING |
 | AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 7 enrichment) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
-| API Contract | 5, 10, 11, 18, 20, 22, 24, 28 | GREEN (Phase 10 enrichment) |
+| API Contract | 5, 10, 11, 18, 20, 22, 24, 28 | GREEN (Phase 11 enrichment) |
 | Architecture | 9, 10, 25 | GREEN (Phase 10 enrichment) |
 | Audio Recording STT | 8, 20 | GREEN (Phase 8 seed) |
-| Auth Cookies | 11 | PENDING |
+| Auth Cookies | 11 | GREEN (Phase 11 seed) |
 | Backend Architecture | 10 | GREEN (Phase 10 seed) |
 | Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
 | Business Rules | 5, 24, 35 | GREEN (Phase 5 seed) |
 | Checklists | 26, 30, 31 | PENDING |
 | Coding Conventions | 9, 25, 26, 27 | GREEN (Phase 9 seed) |
-| Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 5 seed) |
+| Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11 enrichment) |
 | Decision Log | 1, 2, 33 | GREEN |
 | Design | consolidated across phases; finalized in 36 | PENDING |
 | Environment Config | 17 | PENDING |
@@ -121,7 +121,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
 | Routing Layout | 12 | PENDING |
 | Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 9 seed) |
-| Security | 11, 17, 18, 29 | PENDING |
+| Security | 11, 17, 18, 29 | GREEN (Phase 11 seed) |
 | Source Traceability | 31 | PENDING |
 | Status Machine | 5, 35 | GREEN (Phase 5 seed) |
 | Tasks | 32 | PENDING |
@@ -302,6 +302,23 @@ All `§` references below identify sections of the original source brief. They a
 | §10.9 | All logging via `utils/logger.js`; Winston backend only; Morgan development only; `console.log` absolute ban; log levels; child loggers Server/DB/Auth/AI-Addis/AI-Gemini/AI-Nvidia; daily-rotated `logs/` gitignored, 30-day auto-delete; safe-logging rules; AI provider logs (provider, model, status code, timing) without bodies in production | Logging, Project Directory Structure (4), Requirements (REQ-086) |
 | §10.10 | Validators check `express-validator` results; 422 failure response `{ success: false, message, data }`; validators in `validators/*.js` one per domain; applied as route middleware before controller; auth email `normalizeEmail({ gmail_remove_dots: false })` | Backend Architecture (9), API Contract (3), Project Directory Structure (4), Requirements (REQ-085) |
 | §10.11 | No schema field combines `unique: true` with separate indexes; use `schema.index(..)`; hooks/instance methods/static methods accept session options where relevant | Backend Architecture (10) |
+
+---
+
+## Source Trace Map — Phase 11 (source §11)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §11 | JWT-based authentication; access token duration `15m`; refresh token duration `7d`; both stored in httpOnly cookies; cookie options `httpOnly: true`, `secure` in production, `sameSite: lax` | Auth Cookies (1), Security (1), API Contract (4), Requirements (REQ-087) |
+| §11 | No sessions MongoDB collection — zero DB lookups for auth on each request; refresh token rotated on each use to prevent replay | Auth Cookies (1), Security (2), Requirements (REQ-087) |
+| §11 | `authenticate` middleware extracts JWT from `req.cookies.accessToken`, verifies the token, looks up the user, checks the user, attaches the user document to `req.user`; uses `req.user._id.toString()` throughout, not `req.user.id` | Auth Cookies (2), Requirements (REQ-088) |
+| §11 | Password hashing uses `bcryptjs` in a `pre('save')` hook with 12 salt rounds; `comparePassword(candidatePassword)` uses `bcrypt.compare`; plaintext passwords never compared | Auth Cookies (3), Security (2), Requirements (REQ-089) |
+| §11 | Registration form collects only `email` and `password`; no name field; backend auto-extracts `firstName`/`lastName` from the email local part (`beza@gmail.com` → beza/beza; `beza.ayalew@gmail.com` → beza/ayalew); `avatar` and `position` optional, updated later from the Profile page | Auth Cookies (4), Data Modeling (4), Requirements (REQ-090), User Stories (US-026) |
+| §11 | Google OAuth registration uses Google-provided data (`firstName`/`lastName` from profile name, `email` from Google account, `avatar` from Google profile picture); no password required; existing users matched by email and signed in; new users auto-created | Auth Cookies (5), Data Modeling (4), Requirements (REQ-091), User Stories (US-027) |
+| §11 | OAuth architecture provider-neutral; `oauth.service.js` checks `env.OAUTH_GOOGLE_*` credentials; Google stubbed until credentials configured; future providers extend the service; `GET /oauth/google` route exists with `googleOAuth` controller using `getGoogleOAuthUrl()` service | Auth Cookies (5), API Contract (4), Requirements (REQ-091) |
+| §11 | Rate limiting three tiers: global 100 requests per 15 minutes on all endpoints; auth 20 requests per 15 minutes on register and login; AI 10 requests per 1 minute on generation and correction endpoints | Auth Cookies (6), Security (3), Requirements (REQ-092) |
+| §11 | Frontend uses `credentials: 'include'` on all calls, including public pages | Auth Cookies (7), Requirements (REQ-093) |
+| §11 + §12 (cross-aligned) | Google OAuth button on login/register pages uses a Google icon start adornment and a loading spinner on click; §12 shows the OAuth browser redirect at `http://localhost:4000/api/v1/auth/google`; route naming finalized in Phase 12 | Auth Cookies (5) |
 
 ---
 
@@ -617,6 +634,9 @@ Secondary features should not distract from the core workflow of generating a bo
 | Winston | The backend-only logging library used through `backend/utils/logger.js`; Morgan is used in development mode only; `console.log` is banned in backend code. | §10.9 |
 | Graceful shutdown | The mandated backend shutdown sequence on SIGINT/SIGTERM: close the HTTP server, clean up temporary audio chunk files not linked to any report, close the mongoose connection, then exit. | §10.8 |
 | Mongoose session | A MongoDB session used for transactions; every backend write controller opens one (`startSession`/`startTransaction`), commits or aborts, and ends it in `finally`; read-only get/list endpoints skip sessions. | §10.3 |
+| JWT | JSON Web Token; the authentication mechanism of the app. The access token lasts `15m` and the refresh token `7d`; both are carried in httpOnly cookies. | §11 |
+| httpOnly cookie | A cookie not readable by JavaScript; both the access token and the refresh token are stored in httpOnly cookies with `secure` in production and `sameSite: lax`. | §11 |
+| Refresh token rotation | The refresh token is rotated (replaced) on each use to prevent replay attacks. | §11 |
 
 ---
 
@@ -876,6 +896,18 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-085 | Validation must check `express-validator` results in separate files under `backend/validators/*.js` (one per domain), applied as route middleware before the controller handler; validation failure returns 422 with the standard error envelope; auth email validators use `normalizeEmail({ gmail_remove_dots: false })`. | Validator files exist per domain, are mounted on routes, and 422 responses match the envelope. | §10.10 |
 | REQ-086 | All backend logging must go through `backend/utils/logger.js` (Winston; backend only, Morgan in development mode only); `console.log` is absolutely banned in backend code; log files are written to a gitignored `logs/` directory, rotated daily, and auto-deleted after 30 days; production logs must not include passwords, JWT token values, raw cookies, API keys or secrets, raw audio contents, full transcription texts, or full generated report texts — message IDs or truncated previews are used instead; AI provider logs record provider, model, status code, and timing without request or response bodies in production. | All logging routes through `utils/logger.js`; no `console.log` in backend code; log file retention and safe-logging rules hold. | §10.9 |
 
+### Functional Requirements (Phase 11)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-087 | Authentication must be JWT-based: access token duration `15m`, refresh token duration `7d`, both stored in httpOnly cookies with cookie options `httpOnly: true`, `secure` in production, and `sameSite: lax`; the refresh token is rotated on each use to prevent replay; there is no sessions MongoDB collection — zero DB lookups for auth on each request. | Tokens have the stated durations, live in httpOnly cookies with the stated options, rotate on use, and no session store exists. | §11 |
+| REQ-088 | The `authenticate` middleware must extract the JWT from `req.cookies.accessToken`, verify the token, look up the user, check the user, and attach the user document to `req.user`; it must use `req.user._id.toString()` throughout, never `req.user.id`. | All user references use the stringified `_id`; no `req.user.id` usage exists. | §11 |
+| REQ-089 | Passwords must be hashed with `bcryptjs` in a `pre('save')` hook with 12 salt rounds; `comparePassword(candidatePassword)` uses `bcrypt.compare`; plaintext passwords must never be compared. | No plaintext comparison or storage; hashing and comparison follow the stated mechanism. | §11 |
+| REQ-090 | The registration form collects only `email` and `password` (no name field); on account creation the backend auto-extracts `firstName` and `lastName` from the email local part (before `@`): first segment = firstName, last segment = lastName (e.g., `beza@gmail.com` → beza/beza; `beza.ayalew@gmail.com` → beza/ayalew); `avatar` and `position` are optional profile fields updated later from the Profile page, not during registration. | Registration has no name field; extracted names match the rule; avatar/position are absent from registration and editable on the Profile page. | §11 |
+| REQ-091 | Google OAuth registration must use Google-provided data: `firstName`/`lastName` from the Google profile name, `email` from the Google account, `avatar` from the Google profile picture, and no password; existing users are matched by email and signed in; new users are auto-created with Google data; the OAuth architecture is provider-neutral — `oauth.service.js` checks `env.OAUTH_GOOGLE_*` credentials, Google is stubbed until credentials are configured, and future providers extend this service. | OAuth accounts are created or matched by email with Google data; `oauth.service.js` guards on the Google env credentials; Google flow is stubbed without credentials. | §11 |
+| REQ-092 | Rate limiting must have three tiers: global — 100 requests per 15 minutes on all endpoints; auth — 20 requests per 15 minutes on register and login; AI — 10 requests per 1 minute on generation and correction endpoints. | The three tiers apply with the stated limits to the stated endpoints. | §11 |
+| REQ-093 | The frontend must send `credentials: 'include'` on all calls, including public pages. | Every frontend API call includes credentials. | §11 |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -894,6 +926,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Transcription accuracy requirements: **Phase 8 — DONE (REQ-070..073)**.
 - Technical stack and package rules: **Phase 9 — DONE (REQ-074..079)**.
 - Backend architecture rules: **Phase 10 — DONE (REQ-080..086)**.
+- Authentication, authorization, cookies, and tokens rules: **Phase 11 — DONE (REQ-087..093)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -932,6 +965,8 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | US-023 | As an Area Supervisor, I want my audio, transcription, AI chat, and report content to stay in the language I used, without forced translation. | Content is not translated automatically unless the user explicitly chooses translation (REQ-067). | §7 |
 | US-024 | As an Area Supervisor, I want accurate transcription of my Amharic recording, because the report, export, and review all depend on it. | Transcription is accurate; a bad transcription never flows into generation (REQ-070). | §8 |
 | US-025 | As an Area Supervisor, I want to re-transcribe any recording to verify accuracy before the report is generated. | Re-transcription is available for every audio recording (REQ-072). | §8 |
+| US-026 | As an Area Supervisor, I want to register with only my email and password, so that my first and last name are derived automatically and I can start quickly. | The register form has no name field; the backend extracts firstName/lastName from the email local part (REQ-090). | §11 |
+| US-027 | As an Area Supervisor, I want to sign in with Google, so that I can log in without a password. | The OAuth flow signs in existing users by email and auto-creates new accounts with Google data; stubbed until credentials are configured (REQ-091). | §11 |
 
 ---
 
@@ -1204,6 +1239,23 @@ The system must manage: daily supervision reports, transcriptions, AI conversati
 
 Field-level schema (names, types, constraints, indexes, pagination keys) is Phase 24 scope per §5.4; the seeds here are entity-level only.
 
+### 4. User Entity Seeds (Phase 11)
+
+Fields mandated by §11 (entity-level; full field-level schema remains Phase 24):
+
+| Field | Rule | Source |
+|---|---|---|
+| firstName | Derived automatically from the email local part at registration (first segment), or from the Google profile name for OAuth accounts; optional profile updates later | §11 |
+| lastName | Derived automatically from the email local part (last segment), or from the Google profile name; optional profile updates later | §11 |
+| fullName | Schema virtual: `\`${this.firstName} ${this.lastName}\`.trim()`; schema options include `toJSON: { virtuals: true }` and `toObject: { virtuals: true }` | §12.3.3 (cross-aligned) |
+| email | Unique; the account identifier; OAuth users matched by email | §11, §10.11 |
+| password | bcryptjs-hashed (`pre('save')` hook, 12 salt rounds); required for email registration; no password required for Google OAuth-created accounts; plaintext never compared | §11 |
+| avatar | Optional profile field; set from Google profile picture for OAuth accounts; updated from the Profile page | §11 |
+| position | Optional profile field; updated from the Profile page | §11 |
+
+- No sessions MongoDB collection and no token collection: nothing beyond the User document is stored for auth (REQ-087).
+- User 1—N DailyReport ownership relationship per §2 Relationship Seeds (BR-06, REQ-041).
+
 ---
 
 ## Business Rules
@@ -1227,7 +1279,7 @@ Field-level schema (names, types, constraints, indexes, pagination keys) is Phas
 
 ## API Contract
 
-> **Phase 5 seed — conventions and endpoint inventory from §5; response envelope, status codes, and validation shapes added in Phase 10 (§10). Detailed request/response schemas and paths arrive in Phases 11, 18, 20, 22, 24, and 28.**
+> **Phase 5 seed — conventions and endpoint inventory from §5; response envelope, status codes, and validation shapes added in Phase 10 (§10); authentication endpoints added in Phase 11 (§11). Detailed request/response schemas and paths arrive in Phases 12, 18, 20, 22, 24, and 28.**
 
 ### 1. Conventions (seeds)
 
@@ -1253,6 +1305,19 @@ Field-level schema (names, types, constraints, indexes, pagination keys) is Phas
 - **HTTP status codes (§10.6):** imported by semantic name from `backend/utils/httpStatus.js`; numeric status codes are never hardcoded.
 - **Validation errors (§10.10):** `express-validator` middleware in `backend/validators/*.js` (one file per domain), applied on the route before the controller handler; failures return `422` with the standard error envelope `{ success: false, message, data }`.
 - **Pagination (§10.4):** every list endpoint uses `mongoose-paginate-v2` with default page `1`, default limit `10`, and max limit `100` (REQ-053).
+
+### 4. Authentication Endpoints (Phase 11)
+
+| Endpoint | Purpose | Contract seeds |
+|---|---|---|
+| `POST /api/v1/auth/register` | Account creation; body `{ email, password }` only — no name field; backend extracts firstName/lastName from the email local part; 201 success returns the user with the `fullName` virtual | §11; paths/schemas detail in Phase 12 |
+| `POST /api/v1/auth/login` | Sign in; body `{ email, password }`; 200 success; backend sets the `accessToken` (15m) and `refreshToken` (7d) as httpOnly cookies via `Set-Cookie` | §11; paths/schemas detail in Phase 12 |
+| `GET /api/v1/auth/me` | Current authenticated user; used by the frontend route guards on mount | §12.4 (route guards); detail in Phase 12 |
+| `GET /oauth/google` | Google OAuth start route; `googleOAuth` controller using `getGoogleOAuthUrl()` service; stubbed until `env.OAUTH_GOOGLE_*` credentials are configured | §11; §12 shows the browser redirect at `http://localhost:4000/api/v1/auth/google` — route naming finalized in Phase 12 |
+
+- All auth endpoints are mounted under the `/api/v1` prefix per §10.1 (REQ-080).
+- Outcome statuses: `401` invalid credentials, `422` validation failure, `429` rate limited — all with the §10.7 envelope (`{ success: false, message, data }`).
+- Rate limits per tier: global 100/15min (all endpoints), auth 20/15min (register, login), AI 10/1min (generation, correction) (REQ-092).
 
 ---
 
@@ -2049,6 +2114,111 @@ Notes: `backend/.env` defines the environment keys (codebase fact; the full envi
 
 ---
 
+## Auth Cookies
+
+> **Phase 11 seed — authentication, authorization, cookies, and tokens from §11. Frontend login/register page behavior arrives in Phase 12; the RTK Query client in Phase 13; environment secrets in Phase 17; deep security in Phase 29.**
+
+### 1. Authentication Model (§11)
+
+- JWT-based authentication.
+- Access token duration: `15m`.
+- Refresh token duration: `7d`.
+- Access token and refresh token are stored in httpOnly cookies.
+- Cookie options for both tokens:
+  - `httpOnly: true`
+  - `secure` in production
+  - `sameSite: lax`
+- No sessions MongoDB collection — zero DB lookups for auth on each request (no session store; `authenticate` still loads the user document).
+- The refresh token is rotated on each use to prevent replay (REQ-087).
+
+### 2. authenticate Middleware (§11)
+
+- Extracts the JWT from `req.cookies.accessToken`.
+- Verifies the token.
+- Looks up the user and checks the user.
+- Attaches the user document to `req.user`.
+- Uses `req.user._id.toString()` throughout, never `req.user.id` (REQ-088).
+
+### 3. Password Handling (§11)
+
+- Password hashing uses `bcryptjs` in a `pre('save')` hook with 12 salt rounds.
+- `comparePassword(candidatePassword)` uses `bcrypt.compare`.
+- Plaintext passwords must never be compared (REQ-089).
+
+### 4. Registration (§11)
+
+- The registration form collects only `email` and `password`; no name field.
+- On account creation the backend auto-extracts `firstName` and `lastName` from the email local part (before `@`):
+  - `beza@gmail.com` → `firstName=beza`, `lastName=beza`.
+  - Dotted local parts split: `beza.ayalew@gmail.com` → `firstName=beza`, `lastName=ayalew`.
+  - First segment = firstName; last segment = lastName.
+- `avatar` and `position` are optional profile fields; the user updates them later from the Profile page, not during registration (REQ-090).
+
+### 5. Google OAuth (§11)
+
+- OAuth architecture is provider-neutral.
+- `oauth.service.js` checks `env.OAUTH_GOOGLE_*` credentials.
+- Google is stubbed until credentials are configured; future providers extend this service.
+- `GET /oauth/google` route exists with the `googleOAuth` controller using the `getGoogleOAuthUrl()` service.
+- OAuth-created accounts use Google-provided data:
+  - `firstName` and `lastName` extracted from the Google profile name.
+  - `email` taken from the Google account email.
+  - `avatar` taken from the Google profile picture.
+  - No password required.
+- Existing users are matched by email and signed in; new users are auto-created with Google data (REQ-091).
+- Google OAuth button on login/register pages uses a Google icon start adornment and shows a loading spinner on click (§11; §12 shows the browser redirect at `http://localhost:4000/api/v1/auth/google` — route naming finalized in Phase 12).
+
+### 6. Rate Limiting (§11)
+
+Three tiers:
+
+| Tier | Limit | Endpoints |
+|---|---|---|
+| Global | 100 requests per 15 minutes | All endpoints |
+| Auth | 20 requests per 15 minutes | Register and login |
+| AI | 10 requests per 1 minute | Generation and correction endpoints |
+
+(REQ-092)
+
+### 7. Frontend Credentials (§11)
+
+- The frontend uses `credentials: 'include'` on all calls, including public pages (REQ-093; RTK Query `baseQueryWithReauth` detail in Phase 13).
+
+### 8. Expansion Markers
+
+- Phase 12 (§12 Frontend Architecture): login/register page behavior, OAuth redirect handling, route guards.
+- Phase 13 (§13 Redux, RTK Query, And API Client): `baseQueryWithReauth`, cookie-aware client.
+- Phase 17 (§17 Environment Variables): `JWT_*` and `OAUTH_GOOGLE_*` env contract.
+- Phase 29 (§29 Security): deep security rules.
+
+---
+
+## Security
+
+> **Phase 11 seed — the authentication-adjacent security rules from §11. Environment secrets arrive in Phase 17; AI provider security in Phase 18; the full security section in Phase 29.**
+
+### 1. Cookie Security (§11)
+
+- Access and refresh tokens travel only in httpOnly cookies: `httpOnly: true`, `secure` in production, `sameSite: lax` (detail in `## Auth Cookies` §1).
+
+### 2. Authentication Security (§11)
+
+- Refresh token rotated on each use to prevent replay.
+- No sessions MongoDB collection — no session store to attack or maintain.
+- Passwords are never plaintext: bcryptjs hashing with 12 salt rounds; plaintext passwords are never compared (detail in `## Auth Cookies` §3).
+
+### 3. Rate Limiting (§11)
+
+- Three tiers: global 100/15min (all endpoints), auth 20/15min (register and login), AI 10/1min (generation and correction) (REQ-092).
+
+### 4. Expansion Markers
+
+- Phase 17 (§17 Environment Variables): secret handling (`JWT_*`, `OAUTH_GOOGLE_*`, AI API keys).
+- Phase 18 (§18 Addis AI Integration): AI provider security.
+- Phase 29 (§29 Security): full security section.
+
+---
+
 ## Decision Log
 
 > **Built in Phases 1–2 — the ADR format and further decisions are finalized in Phase 33 (§33 Decision Log (ADRs)).** Entries are appended as phases complete. No decision recorded here may contradict a later GREEN decision without a superseding ADR.
@@ -2152,7 +2322,9 @@ Notes: `backend/.env` defines the environment keys (codebase fact; the full envi
 
 ---
 
-## End Of Phase 10 Content
+## End Of Phase 11 Content
+
+Phases 1–11 are GREEN (2026-08-01). Phase 11 built authentication, authorization, cookies, and tokens from §11: new `## Auth Cookies` seed (JWT auth with 15m access / 7d refresh httpOnly cookies, refresh rotation against replay, no sessions MongoDB collection, `authenticate` middleware contract, bcryptjs 12-round `pre('save')` hashing and `comparePassword`, email-local-part name extraction at registration, provider-neutral Google OAuth via `oauth.service.js` stubbed until credentials, three rate-limit tiers, `credentials: 'include'`), new `## Security` seed (cookie security, replay prevention, no-plaintext passwords, rate limiting), enriched `## API Contract` (authentication endpoint inventory: register, login, me, Google OAuth start route; outcome statuses under the §10.7 envelope), enriched `## Data Modeling` (User entity seeds: name fields, `fullName` virtual, unique email, hashed password without plaintext comparison, optional avatar/position, no session/token collection), added REQ-087..093, added US-026/027, extended `## Glossary` (JWT, httpOnly cookie, Refresh token rotation), updated the Checklist (Auth Cookies and Security — GREEN seeds; API Contract and Data Modeling — GREEN enrichment), and added the Phase 11 Source Trace Map. Phase 12 will build the frontend architecture.
 
 Phases 1–10 are GREEN (2026-08-01). Phase 10 built the backend architecture from §10: new `## Backend Architecture` seed (routing under `/api/v1` via `routes/index.js`, fixed global security middleware order `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit`, one controller file per domain with `express-async-handler` and mongoose session transactions, `mongoose-paginate-v2` pagination, frozen constants and `config/env.js` env access, semantic HTTP status codes, response envelope, graceful shutdown, `express-validator` middleware, mongoose schema rules), new `## Logging` seed (Winston backend-only, Morgan development-only, absolute `console.log` ban, log levels, child loggers, gitignored daily-rotated `logs/` with 30-day auto-delete, safe-logging rules, AI provider log fields), enriched `## Architecture` (backend layering), `## API Contract` (response envelope superseding the Phase 5 unspecified-envelope note, semantic status codes, 422 validation shape, pagination), and `## Project Directory Structure` (backend directory tree; current codebase has only `.env` and the package manifests — source files are created during implementation), added REQ-080..086, extended `## Glossary` (Winston, Graceful shutdown, Mongoose session), updated the Checklist (Backend Architecture and Logging — GREEN seeds; Architecture, API Contract, Project Directory Structure — GREEN enrichment), and added the Phase 10 Source Trace Map. Phase 11 will build authentication, authorization, cookies, and tokens.
 
