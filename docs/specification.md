@@ -53,7 +53,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 19 | 19. Other AI Providers | GREEN | Other AI Providers, Addis AI, AI Prompt Spec, Environment Config |
 | 20 | 20. Audio Recording And STT Pipeline | GREEN | Audio Recording STT, Transcription Review, API Contract, Data Modeling |
 | 21 | 21. AI Prompt Requirements | GREEN | AI Prompt Spec, Report Format, Rules |
-| 22 | 22. Export | PENDING | Export Spec, API Contract, Work Flow |
+| 22 | 22. Export | GREEN | Export Spec, API Contract, Work Flow |
 | 23 | 23. Mock Data | PENDING | Mock Data Seeding, Data Modeling, Tasks |
 | 24 | 24. Data Model | PENDING | Data Modeling, API Contract, Business Rules, Report Domain |
 | 25 | 25. Project Directory Structure | PENDING | Project Directory Structure, Coding Conventions, Architecture |
@@ -80,7 +80,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Addis AI | 18 | GREEN (Phase 18 seed) |
 | AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 7, 18, 19, 21 enrichment) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
-| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 28 | GREEN (Phase 13, 18, 20 enrichment) |
+| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 28 | GREEN (Phase 13, 18, 20, 22 enrichment) |
 | Architecture | 9, 10, 25 | GREEN (Phase 10 enrichment) |
 | Audio Recording STT | 8, 20 | GREEN (Phase 8 seed, Phase 20 enrichment) |
 | Auth Cookies | 11 | GREEN (Phase 11 seed) |
@@ -94,7 +94,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Design | consolidated across phases; finalized in 36 | PENDING |
 | Environment Config | 17, 19 | GREEN (Phase 17 seed, Phase 19 enrichment) |
 | Error Handling | 28 | PENDING |
-| Export Spec | 6, 22 | GREEN (Phase 6 seed) |
+| Export Spec | 6, 22 | GREEN (Phase 6 seed, Phase 22 enrichment) |
 | File Storage Uploads | 20 | PENDING |
 | Frontend Architecture | 12, 13, 14 | GREEN (Phase 13 enrichment) |
 | Git Workflow | 32 | PENDING |
@@ -131,7 +131,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | User Interactions | 3, 16, 22, 35 | GREEN (Phase 3 seed, Phase 16 enrichment) |
 | User Stories | 2 (seed), 4 | GREEN (Phase 2 seed) |
 | Validation Audit | 8, 15, 28, 31 | GREEN (Phase 8 seed, Phase 15 enrichment) |
-| Work Flow | 3, 22, 35 | GREEN (Phase 3 seed) |
+| Work Flow | 3, 22, 35 | GREEN (Phase 3 seed, Phase 22 enrichment) |
 
 ---
 
@@ -459,6 +459,18 @@ All `§` references below identify sections of the original source brief. They a
 | §21.3 | Voice correction flow: correction audio → STT → correction text → used in the same correction prompt | AI Prompt Spec (10), Rules (6), Requirements (REQ-148) |
 | §21.4 | Transcription correction: the AI fixes transcription errors (fills gaps, fixes misrecognized words); returns corrected text as `aiCorrectedText` in the Transcription model | AI Prompt Spec (11), Data Modeling (5), Rules (6), Requirements (REQ-149) |
 | §21.5 | The 14 Amharic generation rules the AI prompt must enforce (Amharic default, exact section structure, sample tone, reviewed transcription as source of truth, no invention, blank for missing info, separate activities from unresolved issues, branch-specific details, time ranges per branch, supervisor POV, no generation explanation, no unrelated content, correction scope, Amharic workplace transliteration) — mapped onto the PR-01..16 seeds | AI Prompt Spec (12), Rules (6), Requirements (REQ-150..153) |
+
+## Source Trace Map — Phase 22 (source §22)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §22 | PDF export: client-side, `jspdf` + `jspdf-autotable`, A4, Noto Sans Ethiopic font for Amharic, section headers, page numbers | Export Spec (2), Requirements (REQ-154) |
+| §22 | TXT export: client-side, Blob UTF-8, plain structure preserving the report format | Export Spec (2), Requirements (REQ-155) |
+| §22 | CSV export: client-side, Blob UTF-8 with BOM for Excel compatibility, structured columns | Export Spec (2), Requirements (REQ-156) |
+| §22 | XLSX export: client-side, multi-sheet workbook — content, version history (with metadata), and metadata (provider, dates, status) sheets; workbook library chosen at implementation | Export Spec (2), Requirements (REQ-157) |
+| §22 | Google Docs export: backend-only via Google Docs API with a Google Service Account; creates the document from the report content; sharing set to "Anyone with link can view"; URL returned; frontend opens it in a new tab; user edits freely in Google Docs | Export Spec (4), API Contract (7), Work Flow (5), Requirements (REQ-158) |
+| §22 | The four client-side formats (PDF, TXT, CSV, XLSX) are generated in the browser — no backend export endpoints for them; the Google Docs export is the only backend export | Export Spec (3), API Contract (7), Requirements (REQ-159) |
+| §22 + codebase (`client/package.json`) | `jspdf` ^4.2.1 and `jspdf-autotable` ^5.0.8 are already installed in `client/package.json`; no workbook library is installed (chosen at implementation); `GOOGLE_SERVICE_ACCOUNT_EMAIL`/`GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` are optional env vars (`## Environment Config` §2, REQ-121), absent from `backend/.env` and added when the Google Docs export is enabled | Export Spec (2, 4), API Contract (7) |
 
 ---
 
@@ -798,6 +810,8 @@ Secondary features should not distract from the core workflow of generating a bo
 | gemini-3.1-flash-lite | The Gemini text-generation model used as a fallback provider; configured via `GEMINI_API_KEY` and called through the `generateContent` endpoint. | §19.1 |
 | z-ai/glm-5.2 | The Nvidia text-generation model used as a fallback provider; configured via `NVIDIA_API_KEY` and called through the Nvidia message format with a bearer token. | §19.2 |
 | aiCorrectedText | The corrected transcription text the AI returns from transcription correction (fixing gaps and misrecognized words); stored on the Transcription model. | §21.4 |
+| Noto Sans Ethiopic | The Amharic-capable Unicode font used to render Amharic text in the PDF export (section headers and body). | §22 |
+| Google Service Account | The server-side identity the backend uses to authenticate to the Google Docs API for the Google Docs export; configured via the optional `GOOGLE_SERVICE_ACCOUNT_EMAIL` and `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` environment variables. | §22 |
 
 ---
 
@@ -1177,6 +1191,19 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-152 | The prompt enforces §21.5 rules 11–12: do not output an explanation of how the report was generated; do not include unrelated conversation content. | The prompt text contains both rules. | §21.5 (rules 11–12) |
 | REQ-153 | The prompt enforces §21.5 rules 13–14: corrections update only the relevant part without rewriting correct unrelated sections; English/technical words use Amharic workplace transliteration (e.g., `deep fryer` → `ዲፕ ፍራየር`). | The prompt text contains both rules, including the transliteration example. | §21.5 (rules 13–14) |
 
+### Functional Requirements (Phase 22)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-154 | PDF export: the finalized report downloads as a PDF generated in the browser with `jspdf` and `jspdf-autotable` (already installed in `client/package.json`); A4 page size; Amharic text rendered with the Noto Sans Ethiopic font; report section headings rendered as section headers; page numbers on every page. | A PDF file downloads containing the full report in the §6.1 format, readable in Amharic, with section headers and page numbers. | §22 |
+| REQ-155 | TXT export: the finalized report downloads as a plain-text file (Blob, UTF-8) preserving the §6.1 report format structure; no styling. | A UTF-8 `.txt` file downloads with the report content in order. | §22 |
+| REQ-156 | CSV export: the finalized report downloads as a CSV file (Blob, UTF-8 with byte-order mark) with structured columns mapping the report content, so it opens as a usable spreadsheet (Excel-compatible). | A `.csv` file downloads and opens correctly in Excel with the report content in structured columns. | §22 |
+| REQ-157 | XLSX export: the finalized report downloads as a multi-sheet workbook — a content sheet (the report), a version history sheet (every report version with date, version note, status), and a metadata sheet (AI provider, generation date, report status); the workbook library is chosen at implementation. | A `.xlsx` workbook downloads with all three sheets populated. | §22 |
+| REQ-158 | Google Docs export: the backend authenticates to the Google Docs API with a Google Service Account (`GOOGLE_SERVICE_ACCOUNT_EMAIL`/`GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`, `## Environment Config` §2, REQ-121), creates the document from the report content, sets sharing to "Anyone with link can view", and returns the URL; the frontend opens the URL in a new tab; the user may edit the document freely in Google Docs, outside the app; service account credentials are server-side only and never exposed to the client. | Selecting the Google Docs export returns a shareable document URL that opens in a new tab; no credentials appear in the browser. | §22 |
+| REQ-159 | Client-side-only rule: PDF, TXT, CSV, and XLSX exports are generated entirely in the browser — there are no backend export endpoints for these four formats; the Google Docs export (REQ-158) is the only backend export. | No `/api/v1` export routes exist for the four client-side formats; the exported content is the report as it exists at export time, with no AI re-processing. | §22 |
+
+- Export rules: **Phase 22 — DONE (REQ-154..159)**.
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -1314,7 +1341,7 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 
 ## Work Flow
 
-> **Phase 3 build — the core narration→report flow and the review–correction loop from §3. Detailed sub-flows arrive in later phases: authentication (11), supporting-resource management (4), audio recording/STT pipeline (20), AI prompts (21), export (22), and archive/delete/restore lifecycle (35).**
+> **Phase 3 build — the core narration→report flow and the review–correction loop from §3. Detailed sub-flows arrive in later phases: authentication (11), supporting-resource management (4), audio recording/STT pipeline (20), AI prompts (21), export (22 — `## Export Spec` §2–4), and archive/delete/restore lifecycle (35).**
 
 ### 1. Actors
 
@@ -1338,7 +1365,7 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 | W-09 | System (AI) | Updates the report; corrections update only the relevant part without unnecessarily rewriting correct unrelated sections (REQ-034; correction behavior §6.9) | Updated report | §2.3.7, §3.2, §6.9 |
 | W-10 | Supervisor + System | Repeats W-07..W-09 until the supervisor is satisfied (correction loop) | Satisfied report | §3.2 |
 | W-11 | Supervisor | Accepts/finalizes the report | Final report version | §3.2 (versioning: Phases 24/35) |
-| W-12 | System | Delivers/exports the report (PDF, TXT, CSV, spreadsheet) | Exported report | §2.1 (details Phase 22) |
+| W-12 | System | Delivers/exports the report (PDF, TXT, CSV, spreadsheet, or Google Docs) | Exported report | §2.1, `## Export Spec` §2–4 (details Phase 22) |
 
 ### 3. Work Flow Rules (seeds)
 
@@ -1361,6 +1388,21 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 | Supporting-resource flows (branches, history, analytics) | Phase 4 | (parallel flows) |
 | Archive, delete, restore lifecycle | Phase 35 | W-11 onward |
 | Error states and loading states | Phase 28 | all steps |
+
+### 5. Export Sub-Flow (W-12, Phase 22)
+
+The supervisor exports the finalized report (after W-11) from the report UI:
+
+| Step | Actor | Action | Output | Source |
+|---|---|---|---|---|
+| E-01 | Supervisor | Chooses an export format from the export control on the finalized report: PDF, TXT, CSV, XLSX (client-side), or Google Docs (backend) | Format selection | `## Export Spec` §2–4, `## API Contract` §7 |
+| E-02 | System | Generates the file in the browser for the four client-side formats (no backend call) and downloads it immediately | Downloaded PDF/TXT/CSV/XLSX file | `## Export Spec` §2–3, REQ-154..157, REQ-159 |
+| E-03 | System | For Google Docs: calls the backend export endpoint, which creates the Google document with the report content, sets sharing to "Anyone with link can view", and returns the document URL | Document URL | `## Export Spec` §4, `## API Contract` §7, REQ-158 |
+| E-04 | System | Opens the returned Google Docs URL in a new tab | Google Docs document (view/edit) | REQ-158 |
+| E-05 | Supervisor | Views and, if desired, edits the document freely in Google Docs; edits happen outside the app and are not synced back | Edited document (in Google Docs) | `## Export Spec` §4, REQ-158 |
+
+- Export is available only on a finalized report (W-11 precedes W-12); the exported content is the report as it exists at export time — no AI re-processing (REQ-159).
+- Failure outcomes: a client-side generation failure shows an error state (Phase 28); a Google Docs failure surfaces the backend error through the §10.7 envelope (REQ-158).
 
 ---
 
@@ -1640,6 +1682,12 @@ Entity-level seeds from the recording/STT pipeline (§20; field-level schema rem
 
 - **Upload endpoint** — accepts the full recorded clips array as the multipart field `clips` (§20.1; REQ-140): multer storage in `backend/uploads/audio/` (gitignored), 50 MB max per clip (`AUDIO_MAX_SIZE_BYTES`), server-side ffprobe duration validation and type/size validation (§20.2/§20.3; REQ-142, REQ-143); success sets the report status `audio_recorded` (status names reconciled in Phase 35).
 - **Re-transcription endpoint** — re-runs STT on the stored audio for accuracy verification (§20.5; REQ-145): the backend must accept both `audio_recorded` and `transcribed` statuses; the STT call itself always targets the Addis AI `v2/stt` endpoint with chunking per `## Audio Recording STT` §8 (REQ-128, REQ-144).
+
+### 7. Export (Phase 22)
+
+- **Client-side formats need no backend endpoints** — PDF, TXT, CSV, and XLSX exports are generated entirely in the browser (`## Export Spec` §2, §3; REQ-159). The frontend generates the file from the report data it already holds (via the RTK Query API client, REQ-104) and triggers the download directly; there is no `/api/v1/export` route for these formats.
+- **Google Docs export — the only backend export** — the backend authenticates to the Google Docs API with a Google Service Account using the optional `GOOGLE_SERVICE_ACCOUNT_EMAIL` and `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` environment variables (`## Environment Config` §2, REQ-121), creates the document from the report content, sets the sharing permission to "Anyone with link can view", and returns the document URL (REQ-158). The exact path is defined at implementation (Phase 25 `backend/controllers`), consistent with the Phase 10 precedent of finalizing paths in later phases; responses use the §10.7 envelope. The frontend opens the returned URL in a new tab (`## Work Flow` §5, REQ-158).
+- Google service account credentials are server-side only and must never be exposed to the client (REQ-158).
 
 ---
 
@@ -2287,15 +2335,37 @@ Project handling (REQ-129):
 
 ## Export Spec
 
-> **Phase 6 seed — export context from §6; full export mechanics (formats, naming, API, UI, files) arrive in Phase 22 (§22 Export).**
+> **Phase 6 seed — export context from §6; full export mechanics (formats, naming, API, UI, files) arrived in Phase 22 (§22 Export; REQ-154..159).**
 
 ### 1. Purpose (seed)
 
-The export feature delivers the finalized report (W-12) so it can be shared or archived (§4, REQ-047). The exported artifact is the report in the required §6.1 format (`## Report Format`), supporting formats: PDF, TXT, CSV, and spreadsheet (REQ-047; detail in Phase 22).
+The export feature delivers the finalized report (W-12) so it can be shared or archived (§4, REQ-047). The exported artifact is the report in the required §6.1 format (`## Report Format`), supporting formats: PDF, TXT, CSV, and spreadsheet (REQ-047; format details in §2).
 
-### 2. Expansion Markers
+### 2. Format Details (§22)
 
-- Phase 22 (§22 Export): full export specification — format details per file type, file naming, content mapping, API endpoints (`## API Contract`), UI flow (W-12), and error handling.
+The four client-side formats export the report content as it exists in the app at export time — no AI re-processing, no report regeneration (REQ-159). Google Docs is the only backend export (§4).
+
+| Format | Generated | Details |
+|---|---|---|
+| PDF | Client-side (browser) | Uses `jspdf` and `jspdf-autotable` (both already installed in `client/package.json`); A4 page size; Amharic text rendered with the **Noto Sans Ethiopic** font (Amharic-capable Unicode font); report section headings rendered as section headers; page numbers on every page (REQ-154). |
+| TXT | Client-side (browser) | Downloaded as a Blob with UTF-8 encoding; plain-text structure preserving the report format (§6.1); no styling, no page layout (REQ-155). |
+| CSV | Client-side (browser) | Downloaded as a Blob with UTF-8 encoding and a byte-order mark (BOM) for Excel compatibility; structured columns mapping the report content so it opens as a usable spreadsheet (REQ-156). |
+| XLSX | Client-side (browser) | Multi-sheet workbook: a **content** sheet (the report), a **version history** sheet (every report version with its metadata — date, version note, status), and a **metadata** sheet (report metadata: AI provider, generation date, report status). The workbook library is chosen at implementation (not specified in source §22; no workbook library is currently installed) (REQ-157). |
+
+### 3. Client-Side Only Rule (§22)
+
+PDF, TXT, CSV, and XLSX exports are generated entirely in the browser — there are no backend export endpoints for these four formats (REQ-159). The Google Docs export (§4) is the only backend export in the system (endpoint contract in `## API Contract` §7).
+
+### 4. Google Docs Backend Export (§22)
+
+- Exporting to Google Docs is backend-only: the backend authenticates to the Google Docs API with a **Google Service Account** using the optional `GOOGLE_SERVICE_ACCOUNT_EMAIL` and `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` environment variables (`## Environment Config` §2, REQ-121); these are absent from `backend/.env` and are added when the Google Docs export is enabled.
+- The backend creates the Google document from the generated report content, sets the sharing permission to "Anyone with link can view", and returns the document URL to the frontend (REQ-158).
+- The frontend opens the returned URL in a new tab; the user can then view and edit the document freely in Google Docs — editing happens in Google Docs, outside the app, and is not synced back (REQ-158).
+- Google service account credentials are server-side only and must never be exposed to the client (REQ-158).
+
+### 5. Expansion Markers
+
+- Phase 22 delivered the full export specification — format details per file type (§2), the client-side-only rule (§3), the Google Docs backend export (§4), the API contract (`## API Contract` §7), and the UI flow (`## Work Flow` §5).
 
 ---
 
@@ -3823,3 +3893,7 @@ Phases 1–20 are GREEN (2026-08-01). Phase 20 built the audio recording and STT
 ## End Of Phase 21 Content
 
 Phases 1–21 are GREEN (2026-08-01). Phase 21 built the AI prompt requirements from §21: enriched `## AI Prompt Spec` (new §9 System Prompts And Parameters — the exact §21.1 generation system message with temperature 0.2 / maxOutputTokens 2048 from the frozen AI Generation constants and the exact §21.2 correction system message with temperature 0.15 / maxOutputTokens 2048 from the frozen AI Correction constants, wired across the three providers via the §7 prompt field, Gemini `systemInstruction`, and the Nvidia system role; new §10 Voice Correction Flow — correction audio → STT → correction text → the same correction prompt, STT via the approved chunking pipeline; new §11 Transcription Correction — AI fixes transcription errors and returns `aiCorrectedText` in the Transcription model; new §12 Amharic Generation Rules Enforced In The Prompt — the 14 §21.5 rules mapped onto the PR-01..16 seeds with the exact eight Amharic section names, the few-shot wiring, and the Amharic-default vs mixed precedence resolution), enriched `## Report Format` (resolved the source punctuation note — §21 provides no label-punctuation rule, so the §6.1 template form with Ethiopic `፡` remains canonical per the Phase 6 resolution; resolved the language-precedence wording to `## AI Prompt Spec` §12), enriched `## Rules` (new §6 AI Prompt Rules — the prompt-text, parameter, voice-correction, transcription-correction, and 14-rule enforcement requirements mapped to REQ-146..153), flipped the Phase 21 forward markers in `## AI Prompt Spec`, `## Report Format`, and `## Rules` to DONE, added REQ-146..153, extended `## Glossary` (aiCorrectedText), updated the Checklist (AI Prompt Spec, Report Format, and Rules — GREEN Phase 21 enrichment), and added the Phase 21 Source Trace Map. Phase 22 will build the export mechanics.
+
+## End Of Phase 22 Content
+
+Phases 1–22 are GREEN (2026-08-01). Phase 22 built the export mechanics from §22: enriched `## Export Spec` (new §2 Format Details — PDF via `jspdf` + `jspdf-autotable` (already installed in `client/package.json`), A4, Noto Sans Ethiopic font for Amharic, section headers, page numbers; TXT via UTF-8 Blob preserving the report format; CSV via UTF-8 Blob with BOM for Excel compatibility with structured columns; XLSX as a multi-sheet workbook — content, version history (all versions with metadata), and metadata (provider, dates, status) sheets, workbook library chosen at implementation; new §3 Client-Side Only Rule — PDF/TXT/CSV/XLSX generated in the browser with no backend export endpoints; new §4 Google Docs Backend Export — backend-only via the Google Docs API with a Google Service Account (`GOOGLE_SERVICE_ACCOUNT_EMAIL`/`GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`, `## Environment Config` §2, REQ-121, absent from `backend/.env` and added when the export is enabled), document created from the report content, sharing set to "Anyone with link can view", URL returned, frontend opens it in a new tab, edits happen freely in Google Docs outside the app, credentials server-side only; §2 Expansion Markers renumbered to §5 and flipped to DONE), enriched `## API Contract` (new §7 Export — the four client-side formats need no backend endpoints; Google Docs is the only backend export, path defined at implementation per the Phase 10 precedent), enriched `## Work Flow` (W-12 row now details `## Export Spec` §2–4; new §5 Export Sub-Flow — E-01..E-05: format choice from the finalized report, browser download for the four client-side formats, backend Google Docs export returning the shareable URL, URL opened in a new tab, free editing in Google Docs; export available only on a finalized report; failure outcomes via the §10.7 envelope), flipped the Phase 22 forward marker in `## Export Spec` to DONE, added REQ-154..159, extended `## Glossary` (Noto Sans Ethiopic, Google Service Account), updated the Checklist (Export Spec — GREEN Phase 22 enrichment; Work Flow — GREEN Phase 22 enrichment; API Contract — GREEN Phase 22 enrichment), and added the Phase 22 Source Trace Map with the `client/package.json` codebase facts (jspdf ^4.2.1 and jspdf-autotable ^5.0.8 installed, no workbook library) and the `backend/.env` fact (GOOGLE_SERVICE_ACCOUNT_* absent, added when the Google Docs export is enabled). Phase 23 will build the mock data rules.
