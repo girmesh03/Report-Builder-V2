@@ -39,7 +39,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 5 | 5. Report And Branch Domain | GREEN | Report Domain, Data Modeling, Business Rules, API Contract, Status Machine, Report Management |
 | 6 | 6. Report Format, Samples, And Tone | GREEN | Report Format, AI Prompt Spec, Export Spec |
 | 7 | 7. Language Rules | GREEN | AI Prompt Spec, Report Format, UI/UX Spec |
-| 8 | 8. Transcription Accuracy Requirement | PENDING | Audio Recording STT, Transcription Review, Validation Audit |
+| 8 | 8. Transcription Accuracy Requirement | GREEN | Audio Recording STT, Transcription Review, Validation Audit |
 | 9 | 9. Technical Stack And Package Rules | PENDING | Rules, Coding Conventions, Architecture, Requirements, Project Directory Structure |
 | 10 | 10. Backend Architecture | PENDING | Backend Architecture, Architecture, API Contract, Project Directory Structure |
 | 11 | 11. Authentication, Authorization, Cookies, And Tokens | PENDING | Auth Cookies, Security, API Contract, Data Modeling |
@@ -82,7 +82,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
 | API Contract | 5, 10, 11, 18, 20, 22, 24, 28 | GREEN (Phase 5 seed) |
 | Architecture | 9, 10, 25 | PENDING |
-| Audio Recording STT | 8, 20 | PENDING |
+| Audio Recording STT | 8, 20 | GREEN (Phase 8 seed) |
 | Auth Cookies | 11 | PENDING |
 | Backend Architecture | 10 | PENDING |
 | Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
@@ -126,11 +126,11 @@ Status of every section the target document must contain at minimum. Extra secti
 | Status Machine | 5, 35 | GREEN (Phase 5 seed) |
 | Tasks | 32 | PENDING |
 | Theme Standards | 14 | PENDING |
-| Transcription Review | 8, 20 | PENDING |
+| Transcription Review | 8, 20 | GREEN (Phase 8 seed) |
 | UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 7 seed) |
 | User Interactions | 3, 16, 22, 35 | GREEN (Phase 3 seed) |
 | User Stories | 2 (seed), 4 | GREEN (Phase 2 seed) |
-| Validation Audit | 8, 15, 28, 31 | PENDING |
+| Validation Audit | 8, 15, 28, 31 | GREEN (Phase 8 seed) |
 | Work Flow | 3, 22, 35 | GREEN (Phase 3 seed) |
 
 ---
@@ -257,6 +257,17 @@ All `§` references below identify sections of the original source brief. They a
 | §7 | Do not force translation unless the user explicitly chooses it | UI/UX Spec (2), AI Prompt Spec (PR-17), Report Format (10), Requirements (REQ-067), User Stories (US-023), Glossary (content language flexibility) |
 | §7 | The conversation language in recorded audio is always Amharic | UI/UX Spec (2), AI Prompt Spec (PR-18), Requirements (REQ-068) |
 | §7 | Addis AI selected because it is specialized in Ethiopian Amharic; expected more accurate transcription and report generation than general AI tools | UI/UX Spec (4), Requirements (REQ-069), PRD (6) |
+
+---
+
+## Source Trace Map — Phase 8 (source §8)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §8 | Transcription accuracy is the foundation of the entire product; every subsequent step (AI report generation, export, review) depends on it; garbage transcription produces garbage reports | Audio Recording STT (1), PRD (4), Requirements (REQ-070), User Stories (US-024), Glossary (transcription accuracy) |
+| §8 | Every implementation decision related to chunking strategy, format conversion, MIME type, error handling, and provider use must prioritize transcription accuracy over convenience, performance, or code simplicity — which must also be perfect | Audio Recording STT (2), Requirements (REQ-071) |
+| §8 | The chunking pipeline and correct MIME type per chunk are critical safeguards; re-transcription must be available to verify accuracy on every audio recording | Audio Recording STT (3), Transcription Review (2), Requirements (REQ-072), User Stories (US-025) |
+| §8 | Accuracy regression is a blocking defect; any STT pipeline change that degrades quality must be reverted immediately; accuracy must be verified with real Amharic audio before merging | Audio Recording STT (4), Validation Audit (1), Requirements (REQ-073), Glossary (accuracy regression) |
 
 ---
 
@@ -508,7 +519,7 @@ Secondary features should not distract from the core workflow of generating a bo
 
 ## Glossary
 
-> **Terms added in Phases 1–7. The full glossary is built in Phase 34 (§34 Glossary).**
+> **Terms added in Phases 1–8. The full glossary is built in Phase 34 (§34 Glossary).**
 
 | Term | Definition | Source |
 |---|---|---|
@@ -564,6 +575,8 @@ Secondary features should not distract from the core workflow of generating a bo
 | Amharic workplace transliteration | Writing English or technical words in their common Amharic workplace pronunciation (e.g., deep fryer → ዲፕ ፍራየር) instead of English spelling or literal translation. | §6.7 |
 | Interface language rule | The application shell, navigation, labels, buttons, validation messages, and helper text must all be English, while content may be Amharic, English, or mixed. | §7 |
 | Content language flexibility | Audio, transcription, AI chat, and report content may be Amharic, English, or mixed; translation is never forced unless the user explicitly chooses it. | §7 |
+| Transcription accuracy | The quality of the STT output on which the whole product depends; the foundation of report generation, export, and review. | §8 |
+| Accuracy regression | A degradation in STT transcription quality caused by a pipeline change; a blocking defect that must be reverted immediately. | §8 |
 
 ---
 
@@ -593,6 +606,7 @@ The complete problem statement is in `## Problem Statement`. In summary: the sup
 - **Per-branch supervision activities** (source: §2.2): check daily operational activities; check cleanliness; check employee readiness; follow a checklist; observe urgent branch problems; communicate with staff or responsible people; follow up on previously reported issues; take action or give instructions; form an opinion about branch performance; identify things that need immediate attention; identify things that can make the branch better.
 - **End-of-day report must explain** (source: §2.2): date, branch, working time, completed activities, unresolved issues, general opinion, work exit time.
 - **Report format supports one or multiple branches** (source: §5.1); multi-branch reports preserve branch-specific details and per-branch time ranges when the audio contains them.
+- **Transcription accuracy** (source: §8): transcription accuracy is the foundation of the product — every subsequent step (generation, export, review) depends on it; accuracy is prioritized over convenience, performance, or code simplicity (which must also be perfect); chunking and per-chunk MIME type are critical safeguards; re-transcription verifies accuracy on every recording; accuracy regression is a blocking defect — revert immediately, verify with real Amharic audio before merging.
 - **Language rules** (source: §7): the interface is English; audio, transcription, AI chat, and report content may be Amharic, English, or mixed; translation is never forced unless the user explicitly chooses it; the recorded conversation is always Amharic.
 - **Required report tone** (source: §6.5): professional, direct, clear, work-report oriented, from the supervisor's perspective, natural Amharic — not conversational, not casual, not chatbot-like.
 
@@ -799,6 +813,10 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-067 | Audio, transcription, AI chat, and report content may be Amharic, English, or mixed, and translation must not be forced unless the user explicitly chooses it. | Content in any of the three forms is accepted and kept; no automatic translation. | §7 |
 | REQ-068 | The conversation language in recorded audio is always Amharic. | Recordings are Amharic conversations (STT language handling arrives in Phases 8 and 20). | §7 |
 | REQ-069 | Addis AI must be used for transcription and report generation because it is specialized in Ethiopian Amharic and expected to produce more accurate results than general AI tools. | Addis AI is the provider for STT and text generation (rationale re-affirming REQ-017/035/048/049). | §7 |
+| REQ-070 | Transcription accuracy is the foundation of the product: every subsequent step (AI report generation, export, review) depends on accurate transcription. | Pipeline decisions treat accuracy as foundational; inaccurate transcription never flows into report generation. | §8 |
+| REQ-071 | Every implementation decision related to chunking strategy, format conversion, MIME type, error handling, and provider use must prioritize transcription accuracy over convenience, performance, or code simplicity — while convenience, performance, and code simplicity must also be perfect. | Decisions are justified by accuracy impact; convenience, performance, and simplicity remain excellent. | §8 |
+| REQ-072 | The chunking pipeline and correct MIME type per chunk are critical safeguards, and re-transcription must be available to verify accuracy on every audio recording. | Chunking and MIME safeguards are non-negotiable; every recording can be re-transcribed to verify accuracy. | §8 |
+| REQ-073 | Accuracy regression is a blocking defect: any change to the STT pipeline (chunking, format conversion, MIME type, language code, provider endpoint) that degrades transcription quality must be reverted immediately, and accuracy must be verified with real Amharic audio before merging. | STT pipeline changes are gated on real-Amharic-audio verification; regressions are reverted immediately. | §8 |
 
 ### Non-Functional Requirements (Phase 1)
 
@@ -815,6 +833,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Report and branch domain rules: **Phase 5 — DONE (REQ-050..057)**.
 - Report format, samples, and tone rules: **Phase 6 — DONE (REQ-058..065)**.
 - Language rules: **Phase 7 — DONE (REQ-066..069)**.
+- Transcription accuracy requirements: **Phase 8 — DONE (REQ-070..073)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -851,6 +870,8 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | US-021 | As an Area Supervisor, I want English and technical words written in the usual Amharic workplace style, so that the report reads naturally. | Technical words appear transliterated (e.g., ዲፕ ፍራየር), not in English spelling or literal translation (REQ-061). | §6.7 |
 | US-022 | As an Area Supervisor, I want the application interface in English, so that I can navigate and understand the controls. | All UI copy (shell, navigation, labels, buttons, validation messages, helper text) is English (REQ-066). | §7 |
 | US-023 | As an Area Supervisor, I want my audio, transcription, AI chat, and report content to stay in the language I used, without forced translation. | Content is not translated automatically unless the user explicitly chooses translation (REQ-067). | §7 |
+| US-024 | As an Area Supervisor, I want accurate transcription of my Amharic recording, because the report, export, and review all depend on it. | Transcription is accurate; a bad transcription never flows into generation (REQ-070). | §8 |
+| US-025 | As an Area Supervisor, I want to re-transcribe any recording to verify accuracy before the report is generated. | Re-transcription is available for every audio recording (REQ-072). | §8 |
 
 ---
 
@@ -927,7 +948,7 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 | Step | Actor | Action | Output | Source |
 |---|---|---|---|---|
 | W-01 | Supervisor | Records Amharic audio narration(s) describing the day (one or more narrations per day; all narrations of a day belong to one daily report, AD-008) | Amharic audio recording(s) | §2.1, §3.1, AD-008 |
-| W-02 | System | Sends the recorded audio to Addis AI speech-to-text (detailed pipeline in Phase 20) | Transcription (raw material) | §3.3 |
+| W-02 | System | Sends the recorded audio to Addis AI speech-to-text (detailed pipeline in Phase 20; accuracy is the governing priority per §8) | Transcription (raw material) | §3.3, §8 |
 | W-03 | System | The transcription is expected to contain the needed information but is not organized as a final report | Unorganized transcription text | §3.3 |
 | W-04 | Supervisor | Reviews and edits the transcription when necessary (REQ-016) | Corrected transcription | §2.1, §3.3 |
 | W-05 | System (AI) | Processes, extracts, organizes, and rewrites the information based on the required report rules, report format, tone, and system prompt; generation runs only from the reviewed transcription, never directly from raw audio (§5.2); required format per §6.1 | Organized report draft | §3.3, §5.2, §6.1 |
@@ -1552,6 +1573,74 @@ Addis AI is selected because it is specialized in Ethiopian Amharic and is expec
 
 ---
 
+## Audio Recording STT
+
+> **Phase 8 seed — the transcription accuracy requirements from §8. The full recording and STT pipeline (MediaRecorder, chunking via wavSplitter, MIME validation, Addis AI endpoint, re-transcription flow) arrives in Phase 20 (§20 Audio Recording And STT Pipeline).**
+
+### 1. Accuracy Is The Foundation
+
+Transcription accuracy is the foundation of the entire product. Every subsequent step — AI report generation, export, and review — depends on accurate transcription. Garbage transcription produces garbage reports (§8, REQ-070). Amharic quality is a core requirement, not an optional language feature (REQ-031).
+
+### 2. Priority Rule
+
+Every implementation decision related to chunking strategy, format conversion, MIME type, error handling, and provider use must prioritize transcription accuracy over convenience, performance, or code simplicity. Convenience, performance, and code simplicity must also be perfect (§8, REQ-071).
+
+### 3. Critical Safeguards
+
+The chunking pipeline and the correct MIME type per chunk are critical safeguards (§8, REQ-072). Re-transcription must be available to verify accuracy on every audio recording (§8, REQ-072; flow in `## Transcription Review` §2, mechanics in Phase 20).
+
+### 4. Accuracy Regression Rule
+
+Accuracy regression is a blocking defect (§8, REQ-073). Any change to the STT pipeline — including chunking, format conversion, MIME type, language code, or provider endpoint — that degrades transcription quality must be reverted immediately. Accuracy must be verified with real Amharic audio before merging (§8, REQ-073; gate in `## Validation Audit` §1).
+
+### 5. Expansion Markers
+
+- Phase 18 (§18 Addis AI Integration): STT endpoint details.
+- Phase 20 (§20 Audio Recording And STT Pipeline): MediaRecorder, MIME priority, wavSplitter chunking, language code, re-transcription endpoint, error handling and retries.
+- Phase 28 (§28 Error Handling): STT error states.
+
+---
+
+## Transcription Review
+
+> **Phase 8 seed — accuracy verification from §8 on top of the Phase 3 review loop (W-04). Detailed review/correction UI and re-transcription mechanics arrive in Phase 20.**
+
+### 1. Review Loop (from §3)
+
+The supervisor reviews the transcription and, if needed, corrects it with AI help before report generation (W-04; REQ-034/REQ-041; correction behavior in `## Report Format` §8). Report content is generated only from the reviewed transcription, never directly from raw audio (REQ-038).
+
+### 2. Re-Transcription For Accuracy Verification (§8)
+
+Re-transcription must be available to verify accuracy on every audio recording (§8, REQ-072): the supervisor can re-run STT on the stored audio and confirm the transcription matches the recording before generation. Re-transcription is the accuracy safeguard for the review step; mechanics arrive in Phase 20.
+
+### 3. Expansion Markers
+
+- Phase 20 (§20 Audio Recording And STT Pipeline): review/correction UI (UI-004), re-transcription mechanics, editing with AI help.
+
+---
+
+## Validation Audit
+
+> **Phase 8 seed — the accuracy verification gates from §8. Broader validation and audit (checklists, source traceability, non-functional requirements) arrives in Phases 15, 26, 28, 30, 31.**
+
+### 1. Accuracy Verification Gate
+
+Accuracy regression is a blocking defect (§8, REQ-073). Any change to the STT pipeline — chunking, format conversion, MIME type, language code, provider endpoint — that degrades transcription quality must be reverted immediately. Accuracy must be verified with real Amharic audio before merging (§8, REQ-073). This gate applies to all future STT pipeline work (Phases 18, 20, 28).
+
+### 2. Scope Note
+
+This seed covers transcription accuracy only. Full validation and audit sections arrive in later phases: Phases 15 (React Hook Form Standards), 26 (JSDoc Standards), 28 (Error Handling), 31 (Validation And Audit — checklists, source traceability, non-functional requirements), 32 (Git Workflow).
+
+### 3. Expansion Markers
+
+- Phase 15 (§15 React Hook Form Standards): form validation.
+- Phase 26 (§26 JSDoc Standards): code documentation audit.
+- Phase 28 (§28 Error Handling): error handling audit.
+- Phase 31 (§31 Validation And Audit): full validation audit, checklists, source traceability, non-functional requirements.
+- Phase 32 (§32 Git Workflow): branch/commit rules that carry the accuracy gate.
+
+---
+
 ## Decision Log
 
 > **Built in Phases 1–2 — the ADR format and further decisions are finalized in Phase 33 (§33 Decision Log (ADRs)).** Entries are appended as phases complete. No decision recorded here may contradict a later GREEN decision without a superseding ADR.
@@ -1655,6 +1744,8 @@ Addis AI is selected because it is specialized in Ethiopian Amharic and is expec
 
 ---
 
-## End Of Phase 7 Content
+## End Of Phase 8 Content
+
+Phases 1–8 are GREEN (2026-08-01). Phase 8 built the transcription accuracy requirement from §8: new `## Audio Recording STT` seed (accuracy foundation, priority rule, chunking/MIME safeguards, accuracy regression rule), new `## Transcription Review` seed (Phase 3 review loop + re-transcription for accuracy verification on every recording), new `## Validation Audit` seed (accuracy verification gate with real-Amharic-audio-before-merge rule), enriched `## PRD` (transcription accuracy bullet) and Work Flow (W-02 source += §8), added REQ-070..073, added US-024/025, extended `## Glossary` (transcription accuracy, accuracy regression), updated the Checklist (Audio Recording STT, Transcription Review, Validation Audit — GREEN seeds), and added the Phase 8 Source Trace Map. Phase 9 will build the technical stack and package rules from the package.json files.
 
 Phases 1–7 are GREEN (2026-08-01). Phase 7 built the language rules from §7: new `## UI/UX Spec` seed (interface language English, content language Amharic/English/mixed, no forced translation, Amharic conversation audio, Addis AI language rationale), enriched `## AI Prompt Spec` (PR-17/18 language seeds, Amharic-default vs mixed-content precedence noted for Phase 21), enriched `## Report Format` (§10 language flexibility), enriched `## PRD` (language-rules bullet, Addis AI rationale in supporting feature 7), added REQ-066..069, added US-022/023, extended `## Glossary` (interface language rule, content language flexibility), updated the Checklist (UI/UX Spec seed, AI Prompt Spec enrichment, Report Format enrichment — all GREEN), and added the Phase 7 Source Trace Map. Phase 8 will build the transcription accuracy requirement.
