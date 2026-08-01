@@ -34,7 +34,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 |---|---|---|---|
 | 1 | 1. Project Identity | GREEN | Project Overview, Problem Statement, Glossary, PRD, Requirements, Decision Log |
 | 2 | 2. Problem Statement | GREEN | Problem Statement, PRD, Requirements, User Stories |
-| 3 | 3. Manual Reporting Mental Model | PENDING | PRD, Work Flow, User Interactions, Report Domain |
+| 3 | 3. Manual Reporting Mental Model | GREEN | PRD, Work Flow, User Interactions, Report Domain |
 | 4 | 4. Supporting Features Needed Because Of The Core Problem | PENDING | PRD, Requirements, User Stories, Report Management |
 | 5 | 5. Report And Branch Domain | PENDING | Report Domain, Data Modeling, Business Rules, API Contract, Status Machine, Report Management |
 | 6 | 6. Report Format, Samples, And Tone | PENDING | Report Format, AI Prompt Spec, Export Spec |
@@ -107,14 +107,14 @@ Status of every section the target document must contain at minimum. Extra secti
 | Non-Functional Requirements | 31 | PENDING |
 | Other AI Providers | 19 | PENDING |
 | Phase Protocol | 32 | PENDING |
-| PRD | 1, 2, 3, 4 | GREEN (Phase 2 enrichment) |
+| PRD | 1, 2, 3, 4 | GREEN (Phase 3 enrichment) |
 | Problem Statement | 1, 2 | GREEN |
 | Profile Management | 4 | PENDING |
 | Project Directory Structure | 9, 10, 12, 25, 30 | PENDING |
 | Project Overview | 1 | GREEN |
 | React Hook Form Standards | 15 | PENDING |
 | Redux RTK Query | 13 | PENDING |
-| Report Domain | 3, 5, 24 | PENDING |
+| Report Domain | 3, 5, 24 | GREEN (Phase 3 seed) |
 | Report Format | 6, 7, 21 | PENDING |
 | Report Management | 4, 5, 35 | PENDING |
 | Requirements | 1, 2, 4, 9, 29, 31, 34 | GREEN (Phase 2 enrichment) |
@@ -128,10 +128,10 @@ Status of every section the target document must contain at minimum. Extra secti
 | Theme Standards | 14 | PENDING |
 | Transcription Review | 8, 20 | PENDING |
 | UI/UX Spec | 7, 12, 14, 15, 16 | PENDING |
-| User Interactions | 3, 16, 22, 35 | PENDING |
+| User Interactions | 3, 16, 22, 35 | GREEN (Phase 3 seed) |
 | User Stories | 2 (seed), 4 | GREEN (Phase 2 seed) |
 | Validation Audit | 8, 15, 28, 31 | PENDING |
-| Work Flow | 3, 22, 35 | PENDING |
+| Work Flow | 3, 22, 35 | GREEN (Phase 3 seed) |
 
 ---
 
@@ -171,6 +171,23 @@ All `§` references below identify sections of the original source brief. They a
 | §2.2 | Report must explain: date, branch, working time, completed activities, unresolved issues, general opinion, work exit time | Problem Statement, Requirements (REQ-030) |
 | §2.3 | Seven main pain points (effort, mobility, conversational source, Amharic accuracy, tone, transliteration, user control) | Problem Statement, PRD, Requirements (REQ-031..035), User Stories (US-004) |
 | §2.4 | Project is not mainly about secondary features | Problem Statement, PRD |
+
+---
+
+## Source Trace Map — Phase 3 (source §3)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §3.1 | Person 1 is the supervisor who wants a report prepared; explains the day to Person 2 in Amharic | Report Domain, PRD (11), Glossary (Person 1) |
+| §3.1 | Person 1 may mention 14 items: date, branch(es) visited, entry time, exit time, time range per branch, activities, checklist-based work, urgent issues/problems, actions taken, people contacted, follow-up needed, general opinions, opinions about issues, suggestions | Report Domain (content elements table) |
+| §3.1 | The explanation is natural, not in report format; may be conversational, repeated, incomplete at first, or clarified later | Work Flow (WF-3), Report Domain (DR-2) |
+| §3.2 | Person 2 is a friend with no work relationship; listens carefully and may ask WH questions (date, branch, times, activities, problems, actions, who informed, what needs solution, opinion) | Report Domain, Work Flow (OQ-007: app processes as-is) |
+| §3.2 | Person 2 writes a complete report; Person 1 reviews; if wrong/missing/unclear/unwanted, Person 1 asks for correction; updates until satisfied | Work Flow (W-07..W-10), User Interactions (UI-003..007), Requirements (REQ-038) |
+| §3.3 | Mapping: Person 1 = user/supervisor, Person 2 = Addis AI-powered system | Report Domain, Glossary (Person 2) |
+| §3.3 | Audio sent to Addis AI speech-to-text; transcription contains the needed information but is not organized as a final report | Work Flow (W-02, W-03), Requirements (REQ-037) |
+| §3.3 | AI must process, extract, organize, and rewrite based on report rules, format, tone, and system prompt | Work Flow (W-05, W-06), Report Domain (AI responsibilities) |
+| §3.3 | AI's 12 responsibilities (extract date/branches/times/activities/issues/problems/actions/opinions; organize; write in Amharic; match sample tone; correct on request) | Report Domain (section 3), Requirements (REQ-036) |
+| §3.3 | AI must not treat the transcription as the final report; transcription is raw material, generated report is the organized final output | Work Flow (WF-1), Report Domain (DR-1), Requirements (REQ-037), Glossary (raw material, final output) |
 
 ---
 
@@ -422,7 +439,7 @@ Secondary features should not distract from the core workflow of generating a bo
 
 ## Glossary
 
-> **Terms added in Phases 1–2. The full glossary is built in Phase 34 (§34 Glossary).**
+> **Terms added in Phases 1–3. The full glossary is built in Phase 34 (§34 Glossary).**
 
 | Term | Definition | Source |
 |---|---|---|
@@ -458,12 +475,17 @@ Secondary features should not distract from the core workflow of generating a bo
 | Completed activities | A required element of the end-of-day report. | §2.2 |
 | Unresolved issues | A required element of the end-of-day report. | §2.2 |
 | General opinion | The supervisor's opinion about branch performance; a required element of the end-of-day report. | §2.2 |
+| Person 1 | The supervisor who explains the day's activities to Person 2 in Amharic; mapped to the user/supervisor in the app. | §3.1, §3.3 |
+| Person 2 | The listener who understands, writes the complete report, and corrects it until satisfied; mapped to the Addis AI-powered system in the app. | §3.2, §3.3 |
+| Raw material | The transcription produced from recorded audio; expected to contain the needed information but not organized as a final report; never treated as the final report. | §3.3 |
+| Final output | The organized, format-conformant report the AI writes from the transcription raw material. | §3.3 |
+| Correction loop | The repeated review→correction cycle between supervisor and system that continues until the supervisor is satisfied. | §3.2 |
 
 ---
 
 ## PRD
 
-> **Phase 2 state — enriched in Phase 3 (Mental Model) and Phase 4 (Supporting Features).**
+> **Phase 3 state — enriched in Phase 4 (Supporting Features).**
 
 ### 1. Product Vision
 
@@ -495,7 +517,7 @@ Derived from §1.4 and §2.1 (detailed interaction workflow is built in Phase 3 
 2. The audio is transcribed (STT) to Amharic text.
 3. The supervisor reviews and edits the transcription when necessary.
 4. An AI model optimized for Amharic analyzes the transcription and automatically generates a professional, well-structured daily supervision report that follows the organization's reporting format.
-5. The supervisor reviews the generated report and may request corrections; corrections update only the relevant part without unnecessarily rewriting correct unrelated sections.
+5. The supervisor reviews the generated report and may request corrections; corrections update only the relevant part without unnecessarily rewriting correct unrelated sections, and the review–correction cycle repeats until the supervisor is satisfied (§3.2).
 6. Reports remain editable after generation and preserve historical versions; a single working day may span multiple branches.
 7. The report is exported (PDF, TXT, CSV, spreadsheet — detailed in Phase 22).
 
@@ -557,6 +579,19 @@ Measurable KPIs are **not specified** in the source. Recorded as an open questio
 | OQ-004 | Basic reporting analytics are in V2 (AD-007); the advanced analytics dashboard stays deferred (§1.7). Confirm the basic-analytics scope when Phase 4 details supporting features. | AD-007 (Phase 2); re-checked in Phase 4 |
 | OQ-005 | Multiple narrations per day merge into one daily report (AD-008). Re-confirm the exact merge/pipeline behavior when Phases 20/21 detail the audio pipeline. | AD-008 (Phase 2); re-checked in Phases 20/21 |
 | OQ-006 | "Follow a checklist" (§2.2) is a reportable activity; whether V2 ships a checklist tool is unspecified. | Re-asked in Phase 4/5 |
+| OQ-007 | Person 2 (mental model) may ask WH clarifying questions; §3.3 maps only write/review/correct behavior to the app. Should the app ask clarifying questions or process narrations as-is? | Resolved in Phase 3: process narrations as-is (no clarifying-Q&A step); re-confirmed in Phases 20/21 |
+
+### 11. Manual Reporting Mental Model (Person 1 / Person 2)
+
+The product's core workflow implements the manual reporting mental model of §3 (detailed in `## Work Flow`, `## User Interactions`, and `## Report Domain`):
+
+- **Person 1** is the supervisor who wants a report to be prepared. Person 1 explains the day to Person 2 in Amharic, naturally and not in report format; the explanation may be conversational, repeated, incomplete at first, or clarified later (§3.1).
+- **Person 2** is a friend of Person 1 with no work relationship to the company. Person 2 listens carefully, writes a complete report, and updates it on request until Person 1 is satisfied (§3.2).
+- **In the app**, Person 1 is the user/supervisor and Person 2 is the Addis AI-powered system (§3.3).
+- The supervisor provides a recorded Amharic audio explanation; the app sends the audio to Addis AI speech-to-text; the transcription is expected to contain the needed information but is **not** organized as a final report (§3.3).
+- The AI must process, extract, organize, and rewrite the information based on the required report rules, format, tone, and system prompt; the generated report is the organized final output (§3.3).
+- The app processes narrations as-is; there is no clarifying-question step in the first workflow (decision OQ-007; re-confirmed in Phases 20/21).
+- The review–correction cycle (UI-004..007) repeats until the supervisor is satisfied, mirroring the Person 1 / Person 2 loop (§3.2).
 
 ---
 
@@ -611,6 +646,14 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-034 | The user must be able to review generated reports and request corrections; corrections update only the relevant part without unnecessarily rewriting correct unrelated sections. | A correction request modifies only the targeted part of the report; correct unrelated content is preserved (prompt rules in Phase 21). | §2.3.7 |
 | REQ-035 | Amharic transcription must be accurate. | The transcription pipeline targets accuracy for Amharic speech (accuracy requirement in Phase 8, pipeline in Phase 20). | §2.1, §2.3.4 |
 
+### Functional Requirements (Phase 3)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-036 | The AI must extract and organize from the transcription: date information, branch names, working time and branch time ranges, performed activities, unresolved issues, urgent problems, actions already taken, and general opinions, and place them into the required report format. | Each listed item is extractable from the transcription and appears organized in the generated report structure. | §3.3 |
+| REQ-037 | The system must never treat the transcription as the final report; the transcription is raw material only, and the generated report is the organized final output. | No workflow path presents the raw transcription as the final report; generation always reorganizes the material per the report rules. | §3.3 |
+| REQ-038 | The review–correction cycle must repeat until the supervisor is satisfied (Person 1 / Person 2 behavior); the report is finalized only when the supervisor accepts it. | The user can request successive corrections after each review; the cycle terminates only on explicit user acceptance/finalization. | §3.2 |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -621,6 +664,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 ### Requirement expansion markers
 
 - Detailed functional requirements for the full problem context: **Phase 2 — DONE (REQ-015..035)**.
+- Mental-model extraction and review-loop rules: **Phase 3 — DONE (REQ-036..038)**.
 - Supporting features requirements (centralized management, history, exports, multi-branch): **Phase 4**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
@@ -645,6 +689,145 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | US-008 | As an Area Supervisor, I want my report to remain editable after generation and preserve historical versions, so that later edits never lose earlier versions. | Editing a report preserves version history; prior versions remain retrievable. | §2.1 |
 | US-009 | As an Area Supervisor, I want to manage my user profile information, so that my reporting context stays correct. | Profile data is viewable and editable (details in Phase 4/11). | §2.1 |
 | US-010 | As an Area Supervisor, I want basic reporting analytics, so that I can monitor reporting activity. | Basic analytics exist in V2 (AD-007); the advanced dashboard stays deferred. | §2.1, §1.7 |
+
+---
+
+## Work Flow
+
+> **Phase 3 build — the core narration→report flow and the review–correction loop from §3. Detailed sub-flows arrive in later phases: authentication (11), supporting-resource management (4), audio recording/STT pipeline (20), AI prompts (21), export (22), and archive/delete/restore lifecycle (35).**
+
+### 1. Actors
+
+| Actor | Role |
+|---|---|
+| Supervisor (Person 1) | The user; explains the day, reviews the report, requests corrections, finalizes. |
+| Addis AI system (Person 2) | The system; transcribes audio, extracts/organizes information, writes the report in Amharic, and updates it on request until the supervisor is satisfied. |
+
+### 2. Core Workflow — Narration To Satisfied Report
+
+| Step | Actor | Action | Output | Source |
+|---|---|---|---|---|
+| W-01 | Supervisor | Records Amharic audio narration(s) describing the day (one or more narrations per day; all narrations of a day belong to one daily report, AD-008) | Amharic audio recording(s) | §2.1, §3.1, AD-008 |
+| W-02 | System | Sends the recorded audio to Addis AI speech-to-text (detailed pipeline in Phase 20) | Transcription (raw material) | §3.3 |
+| W-03 | System | The transcription is expected to contain the needed information but is not organized as a final report | Unorganized transcription text | §3.3 |
+| W-04 | Supervisor | Reviews and edits the transcription when necessary (REQ-016) | Corrected transcription | §2.1, §3.3 |
+| W-05 | System (AI) | Processes, extracts, organizes, and rewrites the information based on the required report rules, report format, tone, and system prompt | Organized report draft | §3.3 |
+| W-06 | System (AI) | Writes the report in Amharic, matching the tone of the provided report samples (REQ-032) | Generated Amharic report | §3.3 |
+| W-07 | Supervisor | Reviews the generated report | Review decision (satisfied / needs correction) | §3.2 |
+| W-08 | Supervisor | If something is wrong, missing, unclear, or not written in the desired way, requests a correction | Correction request | §3.2 |
+| W-09 | System (AI) | Updates the report; corrections update only the relevant part without unnecessarily rewriting correct unrelated sections (REQ-034) | Updated report | §2.3.7, §3.2 |
+| W-10 | Supervisor + System | Repeats W-07..W-09 until the supervisor is satisfied (correction loop) | Satisfied report | §3.2 |
+| W-11 | Supervisor | Accepts/finalizes the report | Final report version | §3.2 (versioning: Phases 24/35) |
+| W-12 | System | Delivers/exports the report (PDF, TXT, CSV, spreadsheet) | Exported report | §2.1 (details Phase 22) |
+
+### 3. Work Flow Rules (seeds)
+
+| ID | Rule | Source |
+|---|---|---|
+| WF-1 | The AI must not treat the transcription as the final report; the transcription is raw material only and the generated report is the organized final output (REQ-037). | §3.3 |
+| WF-2 | The app processes narrations as-is: no clarifying-question step in the first workflow (decision OQ-007; re-confirmed in Phases 20/21). | §3.2 (WH questions), OQ-007 |
+| WF-3 | The explanation may be conversational, repeated, incomplete at first, or clarified later; the AI organizes it into the report order. | §3.1, §2.3.3 |
+| WF-4 | The review–correction loop (W-07..W-10) terminates only when the supervisor explicitly accepts the report (REQ-038). | §3.2 |
+
+### 4. Sub-Flow Coverage Map (later phases)
+
+| Sub-flow | Detailed in | Related steps |
+|---|---|---|
+| Authentication, login/logout, protected routes | Phase 11 | (precedes W-01) |
+| Audio recording, re-recording, validation, upload | Phase 20 | W-01, W-02 |
+| Transcription review/correction UI, re-transcription | Phase 20 | W-04 |
+| AI prompt requirements and conversation handling | Phase 21 | W-05, W-06, W-09 |
+| Export to PDF/TXT/CSV/spreadsheet | Phase 22 | W-12 |
+| Supporting-resource flows (branches, history, analytics) | Phase 4 | (parallel flows) |
+| Archive, delete, restore lifecycle | Phase 35 | W-11 onward |
+| Error states and loading states | Phases 16, 28 | all steps |
+
+---
+
+## User Interactions
+
+> **Phase 3 seed — the mental-model interactions from §3. Later-phase interactions (recording controls, transcription editor, export dialogs, auth, resource CRUD, lifecycle actions) are added in their mapped phases (11, 16, 20, 22, 35). Interaction IDs: `UI-<NNN>`.**
+
+| ID | Interaction | Trigger | Main flow | Success outcome | Failure outcome | Source |
+|---|---|---|---|---|---|---|
+| UI-001 | Supervisor explains the day | Supervisor starts a new daily report | Supervisor records Amharic audio narration; may mention date, branch(es) visited, entry time, exit time, time range per branch, activities performed, checklist-based work completed, urgent issues/problems, actions taken, people contacted, follow-up needed, general opinions, opinions about issues, suggestions | Audio recording(s) captured for the day | Recording not captured; supervisor retries or re-records (controls detailed in Phase 20) | §3.1, §3.3 |
+| UI-002 | System listens and processes | Audio sent to STT | System transcribes via Addis AI; transcription contains the needed information but is not organized as a final report; system does not ask clarifying questions (OQ-007) | Transcription produced (raw material) | STT failure; error state and retry (Phase 20) | §3.2, §3.3 |
+| UI-003 | System writes the report | Transcription available | AI extracts, organizes, and rewrites information per report rules/format/tone/system prompt; writes in Amharic matching sample tone | Generated Amharic report presented to the supervisor | Generation failure; error state (Phases 21/28) | §3.2, §3.3 |
+| UI-004 | Supervisor reviews the report | Generated report shown | Supervisor reads the report; judges completeness, clarity, and desired style | Review decision made (accept or request correction) | Report regenerated on request (W-09) | §3.2 |
+| UI-005 | Supervisor requests a correction | Report not satisfactory | Supervisor states what is wrong, missing, unclear, or not written in the desired way | Correction request captured and routed to the AI | Request not submitted; retry | §3.2, §2.3.7 |
+| UI-006 | System updates the report | Correction request received | AI updates only the relevant part; correct unrelated sections are not unnecessarily rewritten | Updated report shown for re-review | Update failure; previous version intact (versioning Phases 24/35) | §3.2, §2.3.7 |
+| UI-007 | Supervisor finalizes | Report satisfies the supervisor | Supervisor accepts the report; the correction loop ends | Final report version stored | — | §3.2 |
+
+**Later-phase interaction markers:** recording start/stop/re-record and file-size validation (Phase 20), transcription review/edit UI (Phase 20), export flow (Phase 22), login/logout and protected routes (Phase 11), branch/report/transcription/AI-conversation/profile CRUD (Phase 4), archive/delete/restore (Phase 35), loading/error/empty/unauthenticated states (Phases 16, 28).
+
+---
+
+## Report Domain
+
+> **Phase 3 seed — the domain derived from the manual reporting mental model (§3). Domain details are expanded in Phase 5 (Report And Branch Domain) and the data model in Phase 24.**
+
+### 1. Actors (Person 1 / Person 2 mapping)
+
+| Actor | In the mental model | In the app |
+|---|---|---|
+| Person 1 | The supervisor who wants a report prepared and explains the day to Person 2 in Amharic | The user (Area Supervisor) |
+| Person 2 | A friend of Person 1 with no work relationship to the company; listens, understands, writes the complete report, and updates it until Person 1 is satisfied | The Addis AI-powered system |
+
+### 2. Report Content Elements (what the narration may mention)
+
+The supervisor may mention any of the following (each is a candidate report element; the required format is finalized in Phase 6):
+
+| # | Element | Source |
+|---|---|---|
+| 1 | The report date | §3.1 |
+| 2 | The branch or branches visited | §3.1 |
+| 3 | The time he entered work | §3.1 |
+| 4 | The time he left work | §3.1 |
+| 5 | The time range spent at each branch | §3.1 |
+| 6 | The activities performed | §3.1 |
+| 7 | The checklist-based work completed | §3.1 |
+| 8 | The urgent issues or problems that require attention | §3.1 |
+| 9 | The actions taken | §3.1 |
+| 10 | The people contacted | §3.1 |
+| 11 | The follow-up needed | §3.1 |
+| 12 | General opinions about the branch | §3.1 |
+| 13 | Opinions about raised issues or problems | §3.1 |
+| 14 | Suggestions that could make things better | §3.1 |
+
+These map onto the required end-of-day report elements (date, branch, working time, completed activities, unresolved issues, general opinion, work exit time — §2.2, REQ-030) and the eleven per-branch activities (§2.2). Reconciliation of mentionable items ↔ required format is Phase 6 scope.
+
+### 3. AI Extraction And Generation Responsibilities
+
+The AI is responsible for (all items §3.3):
+
+1. Extracting date information.
+2. Extracting branch names.
+3. Extracting working time and branch time ranges.
+4. Extracting performed activities.
+5. Extracting unresolved issues.
+6. Extracting urgent problems.
+7. Extracting actions already taken.
+8. Extracting general opinions.
+9. Organizing the extracted information into the required report format.
+10. Writing the report in Amharic.
+11. Matching the tone of the provided report samples.
+12. Correcting or updating the generated report when the user asks after review.
+
+### 4. Domain Rules (seeds)
+
+| ID | Rule | Source |
+|---|---|---|
+| DR-1 | The transcription is raw material, never the final report; the generated report is the organized final output (REQ-037). | §3.3 |
+| DR-2 | The source explanation is natural and conversational; the AI organizes it into the report order (WF-3). | §3.1, §2.3.3 |
+| DR-3 | All narrations of a day merge into one daily report (AD-008); the transcription source text is the merged material. | §2.1, AD-008 |
+| DR-4 | The review–correction loop (UI-004..007) mirrors the Person 1 / Person 2 relationship: correction requests come only from the supervisor and continue until satisfied. | §3.2 |
+| DR-5 | No clarifying-question step in the first workflow; the system processes narrations as-is (OQ-007). | §3.2, OQ-007 |
+
+### 5. Domain Expansion Markers
+
+- Phase 5 (§5 Report And Branch Domain): full report/branch domain — entities, relationships, statuses.
+- Phase 6 (§6 Report Format, Samples, And Tone): required-format reconciliation of the 14 mentionable elements with the 7 required report elements.
+- Phase 24 (§24 Data Model): persisted data model for reports, transcriptions, narrations, versions.
 
 ---
 
@@ -747,9 +930,10 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Reporting-analytics detail scope (OQ-004, AD-007) — re-checked in Phase 4.
 - Narration merge pipeline behavior (OQ-005, AD-008) — re-confirmed in Phases 20/21.
 - Checklist tool existence (OQ-006) — pending user input; re-asked in Phase 4/5.
+- Clarifying-question behavior (OQ-007) — resolved in Phase 3: the app processes narrations as-is; no clarifying-Q&A step; re-confirmed in Phases 20/21.
 
 ---
 
-## End Of Phase 2 Content
+## End Of Phase 3 Content
 
-Phases 1–2 are GREEN (2026-08-01). Phase 2 built `## Problem Statement` exhaustively from §2 (role/responsibilities, burden, unstructured activities, centralization gap, Amharic STT/AI limitation, consequences, need statement, real-world context with 11 activities and 7 report elements, 7 pain points, §2.4 boundary), enriched `## PRD` (context, workflow, supporting features, success outcomes, scope, open questions OQ-004..006), added REQ-015..035 and updated REQ-014, added `## User Stories` (US-001..010, Phase 2 seed), AD-007/AD-008, extended `## Glossary`, and added the Phase 2 Source Trace Map. Phase 3 will build the manual-reporting mental model (PRD, Work Flow, User Interactions, Report Domain).
+Phases 1–3 are GREEN (2026-08-01). Phase 3 built the manual-reporting mental model from §3: new `## Work Flow` (core narration→report cycle W-01..W-12, work-flow rules WF-1..4, sub-flow coverage map), new `## User Interactions` (UI-001..007 with triggers, flows, and outcomes), new `## Report Domain` (Person 1 / Person 2 mapping, 14 report content elements, 12 AI responsibilities, domain rules DR-1..5, expansion markers), enriched `## PRD` (section 5 "until satisfied" loop, new section 11 Mental Model, OQ-007 resolved: process narrations as-is, re-confirmed in Phases 20/21), added REQ-036..038, extended `## Glossary` (Person 1, Person 2, raw material, final output, correction loop), and added the Phase 3 Source Trace Map. Phase 4 will build the supporting features needed because of the core problem (PRD, Requirements, User Stories, Report Management).
