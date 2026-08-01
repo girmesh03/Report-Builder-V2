@@ -52,7 +52,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 18 | 18. Addis AI Integration | GREEN | Addis AI, AI Prompt Spec, API Contract, Security |
 | 19 | 19. Other AI Providers | GREEN | Other AI Providers, Addis AI, AI Prompt Spec, Environment Config |
 | 20 | 20. Audio Recording And STT Pipeline | GREEN | Audio Recording STT, Transcription Review, API Contract, Data Modeling |
-| 21 | 21. AI Prompt Requirements | PENDING | AI Prompt Spec, Report Format, Rules |
+| 21 | 21. AI Prompt Requirements | GREEN | AI Prompt Spec, Report Format, Rules |
 | 22 | 22. Export | PENDING | Export Spec, API Contract, Work Flow |
 | 23 | 23. Mock Data | PENDING | Mock Data Seeding, Data Modeling, Tasks |
 | 24 | 24. Data Model | PENDING | Data Modeling, API Contract, Business Rules, Report Domain |
@@ -78,7 +78,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Spec section | Produced/updated in phase | Status |
 |---|---|---|
 | Addis AI | 18 | GREEN (Phase 18 seed) |
-| AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 7, 18, 19 enrichment) |
+| AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 7, 18, 19, 21 enrichment) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
 | API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 28 | GREEN (Phase 13, 18, 20 enrichment) |
 | Architecture | 9, 10, 25 | GREEN (Phase 10 enrichment) |
@@ -115,12 +115,12 @@ Status of every section the target document must contain at minimum. Extra secti
 | React Hook Form Standards | 15 | GREEN (Phase 15 seed) |
 | Redux RTK Query | 13 | GREEN (Phase 13 seed) |
 | Report Domain | 3, 5, 24 | GREEN (Phase 5 enrichment) |
-| Report Format | 6, 7, 21 | GREEN (Phase 7 enrichment) |
+| Report Format | 6, 7, 21 | GREEN (Phase 7, 21 enrichment) |
 | Report Management | 4, 5, 35 | GREEN (Phase 5 enrichment) |
 | Requirements | 1, 2, 4, 9, 29, 31, 34 | GREEN (Phase 9 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
 | Routing Layout | 12 | GREEN |
-| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16, 17 enrichment) |
+| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16, 17, 21 enrichment) |
 | Security | 11, 17, 18, 29 | GREEN (Phase 11 seed, Phase 17, 18 enrichment) |
 | Source Traceability | 31 | PENDING |
 | Status Machine | 5, 35 | GREEN (Phase 5 seed) |
@@ -449,6 +449,16 @@ All `§` references below identify sections of the original source brief. They a
 | §20.4 | Approved chunking pipeline: ffmpeg full-file WAV `pcm_s16le` 16 kHz mono in a single pass → in-memory PCM-level split via `wavSplitter.js` into ~60 s chunks (`ADDIS_AI_STT_MAX_DURATION_SEC` = 60) → chunk MIME `audio/wav` (never `audio/webm`); alternatives forbidden unless proven equivalent | Audio Recording STT (8), API Contract (6), Requirements (REQ-144) |
 | §20.5 | Re-transcription: backend accepts both `audio_recorded` and `transcribed` statuses; frontend "Re-transcribe" button on a completed transcription re-runs STT on the stored audio | Transcription Review (2), Audio Recording STT (9), API Contract (6), Data Modeling (5), Requirements (REQ-145) |
 | §20 + codebase (`client/package.json`, `backend/package.json`) | `react-media-recorder` ^1.7.2 and `react-player` ^3.4.0 are already installed in `client/package.json`; multer ^2.2.0 is already installed in `backend/package.json`; the `backend/uploads/audio/` directory is created during implementation | Audio Recording STT (5, 7), API Contract (6) |
+
+## Source Trace Map — Phase 21 (source §21)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §21.1 | Generation system prompt exact text ("You are an expert report writer for a restaurant company's supervision department. Generate structured daily supervision reports in Amharic based on field note transcriptions.") with temperature 0.2 / maxOutputTokens 2048 — matches the frozen AI Generation constants group | AI Prompt Spec (9), Rules (6), Requirements (REQ-146) |
+| §21.2 | Correction system prompt exact text ("You are an expert report editor. The user has provided corrections to a previously generated report. Incorporate the corrections while maintaining the original structure and style.") with temperature 0.15 / maxOutputTokens 2048 — matches the frozen AI Correction constants group | AI Prompt Spec (9), Rules (6), Requirements (REQ-147) |
+| §21.3 | Voice correction flow: correction audio → STT → correction text → used in the same correction prompt | AI Prompt Spec (10), Rules (6), Requirements (REQ-148) |
+| §21.4 | Transcription correction: the AI fixes transcription errors (fills gaps, fixes misrecognized words); returns corrected text as `aiCorrectedText` in the Transcription model | AI Prompt Spec (11), Data Modeling (5), Rules (6), Requirements (REQ-149) |
+| §21.5 | The 14 Amharic generation rules the AI prompt must enforce (Amharic default, exact section structure, sample tone, reviewed transcription as source of truth, no invention, blank for missing info, separate activities from unresolved issues, branch-specific details, time ranges per branch, supervisor POV, no generation explanation, no unrelated content, correction scope, Amharic workplace transliteration) — mapped onto the PR-01..16 seeds | AI Prompt Spec (12), Rules (6), Requirements (REQ-150..153) |
 
 ---
 
@@ -787,6 +797,7 @@ Secondary features should not distract from the core workflow of generating a bo
 | x-api-key | The HTTP header Addis AI REST authentication uses; it carries the `sk_`-prefixed secret key and is sent by backend services only. | §18.4 |
 | gemini-3.1-flash-lite | The Gemini text-generation model used as a fallback provider; configured via `GEMINI_API_KEY` and called through the `generateContent` endpoint. | §19.1 |
 | z-ai/glm-5.2 | The Nvidia text-generation model used as a fallback provider; configured via `NVIDIA_API_KEY` and called through the Nvidia message format with a bearer token. | §19.2 |
+| aiCorrectedText | The corrected transcription text the AI returns from transcription correction (fixing gaps and misrecognized words); stored on the Transcription model. | §21.4 |
 
 ---
 
@@ -1153,6 +1164,19 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-144 | The only approved chunking pipeline is: convert the full audio to WAV via ffmpeg in a single pass (`pcm_s16le`, 16 kHz, mono) → split in-memory at the PCM level via `wavSplitter.js` into ~60 s chunks (`ADDIS_AI_STT_MAX_DURATION_SEC` = 60) → send each chunk to Addis AI STT with MIME `audio/wav` (never `audio/webm`); alternatives are forbidden unless proven equivalent. | Chunks are always `audio/wav` from PCM-level splits of a single-pass ffmpeg WAV; no other pipeline is used. | §20.4, §18.8 (REQ-128) |
 | REQ-145 | Re-transcription: the backend accepts both `audio_recorded` and `transcribed` statuses for re-transcription; the frontend shows a "Re-transcribe" button on a completed transcription that re-runs STT on the stored audio. | Re-transcription works from both statuses; the button exists on completed transcriptions. | §20.5 |
 
+### Functional Requirements (Phase 21)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-146 | The generation system prompt is exactly: "You are an expert report writer for a restaurant company's supervision department. Generate structured daily supervision reports in Amharic based on field note transcriptions." Parameters: temperature 0.2, maxOutputTokens 2048 (frozen AI Generation constants group). | The generation request carries the exact system message and the frozen generation parameters. | §21.1 |
+| REQ-147 | The correction system prompt is exactly: "You are an expert report editor. The user has provided corrections to a previously generated report. Incorporate the corrections while maintaining the original structure and style." Parameters: temperature 0.15, maxOutputTokens 2048 (frozen AI Correction constants group). | The correction request carries the exact system message and the frozen correction parameters. | §21.2 |
+| REQ-148 | Voice correction flows: correction audio → STT → correction text → the same correction prompt (REQ-147); correction STT uses the approved chunking pipeline. | A voice correction is transcribed and enters the correction prompt exactly like a typed correction. | §21.3 |
+| REQ-149 | Transcription correction uses the AI to fix transcription errors (fill gaps, fix misrecognized words) and returns the corrected text as `aiCorrectedText` in the Transcription model. | The Transcription model carries `aiCorrectedText` after AI transcription correction. | §21.4 |
+| REQ-150 | The prompt enforces §21.5 rules 1–6: generate in Amharic (mixed only when the transcription is English/mixed); exact section structure (ቀን, ብራንች, ስም, ስራ የገባሁበት ሰዓት, የተሰሩ ስራዎች, መፍትሄ የሚፈሉ ጉዳዮች, አጠቃላይ አስተያየት, ከስራ የወጣሁበት ሰዓት); sample tone/style; reviewed transcription as source of truth; no invented information; blank/not-specified for missing information. | The prompt text contains all six rules. | §21.5 (rules 1–6) |
+| REQ-151 | The prompt enforces §21.5 rules 7–10: separate completed activities from unresolved issues; preserve branch-specific details for multi-branch reports; preserve time ranges per branch; write from the supervisor's point of view. | The prompt text contains all four rules. | §21.5 (rules 7–10) |
+| REQ-152 | The prompt enforces §21.5 rules 11–12: do not output an explanation of how the report was generated; do not include unrelated conversation content. | The prompt text contains both rules. | §21.5 (rules 11–12) |
+| REQ-153 | The prompt enforces §21.5 rules 13–14: corrections update only the relevant part without rewriting correct unrelated sections; English/technical words use Amharic workplace transliteration (e.g., `deep fryer` → `ዲፕ ፍራየር`). | The prompt text contains both rules, including the transliteration example. | §21.5 (rules 13–14) |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -1181,6 +1205,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Addis AI integration rules: **Phase 18 — DONE (REQ-125..131)**.
 - Other AI providers rules: **Phase 19 — DONE (REQ-132..138)**.
 - Audio recording and STT pipeline rules: **Phase 20 — DONE (REQ-139..145)**.
+- AI prompt rules: **Phase 21 — DONE (REQ-146..153)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -1649,7 +1674,7 @@ The status machine covers the daily report lifecycle only; branch and user recor
 
 ## Report Format
 
-> **Phase 6 build — the required Amharic report format, samples, and tone from §6. Language rules continue in Phase 7; prompt construction in Phase 21; export mechanics in Phase 22.**
+> **Phase 6 build — the required Amharic report format, samples, and tone from §6. Language rules continue in Phase 7; prompt construction delivered in Phase 21 (`## AI Prompt Spec` §9–12); export mechanics in Phase 22.**
 
 ### 1. Required Report Structure (§6.1)
 
@@ -1687,7 +1712,7 @@ The generated report must follow this Amharic structure:
 ከ07:55 - 12:20 ኤርፖርት ብራንች
 ```
 
-> **Source punctuation note (not invented here):** the §6.1 template writes the exit-time label as `ከስራ የወጣሁበት ሰዓት፡` (Ethiopic `፡`) while the §6.2–6.4 samples write it as `ከስራ የወጣሁበት ሰዓት:`. Both forms are recorded above as in the source; the exact punctuation rule is fixed in Phase 21 (prompt requirements).
+> **Source punctuation note (not invented here):** the §6.1 template writes the exit-time label as `ከስራ የወጣሁበት ሰዓት፡` (Ethiopic `፡`) while the §6.2–6.4 samples write it as `ከስራ የወጣሁበት ሰዓት:`. Both forms are recorded above as in the source. **Resolved in Phase 21:** §21 provides no label-punctuation rule, so the Phase 6 resolution stands (REQ-058): the §6.1 template form (Ethiopic `፡`) is canonical for the report template (§2); the `:` in the §6.2–6.4 samples is a recorded source variant, not the template form. Prompts enforce the §6.1 template form (§21.5 rule 2; `## AI Prompt Spec` §12).
 
 ### 2. Field Reconciliation
 
@@ -1892,19 +1917,19 @@ The following pair shows a conversational transcription before AI organization a
 
 ### 10. Language Flexibility (§7)
 
-Report content may be Amharic, English, or mixed, following the language of the transcription; translation is never forced unless the user explicitly chooses it (§7, REQ-067). The report defaults to Amharic generation (REQ-059, §6.6 rule 1) with English or technical words transliterated (§6.7, REQ-061); the exact precedence wording between the Amharic default and the §7 mixed-language allowance is finalized in Phase 21 (AI prompt construction). UI copy rules are separate and live in `## UI/UX Spec` §1 (REQ-066).
+Report content may be Amharic, English, or mixed, following the language of the transcription; translation is never forced unless the user explicitly chooses it (§7, REQ-067). The report defaults to Amharic generation (REQ-059, §6.6 rule 1) with English or technical words transliterated (§6.7, REQ-061); the precedence wording is resolved in `## AI Prompt Spec` §12 (rule 1). UI copy rules are separate and live in `## UI/UX Spec` §1 (REQ-066).
 
 ### 11. Expansion Markers
 
 - Phase 7 (§7 Language Rules): **DONE — language flexibility recorded in §10; the §6.7 transliteration rule remains.**
-- Phase 21 (§21 AI Prompt Requirements): prompt construction, the missing-info punctuation rule, and few-shot wiring built on these seeds.
+- Phase 21 (§21 AI Prompt Requirements): **DONE — prompt construction, the missing-info punctuation rule, and few-shot wiring are in `## AI Prompt Spec` §9–12.**
 - Phase 22 (§22 Export): export mechanics for this format.
 
 ---
 
 ## AI Prompt Spec
 
-> **Phase 7 seed — prompt directives derived from §6 (generation rules, tone, transliteration, few-shot example) and §7 (language rules). Full prompt construction arrives in Phase 21; Addis AI integration in Phase 18; other-provider fallbacks in Phase 19. Seed IDs: `PR-<NN>`.**
+> **Phase 7 seed — prompt directives derived from §6 (generation rules, tone, transliteration, few-shot example) and §7 (language rules), with full prompt construction from §21 (system prompts, parameters, voice/transcription correction flows, the 14 Amharic generation rules) delivered in Phase 21 (sections 9–12). Seed IDs: `PR-<NN>`.**
 
 ### 1. Generation Rule Seeds (from §6.6)
 
@@ -1942,7 +1967,7 @@ The prompt must instruct the model to write English or technical words in common
 | PR-17 | Report content may be Amharic, English, or mixed, following the language of the transcription; never force translation unless the user explicitly chooses it. | §7 |
 | PR-18 | The conversation language in recorded audio is always Amharic. | §7 |
 
-Note: PR-01 (generate in Amharic, §6.6 rule 1) stays the default per the required format and samples; §7 permits English or mixed content when the transcription itself is English or mixed. The exact prompt wording for the default-vs-mixed precedence is finalized in Phase 21 — recorded as a marker, not resolved here.
+Note: PR-01 (generate in Amharic, §6.6 rule 1) stays the default per the required format and samples; §7 permits English or mixed content when the transcription itself is English or mixed. The precedence wording is resolved in §12 (rule 1): the prompt generates in Amharic (§21.5 rule 1), with mixed content allowed only when the transcription is English or mixed (PR-17).
 
 ### 5. Few-Shot Seed
 
@@ -1953,12 +1978,12 @@ The prompt should include the §6.10 → §6.11 before/after pair (`## Report Fo
 - Phase 7 (§7 Language Rules): **DONE — language directive seeds added (PR-17/18); the Amharic-default vs mixed-content precedence note is recorded for Phase 21.**
 - Phase 18 (§18 Addis AI Integration): **DONE — seed delivery is recorded in §7 below.**
 - Phase 19 (§19 Other AI Providers): **DONE — provider fallback behavior is in `## Other AI Providers` §3 and `## AI Prompt Spec` §8.**
-- Phase 21 (§21 AI Prompt Requirements): final prompt construction, system-prompt structure, the missing-info punctuation rule, and the PR-01/PR-17 precedence wording.
+- Phase 21 (§21 AI Prompt Requirements): **DONE — system prompts, parameters, voice/transcription correction flows, and the 14 Amharic generation rules are in sections 9–12 (REQ-146..153).**
 
 ### 7. Delivery To The Addis AI Endpoint (§18)
 
 - All PR-01..18 directive seeds are delivered to Addis AI through `POST /api/v1/chat_generate` via backend-only native `fetch` (`## Addis AI` §3, §6, §13; REQ-125).
-- The `prompt` field carries the assembled directive text built from the §1–5 seeds; final prompt wording and system-prompt structure are finalized in Phase 21.
+- The `prompt` field carries the assembled directive text built from the §1–5 seeds and the §21 rules; the final prompt wording and system-prompt structure are in §9–12.
 - `target_language` = `ADDIS_AI_DEFAULT_TARGET_LANGUAGE` (`am`) — echo of `## Environment Config` §2 and PR-01 (REQ-131).
 - `generation_config` comes from the frozen constants (`## Environment Config` §5, REQ-124): report generation uses the AI Generation group (temperature 0.2, maxOutputTokens 2048, topP 0.9, topK 40); report correction requests use the AI Correction group (maxOutputTokens 2048, temperature 0.15) (REQ-127).
 - The prompt requests structured JSON-like output per `## Report Format` §7 and `## Addis AI` §6.
@@ -1968,9 +1993,61 @@ The prompt should include the §6.10 → §6.11 before/after pair (`## Report Fo
 ### 8. Provider Fallback And Delivery (§19)
 
 - The same assembled PR-01..18 directive seeds deliver to Gemini and Nvidia when the user selects them or when the fallback chain runs (REQ-134).
-- Gemini (`## Other AI Providers` §4): `systemInstruction` carries the system prompt (final wording Phase 21); `contents` carries the conversation history; `generationConfig` comes from the frozen constants (REQ-124, REQ-136).
+- Gemini (`## Other AI Providers` §4): `systemInstruction` carries the system prompt (§9); `contents` carries the conversation history; `generationConfig` comes from the frozen constants (REQ-124, REQ-136).
 - Nvidia (`## Other AI Providers` §5): the directive seeds go through the Nvidia message format with the bearer token (REQ-137).
 - Fallback chain: Addis → Gemini → Nvidia (REQ-134); STT always stays with Addis AI (REQ-132).
+
+### 9. System Prompts And Parameters (§21.1–21.2)
+
+**Generation system prompt** (§21.1; REQ-146) — exact text:
+
+> You are an expert report writer for a restaurant company's supervision department. Generate structured daily supervision reports in Amharic based on field note transcriptions.
+
+Parameters: temperature `0.2`, maxOutputTokens `2048` — the frozen AI Generation constants group (`## Environment Config` §5; REQ-124, REQ-127).
+
+**Correction system prompt** (§21.2; REQ-147) — exact text:
+
+> You are an expert report editor. The user has provided corrections to a previously generated report. Incorporate the corrections while maintaining the original structure and style.
+
+Parameters: temperature `0.15`, maxOutputTokens `2048` — the frozen AI Correction constants group (REQ-124, REQ-127).
+
+Delivery wiring (§7, §8): for Addis AI the assembled directive text (§1–5 seeds plus §12 rules) is the prompt sent through `POST /api/v1/chat_generate`; for Gemini the system prompt goes in `systemInstruction` with `contents` carrying conversation history; for Nvidia the system prompt uses the Nvidia system role in the message format (REQ-146, REQ-147).
+
+### 10. Voice Correction Flow (§21.3)
+
+- Correction audio → STT → correction text → fed into the same correction prompt (§9; REQ-148).
+- STT for correction audio uses the Addis AI `v2/stt` endpoint with the approved chunking pipeline (`## Audio Recording STT` §8; REQ-128, REQ-144); the transcribed correction text then enters the correction prompt exactly like a typed correction.
+- Voice corrections are part of the review–correction loop (W-05..W-10; UI-004 in `## User Interactions`).
+
+### 11. Transcription Correction (§21.4)
+
+- The system fixes transcription errors — fills gaps, fixes misrecognized words (REQ-149).
+- Returns the corrected text as `aiCorrectedText` in the Transcription model (field detail Phase 24; entity seed in `## Data Modeling` §5).
+- Distinct from report correction (§9): transcription correction fixes the source material before generation; report correction fixes the generated report.
+
+### 12. Amharic Generation Rules Enforced In The Prompt (§21.5)
+
+The prompt must enforce all 14 §21.5 rules (REQ-150..153). The mapping to the existing seeds (§1, §3, §4) and the two exact §21 system prompts (§9):
+
+| §21.5 rule | Rule | Seed mapping |
+|---|---|---|
+| 1 | Generate the report in Amharic (default; mixed allowed only when the transcription is English or mixed, per PR-17) | PR-01, PR-17 |
+| 2 | Use the exact section structure: ቀን, ብራንች, ስም, ስራ የገባሁበት ሰዓት, የተሰሩ ስራዎች, መፍትሄ የሚፈሉ ጉዳዮች, አጠቃላይ አስተያየት, ከስራ የወጣሁበት ሰዓት | PR-02 (`## Report Format` §1–2) |
+| 3 | Match the tone and writing style of the provided samples: professional, direct, clear, work-report oriented, supervisor perspective | PR-03 (§2 tone seed; samples in `## Report Format` §3–4) |
+| 4 | Use the reviewed transcription as the source of truth | PR-04 |
+| 5 | Do not invent missing information | PR-05 |
+| 6 | If required information is missing, leave blank or mark as not specified | PR-06 (chosen: leave blank, OQ-009) |
+| 7 | Separate completed activities from unresolved issues | PR-07 |
+| 8 | Preserve branch-specific details for multi-branch reports | PR-10 |
+| 9 | Preserve time ranges per branch | PR-11 |
+| 10 | Write from the supervisor's point of view | PR-12 |
+| 11 | Do not output an explanation of how the report was generated | PR-13 |
+| 12 | Do not include unrelated conversation content | PR-14 |
+| 13 | For corrections: update only the relevant part, do not rewrite correct unrelated sections | PR-16 (§9 correction prompt) |
+| 14 | English or technical words use Amharic workplace transliteration (example: `deep fryer` → `ዲፕ ፍራየር`) | §3 transliteration seed |
+
+- Few-shot wiring (§5): the §6.10 → §6.11 before/after pair (`## Report Format` §9) and the §6.2–6.4 samples ride in the prompt as reference examples (tone/format + transformation reference).
+- §6.6 rules 8, 9, 15 (PR-08, PR-09, PR-15) are not listed in §21.5 but remain enforced — §21.5 is the §21-enumerated subset; the complete seed set stays active.
 
 ---
 
@@ -2745,12 +2822,20 @@ client/
 - Addis AI `sk_` keys never appear in client code, Vite env vars sent to the browser, localStorage, Redux state, or client logs; Nvidia and Gemini keys live in `backend/.env` only (REQ-123).
 - Backend constants live in the frozen `utils/constants.js` object — never hardcoded in request handlers (REQ-083, REQ-124).
 
-### 6. Expansion Markers
+### 6. AI Prompt Rules (Phase 21)
+
+- The generation system prompt is the exact §21.1 text and the correction system prompt is the exact §21.2 text (REQ-146, REQ-147; `## AI Prompt Spec` §9).
+- Generation parameters are temperature 0.2 / maxOutputTokens 2048 (frozen AI Generation group); correction parameters are temperature 0.15 / maxOutputTokens 2048 (frozen AI Correction group) — never hardcoded (REQ-124, REQ-127).
+- Voice corrections flow correction audio → STT → correction text → the same correction prompt (REQ-148; `## AI Prompt Spec` §10); correction STT uses the approved chunking pipeline (`## Audio Recording STT` §8).
+- Transcription correction fixes transcription errors (fills gaps, fixes misrecognized words) and returns the corrected text as `aiCorrectedText` in the Transcription model (REQ-149; `## AI Prompt Spec` §11; schema Phase 24).
+- The prompt enforces the 14 §21.5 Amharic generation rules (REQ-150..153; `## AI Prompt Spec` §12): rules 1–6 (Amharic default, exact section structure, sample tone, reviewed transcription as source of truth, no invention, blank for missing info), rules 7–10 (separate activities from unresolved issues, branch-specific details, time ranges per branch, supervisor point of view), rules 11–12 (no generation explanation, no unrelated content), rules 13–14 (corrections update only the relevant part; Amharic workplace transliteration).
+
+### 7. Expansion Markers
 
 - Phase 13 (§13 Redux RTK Query): **DONE (Phase 13)** — Redux and RTK Query rules in §3 above.
 - Phase 16 (§16 UI Rules): **DONE (Phase 16)** — UI rules in §4 above.
 - Phase 17 (§17 Environment Config): **DONE (Phase 17)** — environment rules in §5 above.
-- Phase 21 (§21 AI Prompt Requirements): AI prompt rules.
+- Phase 21 (§21 AI Prompt Requirements): **DONE (Phase 21)** — AI prompt rules in §6 above (REQ-146..153).
 - Phase 26 (§26 JSDoc Standards): documentation rules.
 - Phase 29 (§29 Security): security rules.
 - Phase 30 (§30 Git Workflow): git rules.
@@ -3729,8 +3814,12 @@ Phases 1–18 are GREEN (2026-08-01). Phase 18 built the Addis AI integration fr
 
 ## End Of Phase 19 Content
 
-Phases 1–19 are GREEN (2026-08-01). Phase 19 built the other AI providers from §19: new `## Other AI Providers` seed (provider set and free-AI rule — three providers, STT always uses Addis AI, free-only with no credit card or subscription, models `gemini-3.1-flash-lite` and `z-ai/glm-5.2`, axios for Gemini/Nvidia; provider selection and storage — user picks at generation time via dropdown or buttons, default Addis, provider stored per AI conversation message, corrections may use a different provider; provider fallback chain Addis → Gemini → Nvidia; Gemini integration — `generateContent` contract with `contents`/`systemInstruction`/`generationConfig` and the `key` query parameter; Nvidia integration — Nvidia message format with `Authorization: Bearer`; both with 3x exponential-backoff retries and 502 provider errors), enriched `## AI Prompt Spec` (new §8 Provider Fallback And Delivery — PR-01..18 seeds deliver via Gemini `systemInstruction`/`contents` and the Nvidia message format), flipped the Phase 19 forward markers in `## AI Prompt Spec`, `## Addis AI`, and `## Environment Config` to DONE, added REQ-132..138, extended `## Glossary` (gemini-3.1-flash-lite, z-ai/glm-5.2), updated the Checklist (Other AI Providers — GREEN seed; AI Prompt Spec and Environment Config — GREEN enrichment), and added the Phase 19 Source Trace Map with the `backend/.env` and `backend/package.json` codebase facts.
+Phases 1–19 are GREEN (2026-08-01). Phase 19 built the other AI providers from §19: new `## Other AI Providers` seed (provider set and free-AI rule — three providers, STT always uses Addis AI, free-only with no credit card or subscription, models `gemini-3.1-flash-lite` and `z-ai/glm-5.2`, axios for Gemini/Nvidia; provider selection and storage — user picks at generation time via dropdown or buttons, default Addis, provider stored per AI conversation message, corrections may use a different provider; provider fallback chain Addis → Gemini → Nvidia; Gemini integration — `generateContent` contract with `contents`/`systemInstruction`/`generationConfig` and the `key` query parameter; Nvidia integration — Nvidia message format with `Authorization: Bearer`; both with 3x exponential-backoff retries and 502 provider errors), enriched `## AI Prompt Spec` (new §8 Provider Fallback And Delivery — PR-01..18 seeds deliver via Gemini `systemInstruction`/`contents` and the Nvidia message format), flipped the Phase 19 forward markers in `## AI Prompt Spec`, `## Addis AI`, and `## Environment Config` to DONE, added REQ-132..138, extended `## Glossary` (gemini-3.1-flash-lite, z-ai/glm-5.2), updated the Checklist (Other AI Providers — GREEN seed; AI Prompt Spec and Environment Config — GREEN enrichment), and added the Phase 19 Source Trace Map with the `backend/.env` and `backend/package.json` codebase facts. Phase 20 built the audio recording and STT pipeline.
 
 ## End Of Phase 20 Content
 
-Phases 1–20 are GREEN (2026-08-01). Phase 20 built the audio recording and STT pipeline from §20: enriched `## Audio Recording STT` (new §5 Audio Recording Rules — MediaRecorder clips into a local-state array via a custom hook, full array submits as the multipart field `clips`, blobs never persisted to Redux/redux-persist/localStorage, 15 min/50 MB limits via `AUDIO_MAX_DURATION_SEC`/`AUDIO_MAX_SIZE_BYTES` enforced client-side after recording stops, over-50-MB blocks submit with a warning and a re-record request, MIME priority `audio/webm;codecs=opus` → `audio/webm` → `audio/mp4` → browser default, react-media-recorder and react-player already installed; new §6 Audio Validation — at least one clip, 50 MB max, MIME whitelist, informational duration, server-side ffprobe + multer type/size validation; new §7 Upload Storage — multer into `backend/uploads/audio/` gitignored; new §8 Approved Chunking Pipeline — single-pass ffmpeg WAV `pcm_s16le` 16 kHz mono → in-memory PCM split via `wavSplitter.js` into ~60 s chunks (`ADDIS_AI_STT_MAX_DURATION_SEC` = 60) → chunk MIME `audio/wav` never `audio/webm`, alternatives forbidden unless proven equivalent; new §9 Re-Transcription — backend accepts `audio_recorded` and `transcribed` statuses, Re-transcribe button on completed transcriptions), enriched `## Transcription Review` (re-transcription mechanics — statuses accepted, Re-transcribe button, cross-ref to `## Audio Recording STT` §9), enriched `## API Contract` (new §6 Audio Upload And Re-Transcription Endpoints), enriched `## Data Modeling` (new §5 Narration And Transcription Seeds — clips array, per-clip constraints, storage path, `audio_recorded`/`transcribed`/`reviewed` statuses, re-record/re-transcribe behavior), flipped the Phase 20 forward markers in `## Audio Recording STT` and `## Transcription Review` to DONE, added REQ-139..145, updated the Checklist (Audio Recording STT and Transcription Review — GREEN enrichment; API Contract and Data Modeling — GREEN Phase 20 enrichment), and added the Phase 20 Source Trace Map with the `client/package.json` and `backend/package.json` codebase facts.
+Phases 1–20 are GREEN (2026-08-01). Phase 20 built the audio recording and STT pipeline from §20: enriched `## Audio Recording STT` (new §5 Audio Recording Rules — MediaRecorder clips into a local-state array via a custom hook, full array submits as the multipart field `clips`, blobs never persisted to Redux/redux-persist/localStorage, 15 min/50 MB limits via `AUDIO_MAX_DURATION_SEC`/`AUDIO_MAX_SIZE_BYTES` enforced client-side after recording stops, over-50-MB blocks submit with a warning and a re-record request, MIME priority `audio/webm;codecs=opus` → `audio/webm` → `audio/mp4` → browser default, react-media-recorder and react-player already installed; new §6 Audio Validation — at least one clip, 50 MB max, MIME whitelist, informational duration, server-side ffprobe + multer type/size validation; new §7 Upload Storage — multer into `backend/uploads/audio/` gitignored; new §8 Approved Chunking Pipeline — single-pass ffmpeg WAV `pcm_s16le` 16 kHz mono → in-memory PCM split via `wavSplitter.js` into ~60 s chunks (`ADDIS_AI_STT_MAX_DURATION_SEC` = 60) → chunk MIME `audio/wav` never `audio/webm`, alternatives forbidden unless proven equivalent; new §9 Re-Transcription — backend accepts `audio_recorded` and `transcribed` statuses, Re-transcribe button on completed transcriptions), enriched `## Transcription Review` (re-transcription mechanics — statuses accepted, Re-transcribe button, cross-ref to `## Audio Recording STT` §9), enriched `## API Contract` (new §6 Audio Upload And Re-Transcription Endpoints), enriched `## Data Modeling` (new §5 Narration And Transcription Seeds — clips array, per-clip constraints, storage path, `audio_recorded`/`transcribed`/`reviewed` statuses, re-record/re-transcribe behavior), flipped the Phase 20 forward markers in `## Audio Recording STT` and `## Transcription Review` to DONE, added REQ-139..145, updated the Checklist (Audio Recording STT and Transcription Review — GREEN enrichment; API Contract and Data Modeling — GREEN Phase 20 enrichment), and added the Phase 20 Source Trace Map with the `client/package.json` and `backend/package.json` codebase facts. Phase 21 will build the AI prompt requirements.
+
+## End Of Phase 21 Content
+
+Phases 1–21 are GREEN (2026-08-01). Phase 21 built the AI prompt requirements from §21: enriched `## AI Prompt Spec` (new §9 System Prompts And Parameters — the exact §21.1 generation system message with temperature 0.2 / maxOutputTokens 2048 from the frozen AI Generation constants and the exact §21.2 correction system message with temperature 0.15 / maxOutputTokens 2048 from the frozen AI Correction constants, wired across the three providers via the §7 prompt field, Gemini `systemInstruction`, and the Nvidia system role; new §10 Voice Correction Flow — correction audio → STT → correction text → the same correction prompt, STT via the approved chunking pipeline; new §11 Transcription Correction — AI fixes transcription errors and returns `aiCorrectedText` in the Transcription model; new §12 Amharic Generation Rules Enforced In The Prompt — the 14 §21.5 rules mapped onto the PR-01..16 seeds with the exact eight Amharic section names, the few-shot wiring, and the Amharic-default vs mixed precedence resolution), enriched `## Report Format` (resolved the source punctuation note — §21 provides no label-punctuation rule, so the §6.1 template form with Ethiopic `፡` remains canonical per the Phase 6 resolution; resolved the language-precedence wording to `## AI Prompt Spec` §12), enriched `## Rules` (new §6 AI Prompt Rules — the prompt-text, parameter, voice-correction, transcription-correction, and 14-rule enforcement requirements mapped to REQ-146..153), flipped the Phase 21 forward markers in `## AI Prompt Spec`, `## Report Format`, and `## Rules` to DONE, added REQ-146..153, extended `## Glossary` (aiCorrectedText), updated the Checklist (AI Prompt Spec, Report Format, and Rules — GREEN Phase 21 enrichment), and added the Phase 21 Source Trace Map. Phase 22 will build the export mechanics.
