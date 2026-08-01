@@ -40,7 +40,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 6 | 6. Report Format, Samples, And Tone | GREEN | Report Format, AI Prompt Spec, Export Spec |
 | 7 | 7. Language Rules | GREEN | AI Prompt Spec, Report Format, UI/UX Spec |
 | 8 | 8. Transcription Accuracy Requirement | GREEN | Audio Recording STT, Transcription Review, Validation Audit |
-| 9 | 9. Technical Stack And Package Rules | PENDING | Rules, Coding Conventions, Architecture, Requirements, Project Directory Structure |
+| 9 | 9. Technical Stack And Package Rules | GREEN | Rules, Coding Conventions, Architecture, Requirements, Project Directory Structure |
 | 10 | 10. Backend Architecture | PENDING | Backend Architecture, Architecture, API Contract, Project Directory Structure |
 | 11 | 11. Authentication, Authorization, Cookies, And Tokens | PENDING | Auth Cookies, Security, API Contract, Data Modeling |
 | 12 | 12. Frontend Architecture | PENDING | Frontend Architecture, Routing Layout, UI/UX Spec, MUI Component Standards, Project Directory Structure |
@@ -81,14 +81,14 @@ Status of every section the target document must contain at minimum. Extra secti
 | AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 7 enrichment) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
 | API Contract | 5, 10, 11, 18, 20, 22, 24, 28 | GREEN (Phase 5 seed) |
-| Architecture | 9, 10, 25 | PENDING |
+| Architecture | 9, 10, 25 | GREEN (Phase 9 seed) |
 | Audio Recording STT | 8, 20 | GREEN (Phase 8 seed) |
 | Auth Cookies | 11 | PENDING |
 | Backend Architecture | 10 | PENDING |
 | Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
 | Business Rules | 5, 24, 35 | GREEN (Phase 5 seed) |
 | Checklists | 26, 30, 31 | PENDING |
-| Coding Conventions | 9, 25, 26, 27 | PENDING |
+| Coding Conventions | 9, 25, 26, 27 | GREEN (Phase 9 seed) |
 | Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 5 seed) |
 | Decision Log | 1, 2, 33 | GREEN |
 | Design | consolidated across phases; finalized in 36 | PENDING |
@@ -110,17 +110,17 @@ Status of every section the target document must contain at minimum. Extra secti
 | PRD | 1, 2, 3, 4 | GREEN (Phase 4 enrichment) |
 | Problem Statement | 1, 2 | GREEN |
 | Profile Management | 4 | GREEN (Phase 4 seed) |
-| Project Directory Structure | 9, 10, 12, 25, 30 | PENDING |
+| Project Directory Structure | 9, 10, 12, 25, 30 | GREEN (Phase 9 seed) |
 | Project Overview | 1 | GREEN |
 | React Hook Form Standards | 15 | PENDING |
 | Redux RTK Query | 13 | PENDING |
 | Report Domain | 3, 5, 24 | GREEN (Phase 5 enrichment) |
 | Report Format | 6, 7, 21 | GREEN (Phase 7 enrichment) |
 | Report Management | 4, 5, 35 | GREEN (Phase 5 enrichment) |
-| Requirements | 1, 2, 4, 9, 29, 31, 34 | GREEN (Phase 4 enrichment) |
+| Requirements | 1, 2, 4, 9, 29, 31, 34 | GREEN (Phase 9 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
 | Routing Layout | 12 | PENDING |
-| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | PENDING |
+| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 9 seed) |
 | Security | 11, 17, 18, 29 | PENDING |
 | Source Traceability | 31 | PENDING |
 | Status Machine | 5, 35 | GREEN (Phase 5 seed) |
@@ -268,6 +268,22 @@ All `§` references below identify sections of the original source brief. They a
 | §8 | Every implementation decision related to chunking strategy, format conversion, MIME type, error handling, and provider use must prioritize transcription accuracy over convenience, performance, or code simplicity — which must also be perfect | Audio Recording STT (2), Requirements (REQ-071) |
 | §8 | The chunking pipeline and correct MIME type per chunk are critical safeguards; re-transcription must be available to verify accuracy on every audio recording | Audio Recording STT (3), Transcription Review (2), Requirements (REQ-072), User Stories (US-025) |
 | §8 | Accuracy regression is a blocking defect; any STT pipeline change that degrades quality must be reverted immediately; accuracy must be verified with real Amharic audio before merging | Audio Recording STT (4), Validation Audit (1), Requirements (REQ-073), Glossary (accuracy regression) |
+
+---
+
+## Source Trace Map — Phase 9 (source §9)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §9.1 | Backend: Node.js, Express, Mongoose, ES Modules only (`"type": "module"`), no CommonJS, no `require()` | Rules (1), Coding Conventions (1), Architecture (2), Requirements (REQ-074/075) |
+| §9.1 | Initial backend packages installed in `backend/package.json`; required additional backend packages can be installed | Rules (1), Project Directory Structure (2), Requirements (REQ-079) |
+| §9.1 | Frontend: React 19, Vite 8, MUI 9, React Redux, Redux Toolkit, React Router 8, React Hook Form | Rules (1), Architecture (3), Requirements (REQ-076) |
+| §9.1 | JavaScript only; no TypeScript (.ts/.tsx/TS config); no Next.js/Remix/other frameworks; no Tailwind; MUI `sx` and `styled()` only | Rules (1), Coding Conventions (1–2), Requirements (REQ-074/076) |
+| §9.1 | No automated test frameworks; no zod — manual resolvers with consistent error shape | Rules (1), Coding Conventions (3, 5), Requirements (REQ-077) |
+| §9.1 | HTTP client strategy: native `fetch` for Addis AI on the backend; axios for all other service calls; RTK Query `fetchBaseQuery` with `baseQueryWithReauth` | Rules (1), Coding Conventions (4), Requirements (REQ-078) |
+| §9.2 | `backend/package.json` and `client/package.json` are the source of truth for package versions; packages are installed; other required packages can be installed if needed | Rules (2), Architecture (4), Requirements (REQ-079) |
+| §9.3 | Backend snapshot: `"type": "module"` (reconciled — the actual manifest already changed from commonjs), 16 dependencies, morgan/nodemon devDependencies | Project Directory Structure (2), Glossary (ES Modules) |
+| §9.4 | Frontend snapshot: `"type": "module"`, 23 dependencies, 12 devDependencies | Project Directory Structure (3) |
 
 ---
 
@@ -519,7 +535,7 @@ Secondary features should not distract from the core workflow of generating a bo
 
 ## Glossary
 
-> **Terms added in Phases 1–8. The full glossary is built in Phase 34 (§34 Glossary).**
+> **Terms added in Phases 1–9. The full glossary is built in Phase 34 (§34 Glossary).**
 
 | Term | Definition | Source |
 |---|---|---|
@@ -577,6 +593,9 @@ Secondary features should not distract from the core workflow of generating a bo
 | Content language flexibility | Audio, transcription, AI chat, and report content may be Amharic, English, or mixed; translation is never forced unless the user explicitly chooses it. | §7 |
 | Transcription accuracy | The quality of the STT output on which the whole product depends; the foundation of report generation, export, and review. | §8 |
 | Accuracy regression | A degradation in STT transcription quality caused by a pipeline change; a blocking defect that must be reverted immediately. | §8 |
+| ES Modules | The ECMAScript module system used by the backend (`"type": "module"`); CommonJS `require()` is forbidden. | §9.1 |
+| MUI sx and styled() | The only allowed styling mechanisms; Tailwind CSS is forbidden. | §9.1 |
+| RTK Query | The Redux Toolkit data-fetching layer; uses `fetchBaseQuery` with `baseQueryWithReauth` for API calls. | §9.1 |
 
 ---
 
@@ -817,6 +836,12 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-071 | Every implementation decision related to chunking strategy, format conversion, MIME type, error handling, and provider use must prioritize transcription accuracy over convenience, performance, or code simplicity — while convenience, performance, and code simplicity must also be perfect. | Decisions are justified by accuracy impact; convenience, performance, and simplicity remain excellent. | §8 |
 | REQ-072 | The chunking pipeline and correct MIME type per chunk are critical safeguards, and re-transcription must be available to verify accuracy on every audio recording. | Chunking and MIME safeguards are non-negotiable; every recording can be re-transcribed to verify accuracy. | §8 |
 | REQ-073 | Accuracy regression is a blocking defect: any change to the STT pipeline (chunking, format conversion, MIME type, language code, provider endpoint) that degrades transcription quality must be reverted immediately, and accuracy must be verified with real Amharic audio before merging. | STT pipeline changes are gated on real-Amharic-audio verification; regressions are reverted immediately. | §8 |
+| REQ-074 | All application code must be JavaScript only: no TypeScript, no `.ts`, no `.tsx`, and no TypeScript config. | No TS files or TS config exist in the codebase. | §9.1 |
+| REQ-075 | The backend must use ES Modules only (`"type": "module"`): no CommonJS and no `require()`. | Backend code uses `import`/`export`; `backend/package.json` has `"type": "module"`. | §9.1, §9.3 |
+| REQ-076 | The frontend must use React 19, Vite 8, MUI 9, React Redux, Redux Toolkit, React Router 8, and React Hook Form; no Next.js, no Remix, no other frameworks, and no Tailwind CSS — styling uses MUI `sx` and `styled()` only. | Frontend stack matches the manifest; styling uses MUI `sx`/`styled()`. | §9.1 |
+| REQ-077 | No automated test frameworks and no zod validation library: validation uses manual resolvers with a consistent error shape. | No test framework and no zod in the manifests or code. | §9.1 |
+| REQ-078 | HTTP client strategy: Addis AI calls use native `fetch` on the backend; all other service calls use axios; RTK Query uses `fetchBaseQuery` with `baseQueryWithReauth`. | HTTP calls follow the strategy per call site. | §9.1 |
+| REQ-079 | `backend/package.json` and `client/package.json` are the source of truth for package versions; the installed packages may be extended with additional required packages. | Manifests govern versions; new required packages may be added. | §9.2 |
 
 ### Non-Functional Requirements (Phase 1)
 
@@ -834,6 +859,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Report format, samples, and tone rules: **Phase 6 — DONE (REQ-058..065)**.
 - Language rules: **Phase 7 — DONE (REQ-066..069)**.
 - Transcription accuracy requirements: **Phase 8 — DONE (REQ-070..073)**.
+- Technical stack and package rules: **Phase 9 — DONE (REQ-074..079)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -1641,6 +1667,202 @@ This seed covers transcription accuracy only. Full validation and audit sections
 
 ---
 
+## Architecture
+
+> **Phase 9 seed — the stack-level architecture from §9. Backend architecture arrives in Phase 10 (§10 Backend Architecture); frontend architecture in Phase 12; implementation architecture in Phase 25.**
+
+### 1. Repository Layout
+
+Two independent packages at the repository root `Report-Builder-V2/`: `backend/` and `client/` (codebase fact, AD-006). There is no shared package; each package has its own `package.json`.
+
+### 2. Backend Stack
+
+Node.js + Express + Mongoose, ES Modules only (`"type": "module"`), JavaScript only (§9.1, REQ-074/075). Deep backend architecture (routing, middleware, controllers, models, services, error handling, logging) arrives in Phase 10.
+
+### 3. Frontend Stack
+
+React 19, Vite 8, MUI 9, React Redux, Redux Toolkit, React Router 8, React Hook Form; JavaScript only; no Next.js, no Remix, no other frameworks; no Tailwind CSS (§9.1, REQ-076). Deep frontend architecture arrives in Phases 12–16.
+
+### 4. Package Source Of Truth
+
+`backend/package.json` and `client/package.json` are the source of truth for package versions (§9.2, REQ-079). The packages are already installed; other required packages can be installed if needed.
+
+### 5. Expansion Markers
+
+- Phase 10 (§10 Backend Architecture): backend layering, routing, middleware, controllers, models, services.
+- Phase 25 (§25 Backend Implementation): final implementation architecture.
+
+---
+
+## Coding Conventions
+
+> **Phase 9 seed — the code-level conventions from §9. Deeper conventions arrive in Phases 25 (backend), 26 (JSDoc), and 27 (frontend).**
+
+### 1. Language And Modules
+
+- JavaScript only: no TypeScript, no `.ts`, no `.tsx`, no TS config (§9.1, REQ-074).
+- Backend: ES Modules only (`"type": "module"`); no CommonJS, no `require()` — use `import`/`export` (§9.1, REQ-075).
+
+### 2. Styling
+
+No Tailwind CSS; style with MUI `sx` and `styled()` only (§9.1, REQ-076).
+
+### 3. Validation
+
+No zod; use manual resolvers with a consistent error shape (§9.1, REQ-077).
+
+### 4. HTTP Clients
+
+- Addis AI calls: native `fetch` on the backend.
+- All other service calls: axios.
+- RTK Query: `fetchBaseQuery` with `baseQueryWithReauth` (§9.1, REQ-078).
+
+### 5. Testing
+
+No automated test frameworks (§9.1, REQ-077).
+
+### 6. Expansion Markers
+
+- Phase 25 (§25 Backend Implementation): backend conventions.
+- Phase 26 (§26 JSDoc Standards): JSDoc conventions.
+- Phase 27 (§27 Frontend Implementation): frontend conventions.
+
+---
+
+## Project Directory Structure
+
+> **Phase 9 seed — the repository-level structure from §9. Backend structure arrives in Phase 10; frontend structure in Phase 12; final structure in Phase 25.**
+
+### 1. Repository Root
+
+`Report-Builder-V2/` contains two independent packages: `backend/` and `client/` (codebase fact).
+
+### 2. Backend Package
+
+`backend/package.json` — `"type": "module"` (ES Modules; reconciled: the §9.3 snapshot note about changing commonjs → module is already applied in the actual manifest).
+
+| Field | Value |
+|---|---|
+| name | backend |
+| version | 1.0.0 |
+| main | index.js |
+| scripts | `test` (stub: "no test specified" exit 1) |
+| type | module |
+
+Dependencies (16):
+
+| Package | Version |
+|---|---|
+| bcryptjs | ^3.0.3 |
+| compression | ^1.8.1 |
+| cookie-parser | ^1.4.7 |
+| cors | ^2.8.6 |
+| dayjs | ^1.11.21 |
+| dotenv | ^17.4.2 |
+| express | ^5.2.1 |
+| express-async-handler | ^1.2.0 |
+| express-mongo-sanitize | ^2.2.0 |
+| express-rate-limit | ^8.5.2 |
+| express-validator | ^7.3.2 |
+| helmet | ^8.3.0 |
+| jsonwebtoken | ^9.0.3 |
+| mongoose | ^9.7.4 |
+| mongoose-paginate-v2 | ^1.9.5 |
+| multer | ^2.2.0 |
+
+devDependencies: morgan ^1.11.0, nodemon ^3.1.14.
+
+Reconciliation note: axios is mandated by §9.1 (HTTP client strategy) but is absent from the manifest; per §9.2 additional required packages can be installed — axios is added during implementation (Phase 10+).
+
+### 3. Frontend Package
+
+`client/package.json` — `"type": "module"`.
+
+| Field | Value |
+|---|---|
+| name | client |
+| private | true |
+| version | 0.0.0 |
+| scripts | dev (`vite`), build (`vite build`), lint (`eslint .`), preview (`vite preview`) |
+| type | module |
+
+Dependencies (23):
+
+| Package | Version |
+|---|---|
+| @emotion/react | ^11.14.0 |
+| @emotion/styled | ^11.14.1 |
+| @fontsource/inter | ^5.2.8 |
+| @mui/icons-material | ^9.2.0 |
+| @mui/lab | ^9.0.0-beta.6 |
+| @mui/material | ^9.2.0 |
+| @mui/x-charts | ^9.9.0 |
+| @mui/x-chat | ^9.0.0-alpha.15 |
+| @mui/x-data-grid | ^9.9.0 |
+| @mui/x-date-pickers | ^9.9.0 |
+| @reduxjs/toolkit | ^2.12.0 |
+| dayjs | ^1.11.21 |
+| jspdf | ^4.2.1 |
+| jspdf-autotable | ^5.0.8 |
+| react | ^19.2.7 |
+| react-dom | ^19.2.7 |
+| react-error-boundary | ^6.1.2 |
+| react-hook-form | ^7.81.0 |
+| react-media-recorder | ^1.7.2 |
+| react-player | ^3.4.0 |
+| react-redux | ^9.3.0 |
+| react-router | ^8.2.0 |
+| react-toastify | ^11.1.0 |
+
+devDependencies (12): @babel/core ^7.29.7, @eslint/js ^10.0.1, @rolldown/plugin-babel ^0.2.3, @types/react ^19.2.17, @types/react-dom ^19.2.3, @vitejs/plugin-react ^6.0.3, babel-plugin-react-compiler ^1.0.0, eslint ^10.6.0, eslint-plugin-react-hooks ^7.1.1, eslint-plugin-react-refresh ^0.5.3, globals ^17.7.0, vite ^8.1.1.
+
+Note: the frontend uses the React Compiler tooling (babel-plugin-react-compiler with @rolldown/plugin-babel). The `@types/react`/`@types/react-dom` packages are editor-tooling type declarations only; the project remains JavaScript-only (§9.1, REQ-074).
+
+### 4. Expansion Markers
+
+- Phase 10 (§10 Backend Architecture): backend directory structure.
+- Phase 12 (§12 Frontend Architecture): frontend directory structure.
+- Phase 25 (§25 Backend Implementation): final structure.
+- Phase 30 (§30 Git Workflow): workflow structure.
+
+---
+
+## Rules
+
+> **Phase 9 seed — the technical stack rules from §9. Rules deepen in Phases 13 (Redux), 16 (UI rules), 17 (environment config), 21 (AI prompts), 26 (JSDoc), 29 (security), 30 (git).**
+
+### 1. Stack Rules (§9.1)
+
+- Backend: Node.js, Express, Mongoose, ES Modules only (`"type": "module"`), no CommonJS, no `require()` (REQ-074/075).
+- Initial backend packages are installed in `backend/package.json`; required additional backend packages can be installed (REQ-079).
+- Frontend: React 19, Vite 8, MUI 9, React Redux, Redux Toolkit, React Router 8, React Hook Form (REQ-076).
+- Initial frontend packages are installed in `client/package.json`; required additional frontend packages can be installed (REQ-079).
+- JavaScript only: no TypeScript, no `.ts`, no `.tsx`, no TS config (REQ-074).
+- No Next.js, no Remix, no other frameworks (REQ-076).
+- No Tailwind CSS; use MUI `sx` and `styled()` only (REQ-076).
+- No automated test frameworks (REQ-077).
+- No zod validation library — use manual resolvers with a consistent error shape (REQ-077).
+- HTTP client strategy: Addis AI calls use native `fetch` on the backend; all other service calls use axios; RTK Query uses `fetchBaseQuery` with `baseQueryWithReauth` (REQ-078).
+  - Reconciliation note: axios is mandated here but absent from `backend/package.json`; §9.2 permits installing required packages — axios is added during implementation (Phase 10+).
+
+### 2. Package Source Of Truth (§9.2)
+
+- If package versions differ between notes and package manifests, `backend/package.json` and `client/package.json` are the source of truth (REQ-079).
+- The packages are already installed.
+- Other required packages can be installed if needed (REQ-079).
+
+### 3. Expansion Markers
+
+- Phase 13 (§13 Redux RTK Query): RTK Query rules (fetchBaseQuery + baseQueryWithReauth).
+- Phase 16 (§16 UI Rules): styling rules (MUI sx/styled only).
+- Phase 17 (§17 Environment Config): environment rules.
+- Phase 21 (§21 AI Prompt Requirements): AI prompt rules.
+- Phase 26 (§26 JSDoc Standards): documentation rules.
+- Phase 29 (§29 Security): security rules.
+- Phase 30 (§30 Git Workflow): git rules.
+
+---
+
 ## Decision Log
 
 > **Built in Phases 1–2 — the ADR format and further decisions are finalized in Phase 33 (§33 Decision Log (ADRs)).** Entries are appended as phases complete. No decision recorded here may contradict a later GREEN decision without a superseding ADR.
@@ -1744,7 +1966,9 @@ This seed covers transcription accuracy only. Full validation and audit sections
 
 ---
 
-## End Of Phase 8 Content
+## End Of Phase 9 Content
+
+Phases 1–9 are GREEN (2026-08-01). Phase 9 built the technical stack and package rules from §9 plus the authoritative `backend/package.json` and `client/package.json`: new `## Rules` (stack rules, package source of truth, HTTP client strategy, axios gap reconciliation), new `## Coding Conventions` (JS-only, ES Modules, MUI sx/styled only, manual validation resolvers, HTTP clients, no test frameworks), new `## Architecture` (two-package repository layout, backend/frontend stacks, source of truth), new `## Project Directory Structure` (full version tables for both packages; `"type": "module"` reconciled from the §9.3 commonjs note; React Compiler tooling and @types editor-tooling notes), added REQ-074..079, extended `## Glossary` (ES Modules, MUI sx and styled(), RTK Query), updated the Checklist (Rules, Coding Conventions, Architecture, Project Directory Structure — GREEN seeds; Requirements — GREEN enrichment), and added the Phase 9 Source Trace Map. Phase 10 will build the backend architecture.
 
 Phases 1–8 are GREEN (2026-08-01). Phase 8 built the transcription accuracy requirement from §8: new `## Audio Recording STT` seed (accuracy foundation, priority rule, chunking/MIME safeguards, accuracy regression rule), new `## Transcription Review` seed (Phase 3 review loop + re-transcription for accuracy verification on every recording), new `## Validation Audit` seed (accuracy verification gate with real-Amharic-audio-before-merge rule), enriched `## PRD` (transcription accuracy bullet) and Work Flow (W-02 source += §8), added REQ-070..073, added US-024/025, extended `## Glossary` (transcription accuracy, accuracy regression), updated the Checklist (Audio Recording STT, Transcription Review, Validation Audit — GREEN seeds), and added the Phase 8 Source Trace Map. Phase 9 will build the technical stack and package rules from the package.json files.
 
