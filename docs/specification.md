@@ -48,7 +48,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 14 | 14. MUI, MUI X, Theme, And Component Standards | GREEN | MUI Component Standards, Theme Standards, UI/UX Spec |
 | 15 | 15. React Hook Form Standards | GREEN | React Hook Form Standards, Validation Audit, UI/UX Spec |
 | 16 | 16. UI Rules | GREEN | UI/UX Spec, User Interactions, Rules |
-| 17 | 17. Environment Variables | PENDING | Environment Config, Security, Rules |
+| 17 | 17. Environment Variables | GREEN | Environment Config, Security, Rules |
 | 18 | 18. Addis AI Integration | PENDING | Addis AI, AI Prompt Spec, API Contract, Security |
 | 19 | 19. Other AI Providers | PENDING | Other AI Providers, Addis AI, AI Prompt Spec |
 | 20 | 20. Audio Recording And STT Pipeline | PENDING | Audio Recording STT, Transcription Review, API Contract, Data Modeling |
@@ -92,7 +92,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11 enrichment) |
 | Decision Log | 1, 2, 33 | GREEN |
 | Design | consolidated across phases; finalized in 36 | PENDING |
-| Environment Config | 17 | PENDING |
+| Environment Config | 17 | GREEN (Phase 17 seed) |
 | Error Handling | 28 | PENDING |
 | Export Spec | 6, 22 | GREEN (Phase 6 seed) |
 | File Storage Uploads | 20 | PENDING |
@@ -120,8 +120,8 @@ Status of every section the target document must contain at minimum. Extra secti
 | Requirements | 1, 2, 4, 9, 29, 31, 34 | GREEN (Phase 9 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
 | Routing Layout | 12 | GREEN |
-| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16 enrichment) |
-| Security | 11, 17, 18, 29 | GREEN (Phase 11 seed) |
+| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16, 17 enrichment) |
+| Security | 11, 17, 18, 29 | GREEN (Phase 11 seed, Phase 17 enrichment) |
 | Source Traceability | 31 | PENDING |
 | Status Machine | 5, 35 | GREEN (Phase 5 seed) |
 | Tasks | 32 | PENDING |
@@ -397,6 +397,19 @@ All `§` references below identify sections of the original source brief. They a
 | §16 (rules 6–7) | Icons are always used at `vw < 600` and at `vw < 768 && landscape` — small-screen and landscape action buttons carry icons | UI/UX Spec (12), Rules (4), User Interactions (UI-008), Requirements (REQ-118), User Stories (US-033) |
 | §16 (rules 8–9) | Text must never overflow or overlap at mobile or desktop widths; all text uses ellipsis after a certain character count — no horizontal scroll anywhere | UI/UX Spec (6, 12), Rules (4), MUI Component Standards (7), Frontend Architecture (12.6), Requirements (REQ-119) |
 | §16 + codebase (`client/src`) | `client/src` contains only `App.jsx`, `assets/`, `main.jsx`, and `theme/` — no `components/`, `layouts/`, or `pages/` yet; the Phase 16 UI rules define the contract every future component and layout follows | UI/UX Spec (12), Rules (4) |
+
+---
+
+## Source Trace Map — Phase 17 (source §17)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §17.1 | `.env` files are gitignored and not committed; they exist locally with placeholder or correct values; no `.env.example` files; new env vars added in three steps (local `.env` → config object → validation/default in `config/env.js`); `process.env` never accessed outside `config/env.js`; client vars `VITE_`-prefixed via `import.meta.env.*` | Environment Config (1), Rules (5), Security (4), Requirements (REQ-120) |
+| §17.2 | Backend env contract: 22 required vars with defaults (NODE_ENV development, PORT 4000, CLIENT_ORIGIN http://localhost:3000, MONGODB_URI report-builder-v2, JWT secrets min 32 chars with 15m/7d TTLs, seven ADDIS_AI_* vars with `sk_` placeholder key, LOG_LEVEL debug/info, NVIDIA/GEMINI keys and base URLs, FFMPEG/FFPROBE system paths) and 5 optional vars (OAUTH_GOOGLE_*, GOOGLE_SERVICE_ACCOUNT_* Docs-export-only) | Environment Config (2), Security (4), Rules (5), Requirements (REQ-121) |
+| §17.3 | Client env contract: VITE_API_BASE_URL (default http://localhost:4000/api/v1) and VITE_APP_NAME (default Report Builder V2), both required, read via `import.meta.env` | Environment Config (3), Rules (5), Requirements (REQ-122) |
+| §17.4 | AI key rules: Addis AI `sk_` keys never in client code, browser-sent Vite env vars, localStorage, Redux state, or client logs; Nvidia and Gemini keys in `backend/.env` only | Environment Config (4), Security (4), Rules (5), Requirements (REQ-123) |
+| §17.5 | Backend constants as one frozen object in `utils/constants.js`: Audio (900, 52428800, four MIME types), Pagination (1, 10, 100), STT (60), Auth (12), AI Generation (0.2, 2048, 0.9, 40), AI Correction (2048, 0.15) | Environment Config (5), Backend Architecture (5), Requirements (REQ-124) |
+| §17 + codebase (`backend/.env`, `client/.env`, `.gitignore`, `backend/package.json`) | `backend/.env` exists with all required keys except LOG_LEVEL (absent — add during implementation) plus OAUTH_GOOGLE_*; `client/.env` exists with both `VITE_` keys; root `.gitignore` line 1 is `.env`; no `.env.example`; `dotenv` `^17.4.2` in `backend/package.json`; `config/env.js` and `utils/constants.js` do not exist yet — created during implementation (Phase 25) | Environment Config (1–5), Rules (5) |
 
 ---
 
@@ -729,6 +742,8 @@ Secondary features should not distract from the core workflow of generating a bo
 | formState | The RHF object exposing `errors` (validation messages keyed by field name) and `isSubmitting` (true while the async submit handler runs); it drives MUI `error`/`helperText` display and submit-button loading. | §15 |
 | Icon-first rule | Action buttons always show icons at `vw < 600` and at `vw < 768 && landscape`, so every button remains identifiable on small screens and landscape phones. | §16 |
 | Ellipsis rule | Text never overflows or overlaps at any width; long text truncates with an ellipsis after a certain character count; the app never scrolls horizontally. | §16 |
+| config/env.js (env gate) | The single backend module that reads `process.env` into a frozen, validated `env` object; `process.env` is never accessed outside it. | §17 |
+| import.meta.env | The Vite mechanism the client uses to read `VITE_`-prefixed environment variables. | §17 |
 
 ---
 
@@ -1049,6 +1064,16 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-118 | Icons are always used on action buttons at `vw < 600` and at `vw < 768 && landscape`; small-screen and landscape buttons never lose their icons. | Action buttons on those viewport conditions render with icons; icon-free action buttons do not appear there. | §16 |
 | REQ-119 | Text must never overflow or overlap at mobile or desktop widths; all text uses ellipsis after a certain character count — no horizontal scroll anywhere. | No text overflow or overlap at any width; long text ellipsizes; the app never scrolls horizontally. | §16 |
 
+### Functional Requirements (Phase 17)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-120 | Environment file rules: `.env` files are gitignored and never committed; no `.env.example` files are created; new env vars follow the three-step process (local `.env` → config object in `config/env.js` → validation/default logic in `config/env.js`); `process.env` is never accessed outside `config/env.js`; client env vars are prefixed with `VITE_` and read via `import.meta.env.*`. | `.env` is gitignored; no `.env.example` exists; new vars are added through all three steps; no `process.env` access outside `config/env.js`; client reads only `VITE_*` vars via `import.meta.env`. | §17.1 |
+| REQ-121 | The backend reads every environment variable required by the §17.2 contract — NODE_ENV, PORT, CLIENT_ORIGIN, MONGODB_URI, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET (each min 32 chars), JWT_ACCESS_EXPIRES_IN, JWT_REFRESH_EXPIRES_IN, the seven ADDIS_AI_* vars, LOG_LEVEL, NVIDIA_API_KEY, GEMINI_API_KEY, NVIDIA_API_BASE_URL, GEMINI_API_BASE_URL, FFMPEG_PATH, FFPROBE_PATH — and validates them in `config/env.js` at startup; the optional OAUTH_GOOGLE_* and GOOGLE_SERVICE_ACCOUNT_* vars load when present. | Missing required vars fail startup validation with a clear error; defaults (development, 4000, http://localhost:3000, 15m, 7d, am, 360000, ffmpeg, ffprobe) apply when the source allows; optional vars are read only when defined. | §17.2 |
+| REQ-122 | The client reads `VITE_API_BASE_URL` (default http://localhost:4000/api/v1) and `VITE_APP_NAME` (default Report Builder V2) via `import.meta.env.*`. | `client/.env` carries both keys; the Redux RTK Query client uses `VITE_API_BASE_URL` through `API_CONFIG`; no client env var lacks the `VITE_` prefix. | §17.3 |
+| REQ-123 | AI key rules: Addis AI `sk_` keys never appear in client code, Vite env vars sent to the browser, localStorage, Redux state, or client logs; Nvidia and Gemini API keys are placed in `backend/.env` only. | No `sk_` value exists anywhere in `client/src`, browser-visible Vite env, localStorage, Redux state, or client logs; Nvidia/Gemini keys exist only in `backend/.env`. | §17.4 |
+| REQ-124 | Backend constants are grouped and frozen in a single `Object.freeze()` object exported from `backend/utils/constants.js` — Audio (900, 52428800, the four MIME types), Pagination (1, 10, 100), STT (60), Auth (12), AI Generation (0.2, 2048, 0.9, 40), AI Correction (2048, 0.15) — and nothing is hardcoded in request handlers. | `utils/constants.js` exports one frozen object with the §17.5 groups and values; request handlers reference it instead of literals. | §17.5 |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -1073,6 +1098,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - MUI, MUI X, theme, and component standards rules: **Phase 14 — DONE (REQ-107..111)**.
 - React Hook Form standards rules: **Phase 15 — DONE (REQ-112..116)**.
 - UI rules: **Phase 16 — DONE (REQ-117..119)**.
+- Environment config rules: **Phase 17 — DONE (REQ-120..124)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -2274,7 +2300,7 @@ client/
 
 ## Rules
 
-> **Phase 9 seed — the technical stack rules from §9. Rules deepened in Phases 13 (Redux) and 16 (UI rules); further rules arrive in Phases 17 (environment config), 21 (AI prompts), 26 (JSDoc), 29 (security), 30 (git).**
+> **Phase 9 seed — the technical stack rules from §9. Rules deepened in Phases 13 (Redux), 16 (UI rules), and 17 (environment config); further rules arrive in Phases 21 (AI prompts), 26 (JSDoc), 29 (security), 30 (git).**
 
 ### 1. Stack Rules (§9.1)
 
@@ -2311,11 +2337,20 @@ client/
 - Action buttons always show icons at `vw < 600` and at `vw < 768 && landscape` (REQ-118).
 - Text never overflows or overlaps at any width; all text ellipsizes after a certain character count; no horizontal scroll anywhere (REQ-119).
 
-### 5. Expansion Markers
+### 5. Environment Config Rules (§17)
+
+- `.env` files are gitignored and never committed; no `.env.example` files are created; `.env` files exist locally with placeholder or correct values (REQ-120).
+- New env vars follow the three-step process: add to the local `.env`, add the field to the config object in `config/env.js`, add validation/default logic in `config/env.js` (REQ-120).
+- `process.env` is never accessed directly outside of `config/env.js`; client env vars are prefixed with `VITE_` and accessed via `import.meta.env.*` (REQ-083, REQ-120).
+- The backend env contract in `## Environment Config` §2 (all required and optional vars, defaults, and minimums) must be met; the client env contract in §3 must be met (REQ-121, REQ-122).
+- Addis AI `sk_` keys never appear in client code, Vite env vars sent to the browser, localStorage, Redux state, or client logs; Nvidia and Gemini keys live in `backend/.env` only (REQ-123).
+- Backend constants live in the frozen `utils/constants.js` object — never hardcoded in request handlers (REQ-083, REQ-124).
+
+### 6. Expansion Markers
 
 - Phase 13 (§13 Redux RTK Query): **DONE (Phase 13)** — Redux and RTK Query rules in §3 above.
 - Phase 16 (§16 UI Rules): **DONE (Phase 16)** — UI rules in §4 above.
-- Phase 17 (§17 Environment Config): environment rules.
+- Phase 17 (§17 Environment Config): **DONE (Phase 17)** — environment rules in §5 above.
 - Phase 21 (§21 AI Prompt Requirements): AI prompt rules.
 - Phase 26 (§26 JSDoc Standards): documentation rules.
 - Phase 29 (§29 Security): security rules.
@@ -2508,14 +2543,14 @@ Three tiers:
 
 - Phase 12 (§12 Frontend Architecture): **DONE (Phase 12)** — login/register page behavior, OAuth redirect handling, route guards.
 - Phase 13 (§13 Redux, RTK Query, And API Client): **DONE (Phase 13)** — `baseQueryWithReauth`, cookie-aware client (`## Redux RTK Query` §2).
-- Phase 17 (§17 Environment Variables): `JWT_*` and `OAUTH_GOOGLE_*` env contract.
+- Phase 17 (§17 Environment Variables): **DONE (Phase 17)** — `JWT_*` and `OAUTH_GOOGLE_*` env contract in `## Environment Config` §2.
 - Phase 29 (§29 Security): deep security rules.
 
 ---
 
 ## Security
 
-> **Phase 11 seed — the authentication-adjacent security rules from §11. Environment secrets arrive in Phase 17; AI provider security in Phase 18; the full security section in Phase 29.**
+> **Phase 11 seed — the authentication-adjacent security rules from §11. Environment secrets built in Phase 17; AI provider security in Phase 18; the full security section in Phase 29.**
 
 ### 1. Cookie Security (§11)
 
@@ -2531,9 +2566,17 @@ Three tiers:
 
 - Three tiers: global 100/15min (all endpoints), auth 20/15min (register and login), AI 10/1min (generation and correction) (REQ-092).
 
-### 4. Expansion Markers
+### 4. Environment Secret Handling (§17)
 
-- Phase 17 (§17 Environment Variables): secret handling (`JWT_*`, `OAUTH_GOOGLE_*`, AI API keys).
+- `JWT_ACCESS_SECRET` and `JWT_REFRESH_SECRET` live in `backend/.env` only and are each at least 32 characters (env contract in `## Environment Config` §2, REQ-121).
+- `OAUTH_GOOGLE_CLIENT_ID`, `OAUTH_GOOGLE_CLIENT_SECRET`, and `OAUTH_GOOGLE_CALLBACK_URL` are optional and live in `backend/.env`; Google login stays stubbed until credentials are configured (echo of `## Auth Cookies` §5, REQ-121).
+- `GOOGLE_SERVICE_ACCOUNT_EMAIL` and `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` are required only if Google Docs export is enabled (REQ-121).
+- Addis AI `sk_` keys never appear in client code, Vite env vars sent to the browser, localStorage, Redux state, or client logs; Nvidia and Gemini API keys are placed in `backend/.env` only (§17.4, REQ-123; key rules in `## Environment Config` §4).
+- `process.env` is never accessed outside `config/env.js`, which validates all required vars at startup (REQ-083, REQ-120).
+
+### 5. Expansion Markers
+
+- Phase 17 (§17 Environment Variables): **DONE (Phase 17)** — secret handling in §4 above.
 - Phase 18 (§18 Addis AI Integration): AI provider security.
 - Phase 29 (§29 Security): full security section.
 
@@ -3002,6 +3045,106 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 
 ---
 
+## Environment Config
+
+> **Phase 17 seed — the environment-variable and backend-constants rules from §17 (Environment Variables), verified against the local `.env` files. The `backend/config/env.js` env gate (REQ-083) and the `backend/utils/constants.js` frozen constants contract (§10.5) are specified here; neither file exists yet (codebase fact) and both are created during implementation (Phase 25).**
+
+### 1. Environment File Rules (§17.1)
+
+- `.env` files are gitignored and never committed — the root `.gitignore` first line is `.env` (codebase fact) (REQ-120).
+- `.env` files exist locally with placeholder or correct values; this spec records key names, defaults, and rules only — actual secret values are never written here (REQ-120).
+- No `.env.example` files — none exist and none are created (REQ-120).
+- New env vars are added in three steps: (1) add to the local `.env`, (2) add the field to the config object in `config/env.js`, (3) add validation/default logic in `config/env.js` (REQ-120).
+- `process.env` is never accessed directly outside of `config/env.js` — all config reads go through the validated `env` object (REQ-083, REQ-120).
+- Client env vars must be prefixed with `VITE_` and are accessed via `import.meta.env.*` (REQ-120, REQ-122).
+- `dotenv` `^17.4.2` is installed in `backend/package.json` (REQ-079); the client loads env vars through Vite — no dotenv in `client/package.json` (codebase fact).
+
+### 2. Backend Environment Variables (§17.2)
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| NODE_ENV | Yes | development | Environment mode |
+| PORT | Yes | 4000 | Server port |
+| CLIENT_ORIGIN | Yes | http://localhost:3000 | CORS allowed origin |
+| MONGODB_URI | Yes | — | MongoDB connection string (database: report-builder-v2) |
+| JWT_ACCESS_SECRET | Yes | — | Access token signing secret (min 32 chars) |
+| JWT_REFRESH_SECRET | Yes | — | Refresh token signing secret (min 32 chars) |
+| JWT_ACCESS_EXPIRES_IN | Yes | 15m | Access token TTL (echo of `## Auth Cookies` §2) |
+| JWT_REFRESH_EXPIRES_IN | Yes | 7d | Refresh token TTL (echo of `## Auth Cookies` §2) |
+| ADDIS_AI_BASE_URL | Yes | https://api.addisassistant.com | Addis AI API base URL |
+| ADDIS_AI_API_KEY | Yes | sk_... (placeholder) | Addis AI secret key — backend only (§4 below) |
+| ADDIS_AI_TEXT_MODEL | Yes | Addis-፩-አሌፍ | Text generation model |
+| ADDIS_AI_STT_MODEL | Yes | default | Speech-to-text model |
+| ADDIS_AI_DEFAULT_TARGET_LANGUAGE | Yes | am | Default target language code |
+| ADDIS_AI_STT_LANGUAGE_CODE | Yes | am | STT language code |
+| ADDIS_AI_TIMEOUT_MS | Yes | 360000 | Addis AI request timeout (ms) |
+| LOG_LEVEL | Yes | debug (dev) / info (prod) | Winston log level (echo of `## Logging` §3) |
+| NVIDIA_API_KEY | Yes | — | Nvidia API key — backend only (§4 below) |
+| GEMINI_API_KEY | Yes | — | Gemini API key — backend only (§4 below) |
+| NVIDIA_API_BASE_URL | Yes | — | Nvidia NIM API base URL |
+| GEMINI_API_BASE_URL | Yes | — | Gemini API base URL |
+| FFMPEG_PATH | Yes | ffmpeg (system) | Custom ffmpeg binary path |
+| FFPROBE_PATH | Yes | ffprobe (system) | Custom ffprobe binary path |
+| OAUTH_GOOGLE_CLIENT_ID | No | — | Google OAuth client ID |
+| OAUTH_GOOGLE_CLIENT_SECRET | No | — | Google OAuth client secret |
+| OAUTH_GOOGLE_CALLBACK_URL | No | — | Google OAuth callback URL |
+| GOOGLE_SERVICE_ACCOUNT_EMAIL | No | — | Required if Google Docs export enabled |
+| GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY | No | — | Required if Google Docs export enabled |
+
+- Codebase fact: `backend/.env` exists with placeholder or correct values for every required key except `LOG_LEVEL`, which is absent and must be added during implementation; the optional `OAUTH_GOOGLE_*` keys are present, while `GOOGLE_SERVICE_ACCOUNT_*` are absent (optional — needed only if Google Docs export is enabled) (REQ-121).
+
+### 3. Client Environment Variables (§17.3)
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| VITE_API_BASE_URL | Yes | http://localhost:4000/api/v1 | Backend API base URL — consumed via `API_CONFIG` (see `## Redux RTK Query` §2, REQ-104) |
+| VITE_APP_NAME | Yes | Report Builder V2 | Application display name |
+
+- Client env vars are read via `import.meta.env.*` only (REQ-122).
+- Codebase fact: `client/.env` exists with both keys (REQ-122).
+
+### 4. AI Key Rules (§17.4)
+
+- Addis AI API keys starting with `sk_` must never appear in client code (REQ-123).
+- Addis AI API keys must never appear in Vite env vars sent to the browser (REQ-123).
+- Addis AI API keys must never appear in localStorage (REQ-123).
+- Addis AI API keys must never appear in Redux state (REQ-123).
+- Addis AI API keys must never appear in client logs (REQ-123).
+- Nvidia and Gemini API keys are placed in `backend/.env` only (REQ-123).
+- AI API keys are never written into this spec or any committed file — only key names and rules are recorded (REQ-123).
+
+### 5. Backend Constants (§17.5)
+
+- All backend constants live in a single `Object.freeze()`-frozen object exported from `backend/utils/constants.js`; nothing is hardcoded in request handlers (REQ-083, REQ-124).
+- `backend/config/env.js` reads `process.env` into a frozen, validated `env` object; `utils/constants.js` is imported by controllers and services (echo of `## Backend Architecture` §5).
+
+| Group | Constant | Value | Description |
+|---|---|---|---|
+| Audio | AUDIO_MAX_DURATION_SEC | 900 | Max audio upload duration in seconds (echo of `## Audio Recording STT` §3) |
+| Audio | AUDIO_MAX_SIZE_BYTES | 52428800 | Max audio upload size — 50 MB (echo of `## Audio Recording STT` §3) |
+| Audio | AUDIO_ALLOWED_MIME_TYPES | [audio/mpeg, audio/wav, audio/mp4, audio/webm] | Allowed audio MIME types (echo of `## Audio Recording STT` §3) |
+| Pagination | PAGINATION_DEFAULT_PAGE | 1 | Default page (echo of `## Backend Architecture` §4, REQ-053) |
+| Pagination | PAGINATION_DEFAULT_LIMIT | 10 | Default page size (echo of `## Backend Architecture` §4, REQ-053) |
+| Pagination | PAGINATION_MAX_LIMIT | 100 | Maximum page size (echo of `## Backend Architecture` §4, REQ-053) |
+| STT | ADDIS_AI_STT_MAX_DURATION_SEC | 60 | STT chunk duration cap (echo of `## Audio Recording STT` §3) |
+| Auth | BCRYPT_SALT_ROUNDS | 12 | Password hashing salt rounds (echo of `## Auth Cookies` §3) |
+| AI Generation | AI_TEMPERATURE | 0.2 | Report generation temperature |
+| AI Generation | AI_MAX_OUTPUT_TOKENS | 2048 | Report generation max output tokens |
+| AI Generation | AI_TOP_P | 0.9 | Nucleus sampling threshold |
+| AI Generation | AI_TOP_K | 40 | Top-k sampling |
+| AI Correction | AI_CORRECTION_MAX_OUTPUT_TOKENS | 2048 | Report correction max output tokens |
+| AI Correction | AI_CORRECTION_TEMPERATURE | 0.15 | Report correction temperature |
+
+- Codebase fact: `backend/config/env.js` and `backend/utils/constants.js` do not exist yet — `backend/` currently holds only `.env` and `package.json`; both files are created during implementation (Phase 25) (REQ-083, REQ-124).
+
+### 6. Expansion Markers
+
+- Phase 18 (§18 Addis AI Integration): how the `ADDIS_AI_*` vars are consumed by the Addis AI service.
+- Phase 19 (§19 Other AI Providers): Nvidia and Gemini keys and base URLs.
+- Phase 29 (§29 Security): deep environment-secret handling rules.
+
+---
+
 ## Decision Log
 
 > **Built in Phases 1–2 — the ADR format and further decisions are finalized in Phase 33 (§33 Decision Log (ADRs)).** Entries are appended as phases complete. No decision recorded here may contradict a later GREEN decision without a superseding ADR.
@@ -3111,7 +3254,11 @@ Phases 1–15 are GREEN (2026-08-01). Phase 15 built the React Hook Form standar
 
 ## End Of Phase 16 Content
 
-Phases 1–16 are GREEN (2026-08-01). Phase 16 built the UI rules from §16: enriched `## UI/UX Spec` (new UI Rules section — language-and-content echo of §7, form submit buttons `size="small"` with `flexShrink: 0`, icons always used at `vw < 600` and `vw < 768 && landscape`, text-overflow/ellipsis rule with no horizontal scroll), enriched `## Rules` (new UI Rules section mapped to REQ-117..119), enriched `## User Interactions` (UI-008 — small-screen icon-first and ellipsis interaction; Phase 16 marker DONE), cross-aligned the forward markers in `## MUI Component Standards` and `## Theme Standards`, added REQ-117..119, added US-033, extended `## Glossary` (Icon-first rule, Ellipsis rule), updated the Checklist (Rules, UI/UX Spec, User Interactions — GREEN enrichment), and added the Phase 16 Source Trace Map with the `client/src` codebase fact (only `App.jsx`, `assets/`, `main.jsx`, `theme/` exist — no `components/` or `layouts/` yet). Phase 17 will build the environment variables.
+Phases 1–16 are GREEN (2026-08-01). Phase 16 built the UI rules from §16: enriched `## UI/UX Spec` (new UI Rules section — language-and-content echo of §7, form submit buttons `size="small"` with `flexShrink: 0`, icons always used at `vw < 600` and `vw < 768 && landscape`, text-overflow/ellipsis rule with no horizontal scroll), enriched `## Rules` (new UI Rules section mapped to REQ-117..119), enriched `## User Interactions` (UI-008 — small-screen icon-first and ellipsis interaction; Phase 16 marker DONE), cross-aligned the forward markers in `## MUI Component Standards` and `## Theme Standards`, added REQ-117..119, added US-033, extended `## Glossary` (Icon-first rule, Ellipsis rule), updated the Checklist (Rules, UI/UX Spec, User Interactions — GREEN enrichment), and added the Phase 16 Source Trace Map with the `client/src` codebase fact (only `App.jsx`, `assets/`, `main.jsx`, `theme/` exist — no `components/` or `layouts/` yet). Phase 17 built the environment variables.
+
+## End Of Phase 17 Content
+
+Phases 1–17 are GREEN (2026-08-01). Phase 17 built the environment variables from §17: new `## Environment Config` seed (environment file rules — `.env` gitignored per the root `.gitignore`, `.env` files exist locally, no `.env.example` files, the three-step new-var process, `process.env` never accessed outside `config/env.js`, `VITE_`-prefixed client vars via `import.meta.env.*`; the 22-required + 5-optional backend env table verified against `backend/.env` — all required keys present except `LOG_LEVEL`, `OAUTH_GOOGLE_*` present, `GOOGLE_SERVICE_ACCOUNT_*` absent — with defaults (development, 4000, http://localhost:3000, 15m/7d, am, 360000, ffmpeg/ffprobe); the client env contract verified against `client/.env`; the six AI key never-rules for `sk_`/Nvidia/Gemini keys; the frozen `utils/constants.js` constants contract — Audio, Pagination, STT, Auth, AI Generation, AI Correction), enriched `## Rules` (Environment Config Rules — REQ-120..124), enriched `## Security` (Environment Secret Handling — JWT/OAuth/service-account secrets and AI key rules), flipped the Phase 17 forward markers in `## Rules`, `## Security`, and `## Auth Cookies` to DONE, added REQ-120..124, extended `## Glossary` (config/env.js (env gate), import.meta.env), updated the Checklist (Environment Config — GREEN seed; Security and Rules — GREEN enrichment), and added the Phase 17 Source Trace Map with the `.env` codebase facts. Phase 18 will build the Addis AI integration.
 
 Phases 1–14 are GREEN (2026-08-01). Phase 14 built the MUI, MUI X, theme, and component standards from §14: enriched `## MUI Component Standards` (detailed MuiAppbar/Page Header/Dialogs specs; new MUI Import And Styling Rules — tree-shaken imports, never the `@mui/material` barrel, Grid `size` prop, the deprecated-props replacement table, sx/styled only, no Tailwind or inline styles, theme-aware tokens, no direct `themePrimitives.js`/`gray[50]`/`gray[800]`/`brand[400]` usage, mode-aware colors; Reusable Component Contract — `client/src/components/reusable/*`, `Mui` prefix, forwardRef inputs, `displayName`, `size="small"` defaults, pure passthrough wrappers, `slotProps.input` adornments, mandatory start adornments; Component Catalog — MuiButton native loading, MuiTextField internal password eye, MuiSelect maxHeight-300 MenuProps, MuiDatePicker explicit Desktop/Mobile switching plus the Ethiopian calendar (`utils/ethiopianDate.js`, DD-MM-YY, English day/month names incl. Pagume, RHF via Controller), MuiPagination, MuiDataGrid (columns in `components/columns/*`, action column, archive/restore/delete via MuiConfirmDialog, toolbar + export selection, server pagination, skeleton loading), MuiConfirmDialog, LoadingSpinner, MuiStatusBadge (status-name reconciliation owned by Phase 35); MUI X Usage — community edition only with the x-chat reference URLs), new `## Theme Standards` seed (theme rules from §14.4 verified against the codebase — `client/src/theme/` only, no inline overrides, overrides via `customizations/` files with `@module`, `AppTheme.jsx` composes `createTheme` + `cssVariables` + color schemes + the eight customization groups with `ThemeProvider disableTransitionOnChange`; theme tokens — never import `themePrimitives.js`, greys via `theme.palette.grey[N]`, mode-aware sx colors), enriched `## UI/UX Spec` (MuiStatusBadge in report detail/correction headers, MuiPageHeader subtitle rule, MuiDialog responsive fullscreen), cross-aligned `## Frontend Architecture` markers and `## Project Directory Structure` (`components/reusable/`, `components/columns/`, `utils/ethiopianDate.js`), added REQ-107..111, added US-031, extended `## Glossary` (Ethiopian calendar, Pagume, MUI X community edition), updated the Checklist (MUI Component Standards, UI/UX Spec, Project Directory Structure — GREEN enrichment; Theme Standards — GREEN seed), and added the Phase 14 Source Trace Map. Phase 15 built the React Hook Form standards.
 
