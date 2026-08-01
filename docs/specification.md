@@ -49,7 +49,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 15 | 15. React Hook Form Standards | GREEN | React Hook Form Standards, Validation Audit, UI/UX Spec |
 | 16 | 16. UI Rules | GREEN | UI/UX Spec, User Interactions, Rules |
 | 17 | 17. Environment Variables | GREEN | Environment Config, Security, Rules |
-| 18 | 18. Addis AI Integration | PENDING | Addis AI, AI Prompt Spec, API Contract, Security |
+| 18 | 18. Addis AI Integration | GREEN | Addis AI, AI Prompt Spec, API Contract, Security |
 | 19 | 19. Other AI Providers | PENDING | Other AI Providers, Addis AI, AI Prompt Spec |
 | 20 | 20. Audio Recording And STT Pipeline | PENDING | Audio Recording STT, Transcription Review, API Contract, Data Modeling |
 | 21 | 21. AI Prompt Requirements | PENDING | AI Prompt Spec, Report Format, Rules |
@@ -77,10 +77,10 @@ Status of every section the target document must contain at minimum. Extra secti
 
 | Spec section | Produced/updated in phase | Status |
 |---|---|---|
-| Addis AI | 18 | PENDING |
-| AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 7 enrichment) |
+| Addis AI | 18 | GREEN (Phase 18 seed) |
+| AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 7, 18 enrichment) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
-| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 28 | GREEN (Phase 13 enrichment) |
+| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 28 | GREEN (Phase 13, 18 enrichment) |
 | Architecture | 9, 10, 25 | GREEN (Phase 10 enrichment) |
 | Audio Recording STT | 8, 20 | GREEN (Phase 8 seed) |
 | Auth Cookies | 11 | GREEN (Phase 11 seed) |
@@ -121,7 +121,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
 | Routing Layout | 12 | GREEN |
 | Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16, 17 enrichment) |
-| Security | 11, 17, 18, 29 | GREEN (Phase 11 seed, Phase 17 enrichment) |
+| Security | 11, 17, 18, 29 | GREEN (Phase 11 seed, Phase 17, 18 enrichment) |
 | Source Traceability | 31 | PENDING |
 | Status Machine | 5, 35 | GREEN (Phase 5 seed) |
 | Tasks | 32 | PENDING |
@@ -410,6 +410,25 @@ All `§` references below identify sections of the original source brief. They a
 | §17.4 | AI key rules: Addis AI `sk_` keys never in client code, browser-sent Vite env vars, localStorage, Redux state, or client logs; Nvidia and Gemini keys in `backend/.env` only | Environment Config (4), Security (4), Rules (5), Requirements (REQ-123) |
 | §17.5 | Backend constants as one frozen object in `utils/constants.js`: Audio (900, 52428800, four MIME types), Pagination (1, 10, 100), STT (60), Auth (12), AI Generation (0.2, 2048, 0.9, 40), AI Correction (2048, 0.15) | Environment Config (5), Backend Architecture (5), Requirements (REQ-124) |
 | §17 + codebase (`backend/.env`, `client/.env`, `.gitignore`, `backend/package.json`) | `backend/.env` exists with all required keys except LOG_LEVEL (absent — add during implementation) plus OAUTH_GOOGLE_*; `client/.env` exists with both `VITE_` keys; root `.gitignore` line 1 is `.env`; no `.env.example`; `dotenv` `^17.4.2` in `backend/package.json`; `config/env.js` and `utils/constants.js` do not exist yet — created during implementation (Phase 25) | Environment Config (1–5), Rules (5) |
+
+## Source Trace Map — Phase 18 (source §18)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §18.1–18.2 | Primary sources: addisai.ch plus the 12 docs.addisassistant.com pages (get-started, capabilities, integration, platform/errors); provider identity — African-language AI infrastructure for voice, chat, retrieval, translation, and localization, including voice AI, cross-lingual RAG, STT, TTS, translation, and enterprise deployments | Addis AI (1) |
+| §18.3 | Base URLs: API `https://api.addisassistant.com`, playground `https://platform.addisassistant.com`, realtime relay `wss://relay.addisassistant.com/ws?apiKey=<API_KEY>` | Addis AI (2), API Contract (5) |
+| §18.4 | Authentication: dashboard-generated keys, `sk_` prefix, `x-api-key` header, key never in frontend code, backend-only proxy (no direct client-to-Addis AI calls), AI endpoints protected by authentication, rate limits on auth and AI endpoints | Addis AI (3), Security (5), Requirements (REQ-125, REQ-126) |
+| §18.5 | Core model families: text `Addis-፩-አሌፍ`, voice `አሌፍ-Audio-AM`/`አሌፍ-Audio-OM`, realtime `አሌፍ-1.2-realtime-audio` | Addis AI (4), Requirements (REQ-127) |
+| §18.6 | Language support: English, Amharic, Afan Oromo, Tigrinya; am + English-aware prompting first-class; language constants extensible for om/ti | Addis AI (5), Requirements (REQ-131) |
+| §18.7 | Text generation: POST /api/v1/chat_generate with model/prompt/target_language/conversation_history/generation_config (0.2, 2048, 0.9, 40); response shape (response_text, finish_reason, usage_metadata, modelVersion); project use — after transcription review, strict prompt + JSON-like output, low temperature, keys backend-only, native fetch | Addis AI (6), AI Prompt Spec (7), API Contract (5), Requirements (REQ-127) |
+| §18.8 | STT: POST /api/v2/stt multipart `audio` + `request_data` `{ language_code }`; formats WAV/MP3/M4A/WebM; constraints 60s, 10MB, 16kHz+, mono, quiet environment, single speaker; project use — no frontend duration limit, backend chunks, single-pass ffmpeg WAV `pcm_s16le` 16kHz mono before PCM-level split, no per-segment re-encoding (Opus priming artifacts), retry 3x backoff (1s, 2s, 4s), provider error marks chunk failed and continues | Addis AI (7), API Contract (5), Requirements (REQ-128, REQ-129) |
+| §18.9 | TTS: POST /api/v1/audio JSON text/language/voice_id/stream; Base64 WAV under `audio`; not required for the first workflow — service support kept | Addis AI (8), API Contract (5), Requirements (REQ-130) |
+| §18.10 | Multimodal: POST /api/v1/chat_generate multipart `image`/`audio` + `request_data`; not part of the first workflow | Addis AI (9), API Contract (5), Requirements (REQ-130) |
+| §18.11 | Translation: POST /api/v1/translate, response nests under `data.translation`; optional — no default translation (report may be intentionally Amharic/English/mixed), possible later UI control | Addis AI (10), API Contract (5), Requirements (REQ-130) |
+| §18.12 | Realtime: wss relay; `setupComplete`; base64 PCM16 JSON envelopes; `serverContent.modelTurn.parts[0].inlineData.data`; never expose keys in browser WS URLs; not required for V2; backend-controlled strategy if later | Addis AI (11), API Contract (5), Security (5), Requirements (REQ-130) |
+| §18.13 | Errors: `{ status, error { code, message, param } }`; 400/401/403/404/429/500/503; project handling — safe user messages, log request IDs/status codes not raw content, timeout, retry 3x backoff, provider error marks chunk failed and continues | Addis AI (12), API Contract (5), Requirements (REQ-129) |
+| §18.14 | Implementation implications: backend proxy only, native fetch, multer, Node FormData/Blob, small documented multipart helper if needed, no Addis AI SDK (SDKs coming soon) | Addis AI (13), Requirements (REQ-125) |
+| §18 + codebase (`backend/.env`) | Seven `ADDIS_AI_*` vars exist with real values — base URL, `sk_` key, text model `Addis-፩-አሌፍ`, target language `am`, STT language code `am`, STT model `default`, timeout 360000; the spec documents a placeholder `sk_` only (REQ-123) | Addis AI (2–5), Environment Config (2), Requirements (REQ-121) |
 
 ---
 
@@ -744,6 +763,8 @@ Secondary features should not distract from the core workflow of generating a bo
 | Ellipsis rule | Text never overflows or overlaps at any width; long text truncates with an ellipsis after a certain character count; the app never scrolls horizontally. | §16 |
 | config/env.js (env gate) | The single backend module that reads `process.env` into a frozen, validated `env` object; `process.env` is never accessed outside it. | §17 |
 | import.meta.env | The Vite mechanism the client uses to read `VITE_`-prefixed environment variables. | §17 |
+| Addis-፩-አሌፍ | The Addis AI text model used for report generation and correction; configured via `ADDIS_AI_TEXT_MODEL` and sent as `model` in `chat_generate` requests. | §18.5 |
+| x-api-key | The HTTP header Addis AI REST authentication uses; it carries the `sk_`-prefixed secret key and is sent by backend services only. | §18.4 |
 
 ---
 
@@ -1074,6 +1095,18 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-123 | AI key rules: Addis AI `sk_` keys never appear in client code, Vite env vars sent to the browser, localStorage, Redux state, or client logs; Nvidia and Gemini API keys are placed in `backend/.env` only. | No `sk_` value exists anywhere in `client/src`, browser-visible Vite env, localStorage, Redux state, or client logs; Nvidia/Gemini keys exist only in `backend/.env`. | §17.4 |
 | REQ-124 | Backend constants are grouped and frozen in a single `Object.freeze()` object exported from `backend/utils/constants.js` — Audio (900, 52428800, the four MIME types), Pagination (1, 10, 100), STT (60), Auth (12), AI Generation (0.2, 2048, 0.9, 40), AI Correction (2048, 0.15) — and nothing is hardcoded in request handlers. | `utils/constants.js` exports one frozen object with the §17.5 groups and values; request handlers reference it instead of literals. | §17.5 |
 
+### Functional Requirements (Phase 18)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-125 | All Addis AI calls are made only from backend services via native `fetch` (backend-only proxy); no direct client-to-Addis AI calls exist; no Addis AI SDK is installed. | Client code never calls any Addis AI URL; backend services own every Addis AI call; no Addis AI SDK dependency in either package.json. | §18.4, §18.14 |
+| REQ-126 | Every Addis AI REST call sends the secret key in the `x-api-key` header; secret keys start with `sk_`. | All Addis AI service calls include `x-api-key`; no key appears in URLs, query strings, or request bodies. | §18.4 |
+| REQ-127 | Report generation and correction call `POST /api/v1/chat_generate` with the `Addis-፩-አሌፍ` model, the strict report prompt, `target_language` from `ADDIS_AI_DEFAULT_TARGET_LANGUAGE`, `conversation_history` for correction turns, and `generation_config` from the frozen constants (generation: temperature 0.2, maxOutputTokens 2048, topP 0.9, topK 40; correction: maxOutputTokens 2048, temperature 0.15). | The service builds the request from `config/env.js` values and the frozen constants; no literal model names or generation values are hardcoded in handlers. | §18.5, §18.7, §17.5 (REQ-124) |
+| REQ-128 | Speech-to-text calls `POST /api/v2/stt` with multipart `audio` and `request_data` `{ "language_code": "am" }` (`ADDIS_AI_STT_LANGUAGE_CODE`), with at most 60 seconds and 10 MB per request; longer recordings are converted to WAV by ffmpeg in a single pass (`pcm_s16le`, 16 kHz, mono) and then split into chunks. | The STT service enforces the 60s/10MB limits; full-file conversion happens before any PCM-level split; per-segment re-encoding never happens. | §18.8, REQ-124 |
+| REQ-129 | Addis AI errors map to safe user messages; provider request IDs and status codes are logged (never raw report content); network failures retry 3 times with exponential backoff (1s, 2s, 4s); provider 4xx/5xx errors mark the chunk as failed and continue processing remaining chunks. | Timeout and retry logic exists in the AI client; provider errors never surface raw messages to the user; logs contain request IDs/status codes only. | §18.13, §18.8 |
+| REQ-130 | TTS, translation, multimodal, and realtime are not part of the first report-builder workflow; the app never translates reports by default (content may be intentionally Amharic, English, or mixed). | No TTS/translation/multimodal/realtime calls exist in the first workflow; no automatic translation runs on generated reports. | §18.9, §18.10, §18.11, §18.12, PR-17 |
+| REQ-131 | Amharic and English-aware prompting are first-class (`ADDIS_AI_DEFAULT_TARGET_LANGUAGE` = `am`); language constants remain extensible for Oromo `om` and Tigrinya where appropriate. | Language values come from `config/env.js`/constants, not literals; om/ti entries can be added without code rewiring. | §18.6 |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -1099,6 +1132,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - React Hook Form standards rules: **Phase 15 — DONE (REQ-112..116)**.
 - UI rules: **Phase 16 — DONE (REQ-117..119)**.
 - Environment config rules: **Phase 17 — DONE (REQ-120..124)**.
+- Addis AI integration rules: **Phase 18 — DONE (REQ-125..131)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -1500,6 +1534,21 @@ Fields mandated by §11 (entity-level; full field-level schema remains Phase 24)
 - Outcome statuses: `401` invalid credentials, `422` validation failure, `429` rate limited — all with the §10.7 envelope (`{ success: false, message, data }`).
 - Rate limits per tier: global 100/15min (all endpoints), auth 20/15min (register, login), AI 10/1min (generation, correction) (REQ-092).
 
+### 5. Addis AI Provider Endpoints (backend service dependencies, §18)
+
+- The app never routes Addis AI calls through `/api/v1`: providers are contacted directly from backend services via native `fetch` (REQ-125, `## Addis AI` §3, §13). The table documents the provider contracts the backend depends on; the request/response envelopes are the provider's own, not the §10.7 envelope.
+
+| Provider endpoint | Purpose | Contract seeds |
+|---|---|---|
+| `POST https://api.addisassistant.com/api/v1/chat_generate` | Report generation and correction after transcription review (W-04..W-10); strict prompt + structured JSON-like output | §18.7, `## AI Prompt Spec` §7, `## Addis AI` §6 (REQ-127) |
+| `POST https://api.addisassistant.com/api/v2/stt` | Speech-to-text via multipart `audio` + `request_data` `{ language_code: am }`; max 60s / 10 MB per request; backend chunks longer recordings | §18.8, `## Addis AI` §7, `## Audio Recording STT` (REQ-128) |
+| `POST https://api.addisassistant.com/api/v1/audio` | Text-to-speech; not part of the first workflow — service support only | §18.9, `## Addis AI` §8 (REQ-130) |
+| `POST https://api.addisassistant.com/api/v1/translate` | Optional translation; never applied by default (PR-17) | §18.11, `## Addis AI` §10 (REQ-130) |
+| `POST https://api.addisassistant.com/api/v1/chat_generate` (multipart) | Multimodal with `image`/`audio` files; not part of the first workflow | §18.10, `## Addis AI` §9 (REQ-130) |
+| `wss://relay.addisassistant.com/ws?apiKey=<API_KEY>` | Realtime relay; never with a real key in the browser; not part of the first workflow | §18.12, `## Addis AI` §11 (REQ-130) |
+
+- All calls send the `x-api-key` header (REQ-126); errors map through `## Addis AI` §12 (REQ-129); the AI rate-limit tier 10/1min applies (REQ-092).
+
 ---
 
 ## Status Machine
@@ -1835,9 +1884,205 @@ The prompt should include the §6.10 → §6.11 before/after pair (`## Report Fo
 ### 6. Expansion Markers
 
 - Phase 7 (§7 Language Rules): **DONE — language directive seeds added (PR-17/18); the Amharic-default vs mixed-content precedence note is recorded for Phase 21.**
-- Phase 18 (§18 Addis AI Integration): how these seeds are delivered to the Addis AI endpoint.
+- Phase 18 (§18 Addis AI Integration): **DONE — seed delivery is recorded in §7 below.**
 - Phase 19 (§19 Other AI Providers): provider fallback behavior.
 - Phase 21 (§21 AI Prompt Requirements): final prompt construction, system-prompt structure, the missing-info punctuation rule, and the PR-01/PR-17 precedence wording.
+
+### 7. Delivery To The Addis AI Endpoint (§18)
+
+- All PR-01..18 directive seeds are delivered to Addis AI through `POST /api/v1/chat_generate` via backend-only native `fetch` (`## Addis AI` §3, §6, §13; REQ-125).
+- The `prompt` field carries the assembled directive text built from the §1–5 seeds; final prompt wording and system-prompt structure are finalized in Phase 21.
+- `target_language` = `ADDIS_AI_DEFAULT_TARGET_LANGUAGE` (`am`) — echo of `## Environment Config` §2 and PR-01 (REQ-131).
+- `generation_config` comes from the frozen constants (`## Environment Config` §5, REQ-124): report generation uses the AI Generation group (temperature 0.2, maxOutputTokens 2048, topP 0.9, topK 40); report correction requests use the AI Correction group (maxOutputTokens 2048, temperature 0.15) (REQ-127).
+- The prompt requests structured JSON-like output per `## Report Format` §7 and `## Addis AI` §6.
+- `conversation_history` carries prior report turns plus the user's correction/update requests so PR-16 (update only the relevant part) is honored; the review/correction loop is W-04..W-10 (REQ-034, REQ-041).
+- A failed generation returns the provider error through the `## Addis AI` §12 error mapping with timeout and retry/backoff rules (REQ-129).
+
+---
+
+## Addis AI
+
+> **Phase 18 seed — Addis AI integration from §18. Provider fallbacks arrive in Phase 19, STT pipeline mechanics in Phase 20, final prompt construction in Phase 21, and unified error handling in Phase 28.**
+
+### 1. Provider Identity And Primary Sources (§18.1–18.2)
+
+- Addis AI provides African-language AI infrastructure for voice, chat, retrieval, translation, and localization; the platform supports voice AI, cross-lingual RAG, chat, speech-to-text, text-to-speech, translation, and enterprise deployments (§18.2).
+- Primary sources (§18.1): `https://www.addisai.ch/`; the Addis AI documentation at `https://docs.addisassistant.com` — page paths: get-started/introduction, get-started/quickstart, capabilities/text-generation, capabilities/text-to-speech, capabilities/speech-to-text, capabilities/multimodal, capabilities/realtime, capabilities/translation, integration/web, integration/server, integration/voice-interface, platform/errors.
+
+### 2. Base URLs And Platform (§18.3)
+
+- Developer/API base URL: `https://api.addisassistant.com` — all REST endpoints below are relative to it; recorded as `ADDIS_AI_BASE_URL` in `## Environment Config` §2 (REQ-121).
+- Playground/dashboard: `https://platform.addisassistant.com`.
+- Realtime relay: `wss://relay.addisassistant.com/ws?apiKey=<API_KEY>` — never used with a real key in the browser (§18.12, REQ-123).
+
+### 3. Authentication And Key Rules (§18.4)
+
+- API keys are generated in the Addis AI dashboard; secret keys start with `sk_` (REQ-123, `## Environment Config` §4).
+- REST authentication uses the `x-api-key` header on every Addis AI call (REQ-126).
+- The key is never exposed in frontend code (REQ-123).
+- The app calls Addis AI only from the backend: backend-only proxy, no direct client-to-Addis AI calls (REQ-125, REQ-078).
+- AI endpoints are protected by authentication; rate limits apply on auth and AI endpoints (echo of `## Security` §3, REQ-092; AI tier 10/1min).
+
+### 4. Core Model Families (§18.5)
+
+| Family | Models | Project use |
+|---|---|---|
+| Text | `Addis-፩-አሌፍ` (`ADDIS_AI_TEXT_MODEL`) | Report generation and correction (`## AI Prompt Spec` §7) |
+| Voice | `አሌፍ-Audio-AM`, `አሌፍ-Audio-OM` | STT — model selected by the provider per `language_code` |
+| Realtime audio | `አሌፍ-1.2-realtime-audio` | Not part of the V2 workflow (§18.12) |
+
+### 5. Language Support (§18.6)
+
+- Current support: English, Amharic, Afan Oromo, and Tigrinya; text-generation docs emphasize Amharic and Afan Oromo; STT supports Amharic and Afan Oromo; translation is bidirectional between Amharic `am`, Afan Oromo `om`, and English `en`.
+- The app implements Amharic `am` and English-aware prompting as first-class (`ADDIS_AI_DEFAULT_TARGET_LANGUAGE` = `am`, `ADDIS_AI_STT_LANGUAGE_CODE` = `am`; PR-17).
+- Language constants stay extensible for Oromo `om` and Tigrinya where appropriate (REQ-131).
+
+### 6. Text Generation (§18.7)
+
+Endpoint: `POST https://api.addisassistant.com/api/v1/chat_generate` (REQ-127).
+
+Request body (JSON):
+
+```json
+{
+  "model": "Addis-፩-አሌፍ",
+  "prompt": "string",
+  "target_language": "am",
+  "conversation_history": [
+    { "role": "user", "content": "string" },
+    { "role": "assistant", "content": "string" }
+  ],
+  "generation_config": {
+    "temperature": 0.2,
+    "maxOutputTokens": 2048,
+    "topP": 0.9,
+    "topK": 40
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "response_text": "The generated text response...",
+  "finish_reason": "stop",
+  "usage_metadata": {
+    "prompt_token_count": 12,
+    "candidates_token_count": 45,
+    "total_token_count": 57
+  },
+  "modelVersion": "Addis-፩-አሌፍ"
+}
+```
+
+Project use:
+
+- Called after the user reviews the transcription (`## Transcription Review` §1; W-04).
+- Strict report-generation prompt requesting structured JSON-like output (`## Report Format` §7; `## AI Prompt Spec` §7).
+- Low temperature `0.2` for factual report generation — from the frozen constants AI Generation group (REQ-124, REQ-127).
+- AI keys only in `backend/.env` (REQ-123).
+- Backend HTTP client uses native `fetch` for Addis AI calls (§18.14, REQ-125).
+
+### 7. Speech To Text (§18.8)
+
+Endpoint: `POST https://api.addisassistant.com/api/v2/stt` (REQ-128).
+
+Request is `multipart/form-data`:
+
+- `audio`: uploaded audio file.
+- `request_data`: stringified JSON, e.g. `{ "language_code": "am" }` (`ADDIS_AI_STT_LANGUAGE_CODE`).
+
+Response:
+
+```json
+{
+  "status": "success",
+  "data": {
+    "transcription": "ሰላም እንኳን ደህና መጣችሁ",
+    "usage_metadata": {
+      "totalBilledDuration": "15s",
+      "requestId": "69b60667-0000-2a1e-b6d3-d4f547fe6724"
+    }
+  },
+  "confidence": 0.982
+}
+```
+
+Supported audio formats: WAV (`audio/wav`, `audio/x-wav`, `audio/wave`), MP3 (`audio/mpeg`, `audio/mp3`), M4A (`audio/mp4`, `audio/x-m4a`), WebM (`audio/webm`) — matching the Audio MIME constants (`## Environment Config` §5, REQ-124).
+
+Documented constraints:
+
+- Max duration: 60 seconds per request; chunk by chunk (REQ-128).
+- Max file size per request: 10 MB (REQ-128).
+- Recommended sample rate: 16 kHz or higher; mono preferred.
+- Quiet environment and 10–30 cm microphone distance recommended.
+- Optimized for single-speaker audio; overlapping voices and heavy code-switching may reduce accuracy.
+
+Project use:
+
+- The frontend imposes no duration limit; the backend chunks long WAV recordings before STT (REQ-128; pipeline mechanics in Phase 20).
+- Accuracy-critical pipeline: convert full audio to WAV via ffmpeg in a single pass using `pcm_s16le`, 16 kHz, mono, before PCM-level split; per-segment re-encoding causes Opus decoder priming artifacts that degrade transcription quality (echoed in `## Audio Recording STT`; detail in Phase 20).
+- Error handling: network failure retries 3 times with exponential backoff (1s, 2s, 4s); provider error (4xx, 5xx) marks the chunk as failed and continues processing remaining chunks (REQ-129).
+
+### 8. Text To Speech (§18.9)
+
+Endpoint: `POST https://api.addisassistant.com/api/v1/audio`; JSON body `{ "text": "string", "language": "am", "voice_id": "male_1", "stream": false }`; the response includes Base64 WAV audio, commonly under `audio`.
+
+Project use: TTS is not required for the first report-builder workflow; service support stays possible for later voice playback or AI chat (REQ-130).
+
+### 9. Multimodal (§18.10)
+
+Endpoint: `POST https://api.addisassistant.com/api/v1/chat_generate` as `multipart/form-data` when attaching files — fields include `image` or `audio` plus `request_data` (stringified JSON with `prompt`, `target_language`, and generation config). Not part of the first report-builder workflow (REQ-130).
+
+### 10. Translation (§18.11)
+
+Endpoint: `POST https://api.addisassistant.com/api/v1/translate`; body `{ "text": "string", "source_language": "am", "target_language": "en" }`; the translation nests under `data.translation`.
+
+Project use: optional. The app never translates by default because the report may be intentionally Amharic, English, or mixed (PR-17); a later UI control may let the user request final reports in a chosen target language (REQ-130).
+
+### 11. Realtime (§18.12)
+
+Endpoint: `wss://relay.addisassistant.com/ws?apiKey=<API_KEY>`.
+
+Protocol: the client waits for `{ "setupComplete": true }`; the client sends base64 PCM16 audio chunks in JSON envelopes `{ "data": "BASE64_ENCODED_PCM16_CHUNK", "mimeType": "audio/pcm;rate=16000" }`; the server returns base64 PCM16 audio under `serverContent.modelTurn.parts[0].inlineData.data`.
+
+Project use: secret keys are never exposed in browser WebSocket URLs (REQ-123); realtime is not required for the V2 report creation workflow; if implemented later, use a backend-controlled strategy and verify whether Addis AI supports short-lived client tokens (REQ-130).
+
+### 12. Error Mapping (§18.13)
+
+Error object: `{ "status": "error", "error": { "code": "invalid_api_key", "message": "...", "param": "optional" } }`.
+
+| Status | Meaning | Project handling |
+|---|---|---|
+| 400 | Invalid request or missing field | Validation failure — re-check the request, safe user message |
+| 401 | Missing or invalid API key | Config error — key lives in `backend/.env` (REQ-123) |
+| 403 | Key lacks permission | Config error |
+| 404 | Endpoint or model missing | Config error — verify the model name |
+| 429 | Rate limit or quota | Backoff; AI tier 10/1min echo (`## Security` §3, REQ-092) |
+| 500 | Addis AI server error | Provider error — mark chunk failed and continue (REQ-129) |
+| 503 | Service overloaded | Retry with backoff (REQ-129) |
+
+Project handling (REQ-129):
+
+- Map Addis AI errors to safe user messages; never surface raw provider messages.
+- Log provider request IDs and status codes, not raw sensitive report content (echo of `## Logging` AI provider log fields).
+- Implement timeout; on network failure retry 3 times with exponential backoff (1s, 2s, 4s); on provider error (4xx, 5xx) mark the chunk as failed and continue.
+
+### 13. Package And Implementation Implications (§18.14)
+
+- Backend proxy only — Addis AI calls live in backend services, never on the client (REQ-125).
+- Native `fetch` in Node for Addis AI calls (REQ-125).
+- `multer` receives browser audio uploads.
+- Node `FormData`/`Blob` for multipart forwarding where available; if the project Node version does not support reliable multipart forwarding, add a small documented multipart helper package.
+- No Addis AI SDK installed — docs state JavaScript/TypeScript SDKs are coming soon (REQ-125).
+
+### 14. Expansion Markers
+
+- Phase 19 (§19 Other AI Providers): Nvidia and Gemini fallback behavior; STT always stays with Addis AI.
+- Phase 20 (§20 Audio Recording And STT Pipeline): chunking mechanics, MIME priority, `wavSplitter`, and retry wiring against the §7 endpoint.
+- Phase 21 (§21 AI Prompt Requirements): final prompt construction and system-prompt structure delivered through §6.
+- Phase 28 (§28 Error Handling): unified error handling across providers.
 
 ---
 
@@ -1875,7 +2120,7 @@ The interface language rule (§1) applies to UI copy only; the content language 
 
 ### 4. Addis AI Language Rationale
 
-Addis AI is selected because it is specialized in Ethiopian Amharic and is expected to produce more accurate transcription and report generation than general AI tools that are not focused on Ethiopian language use cases (§7, REQ-069). Integration detail arrives in Phase 18.
+Addis AI is selected because it is specialized in Ethiopian Amharic and is expected to produce more accurate transcription and report generation than general AI tools that are not focused on Ethiopian language use cases (§7, REQ-069). Integration details are in `## Addis AI` (Phase 18).
 
 ### 5. Shell And Scroll Layout (§12.2)
 
@@ -1990,7 +2235,7 @@ Accuracy regression is a blocking defect (§8, REQ-073). Any change to the STT p
 
 ### 5. Expansion Markers
 
-- Phase 18 (§18 Addis AI Integration): STT endpoint details.
+- Phase 18 (§18 Addis AI Integration): **DONE — STT endpoint, constraints, and retry rules are in `## Addis AI` §7.**
 - Phase 20 (§20 Audio Recording And STT Pipeline): MediaRecorder, MIME priority, wavSplitter chunking, language code, re-transcription endpoint, error handling and retries.
 - Phase 28 (§28 Error Handling): STT error states.
 
@@ -2574,10 +2819,18 @@ Three tiers:
 - Addis AI `sk_` keys never appear in client code, Vite env vars sent to the browser, localStorage, Redux state, or client logs; Nvidia and Gemini API keys are placed in `backend/.env` only (§17.4, REQ-123; key rules in `## Environment Config` §4).
 - `process.env` is never accessed outside `config/env.js`, which validates all required vars at startup (REQ-083, REQ-120).
 
-### 5. Expansion Markers
+### 5. AI Provider Security (§18)
+
+- Every Addis AI call authenticates with the `x-api-key` header; secret keys start with `sk_` and live only in `backend/.env` (REQ-126, REQ-123, `## Addis AI` §3).
+- Backend-only proxy: no direct client-to-Addis AI calls; keys are never exposed in frontend code (REQ-125, REQ-123).
+- AI endpoints are protected by authentication, and rate limits apply on auth and AI endpoints (echo of §3; AI tier 10/1min, REQ-092).
+- Keys are never logged; provider request IDs and status codes are logged, never raw sensitive report content (REQ-129, `## Addis AI` §12).
+- Realtime WebSocket URLs never carry real keys in the browser; a later realtime strategy must be backend-controlled (REQ-130, `## Addis AI` §11).
+
+### 6. Expansion Markers
 
 - Phase 17 (§17 Environment Variables): **DONE (Phase 17)** — secret handling in §4 above.
-- Phase 18 (§18 Addis AI Integration): AI provider security.
+- Phase 18 (§18 Addis AI Integration): **DONE — AI provider security in §5 above.**
 - Phase 29 (§29 Security): full security section.
 
 ---
@@ -3139,7 +3392,7 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 
 ### 6. Expansion Markers
 
-- Phase 18 (§18 Addis AI Integration): how the `ADDIS_AI_*` vars are consumed by the Addis AI service.
+- Phase 18 (§18 Addis AI Integration): **DONE — `ADDIS_AI_*` consumption is documented in `## Addis AI` §2 (base URL), §3 (key), §4 (models), §5 (language codes), §6–7 (endpoints), and §13 (implementation).**
 - Phase 19 (§19 Other AI Providers): Nvidia and Gemini keys and base URLs.
 - Phase 29 (§29 Security): deep environment-secret handling rules.
 
@@ -3314,4 +3567,8 @@ Phases 1–16 are GREEN (2026-08-01). Phase 16 built the UI rules from §16: enr
 
 ## End Of Phase 17 Content
 
-Phases 1–17 are GREEN (2026-08-01). Phase 17 built the environment variables from §17: new `## Environment Config` seed (environment file rules — `.env` gitignored per the root `.gitignore`, `.env` files exist locally, no `.env.example` files, the three-step new-var process, `process.env` never accessed outside `config/env.js`, `VITE_`-prefixed client vars via `import.meta.env.*`; the 22-required + 5-optional backend env table verified against `backend/.env` — all required keys present except `LOG_LEVEL`, `OAUTH_GOOGLE_*` present, `GOOGLE_SERVICE_ACCOUNT_*` absent — with defaults (development, 4000, http://localhost:3000, 15m/7d, am, 360000, ffmpeg/ffprobe); the client env contract verified against `client/.env`; the six AI key never-rules for `sk_`/Nvidia/Gemini keys; the frozen `utils/constants.js` constants contract — Audio, Pagination, STT, Auth, AI Generation, AI Correction), enriched `## Rules` (Environment Config Rules — REQ-120..124), enriched `## Security` (Environment Secret Handling — JWT/OAuth/service-account secrets and AI key rules), flipped the Phase 17 forward markers in `## Rules`, `## Security`, and `## Auth Cookies` to DONE, added REQ-120..124, extended `## Glossary` (config/env.js (env gate), import.meta.env), updated the Checklist (Environment Config — GREEN seed; Security and Rules — GREEN enrichment), and added the Phase 17 Source Trace Map with the `.env` codebase facts. Phase 18 will build the Addis AI integration.
+Phases 1–17 are GREEN (2026-08-01). Phase 17 built the environment variables from §17: new `## Environment Config` seed (environment file rules — `.env` gitignored per the root `.gitignore`, `.env` files exist locally, no `.env.example` files, the three-step new-var process, `process.env` never accessed outside `config/env.js`, `VITE_`-prefixed client vars via `import.meta.env.*`; the 22-required + 5-optional backend env table verified against `backend/.env` — all required keys present except `LOG_LEVEL`, `OAUTH_GOOGLE_*` present, `GOOGLE_SERVICE_ACCOUNT_*` absent — with defaults (development, 4000, http://localhost:3000, 15m/7d, am, 360000, ffmpeg/ffprobe); the client env contract verified against `client/.env`; the six AI key never-rules for `sk_`/Nvidia/Gemini keys; the frozen `utils/constants.js` constants contract — Audio, Pagination, STT, Auth, AI Generation, AI Correction), enriched `## Rules` (Environment Config Rules — REQ-120..124), enriched `## Security` (Environment Secret Handling — JWT/OAuth/service-account secrets and AI key rules), flipped the Phase 17 forward markers in `## Rules`, `## Security`, and `## Auth Cookies` to DONE, added REQ-120..124, extended `## Glossary` (config/env.js (env gate), import.meta.env), updated the Checklist (Environment Config — GREEN seed; Security and Rules — GREEN enrichment), and added the Phase 17 Source Trace Map with the `.env` codebase facts. Phase 18 built the Addis AI integration.
+
+## End Of Phase 18 Content
+
+Phases 1–18 are GREEN (2026-08-01). Phase 18 built the Addis AI integration from §18: new `## Addis AI` seed (provider identity and primary sources, base URLs and platform, authentication and key rules, core model families, language support, text generation and speech-to-text contracts with request/response shapes, TTS/multimodal/translation/realtime non-first-workflow notes, error mapping with the status table and project handling, package and implementation implications), enriched `## AI Prompt Spec` (new §7 Delivery To The Addis AI Endpoint — PR-01..18 seeds delivered via `chat_generate` with the frozen-constants generation config), enriched `## API Contract` (new §5 Addis AI Provider Endpoints — backend service dependencies), enriched `## Security` (new §5 AI Provider Security), flipped the Phase 18 forward markers in `## AI Prompt Spec`, `## Security`, `## Environment Config`, and `## Audio Recording STT` to DONE, updated the `## UI/UX Spec` Addis AI rationale cross-ref, added REQ-125..131, extended `## Glossary` (Addis-፩-አሌፍ, x-api-key), updated the Checklist (Addis AI — GREEN seed; AI Prompt Spec, API Contract, Security — GREEN enrichment), and added the Phase 18 Source Trace Map with the `backend/.env` codebase facts. Phase 19 will build the other AI providers.
