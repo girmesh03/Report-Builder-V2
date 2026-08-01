@@ -56,7 +56,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 22 | 22. Export | GREEN | Export Spec, API Contract, Work Flow |
 | 23 | 23. Mock Data | GREEN | Mock Data Seeding, Data Modeling, Tasks |
 | 24 | 24. Data Model | GREEN | Data Modeling, API Contract, Business Rules, Report Domain |
-| 25 | 25. Project Directory Structure | PENDING | Project Directory Structure, Coding Conventions, Architecture |
+| 25 | 25. Project Directory Structure | GREEN | Project Directory Structure, Coding Conventions, Architecture |
 | 26 | 26. Code Quality And Coding Conventions | PENDING | Coding Conventions, Rules, JSDoc Standards, Checklists |
 | 27 | 27. JSDoc Conventions | PENDING | JSDoc Standards, Coding Conventions |
 | 28 | 28. Error Handling Patterns | PENDING | Error Handling, API Contract, Validation Audit |
@@ -80,21 +80,21 @@ Status of every section the target document must contain at minimum. Extra secti
 | Addis AI | 18 | GREEN (Phase 18 seed) |
 | AI Prompt Spec | 6, 7, 18, 19, 21, 24 | GREEN (Phase 7, 18, 19, 21, 24 enrichment) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
-| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 28 | GREEN (Phase 13, 18, 20, 22, 24 enrichment) |
-| Architecture | 9, 10, 25 | GREEN (Phase 10 enrichment) |
+| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 25, 28 | GREEN (Phase 13, 18, 20, 22, 24, 25 enrichment) |
+| Architecture | 9, 10, 25 | GREEN (Phase 10, 25 enrichment) |
 | Audio Recording STT | 8, 20, 24 | GREEN (Phase 8 seed, Phase 20, 24 enrichment) |
 | Auth Cookies | 11 | GREEN (Phase 11 seed) |
-| Backend Architecture | 10, 24 | GREEN (Phase 10 seed, Phase 24 enrichment) |
+| Backend Architecture | 10, 24, 25 | GREEN (Phase 10 seed, Phase 24, 25 enrichment) |
 | Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
 | Business Rules | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
 | Checklists | 26, 30, 31 | PENDING |
-| Coding Conventions | 9, 25, 26, 27 | GREEN (Phase 9 seed) |
+| Coding Conventions | 9, 25, 26, 27 | GREEN (Phase 9 seed, Phase 25 enrichment) |
 | Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11, 20, 23, 24 enrichment) |
 | Decision Log | 1, 2, 24, 33 | GREEN |
 | Design | consolidated across phases; finalized in 36 | PENDING |
-| Environment Config | 17, 19 | GREEN (Phase 17 seed, Phase 19 enrichment) |
+| Environment Config | 17, 19, 25 | GREEN (Phase 17 seed, Phase 19, 25 enrichment) |
 | Error Handling | 28 | PENDING |
-| Export Spec | 6, 22 | GREEN (Phase 6 seed, Phase 22 enrichment) |
+| Export Spec | 6, 22, 25 | GREEN (Phase 6 seed, Phase 22, 25 enrichment) |
 | File Storage Uploads | 20 | PENDING |
 | Frontend Architecture | 12, 13, 14 | GREEN (Phase 13 enrichment) |
 | Git Workflow | 32 | PENDING |
@@ -110,18 +110,18 @@ Status of every section the target document must contain at minimum. Extra secti
 | PRD | 1, 2, 3, 4 | GREEN (Phase 4 enrichment) |
 | Problem Statement | 1, 2 | GREEN |
 | Profile Management | 4 | GREEN (Phase 4 seed) |
-| Project Directory Structure | 9, 10, 12, 13, 25, 30 | GREEN (Phase 14 enrichment) |
+| Project Directory Structure | 9, 10, 12, 13, 25, 30 | GREEN (Phase 14, 25 enrichment) |
 | Project Overview | 1 | GREEN |
 | React Hook Form Standards | 15 | GREEN (Phase 15 seed) |
 | Redux RTK Query | 13 | GREEN (Phase 13 seed) |
 | Report Domain | 3, 5, 24 | GREEN (Phase 5, 24 enrichment) |
 | Report Format | 6, 7, 21 | GREEN (Phase 7, 21 enrichment) |
 | Report Management | 4, 5, 24, 35 | GREEN (Phase 5, 24 enrichment) |
-| Requirements | 1, 2, 4, 9, 24, 29, 31, 34 | GREEN (Phase 9, 24 enrichment) |
+| Requirements | 1, 2, 4, 9, 24, 25, 29, 31, 34 | GREEN (Phase 9, 24, 25 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
 | Routing Layout | 12 | GREEN |
 | Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16, 17, 21 enrichment) |
-| Security | 11, 17, 18, 29 | GREEN (Phase 11 seed, Phase 17, 18 enrichment) |
+| Security | 11, 17, 18, 25, 29 | GREEN (Phase 11 seed, Phase 17, 18, 25 enrichment) |
 | Source Traceability | 31 | PENDING |
 | Status Machine | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
 | Tasks | 23 (seed — content lives in ## Mock Data Seeding), 32 | PENDING |
@@ -131,7 +131,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | User Interactions | 3, 16, 22, 35 | GREEN (Phase 3 seed, Phase 16 enrichment) |
 | User Stories | 2 (seed), 4 | GREEN (Phase 2 seed) |
 | Validation Audit | 8, 15, 24, 28, 31 | GREEN (Phase 8 seed, Phase 15, 24 enrichment) |
-| Work Flow | 3, 22, 35 | GREEN (Phase 3 seed, Phase 22 enrichment) |
+| Work Flow | 3, 22, 25, 35 | GREEN (Phase 3 seed, Phase 22, 25 enrichment) |
 
 ---
 
@@ -405,7 +405,7 @@ All `§` references below identify sections of the original source brief. They a
 | Source ref | Fact | Recorded in spec section |
 |---|---|---|
 | §17.1 | `.env` files are gitignored and not committed; they exist locally with placeholder or correct values; no `.env.example` files; new env vars added in three steps (local `.env` → config object → validation/default in `config/env.js`); `process.env` never accessed outside `config/env.js`; client vars `VITE_`-prefixed via `import.meta.env.*` | Environment Config (1), Rules (5), Security (4), Requirements (REQ-120) |
-| §17.2 | Backend env contract: 22 required vars with defaults (NODE_ENV development, PORT 4000, CLIENT_ORIGIN http://localhost:3000, MONGODB_URI report-builder-v2, JWT secrets min 32 chars with 15m/7d TTLs, seven ADDIS_AI_* vars with `sk_` placeholder key, LOG_LEVEL debug/info, NVIDIA/GEMINI keys and base URLs, FFMPEG/FFPROBE system paths) and 5 optional vars (OAUTH_GOOGLE_*, GOOGLE_SERVICE_ACCOUNT_* Docs-export-only) | Environment Config (2), Security (4), Rules (5), Requirements (REQ-121) |
+| §17.2 | Backend env contract: 22 required vars with defaults (NODE_ENV development, PORT 4000, CLIENT_ORIGIN http://localhost:3000, MONGODB_URI report-builder-v2, JWT secrets min 32 chars with 15m/7d TTLs, seven ADDIS_AI_* vars with `sk_` placeholder key, LOG_LEVEL debug/info, NVIDIA/GEMINI keys and base URLs, FFMPEG/FFPROBE system paths) and 3 optional vars (OAUTH_GOOGLE_*; the GOOGLE_SERVICE_ACCOUNT_* pair was part of the original 5 and is retired in Phase 25 — REQ-177) | Environment Config (2), Security (4), Rules (5), Requirements (REQ-121) |
 | §17.3 | Client env contract: VITE_API_BASE_URL (default http://localhost:4000/api/v1) and VITE_APP_NAME (default Report Builder V2), both required, read via `import.meta.env` | Environment Config (3), Rules (5), Requirements (REQ-122) |
 | §17.4 | AI key rules: Addis AI `sk_` keys never in client code, browser-sent Vite env vars, localStorage, Redux state, or client logs; Nvidia and Gemini keys in `backend/.env` only | Environment Config (4), Security (4), Rules (5), Requirements (REQ-123) |
 | §17.5 | Backend constants as one frozen object in `utils/constants.js`: Audio (900, 52428800, four MIME types), Pagination (1, 10, 100), STT (60), Auth (12), AI Generation (0.2, 2048, 0.9, 40), AI Correction (2048, 0.15) | Environment Config (5), Backend Architecture (5), Requirements (REQ-124) |
@@ -468,9 +468,9 @@ All `§` references below identify sections of the original source brief. They a
 | §22 | TXT export: client-side, Blob UTF-8, plain structure preserving the report format | Export Spec (2), Requirements (REQ-155) |
 | §22 | CSV export: client-side, Blob UTF-8 with BOM for Excel compatibility, structured columns | Export Spec (2), Requirements (REQ-156) |
 | §22 | XLSX export: client-side, multi-sheet workbook — content, version history (with metadata), and metadata (provider, dates, status) sheets; workbook library chosen at implementation | Export Spec (2), Requirements (REQ-157) |
-| §22 | Google Docs export: backend-only via Google Docs API with a Google Service Account; creates the document from the report content; sharing set to "Anyone with link can view"; URL returned; frontend opens it in a new tab; user edits freely in Google Docs | Export Spec (4), API Contract (7), Work Flow (5), Requirements (REQ-158) |
+| §22 | Google Docs export: backend-only; the document is created in the user's own Google Drive with the user's own Google OAuth token (`drive.file` scope) and the URL is returned; frontend opens it in a new tab; user edits freely in their Drive (service-account mechanism replaced in Phase 25 by user decision) | Export Spec (4), API Contract (7), Work Flow (5), Requirements (REQ-158, REQ-177) |
 | §22 | The four client-side formats (PDF, TXT, CSV, XLSX) are generated in the browser — no backend export endpoints for them; the Google Docs export is the only backend export | Export Spec (3), API Contract (7), Requirements (REQ-159) |
-| §22 + codebase (`client/package.json`) | `jspdf` ^4.2.1 and `jspdf-autotable` ^5.0.8 are already installed in `client/package.json`; no workbook library is installed (chosen at implementation); `GOOGLE_SERVICE_ACCOUNT_EMAIL`/`GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` are optional env vars (`## Environment Config` §2, REQ-121), absent from `backend/.env` and added when the Google Docs export is enabled | Export Spec (2, 4), API Contract (7) |
+| §22 + codebase (`client/package.json`) | `jspdf` ^4.2.1 and `jspdf-autotable` ^5.0.8 are already installed in `client/package.json`; no workbook library is installed (chosen at implementation); `GOOGLE_SERVICE_ACCOUNT_EMAIL`/`GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` were verified as optional env vars absent from `backend/.env` (retired in Phase 25 — REQ-177; the export now uses the user's own OAuth token) | Export Spec (2, 4), API Contract (7) |
 
 ## Source Trace Map — Phase 23 (source §23)
 
@@ -496,6 +496,21 @@ All `§` references below identify sections of the original source brief. They a
 | §24.8 | Branch schema: `name` (required), `location`, `isArchived`/`archivedAt`, `user` ref; unique `{ user, name }` index; TTL 30-day partial `archivedAt` | Data Modeling (4.5), API Contract (8) |
 | §24.9 | ChatConversation schema: `user`/`report` refs (required), `title` (default "New Chat"), `messages[]` (`{ id, role, status, parts (4 tool shapes), provider ("addis" | "gemini" | "nvidia"), createdAt }` — provider is the user-approved Phase 24 extension for REQ-133); index `{ user, updatedAt: -1 }`; deleting a report does not delete its conversations | Data Modeling (4.6), API Contract (8), Other AI Providers (2), Requirements (REQ-172) |
 | §24.10 | Relationship model: Report is the hub — Audio/Transcription point back to Report; bidirectional user ownership on Report, Branch, Audio, Transcription, ChatConversation | Data Modeling (2) |
+
+## Source Trace Map — Phase 25 (source §25)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §25.1 | Explicit backend paths: `app.js`, `server.js`, `config/env.js`, `config/db.js`, `routes/index.js`, per-domain `routes/*.js` modules, per-domain `validators/*.js`, `utils/constants.js`, `utils/httpStatus.js`, `utils/logger.js`, `services/oauth.service.js`, `middleware/notFound.middleware.js` (unmatched routes → `CustomError(404)` → `next()`), `mock/*`, `uploads/audio/` (runtime-created, gitignored `{uuid}.webm` clips) | Project Directory Structure (1, 4), Backend Architecture (10), Mock Data Seeding (6), Requirements (REQ-174) |
+| §25.2 | Explicit frontend paths: `client/src/main.jsx`, `App.jsx`, lazy-loaded `pages/*`, `components/layout/*`, `components/<domain>/*`, `utils/constants.js`, `redux/app/store.js`, `redux/features/api.js` and `<name>Slice.js` files, `components/reusable/*`, `components/columns/*`, `theme/*` (incl. `redux/features/assistantApi.js`) | Project Directory Structure (5), Requirements (REQ-175) |
+| §25.3 | Complete tree generated from the current `backend/*` + `client/*` codebases plus the §25.1/§25.2 explicit paths and this document | Project Directory Structure (1, 4, 5, 6), Requirements (REQ-173) |
+| §10.3 + §25.1 | Per-domain file pattern: one controller file per domain — `<domain>.controller.js` / `<domain>.routes.js` / `<domain>.validator.js` / `<domain>.model.js`; external integrations in `services/*.service.js`; cross-cutting concerns in `middleware/*.middleware.js` | Coding Conventions (6), Project Directory Structure (4, 6), Requirements (REQ-176) |
+| §25.4 | Directory conventions: no source files are created outside the documented tree; every file created during implementation lands in the §4/§5 subtrees | Project Directory Structure (6), Requirements (REQ-173) |
+| Phase 25 user decision (AD-012) | Google Docs export uses the user's own Google OAuth token (login flow extended with the `drive.file` scope) to create the document in the user's own Google Drive — replacing the earlier Google Service Account mechanism, which cannot place files in a user's Drive | Export Spec (4), API Contract (7), Work Flow (5), Environment Config (2), Security (4), Glossary, Requirements (REQ-158, REQ-177), Decision Log (AD-012) |
+| Phase 25 user decision (AD-013) | AI provider integrations live in separate services files — `addis.service.js`, `gemini.service.js`, `nvidia.service.js` — plus `googleDocs.service.js`; controllers stay thin | Architecture (5), Coding Conventions (6), Project Directory Structure (4), Decision Log (AD-013) |
+| Phase 25 user decision | Google Docs export endpoint path finalized: `POST /api/v1/reports/:reportId/export`; handler `exportReport` in `report.controller.js`; document creation in `services/googleDocs.service.js` | API Contract (7), Project Directory Structure (4) |
+| Phase 25 | Mock entry points finalized: `backend/mock/seed.js` and `backend/mock/wipe.js`, npm scripts `mock:seed`/`mock:wipe` with the `NODE_ENV` production guard — resolves the Phase 23 deferral | Mock Data Seeding (6), Project Directory Structure (4) |
+| Codebase (`backend/`, `client/`) | `backend/` holds only `.env`, `package.json`, `package-lock.json`; `client/src` holds only `main.jsx`, `App.jsx`, `theme/`, `assets/` — the rest of the tree is created during implementation | Project Directory Structure (1, 4, 5, 6) |
 
 ---
 
@@ -836,7 +851,7 @@ Secondary features should not distract from the core workflow of generating a bo
 | z-ai/glm-5.2 | The Nvidia text-generation model used as a fallback provider; configured via `NVIDIA_API_KEY` and called through the Nvidia message format with a bearer token. | §19.2 |
 | aiCorrectedText | Superseded field name (Phase 24, AD-011): AI transcription corrections are stored as `Transcription.latest` plus a new `history[]` entry whose `reviewer` is the provider string (`## Data Modeling` §4.3). | §21.4 |
 | Noto Sans Ethiopic | The Amharic-capable Unicode font used to render Amharic text in the PDF export (section headers and body). | §22 |
-| Google Service Account | The server-side identity the backend uses to authenticate to the Google Docs API for the Google Docs export; configured via the optional `GOOGLE_SERVICE_ACCOUNT_EMAIL` and `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` environment variables. | §22 |
+| Google Drive export | The Google Docs export mechanism (Phase 25 user decision): the backend creates the document with the user's own Google OAuth token — the login flow extended with the `drive.file` scope — so the document lands in the user's own Google Drive, fully owned and editable by the user. | §22 |
 | Mock data | Development/demo-only records injected into MongoDB via `backend/mock/*`; injection and wipe run inside MongoDB sessions, mock narrations are metadata-only (no audio files), and the commands refuse to run when `NODE_ENV` is `production` (AD-009). | §23, §33 (ADR-037) |
 
 ---
@@ -1163,7 +1178,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | ID | Requirement | Acceptance criteria | Source |
 |---|---|---|---|
 | REQ-120 | Environment file rules: `.env` files are gitignored and never committed; no `.env.example` files are created; new env vars follow the three-step process (local `.env` → config object in `config/env.js` → validation/default logic in `config/env.js`); `process.env` is never accessed outside `config/env.js`; client env vars are prefixed with `VITE_` and read via `import.meta.env.*`. | `.env` is gitignored; no `.env.example` exists; new vars are added through all three steps; no `process.env` access outside `config/env.js`; client reads only `VITE_*` vars via `import.meta.env`. | §17.1 |
-| REQ-121 | The backend reads every environment variable required by the §17.2 contract — NODE_ENV, PORT, CLIENT_ORIGIN, MONGODB_URI, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET (each min 32 chars), JWT_ACCESS_EXPIRES_IN, JWT_REFRESH_EXPIRES_IN, the seven ADDIS_AI_* vars, LOG_LEVEL, NVIDIA_API_KEY, GEMINI_API_KEY, NVIDIA_API_BASE_URL, GEMINI_API_BASE_URL, FFMPEG_PATH, FFPROBE_PATH — and validates them in `config/env.js` at startup; the optional OAUTH_GOOGLE_* and GOOGLE_SERVICE_ACCOUNT_* vars load when present. | Missing required vars fail startup validation with a clear error; defaults (development, 4000, http://localhost:3000, 15m, 7d, am, 360000, ffmpeg, ffprobe) apply when the source allows; optional vars are read only when defined. | §17.2 |
+| REQ-121 | The backend reads every environment variable required by the §17.2 contract — NODE_ENV, PORT, CLIENT_ORIGIN, MONGODB_URI, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET (each min 32 chars), JWT_ACCESS_EXPIRES_IN, JWT_REFRESH_EXPIRES_IN, the seven ADDIS_AI_* vars, LOG_LEVEL, NVIDIA_API_KEY, GEMINI_API_KEY, NVIDIA_API_BASE_URL, GEMINI_API_BASE_URL, FFMPEG_PATH, FFPROBE_PATH — and validates them in `config/env.js` at startup; the optional OAUTH_GOOGLE_* vars load when present. | Missing required vars fail startup validation with a clear error; defaults (development, 4000, http://localhost:3000, 15m, 7d, am, 360000, ffmpeg, ffprobe) apply when the source allows; optional vars are read only when defined. | §17.2 |
 | REQ-122 | The client reads `VITE_API_BASE_URL` (default http://localhost:4000/api/v1) and `VITE_APP_NAME` (default Report Builder V2) via `import.meta.env.*`. | `client/.env` carries both keys; the Redux RTK Query client uses `VITE_API_BASE_URL` through `API_CONFIG`; no client env var lacks the `VITE_` prefix. | §17.3 |
 | REQ-123 | AI key rules: Addis AI `sk_` keys never appear in client code, Vite env vars sent to the browser, localStorage, Redux state, or client logs; Nvidia and Gemini API keys are placed in `backend/.env` only. | No `sk_` value exists anywhere in `client/src`, browser-visible Vite env, localStorage, Redux state, or client logs; Nvidia/Gemini keys exist only in `backend/.env`. | §17.4 |
 | REQ-124 | Backend constants are grouped and frozen in a single `Object.freeze()` object exported from `backend/utils/constants.js` — Audio (900, 52428800, the four MIME types), Pagination (1, 10, 100), STT (60), Auth (12), AI Generation (0.2, 2048, 0.9, 40), AI Correction (2048, 0.15) — and nothing is hardcoded in request handlers. | `utils/constants.js` exports one frozen object with the §17.5 groups and values; request handlers reference it instead of literals. | §17.5 |
@@ -1225,7 +1240,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-155 | TXT export: the finalized report downloads as a plain-text file (Blob, UTF-8) preserving the §6.1 report format structure; no styling. | A UTF-8 `.txt` file downloads with the report content in order. | §22 |
 | REQ-156 | CSV export: the finalized report downloads as a CSV file (Blob, UTF-8 with byte-order mark) with structured columns mapping the report content, so it opens as a usable spreadsheet (Excel-compatible). | A `.csv` file downloads and opens correctly in Excel with the report content in structured columns. | §22 |
 | REQ-157 | XLSX export: the finalized report downloads as a multi-sheet workbook — a content sheet (the report), a version history sheet (every report version with date, version note, status), and a metadata sheet (AI provider, generation date, report status); the workbook library is chosen at implementation. | A `.xlsx` workbook downloads with all three sheets populated. | §22 |
-| REQ-158 | Google Docs export: the backend authenticates to the Google Docs API with a Google Service Account (`GOOGLE_SERVICE_ACCOUNT_EMAIL`/`GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`, `## Environment Config` §2, REQ-121), creates the document from the report content, sets sharing to "Anyone with link can view", and returns the URL; the frontend opens the URL in a new tab; the user may edit the document freely in Google Docs, outside the app; service account credentials are server-side only and never exposed to the client. | Selecting the Google Docs export returns a shareable document URL that opens in a new tab; no credentials appear in the browser. | §22 |
+| REQ-158 | Google Docs export: the backend uses the user's own Google OAuth token (the Google login flow extended with the `drive.file` scope) to create the document from the report content directly in the user's own Google Drive, and returns the document URL; the frontend opens the URL in a new tab; the user owns the document and may edit, share, download, or move it freely in Google Drive, outside the app; the user's OAuth token is stored and refreshed server-side only and never exposed to the client. | Selecting the Google Docs export returns the URL of a document that appears in the user's own Google Drive and opens in a new tab; no credentials appear in the browser. | §22 (amended in Phase 25 by user decision) |
 | REQ-159 | Client-side-only rule: PDF, TXT, CSV, and XLSX exports are generated entirely in the browser — there are no backend export endpoints for these four formats; the Google Docs export (REQ-158) is the only backend export. | No `/api/v1` export routes exist for the four client-side formats; the exported content is the report as it exists at export time, with no AI re-processing. | §22 |
 
 - Export rules: **Phase 22 — DONE (REQ-154..159)**.
@@ -1252,6 +1267,11 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-170 | User `firstName`/`lastName` are extracted from the email local part (or the Google profile name): `beza.ayalew@example.com` → firstName `"beza"`, lastName `"ayalew"`; a local part without a separator yields a single firstName and an empty lastName. | Registration stores the extracted names; profiles can be updated later. | §24.7, §11 |
 | REQ-171 | Each successful report generation appends a `generatedHistory[]` entry `{ provider, text, generatedAt }` and overwrites `Report.generated`; regeneration appends rather than replaces history. | After N generations the history array holds N entries; `generated` holds the latest text. | §24.4 (AD-010) |
 | REQ-172 | ChatConversation messages carry `{ id, role, status, parts, provider, createdAt }` — `provider` is the enum `addis | gemini | nvidia` and `parts` supports the four tool shapes. | Conversation documents store messages with a provider value and parts; the provider distinguishes corrections from initial generation (REQ-133). | §24.9 (user decision, AD-011) |
+| REQ-173 | The complete future-state repository tree — repository root, backend, and client — is recorded in `## Project Directory Structure` §1, §4, and §5 per §25.3; every file created during implementation lands in the documented subtree, and new paths are added to the tree when phases introduce them. | The documented tree matches the implemented repository at the end of implementation; the tree contains no path absent from the codebase or the source brief. | §25.3 |
+| REQ-174 | The explicit §25.1 backend paths exist and are used: `app.js`, `server.js`, `config/env.js`, `config/db.js`, `routes/index.js`, per-domain `routes/*.js` modules, per-domain `validators/*.js`, `utils/constants.js`, `utils/httpStatus.js`, `utils/logger.js`, `services/oauth.service.js`, `middleware/notFound.middleware.js`, `mock/*`, and `uploads/audio/`. | All listed paths exist in the implemented backend and serve their documented role. | §25.1 |
+| REQ-175 | The explicit §25.2 frontend paths exist and are used: `client/src/main.jsx`, `App.jsx`, lazy-loaded `pages/*`, `components/layout/*`, `components/<domain>/*`, `utils/constants.js`, `redux/app/store.js`, `redux/features/api.js` and `<name>Slice.js` files, `components/reusable/*`, `components/columns/*`, and `theme/*`. | All listed paths exist in the implemented client and serve their documented role. | §25.2 |
+| REQ-176 | Backend per-domain files follow the `<domain>.controller.js` / `<domain>.routes.js` / `<domain>.validator.js` / `<domain>.model.js` naming pattern with one controller file per domain (auth, branch, report, audio, transcription, ai, user, analytics); external integrations live in `services/*.service.js`; cross-cutting concerns live in `middleware/*.middleware.js`. | The implemented backend matches the `## Project Directory Structure` §4 tree file for file. | §10.3, §25.1 |
+| REQ-177 | The Google Docs export creates the document with the user's own Google OAuth token — the Google login flow extended with the `drive.file` scope — so the document lands in the user's own Google Drive, fully owned and editable by the user; no Google Service Account is used. | The exported document appears in the user's Google Drive and is owned, editable, shareable, and downloadable by them; no service-account credentials exist in the environment contract. | §22 (Phase 25 user decision) |
 
 ### Non-Functional Requirements (Phase 1)
 
@@ -1449,9 +1469,9 @@ The supervisor exports the finalized report (after W-11) from the report UI:
 |---|---|---|---|---|
 | E-01 | Supervisor | Chooses an export format from the export control on the finalized report: PDF, TXT, CSV, XLSX (client-side), or Google Docs (backend) | Format selection | `## Export Spec` §2–4, `## API Contract` §7 |
 | E-02 | System | Generates the file in the browser for the four client-side formats (no backend call) and downloads it immediately | Downloaded PDF/TXT/CSV/XLSX file | `## Export Spec` §2–3, REQ-154..157, REQ-159 |
-| E-03 | System | For Google Docs: calls the backend export endpoint, which creates the Google document with the report content, sets sharing to "Anyone with link can view", and returns the document URL | Document URL | `## Export Spec` §4, `## API Contract` §7, REQ-158 |
+| E-03 | System | For Google Docs: calls the backend export endpoint, which creates the Google document with the report content in the user's own Google Drive (via the user's Google OAuth token) and returns the document URL | Document URL | `## Export Spec` §4, `## API Contract` §7, REQ-158 |
 | E-04 | System | Opens the returned Google Docs URL in a new tab | Google Docs document (view/edit) | REQ-158 |
-| E-05 | Supervisor | Views and, if desired, edits the document freely in Google Docs; edits happen outside the app and are not synced back | Edited document (in Google Docs) | `## Export Spec` §4, REQ-158 |
+| E-05 | Supervisor | Views and, if desired, edits the document freely in their own Google Drive; edits happen outside the app and are not synced back | Edited document (in the user's Google Drive) | `## Export Spec` §4, REQ-158 |
 
 - Export is available only on a finalized report (W-11 precedes W-12); the exported content is the report as it exists at export time — no AI re-processing (REQ-159).
 - Failure outcomes: a client-side generation failure shows an error state (Phase 28); a Google Docs failure surfaces the backend error through the §10.7 envelope (REQ-158).
@@ -1890,8 +1910,8 @@ Lifecycle: `draft → audio_attached → transcribed → reviewed → completed`
 ### 7. Export (Phase 22)
 
 - **Client-side formats need no backend endpoints** — PDF, TXT, CSV, and XLSX exports are generated entirely in the browser (`## Export Spec` §2, §3; REQ-159). The frontend generates the file from the report data it already holds (via the RTK Query API client, REQ-104) and triggers the download directly; there is no `/api/v1/export` route for these formats.
-- **Google Docs export — the only backend export** — the backend authenticates to the Google Docs API with a Google Service Account using the optional `GOOGLE_SERVICE_ACCOUNT_EMAIL` and `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` environment variables (`## Environment Config` §2, REQ-121), creates the document from the report content, sets the sharing permission to "Anyone with link can view", and returns the document URL (REQ-158). The exact path is defined at implementation (Phase 25 `backend/controllers`), consistent with the Phase 10 precedent of finalizing paths in later phases; responses use the §10.7 envelope. The frontend opens the returned URL in a new tab (`## Work Flow` §5, REQ-158).
-- Google service account credentials are server-side only and must never be exposed to the client (REQ-158).
+- **Google Docs export — the only backend export** — `POST /api/v1/reports/:reportId/export` (path finalized in Phase 25): the backend calls the Google Docs API with the **user's own Google OAuth token** (the Google login flow extended with the `drive.file` scope) and creates the document from the report content directly in the **user's own Google Drive** — fully owned and editable by the user, no sharing-permission step (REQ-158, REQ-177; `## Export Spec` §4). The handler is `exportReport` in `report.controller.js`; document creation lives in `services/googleDocs.service.js` (`## Project Directory Structure` §4). Responses use the §10.7 envelope. The frontend opens the returned URL in a new tab (`## Work Flow` §5, REQ-158).
+- The user's Google OAuth token is stored and refreshed server-side only and must never be exposed to the client (REQ-158, REQ-177).
 
 ### 8. Model-Driven Contracts (Phase 24, §24 Data Model)
 
@@ -2606,12 +2626,13 @@ The four client-side formats export the report content as it exists in the app a
 
 PDF, TXT, CSV, and XLSX exports are generated entirely in the browser — there are no backend export endpoints for these four formats (REQ-159). The Google Docs export (§4) is the only backend export in the system (endpoint contract in `## API Contract` §7).
 
-### 4. Google Docs Backend Export (§22)
+### 4. Google Docs Backend Export (§22, Phase 25 user decision)
 
-- Exporting to Google Docs is backend-only: the backend authenticates to the Google Docs API with a **Google Service Account** using the optional `GOOGLE_SERVICE_ACCOUNT_EMAIL` and `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` environment variables (`## Environment Config` §2, REQ-121); these are absent from `backend/.env` and are added when the Google Docs export is enabled.
-- The backend creates the Google document from the generated report content, sets the sharing permission to "Anyone with link can view", and returns the document URL to the frontend (REQ-158).
-- The frontend opens the returned URL in a new tab; the user can then view and edit the document freely in Google Docs — editing happens in Google Docs, outside the app, and is not synced back (REQ-158).
-- Google service account credentials are server-side only and must never be exposed to the client (REQ-158).
+- Exporting to Google Docs is backend-only: the backend uses the **user's own Google OAuth token** — the Google login flow extended with the `drive.file` scope — to call the Google Docs API and create the document from the generated report content directly in the **user's own Google Drive** (REQ-158, REQ-177).
+- The user owns the resulting document: it appears in their Drive and can be edited, shared, downloaded, or moved freely — no sharing-permission step is needed.
+- The backend returns the document URL; the frontend opens it in a new tab; edits happen in the user's Drive, outside the app, and are not synced back (REQ-158).
+- The user's Google OAuth token is stored and refreshed server-side only and must never be exposed to the client (REQ-158, REQ-177).
+- **Reconciliation note (Phase 25 user decision):** the earlier service-account mechanism (`GOOGLE_SERVICE_ACCOUNT_EMAIL`/`GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` with "Anyone with link can view") was replaced — a service account cannot place files in a user's Drive. `## Environment Config` §2, `## Security`, `## Glossary`, `## API Contract` §7, and `## Work Flow` §5 reflect the change.
 
 ### 5. Expansion Markers
 
@@ -2851,7 +2872,7 @@ This seed covers transcription accuracy and form validation. Full validation and
 
 ## Architecture
 
-> **Phase 9 seed — the stack-level architecture from §9, enriched in Phase 10 with the §10 backend architecture. Frontend architecture arrives in Phase 12; implementation architecture in Phase 25.**
+> **Phase 9 seed — the stack-level architecture from §9, enriched in Phase 10 with the §10 backend architecture. Frontend architecture arrived in Phase 12; implementation architecture finalized in Phase 25.**
 
 ### 1. Repository Layout
 
@@ -2869,25 +2890,26 @@ React 19, Vite 8, MUI 9, React Redux, Redux Toolkit, React Router 8, React Hook 
 
 `backend/package.json` and `client/package.json` are the source of truth for package versions (§9.2, REQ-079). The packages are already installed; other required packages can be installed if needed.
 
-### 5. Backend Architecture (Phase 10)
+### 5. Backend Architecture (Phase 10, final Phase 25)
 
 Backend architecture mandated by §10 (full detail in `## Backend Architecture`):
 
 - **Layering:** routes → validators → controllers → models. All routes are mounted under `/api/v1`; `backend/routes/index.js` imports and mounts all route modules; `app.js` registers no routes directly (§10.1).
-- **Middleware:** fixed global security stack `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit`, not reorderable or removable (§10.2).
+- **Middleware:** fixed global security stack `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit`, not reorderable or removable (§10.2); custom cross-cutting middleware (`authenticate`, `notFound`, `error`) lives in `backend/middleware/*.middleware.js`.
 - **Controllers:** one file per domain (auth, branch, report, audio, transcription, ai, user, analytics); `express-async-handler` as `asyncHandler` wraps all handlers; write controllers use mongoose sessions and transactions (`try/catch/finally`, commit-or-abort, `endSession` in `finally`); read-only get/list endpoints skip transactions; errors forward via `next(error)` to the global error handler (§10.3).
-- **Constants and config:** `backend/utils/constants.js` (frozen, no magic values); all environment access through the frozen `env` object in `backend/config/env.js` (§10.5).
+- **Services layer:** external integrations live in `backend/services/*.service.js` — `oauth.service.js` (Google OAuth, including the `drive.file` scope), `addis.service.js`, `gemini.service.js`, `nvidia.service.js`, and `googleDocs.service.js` (Google Drive export); controllers stay thin (§25.1, Phase 25 user decision).
+- **Constants and config:** `backend/utils/constants.js` (frozen, no magic values); all environment access through the frozen `env` object in `backend/config/env.js` (§10.5); DB connection in `backend/config/db.js` (§25.1).
 - **Startup:** the HTTP server starts before the database connection so the health endpoint is reachable without the DB; graceful shutdown on SIGINT/SIGTERM is mandatory and must not be removed or replaced (§10.8).
 
 ### 6. Expansion Markers
 
-- Phase 25 (§25 Backend Implementation): final implementation architecture.
+- Phase 25 (§25 Project Directory Structure): **DONE (Phase 25)** — final implementation architecture: backend layers and services in §5, complete file tree in `## Project Directory Structure` §4.
 
 ---
 
 ## Coding Conventions
 
-> **Phase 9 seed — the code-level conventions from §9. Deeper conventions arrive in Phases 25 (backend), 26 (JSDoc), and 27 (frontend).**
+> **Phase 9 seed — the code-level conventions from §9. Backend file-organization conventions arrived in Phase 25; deeper code conventions arrive in Phases 26 (JSDoc) and 27 (frontend).**
 
 ### 1. Language And Modules
 
@@ -2912,9 +2934,19 @@ No zod; use manual resolvers with a consistent error shape (§9.1, REQ-077).
 
 No automated test frameworks (§9.1, REQ-077).
 
-### 6. Expansion Markers
+### 6. Backend File Organization (Phase 25)
 
-- Phase 25 (§25 Backend Implementation): backend conventions.
+Structure-scoped conventions from §25 and §10 (code-level conventions arrive in Phase 26):
+
+- Backend file names are kebab-case, following the §25.1 explicit names (`env.js`, `oauth.service.js`, `notFound.middleware.js`); per-domain files follow the `<domain>.controller.js`, `<domain>.routes.js`, `<domain>.validator.js`, and `<domain>.model.js` patterns (REQ-176).
+- One controller file per domain: auth, branch, report, audio, transcription, ai, user, analytics (§10.3, REQ-176).
+- External integrations live in `backend/services/*.service.js` (e.g. `oauth.service.js`, `addis.service.js`, `gemini.service.js`, `nvidia.service.js`, `googleDocs.service.js`); cross-cutting HTTP concerns live in `backend/middleware/*.middleware.js` (`authenticate`, `notFound`, `error`) (REQ-176).
+- Every file created during implementation must land in the `## Project Directory Structure` §4/§5 subtrees; new paths must be recorded there (REQ-173).
+- New route modules are created in `backend/routes/`, imported, and mounted in `backend/routes/index.js` (REQ-080).
+
+### 7. Expansion Markers
+
+- Phase 25 (§25 Project Directory Structure): **DONE (Phase 25)** — backend file organization in §6.
 - Phase 26 (§26 JSDoc Standards): JSDoc conventions.
 - Phase 27 (§27 Frontend Implementation): frontend conventions.
 
@@ -2922,11 +2954,21 @@ No automated test frameworks (§9.1, REQ-077).
 
 ## Project Directory Structure
 
-> **Phase 9 seed — the repository-level structure from §9, enriched in Phase 10 with the §10 backend directory structure and in Phase 12 with the §12 frontend directory structure. Final structure in Phase 25.**
+> **Phase 9 seed — the repository-level structure from §9, enriched in Phase 10 with the §10 backend directory structure and in Phase 12 with the §12 frontend directory structure. Final structure in Phase 25 (§25 Project Directory Structure).**
 
 ### 1. Repository Root
 
-`Report-Builder-V2/` contains two independent packages: `backend/` and `client/` (codebase fact).
+`Report-Builder-V2/` contains two independent packages — `backend/` and `client/` — plus the repository-level files below (codebase facts; AD-006). There is no root `package.json`.
+
+```
+Report-Builder-V2/
+├── .gitignore            # First line: `.env` (`## Environment Config` §1, REQ-120)
+├── README.md             # `# Report Builder V2`
+├── backend/              # Backend package — structure in §4
+├── client/               # Frontend package — structure in §5
+├── docs/                 # Project documentation (not part of the delivered application)
+└── scripts/              # Repository tooling, e.g. scripts/verify-initial-doc.py
+```
 
 ### 2. Backend Package
 
@@ -3009,35 +3051,86 @@ devDependencies (12): @babel/core ^7.29.7, @eslint/js ^10.0.1, @rolldown/plugin-
 
 Note: the frontend uses the React Compiler tooling (babel-plugin-react-compiler with @rolldown/plugin-babel). The `@types/react`/`@types/react-dom` packages are editor-tooling type declarations only; the project remains JavaScript-only (§9.1, REQ-074).
 
-### 4. Backend Directory Structure (Phase 10)
+### 4. Backend Directory Structure (final, Phase 25)
 
-Future-state backend tree mandated by §10 and the phase map (source files are created during implementation; codebase currently contains only `.env`, `package.json`, `package-lock.json`):
+Complete future-state backend tree, generated in Phase 25 per §25.3 from the current `backend/*` codebase and the §25.1 explicit paths. The codebase currently contains only `.env`, `package.json`, and `package-lock.json` (no source files); every file below is created during implementation:
 
 ```
 backend/
-├── app.js                 # Express app assembly; /api/v1 mount point; no direct routes (§10.1–10.2)
-├── server.js              # Server bootstrap; starts before DB; graceful shutdown (§10.8)
+├── .env                        # Local only, gitignored; env contract `## Environment Config` §2 (REQ-121)
+├── package.json                # `"type": "module"`; dependency table in §2
+├── package-lock.json
+├── app.js                      # Express app assembly; fixed global security stack; `/api/v1` mount point; no direct routes (§10.1–10.2)
+├── server.js                   # Server bootstrap: dotenv → DB connect → listen; starts before DB; graceful shutdown (§10.8, REQ-084)
 ├── config/
-│   └── env.js             # Frozen `env` object; sole access point for process.env (§10.5)
-├── controllers/           # One file per domain: auth, branch, report, audio, transcription, ai, user, analytics (§10.3)
-├── middleware/            # Global security stack: helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit (§10.2)
-├── models/                # Mongoose schemas; hooks/instance/static methods accept sessions (§10.3, §10.11)
-├── mock/                  # Mock-data injection/wipe supporting sessions (§10.3; `## Mock Data Seeding`)
-├── routes/
-│   └── index.js           # Imports and mounts all /api/v1 route modules (§10.1)
+│   ├── env.js                  # Frozen validated `env` object; sole `process.env` access point (§10.5, REQ-083)
+│   └── db.js                   # Mongoose connection/options; consumed by server.js (§25.1)
+├── controllers/                # One file per domain; `asyncHandler` wraps all handlers (§10.3)
+│   ├── auth.controller.js      # register, login, logout, refresh, Google OAuth (§11)
+│   ├── branch.controller.js    # Branch CRUD
+│   ├── report.controller.js    # Report CRUD, generate, export — incl. `exportReport` (Google Drive export, §22, Phase 25)
+│   ├── audio.controller.js     # Clips upload, re-transcription (§20; multer → uploads/audio/)
+│   ├── transcription.controller.js  # Transcription list/update/AI correction (§20–21)
+│   ├── ai.controller.js        # Generation/correction orchestration; calls services/addis|gemini|nvidia (§18–19)
+│   ├── user.controller.js      # Profile endpoints
+│   └── analytics.controller.js # Dashboard analytics
+├── middleware/
+│   ├── authenticate.middleware.js  # JWT verification on protected routes (§11)
+│   ├── notFound.middleware.js      # Unmatched routes → CustomError(404) → next() (§25.1, §28.1)
+│   └── error.middleware.js         # Global error handler; operational vs unexpected (§28)
+├── models/                    # Mongoose schemas (`## Data Modeling` §4)
+│   ├── user.model.js          # User
+│   ├── branch.model.js        # Branch
+│   ├── report.model.js        # Report
+│   ├── transcription.model.js # Transcription
+│   └── audio.model.js         # Audio
+├── mock/                      # Development-only data injection/wipe (`## Mock Data Seeding` §6)
+│   ├── seed.js                # Inject module (session contract; wipe-before-inject)
+│   └── wipe.js                # Transactional wipe module
+├── routes/                    # All routes mounted under /api/v1 via index.js (§10.1)
+│   ├── index.js               # Imports and mounts all route modules
+│   ├── auth.routes.js
+│   ├── branch.routes.js
+│   ├── report.routes.js
+│   ├── audio.routes.js
+│   ├── transcription.routes.js
+│   ├── ai.routes.js
+│   ├── user.routes.js
+│   └── analytics.routes.js
+├── services/                  # External integration logic; controllers stay thin (Phase 25 user decision)
+│   ├── oauth.service.js       # Google OAuth: getGoogleOAuthUrl(), token exchange; `drive.file` scope for export (§25.1, §11)
+│   ├── addis.service.js       # Addis AI REST integration (§18)
+│   ├── gemini.service.js      # Gemini fallback provider (§19)
+│   ├── nvidia.service.js      # Nvidia fallback provider (§19)
+│   └── googleDocs.service.js  # Google Docs export: creates the document in the user's own Drive with the user's OAuth token (§22, Phase 25, REQ-158)
+├── uploads/
+│   └── audio/                 # Multer destination for clips; runtime-created; gitignored (§20.1, §25.1)
 ├── utils/
-│   ├── constants.js       # Frozen constants; no magic values (§10.5)
-│   ├── httpStatus.js      # Semantic HTTP status codes (§10.6)
-│   └── logger.js          # Winston logger; backend-only logging (§10.9)
-├── validators/            # express-validator files, one per domain (§10.10)
-└── logs/                  # Winston daily-rotated logs; gitignored; 30-day auto-delete (§10.9)
+│   ├── constants.js           # Frozen constants; no magic values (§10.5; `## Environment Config` §5)
+│   ├── httpStatus.js          # Semantic HTTP status codes (§10.6)
+│   ├── logger.js              # Winston logger; backend-only logging (§10.9)
+│   └── wavSplitter.js         # In-memory PCM-level chunk splitter for STT (§20)
+├── validators/                # express-validator files, one per domain, applied as route middleware (§10.10)
+│   ├── auth.validator.js
+│   ├── branch.validator.js
+│   ├── report.validator.js
+│   ├── audio.validator.js
+│   ├── transcription.validator.js
+│   ├── ai.validator.js
+│   ├── user.validator.js
+│   └── analytics.validator.js
+└── logs/                      # Winston daily-rotated logs; gitignored; 30-day auto-delete (§10.9)
 ```
 
-Notes: `backend/.env` defines the environment keys (codebase fact; the full environment-variable contract is Phase 17). `backend/mock/*` is confirmed by §10.3; its seeding behavior is detailed in `## Mock Data Seeding`.
+Notes:
 
-### 4. Frontend Directory Structure (Phase 12)
+- `backend/uploads/audio/` is created at runtime by multer and holds `{uuid}.webm` clips (`## Data Modeling` §4.2); it is gitignored and never committed.
+- Mock entry points finalized in Phase 25: `mock/seed.js` and `mock/wipe.js`, wired as the npm scripts `mock:seed` and `mock:wipe` with the `NODE_ENV` production guard (REQ-164; §23 deferral resolved — `## Mock Data Seeding` §6).
+- Export path resolved in Phase 25 (user decision): `POST /api/v1/reports/:reportId/export` — handler `exportReport` in `report.controller.js`, document creation in `services/googleDocs.service.js` (Google Drive export, REQ-158).
 
-Future-state frontend tree mandated by §12 and the phase map. Current codebase state: `client/src` contains only `main.jsx`, `App.jsx`, `theme/`, and `assets/` (Vite scaffolding); the rest of the tree is created during implementation:
+### 5. Frontend Directory Structure (final, Phase 25)
+
+Complete future-state frontend tree, generated in Phase 25 per §25.3 from the current `client/*` codebase and the §25.2 explicit paths. Current codebase state: `client/src` contains only `main.jsx`, `App.jsx`, `theme/`, and `assets/` (Vite scaffolding); the rest of the tree is created during implementation:
 
 ```
 client/
@@ -3051,8 +3144,9 @@ client/
 └── src/
     ├── main.jsx                       # createBrowserRouter + RouterProvider; LocalizationProvider + AdapterDayjs wrap (§12.1)
     ├── App.jsx                        # Root layout: AppTheme, CssBaseline, AppErrorBoundary, AppToastContainer, <Outlet /> (§12.1)
-    ├── pages/                         # One lazy-loaded file per page (§12.6): Landing, Login, Register, Dashboard, Reports,
-    │                                  #   ReportDetails, Branches, BranchDetails, Profile, NotFound, Assistant (AppShell sibling, full-screen)
+    ├── pages/                         # One lazy-loaded file per page (§12.6, §25.2): Landing.jsx, Login.jsx, Register.jsx,
+    │                                  #   Dashboard.jsx, Reports.jsx, ReportDetails.jsx, Branches.jsx, BranchDetails.jsx,
+    │                                  #   Profile.jsx, NotFound.jsx, Assistant.jsx (AppShell sibling, full-screen)
     ├── components/
     │   ├── <domain>/                  # One domain folder per page (§12.6): landing, login, register, dashboard, report,
     │   │                              #   branch, profile, assistant, notFound — e.g. components/login/LoginForm.jsx;
@@ -3066,7 +3160,7 @@ client/
     │   ├── assistant/
     │   │   └── chatAdapter.js         # Plain-JS ChatBox adapter: sendMessage/listConversations/listMessages/addToolApprovalResponse (§12.6 3.5.2)
     │   ├── reusable/                  # Reusable Mui* components: MuiAppbar, MuiButton, MuiDialog, MuiTextField, MuiSelect, MuiDatePicker, MuiPagination, MuiDataGrid, MuiConfirmDialog, MuiPageHeader, MuiStatusBadge, LoadingSpinner, GlobalSearchDialog (§14.2–14.3)
-    │   └── columns/                   # Per-domain MuiDataGrid column sets; action column last (§14 1.8)
+    │   └── columns/                   # Per-domain MuiDataGrid column sets; action column last (§14 1.8) — e.g. reportColumns.jsx, branchColumns.jsx
     ├── hooks/
     │   ├── useAuth.js                 # Auth state convenience hook (§12.7)
     │   └── useAudioRecorder.js        # MediaRecorder state/actions hook (§12.7)
@@ -3075,13 +3169,14 @@ client/
     │   │   └── store.js                  # configureStore; exported store (§13.1)
     │   └── features/
     │       ├── api.js                    # createApi + fetchBaseQuery + baseQueryWithReauth; baseUrl = API_CONFIG.VITE_API_BASE_URL, credentials: 'include' (§13.1–13.2)
+    │       ├── assistantApi.js           # RTK Query chat endpoints (sendMessage/listConversations/listMessages/addToolApprovalResponse) used by chatAdapter.js (§12.6 3.5.2, §21, §25.2)
     │       ├── authSlice.js              # useLoginMutation, useRegisterMutation, ... (§12.6, §13.1)
     │       ├── branchSlice.js            # branch CRUD endpoints (§13.1)
     │       ├── reportSlice.js            # report list/create/details/update/archive/restore/delete/generate (§13.1)
     │       ├── audioSlice.js             # audio upload, re-transcription (§13.1; pipeline in Phase 20)
     │       ├── transcriptionSlice.js     # transcription list/update/AI correction (§13.1)
     │       ├── userSlice.js              # profile endpoints (§13.1)
-    │       ├── aiConversationSlice.js    # assistant chat (chatAdapter.js + assistantApi.js, Phase 13 detail in Phase 12 §3.5.2) (§13.1)
+    │       ├── aiConversationSlice.js    # assistant chat state: conversations list, activeConversationId, streaming parts (§21)
     │       └── analyticsSlice.js         # dashboard analytics endpoints (§13.1)
     ├── utils/
     │   ├── constants.js                  # API_CONFIG with VITE_API_BASE_URL; frozen constants (§10.5, §13.2)
@@ -3090,12 +3185,26 @@ client/
     └── assets/                        # hero.png, notFound_404.svg, react.svg, vite.svg (codebase fact)
 ```
 
-### 6. Expansion Markers
+### 6. Final Structure Rules (Phase 25)
+
+- §25.3 is fulfilled here: the complete final tree above was generated from the current `backend/*` and `client/*` codebases plus the §25.1/§25.2 explicit paths and this document (REQ-173).
+- Backend file names are kebab-case, following the §25.1 explicit names (`env.js`, `oauth.service.js`, `notFound.middleware.js`): per-domain files follow `<domain>.controller.js`, `<domain>.routes.js`, `<domain>.validator.js`, and `<domain>.model.js` (REQ-176).
+- Every file created during implementation must land in the subtree documented above; when later phases introduce new paths, those paths are added to this tree (REQ-173).
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-173 | The complete future-state repository tree — repository root, backend, and client — is recorded in `## Project Directory Structure` §1, §4, and §5 per §25.3; every file created during implementation lands in the documented subtree, and new paths are added to the tree when phases introduce them. | The documented tree matches the implemented repository at the end of implementation; the tree contains no path absent from the codebase or the source brief. | §25.3 |
+| REQ-174 | The explicit §25.1 backend paths exist and are used: `app.js`, `server.js`, `config/env.js`, `config/db.js`, `routes/index.js`, per-domain `routes/*.js` modules, per-domain `validators/*.js`, `utils/constants.js`, `utils/httpStatus.js`, `utils/logger.js`, `services/oauth.service.js`, `middleware/notFound.middleware.js`, `mock/*`, and `uploads/audio/`. | All listed paths exist in the implemented backend and serve their documented role. | §25.1 |
+| REQ-175 | The explicit §25.2 frontend paths exist and are used: `client/src/main.jsx`, `App.jsx`, lazy-loaded `pages/*`, `components/layout/*`, `components/<domain>/*`, `utils/constants.js`, `redux/app/store.js`, `redux/features/api.js` and `<name>Slice.js` files, `components/reusable/*`, `components/columns/*`, and `theme/*`. | All listed paths exist in the implemented client and serve their documented role. | §25.2 |
+| REQ-176 | Backend per-domain files follow the `<domain>.controller.js` / `<domain>.routes.js` / `<domain>.validator.js` / `<domain>.model.js` naming pattern with one controller file per domain (auth, branch, report, audio, transcription, ai, user, analytics); external integrations live in `services/*.service.js`; cross-cutting concerns live in `middleware/*.middleware.js`. | The implemented backend matches the §4 tree file for file. | §10.3, §25.1 |
+| REQ-177 | The Google Docs export creates the document with the user's own Google OAuth token — the Google login flow extended with the `drive.file` scope — so the document lands in the user's own Google Drive, fully owned and editable by the user; no Google Service Account is used. | The exported document appears in the user's Google Drive and is owned, editable, shareable, and downloadable by them; no service-account credentials exist in the environment contract. | §22 (Phase 25 user decision) |
+
+### 7. Expansion Markers
 
 - Phase 12 (§12 Frontend Architecture): **DONE (Phase 12)** — frontend directory tree above.
 - Phase 13 (§13 Redux, RTK Query, And API Client): **DONE (Phase 13)** — `redux/` subtree and `utils/constants.js` added above.
 - Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): **DONE (Phase 14)** — `components/reusable/`, `components/columns/`, and `utils/ethiopianDate.js` added above.
-- Phase 25 (§25 Backend Implementation): final structure.
+- Phase 25 (§25 Project Directory Structure): **DONE (Phase 25)** — final structure: backend tree §4, frontend tree §5, rules and requirements §6.
 - Phase 30 (§30 Git Workflow): workflow structure.
 
 ---
@@ -3170,7 +3279,7 @@ client/
 
 ## Backend Architecture
 
-> **Phase 10 seed — the backend architecture from §10 (Backend Architecture). Deeper backend implementation details arrive in Phase 24 (Data Model), Phase 25 (implementation), and Phase 28 (error handling).**
+> **Phase 10 seed — the backend architecture from §10 (Backend Architecture). Deeper backend implementation details arrive in Phase 24 (Data Model) and Phase 28 (error handling); the implementation-level architecture and the final file tree were finalized in Phase 25 (`## Project Directory Structure` §4).**
 
 ### 1. Routing (§10.1)
 
@@ -3255,7 +3364,7 @@ client/
 ### 11. Expansion Markers
 
 - Phase 24 (§24 Data Model): **DONE — full schema definitions delivered in `## Data Modeling` §4 (Report, Audio, Transcription, User, Branch, ChatConversation).**
-- Phase 25 (§25 Backend Implementation): implementation-level backend architecture.
+- Phase 25 (§25 Project Directory Structure): **DONE (Phase 25) — implementation-level backend architecture: complete file tree in `## Project Directory Structure` §4 (app, server, config, controllers, middleware, models, mock, routes, services, uploads, utils, validators, logs).**
 - Phase 28 (§28 Error Handling): global error handler detail.
 
 ---
@@ -3326,7 +3435,7 @@ The seed set follows the `## Data Modeling` §1 inventory (Phase 24). Entity-lev
 
 ### 6. Entry Points
 
-- The inject and wipe logic lives under `backend/mock/*` (§25.1; `## Project Directory Structure` §4). The concrete module file names and npm script names are defined at implementation, following the §10.3 directory conventions.
+- The inject and wipe logic lives under `backend/mock/*` (§25.1; `## Project Directory Structure` §4) as `backend/mock/seed.js` and `backend/mock/wipe.js`, wired as the npm scripts `mock:seed` and `mock:wipe` (names finalized in Phase 25), following the §10.3 directory conventions.
 - No `mock/` or `seed/` directory and no seed npm script exist in `backend/` today — the modules are created during implementation (codebase fact).
 - The npm scripts wrap the functions of §2–§3 and enforce the production guard of §1 (REQ-164).
 
@@ -3448,7 +3557,7 @@ Three tiers:
 
 - `JWT_ACCESS_SECRET` and `JWT_REFRESH_SECRET` live in `backend/.env` only and are each at least 32 characters (env contract in `## Environment Config` §2, REQ-121).
 - `OAUTH_GOOGLE_CLIENT_ID`, `OAUTH_GOOGLE_CLIENT_SECRET`, and `OAUTH_GOOGLE_CALLBACK_URL` are optional and live in `backend/.env`; Google login stays stubbed until credentials are configured (echo of `## Auth Cookies` §5, REQ-121).
-- `GOOGLE_SERVICE_ACCOUNT_EMAIL` and `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` are required only if Google Docs export is enabled (REQ-121).
+- The user's Google OAuth token — used for the Google Docs export with the `drive.file` scope — is stored and refreshed server-side only and must never be exposed to the client (REQ-158, REQ-177; `## Export Spec` §4).
 - Addis AI `sk_` keys never appear in client code, Vite env vars sent to the browser, localStorage, Redux state, or client logs; Nvidia and Gemini API keys are placed in `backend/.env` only (§17.4, REQ-123; key rules in `## Environment Config` §4).
 - `process.env` is never accessed outside `config/env.js`, which validates all required vars at startup (REQ-083, REQ-120).
 
@@ -3978,10 +4087,9 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 | OAUTH_GOOGLE_CLIENT_ID | No | — | Google OAuth client ID |
 | OAUTH_GOOGLE_CLIENT_SECRET | No | — | Google OAuth client secret |
 | OAUTH_GOOGLE_CALLBACK_URL | No | — | Google OAuth callback URL |
-| GOOGLE_SERVICE_ACCOUNT_EMAIL | No | — | Required if Google Docs export enabled |
-| GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY | No | — | Required if Google Docs export enabled |
 
-- Codebase fact: `backend/.env` exists with placeholder or correct values for every required key except `LOG_LEVEL`, which is absent and must be added during implementation; the optional `OAUTH_GOOGLE_*` keys are present, while `GOOGLE_SERVICE_ACCOUNT_*` are absent (optional — needed only if Google Docs export is enabled) (REQ-121).
+- The Google Docs export reuses the optional `OAUTH_GOOGLE_*` keys — the document is created with the user's own Google OAuth token (the login flow extended with the `drive.file` scope), so no service-account credentials are needed (Phase 25 user decision, REQ-177).
+- Codebase fact: `backend/.env` exists with placeholder or correct values for every required key except `LOG_LEVEL`, which is absent and must be added during implementation; the optional `OAUTH_GOOGLE_*` keys are present (REQ-121).
 
 ### 3. Client Environment Variables (§17.3)
 
@@ -4153,6 +4261,24 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 - **Consequences:** All spec sections now use `audio_attached`; transcription corrections store `latest` + `history`; assistant messages record the provider; no Analytics collection is created in Phase 25.
 - **Source:** §24.4, §24.6, §24.9, §20.5, §21.4, §19 (REQ-133, REQ-145, REQ-149, REQ-168, REQ-172).
 
+#### AD-012 — Google Docs export lands in the user's own Drive (user OAuth token)
+
+- **Date:** 2026-08-02. **Status:** Accepted (user decision, Phase 25).
+- **Context:** §22 specified the Google Docs export via a Google Service Account with "Anyone with link can view" sharing. The user wants the report "available on my google drive so that I can do whatever I want to do with it" — a service account cannot place files in a user's Drive.
+- **Decision:** The Google Docs export creates the document with the **user's own Google OAuth token** — the Google login flow extended with the `drive.file` scope — so the document lands in the user's own Google Drive, fully owned and editable by the user; no sharing-permission step; no Google Service Account is used (`GOOGLE_SERVICE_ACCOUNT_EMAIL`/`GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` are removed from the environment contract, REQ-177).
+- **Rationale:** Only a user-OAuth flow can create documents the user owns in their own Drive; the `drive.file` scope grants access only to files the app creates or opens, keeping the app's Drive footprint minimal.
+- **Consequences:** `## Export Spec` §4, `## API Contract` §7, `## Work Flow` §5, `## Environment Config` §2, `## Security`, and `## Glossary` now reflect the user-OAuth mechanism; the export path is finalized as `POST /api/v1/reports/:reportId/export` with `exportReport` in `report.controller.js` and document creation in `services/googleDocs.service.js`; the user's token is stored and refreshed server-side only (REQ-158, REQ-177).
+- **Source:** §22 (Phase 25 user decision).
+
+#### AD-013 — AI provider integrations in separate services files
+
+- **Date:** 2026-08-02. **Status:** Accepted (user decision, Phase 25).
+- **Context:** §10.3 requires one controller file per domain; §18.14 and §19 require backend-only provider calls via native `fetch` (Addis) and axios (Gemini/Nvidia). Phase 25 asked where provider logic lives.
+- **Decision:** Each external integration lives in its own file under `backend/services/` — `addis.service.js`, `gemini.service.js`, `nvidia.service.js`, `googleDocs.service.js`, plus `oauth.service.js` — with controllers kept thin; cross-cutting HTTP concerns live in `backend/middleware/*.middleware.js` (REQ-176).
+- **Rationale:** Keeps controllers small, isolates provider-specific request/response shapes and retries in one place per provider, and matches the explicit §25.1 `services/oauth.service.js` path.
+- **Consequences:** The `## Project Directory Structure` §4 tree carries the five `services/*.service.js` files; `## Architecture` §5 and `## Coding Conventions` §6 document the services layer.
+- **Source:** §25.1, §10.3, §18.14, §19 (Phase 25 user decision).
+
 ### Decision Log open items
 
 - Measurable success KPIs (OQ-001) — decision pending user input.
@@ -4260,3 +4386,7 @@ Phases 1–23 are GREEN (2026-08-02). Phase 23 built the mock data rules from §
 ## End Of Phase 24 Content
 
 Phases 1–24 are GREEN (2026-08-02). Phase 24 built the data model from §24: rewrote `## Data Modeling` (new §1 inventory — six persisted models (User, Branch, Report, Audio, Transcription, ChatConversation) plus derived analytics with no collection; new §2 relationship diagram and rules — Report is the hub, Audio/Transcription point back to Report, bidirectional user ownership, report deletion keeps conversations; new §3 modeling rules — session-capable hooks/instance/static methods, `schema.index(..)`-only indexes, no `unique: true` plus separate-index combos, mongoose-paginate-v2 on all list endpoints; new §4 field-level schemas — Report with `branches[]` per-branch clockIn/clockOut, top-level clockIn/clockOut (DR-8 clock semantics), `audio[]`, `transcription`, status enum `draft | audio_attached | transcribed | reviewed | completed` (lifecycle, AD-011), `isArchived`/`archivedAt` TTL 30-day partial index, `generated` plus `generatedHistory[]` (unified report-version model, AD-010); Audio one doc per clip (`uploads/audio/{uuid}.webm`, fileSize ≤ 50 MB, duration ≤ 900 s via ffprobe, no status field); Transcription (`raw`, `latest`, `history[]` with reviewer User ObjectId or provider string, three review modes, no status field — AD-011); User (bcryptjs 12-round pre-save skip-if-unmodified, `comparePassword`, unique email via `schema.index`, `fullName` virtual, toJSON deletes password); Branch (unique `{user, name}` index, TTL archive); ChatConversation (messages `{ id, role, status, parts (4 tool shapes), provider "addis" | "gemini" | "nvidia" }`, index `{user, updatedAt: -1}`); new §5 Phase enrichment superseding note; new §6 Report Status Lifecycle; new §7 expansion markers — Phases 11/20/23 DONE, 35 pending), enriched `## Business Rules` (BR-11..14), enriched `## API Contract` (new §8 Model-Driven Contracts — Report/Branch request-response tables, Audio constants, transcription correction payload, ChatConversation message shape, pagination/sort keys), enriched `## Status Machine` (new §3 work-flow → enum mapping), enriched `## Report Domain` (DR-8 clock-semantics rule; §9 record types map to models), enriched `## Mock Data Seeding` (§4 entity set → final models, §5 metadata-only rule), enriched `## Other AI Providers` (§6 conversation message provider), `## Audio Recording STT` (§9, §10 markers), `## AI Prompt Spec` (§11 corrected transcription storage), `## Transcription Review` (§2 status semantics), reworded `## Rules` (§6 AI Prompt Rules), updated the MuiStatusBadge reconciliation note in `## MUI Component Standards` (§9.8 — the five badge statuses are the Phase 24 enum; Phase 35 owns only the archive/delete/restore lifecycle), extended `## Glossary` (Narration, AI conversation, Generated report, Report version history, Analytics; `aiCorrectedText` superseded note), reworded REQ-145/REQ-149, added REQ-165..172, added AD-010 (Unified Report Version) and AD-011 (Phase 24 Reconciliations), updated the Checklist (Data Modeling, API Contract, Business Rules, Report Domain, Status Machine, Glossary, Requirements, Mock Data Seeding, Other AI Providers, Audio Recording STT, Transcription Review, Validation Audit, Backend Architecture, MUI Component Standards — GREEN Phase 24 enrichment), and added the Phase 24 Source Trace Map. Phase 35 will build the archive/delete/restore lifecycle.
+
+## End Of Phase 25 Content
+
+Phases 1–25 are GREEN (2026-08-02). Phase 25 built the project directory structure from §25: rewrote `## Project Directory Structure` (new §1 Repository Root — `Report-Builder-V2/` with `.gitignore` (first line `.env`), `README.md`, `backend/`, `client/`, `docs/`, `scripts/verify-initial-doc.py`; new §4 Backend Directory Structure — the complete future-state backend tree from §25.3: `app.js`, `server.js`, `config/env.js` + `config/db.js`, per-domain `controllers/*.js` (8 files incl. `report.controller.js` with the `exportReport` Google Drive export), `middleware/{authenticate,notFound,error}.middleware.js` (notFound → `CustomError(404)` → `next()`), the five models, `mock/{seed,wipe}.js`, `routes/index.js` + 8 per-domain route modules, `services/{oauth,addis,gemini,nvidia,googleDocs}.service.js`, `uploads/audio/` (runtime-created, gitignored `{uuid}.webm` clips), `utils/{constants,httpStatus,logger,wavSplitter}.js`, 8 per-domain `validators/*.js`, `logs/`; new §5 Frontend Directory Structure — the complete future-state client tree: `main.jsx`, `App.jsx`, lazy-loaded `pages/*`, `components/layout/*`, `components/<domain>/*`, `redux/app/store.js` + `redux/features/{api,assistantApi,<name>Slice}.js`, `components/{reusable,columns}/*`, `utils/{constants,ethiopianDate}.js`, `theme/*`; new §6 Final Structure Rules — §25.3 completeness (REQ-173), kebab-case per-domain naming (REQ-176), new paths recorded in the tree; new §7 Expansion Markers — Phases 12/13/14 DONE, 25 DONE (final structure), 30 pending; the duplicate-heading numbering of the old tree (two `### 4.`, skipped `### 5.`) is fixed; the `## Mock Data Seeding` §6 Entry Points deferral is resolved — `mock/seed.js`/`mock/wipe.js` with the `mock:seed`/`mock:wipe` npm scripts and the `NODE_ENV` production guard (REQ-164); the export path is finalized — `POST /api/v1/reports/:reportId/export`, `exportReport` in `report.controller.js`, `services/googleDocs.service.js`), enriched `## Architecture` (header blockquote + §5 Backend Architecture — the services layer (`oauth.service.js` with the `drive.file` scope, `addis`/`gemini`/`nvidia`/`googleDocs` services, thin controllers), middleware, config; §6 markers — Phase 25 DONE), enriched `## Coding Conventions` (new §6 Backend File Organization — per-domain `<domain>.controller.js`/`<domain>.routes.js`/`<domain>.validator.js`/`<domain>.model.js` naming, services layer, middleware roles; §7 markers — Phase 25 DONE), enriched `## Backend Architecture` (header blockquote; expansion markers — Phase 25 DONE with the full file tree), amended the Google Docs export by user decision (AD-012): `## Export Spec` §4 rewritten — the backend creates the document with the user's own Google OAuth token (login flow extended with the `drive.file` scope) directly in the user's own Google Drive, user owns/edits/shares/downloads the document, no sharing-permission step, token stored/refreshed server-side only, service-account mechanism retired; `## API Contract` §7 — export path `POST /api/v1/reports/:reportId/export`, handler and service named; `## Work Flow` §5 — E-03..E-05 now describe the user's own Drive; `## Environment Config` §2 — `GOOGLE_SERVICE_ACCOUNT_EMAIL`/`GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` rows removed, note added that the export reuses the optional `OAUTH_GOOGLE_*` keys; `## Security` — service-account bullet replaced with the user-token server-side rule; `## Glossary` — "Google Service Account" entry replaced with "Google Drive export"; REQ-121 optional-var phrase trimmed; REQ-158 rewritten (user-OAuth mechanism); REQ-159 unchanged; the service-files decision (AD-013) recorded; added REQ-173..177 (complete tree, §25.1 backend paths, §25.2 frontend paths, per-domain/services/middleware naming, user-OAuth export with no service account), added AD-012 and AD-013 to the `## Decision Log`, updated the Checklist (Project Directory Structure, Architecture, Coding Conventions, Backend Architecture, Export Spec, API Contract, Work Flow, Environment Config, Security, Requirements — GREEN Phase 25 enrichment), reconciled the Phase 17/22 Source Trace Map rows with the Phase 25 retirement notes, aligned the initial source brief with the Google Docs decision (§17.2 env table rows removed + note; §22 export rewritten), and added the Phase 25 Source Trace Map. Phase 26 will build the code quality and coding conventions.

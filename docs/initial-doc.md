@@ -2663,8 +2663,8 @@ Landing, Login, Register, Dashboard, Reports, ReportDetails, Branches, BranchDet
 | OAUTH_GOOGLE_CLIENT_ID             | No       | —                              | Google OAuth client ID                                  |
 | OAUTH_GOOGLE_CLIENT_SECRET         | No       | —                              | Google OAuth client secret                              |
 | OAUTH_GOOGLE_CALLBACK_URL          | No       | —                              | Google OAuth callback URL                               |
-| GOOGLE_SERVICE_ACCOUNT_EMAIL       | No       | —                              | Required if Google Docs export enabled                  |
-| GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY | No       | —                              | Required if Google Docs export enabled                  |
+
+The Google Docs export reuses the optional `OAUTH_GOOGLE_*` keys — the document is created with the user's own Google OAuth token (the login flow extended with the `drive.file` scope), so no service-account credentials are needed (Phase 25 user decision).
 
 ### 17.3 Client Environment Variables
 
@@ -3019,13 +3019,13 @@ The AI prompt must enforce these rules:
 
 ## 22. Export
 
-Reports should be exportable in multiple formats. PDF, TXT, CSV, and XLSX export is client-side only. Google Docs export is backend-only using a Google Service Account.
+Reports should be exportable in multiple formats. PDF, TXT, CSV, and XLSX export is client-side only. Google Docs export is backend-only: the document is created directly in the user's own Google Drive with the user's own Google OAuth token.
 
 - **PDF:** `jspdf` with `jspdf-autotable`. A4 format. Noto Sans Ethiopic font for Amharic text. Section headers. Page numbers.
 - **TXT:** Blob with UTF-8 encoding. Plain structure preserving report format.
 - **CSV:** Blob with UTF-8 with BOM for Excel compatibility. Structured columns.
 - **XLSX:** Multi-sheet workbook: content sheet (report), version history sheet (all versions with metadata), metadata sheet (provider, dates, status).
-- **Google Docs:** Backend uses Google Docs API with a Google Service Account to create a document from the generated report content, set sharing to "Anyone with link can view", and return the URL. Frontend opens the URL in a new tab. User can edit freely in Google Docs.
+- **Google Docs:** Backend uses the Google Docs API with the user's own Google OAuth token (the Google login flow, extended with the `drive.file` scope) to create a document from the generated report content directly in the user's own Google Drive. The user owns the document and can edit, share, download, or move it freely — no sharing-permission step is needed. Returns the document URL. Frontend opens the URL in a new tab. The user's token is stored and refreshed server-side only. (Phase 25 user decision: replaced the earlier Google Service Account approach, which cannot place files in a user's Drive.)
 
 `jspdf` and `jspdf-autotable` are already installed in the client package list.
 
