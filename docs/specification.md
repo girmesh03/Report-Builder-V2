@@ -50,7 +50,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 16 | 16. UI Rules | GREEN | UI/UX Spec, User Interactions, Rules |
 | 17 | 17. Environment Variables | GREEN | Environment Config, Security, Rules |
 | 18 | 18. Addis AI Integration | GREEN | Addis AI, AI Prompt Spec, API Contract, Security |
-| 19 | 19. Other AI Providers | PENDING | Other AI Providers, Addis AI, AI Prompt Spec |
+| 19 | 19. Other AI Providers | GREEN | Other AI Providers, Addis AI, AI Prompt Spec, Environment Config |
 | 20 | 20. Audio Recording And STT Pipeline | PENDING | Audio Recording STT, Transcription Review, API Contract, Data Modeling |
 | 21 | 21. AI Prompt Requirements | PENDING | AI Prompt Spec, Report Format, Rules |
 | 22 | 22. Export | PENDING | Export Spec, API Contract, Work Flow |
@@ -78,7 +78,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Spec section | Produced/updated in phase | Status |
 |---|---|---|
 | Addis AI | 18 | GREEN (Phase 18 seed) |
-| AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 7, 18 enrichment) |
+| AI Prompt Spec | 6, 7, 18, 19, 21 | GREEN (Phase 7, 18, 19 enrichment) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
 | API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 28 | GREEN (Phase 13, 18 enrichment) |
 | Architecture | 9, 10, 25 | GREEN (Phase 10 enrichment) |
@@ -92,7 +92,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11 enrichment) |
 | Decision Log | 1, 2, 33 | GREEN |
 | Design | consolidated across phases; finalized in 36 | PENDING |
-| Environment Config | 17 | GREEN (Phase 17 seed) |
+| Environment Config | 17, 19 | GREEN (Phase 17 seed, Phase 19 enrichment) |
 | Error Handling | 28 | PENDING |
 | Export Spec | 6, 22 | GREEN (Phase 6 seed) |
 | File Storage Uploads | 20 | PENDING |
@@ -105,7 +105,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Mock Data Seeding | 23 | PENDING |
 | MUI Component Standards | 12, 14 | GREEN (Phase 14 enrichment) |
 | Non-Functional Requirements | 31 | PENDING |
-| Other AI Providers | 19 | PENDING |
+| Other AI Providers | 19 | GREEN (Phase 19 seed) |
 | Phase Protocol | 32 | PENDING |
 | PRD | 1, 2, 3, 4 | GREEN (Phase 4 enrichment) |
 | Problem Statement | 1, 2 | GREEN |
@@ -429,6 +429,15 @@ All `§` references below identify sections of the original source brief. They a
 | §18.13 | Errors: `{ status, error { code, message, param } }`; 400/401/403/404/429/500/503; project handling — safe user messages, log request IDs/status codes not raw content, timeout, retry 3x backoff, provider error marks chunk failed and continues | Addis AI (12), API Contract (5), Requirements (REQ-129) |
 | §18.14 | Implementation implications: backend proxy only, native fetch, multer, Node FormData/Blob, small documented multipart helper if needed, no Addis AI SDK (SDKs coming soon) | Addis AI (13), Requirements (REQ-125) |
 | §18 + codebase (`backend/.env`) | Seven `ADDIS_AI_*` vars exist with real values — base URL, `sk_` key, text model `Addis-፩-አሌፍ`, target language `am`, STT language code `am`, STT model `default`, timeout 360000; the spec documents a placeholder `sk_` only (REQ-123) | Addis AI (2–5), Environment Config (2), Requirements (REQ-121) |
+
+## Source Trace Map — Phase 19 (source §19)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §19 | Nvidia and Gemini are used in addition to Addis AI; STT always uses Addis AI; all providers must be free (no credit card or subscription — never non-free AI); Nvidia and Gemini keys in `backend/.env`; Gemini model `gemini-3.1-flash-lite`; Nvidia model `z-ai/glm-5.2` at least for now; other free models may be added; HTTP client for Gemini and Nvidia is axios; all three providers available, selected by the user at generation time via dropdown or buttons, default Addis; provider stored per AI conversation message; different providers for corrections vs initial generation; fallback chain Addis → Gemini → Nvidia | Other AI Providers (1–3), AI Prompt Spec (8), Requirements (REQ-132..135, REQ-138) |
+| §19.1 | Gemini: model `gemini-3.1-flash-lite`; endpoint `:generateContent?key=${GEMINI_API_KEY}`; request `{ contents, systemInstruction, generationConfig (0.2, 2048, 0.9, 40) }`; no streaming; network failure retry 3x exponential backoff; provider error returns 502 | Other AI Providers (4), AI Prompt Spec (8), Requirements (REQ-136) |
+| §19.2 | Nvidia: model `z-ai/glm-5.2`; Nvidia API message format with `Authorization: Bearer` token; same retry pattern as Gemini | Other AI Providers (5), AI Prompt Spec (8), Requirements (REQ-137) |
+| §19 + codebase (`backend/.env`, `backend/package.json`) | `backend/.env` holds real Nvidia (`nvapi-` prefixed) and Gemini (`AIzaSy` prefixed) keys plus `NVIDIA_API_BASE_URL`/`GEMINI_API_BASE_URL` `change me` placeholders; the spec records the keys as placeholders only (REQ-123); axios is absent from `backend/package.json` — added during implementation (REQ-138) | Other AI Providers (1, 4, 5), Environment Config (2), Requirements (REQ-138) |
 
 ---
 
@@ -765,6 +774,8 @@ Secondary features should not distract from the core workflow of generating a bo
 | import.meta.env | The Vite mechanism the client uses to read `VITE_`-prefixed environment variables. | §17 |
 | Addis-፩-አሌፍ | The Addis AI text model used for report generation and correction; configured via `ADDIS_AI_TEXT_MODEL` and sent as `model` in `chat_generate` requests. | §18.5 |
 | x-api-key | The HTTP header Addis AI REST authentication uses; it carries the `sk_`-prefixed secret key and is sent by backend services only. | §18.4 |
+| gemini-3.1-flash-lite | The Gemini text-generation model used as a fallback provider; configured via `GEMINI_API_KEY` and called through the `generateContent` endpoint. | §19.1 |
+| z-ai/glm-5.2 | The Nvidia text-generation model used as a fallback provider; configured via `NVIDIA_API_KEY` and called through the Nvidia message format with a bearer token. | §19.2 |
 
 ---
 
@@ -1107,6 +1118,18 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-130 | TTS, translation, multimodal, and realtime are not part of the first report-builder workflow; the app never translates reports by default (content may be intentionally Amharic, English, or mixed). | No TTS/translation/multimodal/realtime calls exist in the first workflow; no automatic translation runs on generated reports. | §18.9, §18.10, §18.11, §18.12, PR-17 |
 | REQ-131 | Amharic and English-aware prompting are first-class (`ADDIS_AI_DEFAULT_TARGET_LANGUAGE` = `am`); language constants remain extensible for Oromo `om` and Tigrinya where appropriate. | Language values come from `config/env.js`/constants, not literals; om/ti entries can be added without code rewiring. | §18.6 |
 
+### Functional Requirements (Phase 19)
+
+| ID | Requirement | Acceptance criteria | Source |
+|---|---|---|---|
+| REQ-132 | All three providers are available (Addis AI, Gemini, Nvidia); STT always uses Addis AI; the user selects the text-generation provider at generation time via dropdown or buttons, default Addis. | Provider selection UI exists with Addis as default; STT calls only ever target Addis AI. | §19 |
+| REQ-133 | The provider is stored per AI conversation message; different providers can be used for corrections versus initial generation. | Every AI conversation message records its provider; a correction run may use a different provider than the initial generation. | §19 |
+| REQ-134 | The provider fallback chain is Addis → Gemini → Nvidia; when the selected provider fails, the next provider in the chain is used. | Fallback logic exists in the AI client; failures cascade through the chain in order. | §19 |
+| REQ-135 | All AI providers used must be free — no credit card or subscription required; non-free AI is never used. | No provider requires payment; no non-free AI service is called. | §19 |
+| REQ-136 | Gemini integration uses model `gemini-3.1-flash-lite`; `POST …:generateContent?key=${GEMINI_API_KEY}` with request `{ contents, systemInstruction, generationConfig }` (temperature 0.2, maxOutputTokens 2048, topP 0.9, topK 40); no streaming; network failures retry 3 times with exponential backoff; provider errors return 502. | The Gemini service builds the documented request; retries and the 502 mapping behave per contract. | §19.1 |
+| REQ-137 | Nvidia integration uses model `z-ai/glm-5.2` with the Nvidia API message format and `Authorization: Bearer` token; network failures retry 3 times with exponential backoff; provider errors return 502. | The Nvidia service builds the documented message format; retries and the 502 mapping behave per contract. | §19.2 |
+| REQ-138 | Gemini and Nvidia calls use axios (echo of REQ-078); axios is absent from `backend/package.json` and is added during implementation. | All Gemini/Nvidia calls go through axios; axios appears in `backend/package.json` during implementation. | §19, §9.1 (REQ-078) |
+
 ### Non-Functional Requirements (Phase 1)
 
 | ID | Requirement | Acceptance criteria | Source |
@@ -1133,6 +1156,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - UI rules: **Phase 16 — DONE (REQ-117..119)**.
 - Environment config rules: **Phase 17 — DONE (REQ-120..124)**.
 - Addis AI integration rules: **Phase 18 — DONE (REQ-125..131)**.
+- Other AI providers rules: **Phase 19 — DONE (REQ-132..138)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -1885,7 +1909,7 @@ The prompt should include the §6.10 → §6.11 before/after pair (`## Report Fo
 
 - Phase 7 (§7 Language Rules): **DONE — language directive seeds added (PR-17/18); the Amharic-default vs mixed-content precedence note is recorded for Phase 21.**
 - Phase 18 (§18 Addis AI Integration): **DONE — seed delivery is recorded in §7 below.**
-- Phase 19 (§19 Other AI Providers): provider fallback behavior.
+- Phase 19 (§19 Other AI Providers): **DONE — provider fallback behavior is in `## Other AI Providers` §3 and `## AI Prompt Spec` §8.**
 - Phase 21 (§21 AI Prompt Requirements): final prompt construction, system-prompt structure, the missing-info punctuation rule, and the PR-01/PR-17 precedence wording.
 
 ### 7. Delivery To The Addis AI Endpoint (§18)
@@ -1897,6 +1921,13 @@ The prompt should include the §6.10 → §6.11 before/after pair (`## Report Fo
 - The prompt requests structured JSON-like output per `## Report Format` §7 and `## Addis AI` §6.
 - `conversation_history` carries prior report turns plus the user's correction/update requests so PR-16 (update only the relevant part) is honored; the review/correction loop is W-04..W-10 (REQ-034, REQ-041).
 - A failed generation returns the provider error through the `## Addis AI` §12 error mapping with timeout and retry/backoff rules (REQ-129).
+
+### 8. Provider Fallback And Delivery (§19)
+
+- The same assembled PR-01..18 directive seeds deliver to Gemini and Nvidia when the user selects them or when the fallback chain runs (REQ-134).
+- Gemini (`## Other AI Providers` §4): `systemInstruction` carries the system prompt (final wording Phase 21); `contents` carries the conversation history; `generationConfig` comes from the frozen constants (REQ-124, REQ-136).
+- Nvidia (`## Other AI Providers` §5): the directive seeds go through the Nvidia message format with the bearer token (REQ-137).
+- Fallback chain: Addis → Gemini → Nvidia (REQ-134); STT always stays with Addis AI (REQ-132).
 
 ---
 
@@ -2079,10 +2110,58 @@ Project handling (REQ-129):
 
 ### 14. Expansion Markers
 
-- Phase 19 (§19 Other AI Providers): Nvidia and Gemini fallback behavior; STT always stays with Addis AI.
+- Phase 19 (§19 Other AI Providers): **DONE — Nvidia and Gemini contracts and the fallback chain are in `## Other AI Providers`; STT always stays with Addis AI.**
 - Phase 20 (§20 Audio Recording And STT Pipeline): chunking mechanics, MIME priority, `wavSplitter`, and retry wiring against the §7 endpoint.
 - Phase 21 (§21 AI Prompt Requirements): final prompt construction and system-prompt structure delivered through §6.
 - Phase 28 (§28 Error Handling): unified error handling across providers.
+
+---
+
+## Other AI Providers
+
+> **Phase 19 seed — Nvidia and Gemini integration from §19. Final prompt construction arrives in Phase 21, the conversation data model in Phase 24, and unified error handling in Phase 28.**
+
+### 1. Provider Set And Free-AI Rule (§19)
+
+- Three providers are available: Addis AI (`## Addis AI`), Gemini, and Nvidia.
+- STT always uses Addis AI; Gemini and Nvidia are text-generation providers only (REQ-132).
+- All AI providers used must be free — no credit card or subscription required; non-free AI is never used (REQ-135).
+- Nvidia and Gemini API keys live in `backend/.env` only (echo of `## Environment Config` §4, REQ-123).
+- Models: Gemini `gemini-3.1-flash-lite`; Nvidia `z-ai/glm-5.2` at least for now; other free models may be added (REQ-136, REQ-137).
+- HTTP client for Gemini and Nvidia: axios (echo of `## Rules` §1 and REQ-078; axios is absent from `backend/package.json` and is added during implementation — REQ-138).
+
+### 2. Provider Selection And Storage (§19)
+
+- The user selects the text-generation provider at generation time via dropdown or buttons; the default is Addis (REQ-132). The `## UI/UX Spec` ReportCorrection page seed already records generate-with-provider-selection (default `addis`).
+- The provider is stored per AI conversation message; different providers can be used for corrections versus initial generation (REQ-133; AI-conversation endpoint detail in `## API Contract` §2, Phases 18/21; data model in Phase 24).
+
+### 3. Provider Fallback Chain (§19)
+
+- Fallback chain: Addis → Gemini → Nvidia (REQ-134). When the selected provider fails, the next provider in the chain is used.
+- STT never falls back — it always uses Addis AI (REQ-132).
+- Fallback and prompt delivery details are in `## AI Prompt Spec` §8.
+
+### 4. Gemini Integration (§19.1)
+
+- Model: `gemini-3.1-flash-lite`; key `GEMINI_API_KEY` and base URL in `backend/.env` (`## Environment Config` §2).
+- Endpoint: `POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}` — the key is passed as the documented query parameter, but only from backend services, never from the client (REQ-123).
+- Request body: `{ contents: [{ role, parts: [{ text }] }], systemInstruction: { parts: [{ text }] }, generationConfig: { temperature: 0.2, maxOutputTokens: 2048, topP: 0.9, topK: 40 } }` — the generation config mirrors the frozen constants AI Generation group (REQ-124, REQ-136).
+- No streaming (REQ-136).
+- Error handling: network failure retries 3 times with exponential backoff; provider error returns 502 (REQ-136, following the `## Addis AI` §12 pattern).
+- HTTP client: axios (REQ-138).
+
+### 5. Nvidia Integration (§19.2)
+
+- Model: `z-ai/glm-5.2`; key `NVIDIA_API_KEY` and base URL in `backend/.env` (`## Environment Config` §2).
+- Uses the Nvidia API message format with `Authorization: Bearer` token (REQ-137); the key is sent only from backend services (REQ-123).
+- Same retry pattern as Gemini: network failure retries 3 times with exponential backoff; provider error returns 502 (REQ-137).
+- HTTP client: axios (REQ-138).
+
+### 6. Expansion Markers
+
+- Phase 21 (§21 AI Prompt Requirements): final prompt construction delivered through Gemini `contents`/`systemInstruction` and the Nvidia message format.
+- Phase 24 (§24 Data Model): provider field stored per AI conversation message.
+- Phase 28 (§28 Error Handling): unified error handling across all three providers.
 
 ---
 
@@ -3393,7 +3472,7 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 ### 6. Expansion Markers
 
 - Phase 18 (§18 Addis AI Integration): **DONE — `ADDIS_AI_*` consumption is documented in `## Addis AI` §2 (base URL), §3 (key), §4 (models), §5 (language codes), §6–7 (endpoints), and §13 (implementation).**
-- Phase 19 (§19 Other AI Providers): Nvidia and Gemini keys and base URLs.
+- Phase 19 (§19 Other AI Providers): **DONE — Nvidia and Gemini keys and base URLs are consumed per `## Other AI Providers` §4–5; `backend/.env` holds real keys and `change me` base-URL placeholders.**
 - Phase 29 (§29 Security): deep environment-secret handling rules.
 
 ---
@@ -3571,4 +3650,8 @@ Phases 1–17 are GREEN (2026-08-01). Phase 17 built the environment variables f
 
 ## End Of Phase 18 Content
 
-Phases 1–18 are GREEN (2026-08-01). Phase 18 built the Addis AI integration from §18: new `## Addis AI` seed (provider identity and primary sources, base URLs and platform, authentication and key rules, core model families, language support, text generation and speech-to-text contracts with request/response shapes, TTS/multimodal/translation/realtime non-first-workflow notes, error mapping with the status table and project handling, package and implementation implications), enriched `## AI Prompt Spec` (new §7 Delivery To The Addis AI Endpoint — PR-01..18 seeds delivered via `chat_generate` with the frozen-constants generation config), enriched `## API Contract` (new §5 Addis AI Provider Endpoints — backend service dependencies), enriched `## Security` (new §5 AI Provider Security), flipped the Phase 18 forward markers in `## AI Prompt Spec`, `## Security`, `## Environment Config`, and `## Audio Recording STT` to DONE, updated the `## UI/UX Spec` Addis AI rationale cross-ref, added REQ-125..131, extended `## Glossary` (Addis-፩-አሌፍ, x-api-key), updated the Checklist (Addis AI — GREEN seed; AI Prompt Spec, API Contract, Security — GREEN enrichment), and added the Phase 18 Source Trace Map with the `backend/.env` codebase facts. Phase 19 will build the other AI providers.
+Phases 1–18 are GREEN (2026-08-01). Phase 18 built the Addis AI integration from §18: new `## Addis AI` seed (provider identity and primary sources, base URLs and platform, authentication and key rules, core model families, language support, text generation and speech-to-text contracts with request/response shapes, TTS/multimodal/translation/realtime non-first-workflow notes, error mapping with the status table and project handling, package and implementation implications), enriched `## AI Prompt Spec` (new §7 Delivery To The Addis AI Endpoint — PR-01..18 seeds delivered via `chat_generate` with the frozen-constants generation config), enriched `## API Contract` (new §5 Addis AI Provider Endpoints — backend service dependencies), enriched `## Security` (new §5 AI Provider Security), flipped the Phase 18 forward markers in `## AI Prompt Spec`, `## Security`, `## Environment Config`, and `## Audio Recording STT` to DONE, updated the `## UI/UX Spec` Addis AI rationale cross-ref, added REQ-125..131, extended `## Glossary` (Addis-፩-አሌፍ, x-api-key), updated the Checklist (Addis AI — GREEN seed; AI Prompt Spec, API Contract, Security — GREEN enrichment), and added the Phase 18 Source Trace Map with the `backend/.env` codebase facts. Phase 19 built the other AI providers.
+
+## End Of Phase 19 Content
+
+Phases 1–19 are GREEN (2026-08-01). Phase 19 built the other AI providers from §19: new `## Other AI Providers` seed (provider set and free-AI rule — three providers, STT always uses Addis AI, free-only with no credit card or subscription, models `gemini-3.1-flash-lite` and `z-ai/glm-5.2`, axios for Gemini/Nvidia; provider selection and storage — user picks at generation time via dropdown or buttons, default Addis, provider stored per AI conversation message, corrections may use a different provider; provider fallback chain Addis → Gemini → Nvidia; Gemini integration — `generateContent` contract with `contents`/`systemInstruction`/`generationConfig` and the `key` query parameter; Nvidia integration — Nvidia message format with `Authorization: Bearer`; both with 3x exponential-backoff retries and 502 provider errors), enriched `## AI Prompt Spec` (new §8 Provider Fallback And Delivery — PR-01..18 seeds deliver via Gemini `systemInstruction`/`contents` and the Nvidia message format), flipped the Phase 19 forward markers in `## AI Prompt Spec`, `## Addis AI`, and `## Environment Config` to DONE, added REQ-132..138, extended `## Glossary` (gemini-3.1-flash-lite, z-ai/glm-5.2), updated the Checklist (Other AI Providers — GREEN seed; AI Prompt Spec and Environment Config — GREEN enrichment), and added the Phase 19 Source Trace Map with the `backend/.env` and `backend/package.json` codebase facts. Phase 20 will build the audio recording and STT pipeline.
