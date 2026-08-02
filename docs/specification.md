@@ -66,8 +66,8 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 32 | 32. Git And Phase Protocol | GREEN | Phase Protocol, Tasks And Implementation Plan |
 | 33 | 33. Decision Log (ADRs) | GREEN | Decision Log |
 | 34 | 34. Glossary | GREEN | Glossary, Requirements |
-| 35 | 35. Archive, Delete, And Restore Lifecycle | PENDING | Report Management, Data Modeling, Business Rules, Work Flow |
-| 36 | Final Consolidation (no source section) | PENDING | Full `docs/specification.md` — coverage verification, open-question resolution, final quality gate |
+| 35 | 35. Archive, Delete, And Restore Lifecycle | GREEN | Report Management, Data Modeling, Business Rules, Work Flow |
+| 36 | Final Consolidation (no source section) | GREEN | Full `docs/specification.md` — coverage verification, open-question resolution, final quality gate; closed the recorder-state-machine, MuiTimePicker, create-dialog submit/validation, endpoint-path, and report-deletion-cascade coverage gaps (see `## Final Coverage Audit`); Design and File Storage Uploads checklist rows marked GREEN; remaining PENDING rows are intentional (Analytics deferred product feature, Risk Register unassigned, OQ-001..003 open questions) |
 
 ---
 
@@ -80,30 +80,30 @@ Status of every section the target document must contain at minimum. Extra secti
 | Addis AI | 18 | GREEN (Phase 18 seed) |
 | AI Prompt Spec | 6, 7, 18, 19, 21, 24 | GREEN (Phase 7, 18, 19, 21, 24 enrichment) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
-| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 25, 28 | GREEN (Phase 13, 18, 20, 22, 24, 25, 28 enrichment) |
+| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 25, 28, 35, 36 | GREEN (Phase 13, 18, 20, 22, 24, 25, 28, 35 enrichment; Phase 36 §6 endpoint paths) |
 | Architecture | 9, 10, 25 | GREEN (Phase 10, 25 enrichment) |
-| Audio Recording STT | 8, 20, 24 | GREEN (Phase 8 seed, Phase 20, 24 enrichment) |
+| Audio Recording STT | 8, 20, 24, 36 | GREEN (Phase 8 seed, Phase 20, 24 enrichment; Phase 36 recorder state machine + create-dialog validation/submit) |
 | Auth Cookies | 11 | GREEN (Phase 11 seed) |
-| Backend Architecture | 10, 24, 25, 28 | GREEN (Phase 10 seed, Phase 24, 25, 28 enrichment) |
+| Backend Architecture | 10, 24, 25, 28, 35 | GREEN (Phase 10 seed, Phase 24, 25, 28, 35 enrichment) |
 | Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
-| Business Rules | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
+| Business Rules | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24, 35 enrichment) |
 | Checklists | 26, 30, 31 | GREEN (Phase 26 seed, Phase 30, 31 enrichment) |
 | Coding Conventions | 9, 25, 26, 27 | GREEN (Phase 9 seed, Phase 25, 26, 27 enrichment) |
-| Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11, 20, 23, 24 enrichment) |
+| Data Modeling | 5, 11, 20, 23, 24, 35, 36 | GREEN (Phase 11, 20, 23, 24, 35 enrichment; Phase 36 cascade reconciliation) |
 | Decision Log | 1, 2, 24, 33 | GREEN (Phase 1–2 seed, Phase 24 enrichment, Phase 33 finalization) |
-| Design | consolidated across phases; finalized in 36 | PENDING |
+| Design | consolidated across phases; finalized in 36 | GREEN (Phase 36 — consolidated across Theme Standards, MUI Component Standards, and UI/UX Spec; verified in `## Final Coverage Audit`) |
 | Environment Config | 17, 19, 25, 29 | GREEN (Phase 17 seed, Phase 19, 25, 29 enrichment) |
 | Error Handling | 28 | GREEN (Phase 28 seed) |
 | Export Spec | 6, 22, 25 | GREEN (Phase 6 seed, Phase 22, 25 enrichment) |
-| File Storage Uploads | 20 | PENDING |
+| File Storage Uploads | 20, 36 | GREEN (Phase 20 seed — content lives in `## Audio Recording STT` §5–7 and `## API Contract` §6; Phase 36 verification) |
 | Frontend Architecture | 12, 13, 14 | GREEN (Phase 13 enrichment) |
 | Git Workflow | 32 | GREEN (Phase 32 — merged into `## Phase Protocol` per AD-014) |
 | Glossary | 1, 2, 24, 34 (final) | GREEN (Phase 1–2 seed, Phase 24 enrichment, Phase 34 finalization) |
 | Implementation Plan | 32 | GREEN (Phase 32 seed) |
 | JSDoc Standards | 26, 27 | GREEN (Phase 26 seed, Phase 27 enrichment) |
 | Logging | 10, 28 | GREEN (Phase 10 seed, Phase 28 enrichment) |
-| Mock Data Seeding | 23, 24 | GREEN (Phase 23 seed, Phase 24 enrichment) |
-| MUI Component Standards | 12, 14, 24 | GREEN (Phase 14, 24 enrichment) |
+| Mock Data Seeding | 23, 24, 35 | GREEN (Phase 23 seed, Phase 24, 35 enrichment) |
+| MUI Component Standards | 12, 14, 24, 36 | GREEN (Phase 14, 24 enrichment; Phase 36 MuiTimePicker §9.9) |
 | Non-Functional Requirements | 1, 31 | GREEN (Phase 1 seed, Phase 31 enrichment) |
 | Other AI Providers | 19, 24 | GREEN (Phase 19 seed, Phase 24 enrichment) |
 | Phase Protocol | 32 | GREEN (Phase 32 seed) |
@@ -116,22 +116,22 @@ Status of every section the target document must contain at minimum. Extra secti
 | Redux RTK Query | 13, 28 | GREEN (Phase 13 seed, Phase 28 enrichment) |
 | Report Domain | 3, 5, 24 | GREEN (Phase 5, 24 enrichment) |
 | Report Format | 6, 7, 21 | GREEN (Phase 7, 21 enrichment) |
-| Report Management | 4, 5, 24, 35 | GREEN (Phase 5, 24 enrichment) |
-| Requirements | 1, 2, 4, 9, 24, 25, 29, 31, 34 | GREEN (Phase 9, 24, 25, 29 enrichment) |
-| Risk Register | pending assignment (candidate: 33/36) | PENDING |
+| Report Management | 4, 5, 24, 35 | GREEN (Phase 5, 24, 35 enrichment) |
+| Requirements | 1, 2, 4, 9, 24, 25, 29, 31, 34, 35 | GREEN (Phase 9, 24, 25, 29, 35 enrichment) |
+| Risk Register | assessed in 36 (no new risks surfaced; mitigations live across Security, Error Handling, and Requirements); explicit risk table remains unassigned | PENDING |
 | Routing Layout | 12 | GREEN |
 | Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16, 17, 21, 26, 29, 30 enrichment) |
 | Security | 11, 17, 18, 25, 29 | GREEN (Phase 11 seed, Phase 17, 18, 25, 29 enrichment) |
-| Source Traceability | 31 | GREEN (Phase 31 seed) |
-| Status Machine | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
+| Source Traceability | 31, 36 | GREEN (Phase 31 seed; Phase 36 row 36) |
+| Status Machine | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24, 35 enrichment) |
 | Tasks | 23 (seed — content lives in ## Mock Data Seeding), 32 | GREEN (Phase 23 seed, Phase 32 consolidation — content lives in `## Tasks And Implementation Plan`) |
 | Theme Standards | 14 | GREEN (Phase 14 seed) |
-| Transcription Review | 8, 20, 24 | GREEN (Phase 8 seed, Phase 20, 24 enrichment) |
-| UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 15, 16 enrichment) |
+| Transcription Review | 8, 20, 24, 36 | GREEN (Phase 8 seed, Phase 20, 24 enrichment; Phase 36 §2.1 retry path) |
+| UI/UX Spec | 7, 12, 14, 15, 16, 35, 36 | GREEN (Phase 15, 16, 35 enrichment; Phase 36 CreateReportDialog) |
 | User Interactions | 3, 16, 22, 35 | GREEN (Phase 3 seed, Phase 16 enrichment) |
 | User Stories | 2 (seed), 4 | GREEN (Phase 2 seed) |
 | Validation Audit | 8, 15, 24, 28, 31 | GREEN (Phase 8 seed, Phase 15, 24, 28, 31 enrichment) |
-| Work Flow | 3, 22, 25, 35 | GREEN (Phase 3 seed, Phase 22, 25 enrichment) |
+| Work Flow | 3, 22, 25, 35 | GREEN (Phase 3 seed, Phase 22, 25, 35 enrichment) |
 
 ---
 
@@ -365,7 +365,7 @@ All `§` references below identify sections of the original source brief. They a
 | §14.4 + codebase (`client/src/theme/`) | `AppTheme.jsx` exists with `cssVariables: { colorSchemeSelector: 'data-mui-color-scheme', cssVarPrefix: 'template' }`, `colorSchemes`/`typography`/`shadows`/`shape` from `themePrimitives.js`, `components` built from the eight customization groups, and `ThemeProvider` with `disableTransitionOnChange`; `themePrimitives.js` also exports `layoutConfig`; `customizations/index.js` re-exports the eight customization groups | Theme Standards (1) |
 | §14.5 | All MUI X components — charts, date picker, data grid, and any other MUI X component — are community version only; MUI X Chat references: `https://mui.com/x/react-chat/` and `https://mui.com/x/react-chat/backend/adapters/` | MUI Component Standards (10), Requirements (REQ-111) |
 | §14 (1.1–1.13) | Component catalog: MuiAppbar (file `client/src/components/reusable/MuiAppbar.jsx`, props `position`/`elevation`/`color`/`sx` defaults, left logo → `/dashboard` if authenticated else `/`, right section conditional on auth, PublicLayout vs AppShell behaviors, avatar 32px below 600px / 36px at or above 600px, auth detection via Redux `authSlice` `useSelector`, exclusions — search dialog, user dropdown, hamburger); MuiButton; MuiDialog (title bottom divider, scrollable content, actions divider, responsive fullscreen down('sm') OR down('md')+landscape); MuiTextField; MuiSelect; MuiDatePicker (Ethiopian calendar — `client/src/utils/ethiopianDate.js` with `ethiopianToGregorian`/`gregorianToEthiopian`, custom lightweight conversion no npm package, DD-MM-YY display e.g. `25-02-18`, English day names, English month names mapped to Ethiopian months September…August + Pagume, RHF via Controller, `LocalizationProvider` + `AdapterDayjs` in `main.jsx`); MuiPagination (count = server `totalPages` from `mongoose-paginate-v2`, constants `PAGINATION_DEFAULT_PAGE=1`/`PAGINATION_DEFAULT_LIMIT=10`/`PAGINATION_MAX_LIMIT=100`); MuiDataGrid (columns in `client/src/components/columns/*.js` action column last, View/Edit/Archive/Delete icon colors via `sx`, archive→MuiConfirmDialog→restore or delete flow, `checkboxSelection` + `disableRowSelectionOnClick` + export button, `GridToolbar`, `paginationMode="server"`, `pageSizeOptions={[10, 25, 50, 100]}`, skeleton via `slotProps.loadingOverlay`, custom `noRowsOverlay`, default `sx={{ height: 400 }}`); MuiConfirmDialog; LoadingSpinner (size default 40, minHeight default `"100vh"`); GlobalSearchDialog (`useForm({ mode: 'onSubmit' })`, uncontrolled `register('search')`, ArrowBackIcon start adornment clears/resets/closes); MuiPageHeader (title + subtitle hidden on vw < 600 portrait, children right slot, `mb: 2`, bottom divider); MuiStatusBadge (statuses `draft`/`audio_attached`/`transcribed`/`reviewed`/`completed` → default/warning/info/primary/success; used in Report Details header (3.6)) | MUI Component Standards (1, 4, 5, 9), UI/UX Spec (10, 11), Requirements (REQ-109, REQ-110) |
-| §14 (1.13) + §5 (cross-aligned) | MuiStatusBadge status names (`draft` | `audio_attached` | `transcribed` | `reviewed` | `completed`) are the Phase 24 report status enum (`## Status Machine` §3 mapping; `## Data Modeling` §4.1); Phase 35 (§35 Archive, Delete, And Restore Lifecycle) owns the archive/delete/restore lifecycle rules | MUI Component Standards (9), Status Machine (3), Data Modeling (4.1) |
+| §14 (1.13) + §5 (cross-aligned) | MuiStatusBadge status names (`draft` | `audio_attached` | `transcribed` | `reviewed` | `completed`) are the Phase 24 report status enum (`## Status Machine` §3 mapping; `## Data Modeling` §4.1); the archive/delete/restore lifecycle rules live in `## Archive Delete Restore Lifecycle` (Phase 35) | MUI Component Standards (9), Status Machine (3), Data Modeling (4.1) |
 
 ---
 
@@ -494,7 +494,7 @@ All `§` references below identify sections of the original source brief. They a
 | §24.6 | Transcription schema: `user`/`report` refs, `raw`, `latest` (starts empty), `history[]` (`{ instruction, reviewed, reviewer: User ObjectId | "addis" | "gemini" | "nvidia", editedAt }`); no status field; three review modes (direct edit / instruction→AI / voice→STT→AI) | Data Modeling (4.3), AI Prompt Spec (11), Rules (6), Requirements (REQ-149) |
 | §24.7 | User schema: `firstName`/`lastName` (default ""), `email` (required, lowercase, trim, unique index), `password` (required, `select: false`, bcryptjs 12-round pre-save hook when modified), `avatar`/`position` (default ""), `refreshToken`, `authProvider` (`local | google`); `fullName` virtual; `comparePassword` via `bcrypt.compare`; name extraction from email local part; toJSON deletes `password` | Data Modeling (4.4), Auth Cookies (4), Requirements (REQ-167/170) |
 | §24.8 | Branch schema: `name` (required), `location`, `isArchived`/`archivedAt`, `user` ref; unique `{ user, name }` index; TTL 30-day partial `archivedAt` | Data Modeling (4.5), API Contract (8) |
-| §24.9 | ChatConversation schema: `user`/`report` refs (required), `title` (default "New Chat"), `messages[]` (`{ id, role, status, parts (4 tool shapes), provider ("addis" | "gemini" | "nvidia"), createdAt }` — provider is the user-approved Phase 24 extension for REQ-133); index `{ user, updatedAt: -1 }`; deleting a report does not delete its conversations | Data Modeling (4.6), API Contract (8), Other AI Providers (2), Requirements (REQ-172) |
+| §24.9 | ChatConversation schema: `user`/`report` refs (required), `title` (default "New Chat"), `messages[]` (`{ id, role, status, parts (4 tool shapes), provider ("addis" | "gemini" | "nvidia"), createdAt }` — provider is the user-approved Phase 24 extension for REQ-133); index `{ user, updatedAt: -1 }`; deleting a report does not delete its conversations — note: this "keeps conversations" behavior is SUPERSEDED by the Phase 35 archive/delete cascade (see `## Final Coverage Audit`, cascade reconciliation): report deletion cascade-deletes linked ChatConversation documents, per ADR-018 | Data Modeling (4.6), API Contract (8), Other AI Providers (2), Requirements (REQ-172) |
 | §24.10 | Relationship model: Report is the hub — Audio/Transcription point back to Report; bidirectional user ownership on Report, Branch, Audio, Transcription, ChatConversation | Data Modeling (2) |
 
 ## Source Trace Map — Phase 25 (source §25)
@@ -674,6 +674,20 @@ All `§` references below identify sections of the original source brief. They a
 | §34 | baseQueryWithReauth — RTK Query wrapper that handles token refresh on 401 responses | Glossary (already present) |
 | §34 | Two-Path Deletion — archive then permanent delete (user-initiated or after 30 days) | Glossary (added in Phase 34) |
 
+## Source Trace Map — Phase 35 (source §35)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §35.1 | Two-path deletion model: archive (soft delete, reversible) then permanent delete — archive is a flag (`isArchived`/`archivedAt`), never an enum value | Archive Delete Restore Lifecycle (1, 9), Status Machine (1, 3), Data Modeling (7), Decision Log (AD-017) |
+| §35.2 | Archivable resources: Report (cascade — Transcription, Audio, linked ChatConversations, physical `filePath` files, one session/transaction) and Branch (document only — reports keep the embedded snapshot) | Archive Delete Restore Lifecycle (2), Data Modeling (4.1, 4.2), Requirements (REQ-226, REQ-227) |
+| §35.3 | Six endpoints — `PATCH /api/v1/reports/:id/archive`, `PATCH /api/v1/reports/:id/restore`, `DELETE /api/v1/reports/:id` (permanent; requires archived), `PATCH /api/v1/branches/:id/archive`, `PATCH /api/v1/branches/:id/restore`, `DELETE /api/v1/branches/:id` — with exact 200 envelopes | API Contract (9), Report Management, Work Flow (W-11) |
+| §35.4 | Guard order: 404 for missing/non-archived targets, 409 (established `CONFLICT`) for lifecycle violations — exact messages | API Contract (9.1, 9.2), Requirements (REQ-228) |
+| §35.5 | Session and transaction requirements (10.3/29.10, ADR-018); session-capable hooks (10.11); post-commit best-effort `fs.unlink`; TTL deletion is the single documented exception to the session rule | Archive Delete Restore Lifecycle (5), Backend Architecture (8), Requirements (REQ-226) |
+| §35.6 | Automatic 30-day path: `ARCHIVE_TTL_SECONDS = 2592000` TTL indexes (primary) plus the cleanup sweeper (`CLEANUP_SWEEPER_INTERVAL_MS = 3600000`); sweeper wins races; the orphan sweep cleans post-TTL files | Archive Delete Restore Lifecycle (6), Environment Config (5), Backend Architecture (8), Requirements (REQ-229) |
+| §35.7 | Frontend flows — "Archived" indicator, list visibility, exact dialog copy, toasts, navigation after actions | Archive Delete Restore Lifecycle (7), UI/UX Spec |
+| §35.8 | Edge cases — re-archive, delete-while-deleting, TTL/sweeper race, orphan files, snapshot-preserving branch delete, archived login enforcement | Archive Delete Restore Lifecycle (8) |
+| §35.9 | Consistency notes — `## Archive Delete Restore Lifecycle` is authoritative; ADR-015 and ADR-018; the `Report.status` enum is unchanged | Archive Delete Restore Lifecycle (9), Decision Log (AD-017), Data Modeling (7) |
+
 ## Source Traceability
 
 Every fact extracted from `docs/initial-doc.md` is recorded in the per-phase source trace maps above (`## Source Trace Map — Phase N (source §N)`), one map per phase listing each source fact and the exact spec section that records it. This section is the index: one row per phase, with the spec sections each phase produced or updated. No source fact is recorded only here — the maps above carry the per-fact detail.
@@ -714,6 +728,8 @@ Every fact extracted from `docs/initial-doc.md` is recorded in the per-phase sou
 | 32 | §32 Git And Phase Protocol | Phase Protocol, Tasks And Implementation Plan, Requirements, Decision Log, Rules, Project Directory Structure, Validation Audit, Mock Data Seeding, Source Traceability | GREEN |
 | 33 | §33 Decision Log (ADRs) | Decision Log, Tasks And Implementation Plan, Source Traceability | GREEN |
 | 34 | §34 Glossary | Glossary, Requirements, Source Traceability | GREEN |
+| 35 | §35 Archive, Delete, And Restore Lifecycle | Archive Delete Restore Lifecycle, API Contract, Data Modeling, Business Rules, Status Machine, Work Flow, Report Management, Backend Architecture, Environment Config, UI/UX Spec, Requirements, Mock Data Seeding, Source Traceability | GREEN |
+| 36 | Final Consolidation (no source section) | Full `docs/specification.md` — coverage audit, checklist reconciliation, final quality gate; enrichment rows added to Audio Recording STT (recorder state machine, create-dialog validation/submit), Transcription Review (re-transcription retry), API Contract (create/re-transcribe/transcription-history/audio-stream endpoints), MUI Component Standards (MuiTimePicker), UI/UX Spec (CreateReportDialog); cascade-contradiction reconciliation (Phase 35 wins); `## Final Coverage Audit` appended | GREEN |
 
 ---
 
@@ -1548,6 +1564,11 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-222 | Step 6 first records the phase's changes/updates/corrections in `docs/implementation-log.md`; every recorded change is respected in future phases. | `docs/implementation-log.md` documents each phase's changes and future phases apply them. | §32 |
 | REQ-223 | Each implementation phase results in meaningful, visible changes and is never presented without visible results. | Each phase's review shows meaningful, visible changes. | §32 |
 | REQ-224 | Phase branches are merged only after user approval, then deleted locally and remotely. | Merged branches are deleted both locally and on the remote. | §32 |
+| REQ-225 | A report can be archived (soft delete) via `PATCH /api/v1/reports/:id/archive` and restored via `PATCH /api/v1/reports/:id/restore`; archived reports are excluded from default lists and blocked (403) for all modifications. | Archive/restore behave per `## Archive Delete Restore Lifecycle`; archived reports never appear in default list queries. | §35 |
+| REQ-226 | Deleting a report cascades to its Transcription, Audio, and linked ChatConversation documents and the physical audio files, within one session/transaction (10.3/29.10, ADR-018). | Cascade scope per `## Archive Delete Restore Lifecycle` §2; the cascade is atomic. | §35 |
+| REQ-227 | Branch deletion removes only the Branch document — reports keep the embedded branch snapshot and are never deleted or orphaned. | Cascade scope per `## Archive Delete Restore Lifecycle` §2. | §35 |
+| REQ-228 | Lifecycle endpoints return 404 for missing/non-archived targets and 409 (established `CONFLICT` constant, REQ-216) for lifecycle violations, in the documented guard order. | Guard order and messages per `## Archive Delete Restore Lifecycle` §3–§4. | §35 |
+| REQ-229 | Archived reports are automatically and permanently deleted 30 days after `archivedAt` (TTL indexes plus the cleanup sweeper, per-hour default interval). | TTL/sweeper behavior per `## Archive Delete Restore Lifecycle` §6. | §35 |
 
 ### Requirement expansion markers
 
@@ -1582,6 +1603,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - File creation rules: **Phase 30 — DONE (REQ-206..209)**.
 - Validation and audit rules: **Phase 31 — DONE (REQ-210..216)**.
 - Git and phase protocol rules: **Phase 32 — DONE (REQ-217..224)**.
+- Archive/delete/restore lifecycle rules: **Phase 35 — DONE (REQ-225..229)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31 — DONE (REQ-210..216)**.
@@ -1665,7 +1687,7 @@ The supporting features exist to support the core workflow (§4): the supervisor
 
 | Resource | Create | Read | Update | Delete | Notes |
 |---|---|---|---|---|---|
-| Reports | Yes (REQ-045) | Yes | Yes (editable after generation, §2.1) | Yes (archive/delete semantics in Phase 35) | REQ-027/045 |
+| Reports | Yes (REQ-045) | Yes | Yes (editable after generation, §2.1) | Yes (two-path archive → delete, `## Archive Delete Restore Lifecycle`) | REQ-027/045 |
 | Branches | Yes (REQ-046) | Yes | Yes | Yes | Branch domain rules in Phase 5 |
 | Profile | Yes (via auth registration, Phase 11) | Yes | Yes | — | REQ-025/042 |
 | Transcriptions / AI conversations | Yes (pipeline) | Yes | Yes (transcription editing, REQ-016/039) | — | Phases 20/21/24 |
@@ -1676,7 +1698,7 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 
 ### 6. Lifecycle Seeds
 
-- Daily report lifecycle (detailed in Phase 35): created → recorded/transcribed → reviewed (transcription) → generated → reviewed/corrected → finalized → exported → archived/deleted/restored.
+- Daily report lifecycle (detailed in `## Archive Delete Restore Lifecycle`, Phase 35): created → recorded/transcribed → reviewed (transcription) → generated → reviewed/corrected → finalized → exported → archived/deleted/restored.
 - Multi-branch days: one daily report covers one or more branches (§2.1, §5.1, REQ-014/028/050).
 - **Generation source (§5.2, REQ-054, BR-05):** report content is generated only from the reviewed transcription, never directly from raw audio.
 - **Version preservation (§5.2, REQ-024/027):** reports remain editable after generation and preserve historical versions.
@@ -1690,7 +1712,7 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 
 ## Work Flow
 
-> **Phase 3 build — the core narration→report flow and the review–correction loop from §3. Detailed sub-flows arrive in later phases: authentication (11), supporting-resource management (4), audio recording/STT pipeline (20), AI prompts (21), export (22 — `## Export Spec` §2–4), and archive/delete/restore lifecycle (35).**
+> **Phase 3 build — the core narration→report flow and the review–correction loop from §3. Detailed sub-flows arrive in later phases: authentication (11), supporting-resource management (4), audio recording/STT pipeline (20), AI prompts (21), export (22 — `## Export Spec` §2–4), and the archive/delete/restore lifecycle (35 — `## Archive Delete Restore Lifecycle`).**
 
 ### 1. Actors
 
@@ -1713,7 +1735,7 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 | W-08 | Supervisor | If something is wrong, missing, unclear, or not written in the desired way, requests a correction | Correction request | §3.2 |
 | W-09 | System (AI) | Updates the report; corrections update only the relevant part without unnecessarily rewriting correct unrelated sections (REQ-034; correction behavior §6.9) | Updated report | §2.3.7, §3.2, §6.9 |
 | W-10 | Supervisor + System | Repeats W-07..W-09 until the supervisor is satisfied (correction loop) | Satisfied report | §3.2 |
-| W-11 | Supervisor | Accepts/finalizes the report | Final report version | §3.2 (versioning: Phase 24 — `Report.generatedHistory[]`, AD-010; lifecycle Phase 35) |
+| W-11 | Supervisor | Accepts/finalizes the report | Final report version | §3.2 (versioning: Phase 24 — `Report.generatedHistory[]`, AD-010; lifecycle Phase 35 — `## Archive Delete Restore Lifecycle`) |
 | W-12 | System | Delivers/exports the report (PDF, TXT, CSV, spreadsheet, or Google Docs) | Exported report | §2.1, `## Export Spec` §2–4 (details Phase 22) |
 
 ### 3. Work Flow Rules (seeds)
@@ -1735,7 +1757,7 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 | AI prompt requirements and conversation handling | Phase 21 | W-05, W-06, W-09 |
 | Export to PDF/TXT/CSV/spreadsheet | Phase 22 | W-12 |
 | Supporting-resource flows (branches, history, analytics) | Phase 4 | (parallel flows) |
-| Archive, delete, restore lifecycle | Phase 35 | W-11 onward |
+| Archive, delete, restore lifecycle | Phase 35 — `## Archive Delete Restore Lifecycle` | W-11 onward |
 | Error states and loading states | Phase 28 (`## Error Handling` §3) | all steps |
 
 ### 5. Export Sub-Flow (W-12, Phase 22)
@@ -1929,7 +1951,7 @@ Branch (1) ──→ User (1)
 Audio (1) ──→ User (1)
 Transcription (1) ──→ User (1)
 ChatConversation (1) ──→ User (1)
-ChatConversation (1) ──→ Report (1) — deleting a report does NOT delete its conversations
+ChatConversation (1) ──→ Report (1) — cascade-deletes its linked ChatConversations when the report is deleted (Phase 35.2 supersedes the Phase 24 "does NOT delete conversations" behavior; ADR-018, see `## Final Coverage Audit`)
 ```
 
 Plus: User 1—N Report ownership (BR-06, REQ-041); User 1—N Branch (§5.1); Report 1—N Branch per day (multi-branch days, §5.1, §24.4 `branches[]`).
@@ -1944,7 +1966,7 @@ Plus: User 1—N Report ownership (BR-06, REQ-041); User 1—N Branch (§5.1); R
 | DM-04 | All list endpoints use `mongoose-paginate-v2` (default page 1, limit 10, max 100; REQ-053, BR-04); list models carry the pagination plugin. | §24.2, §5.2 |
 | DM-05 | `User.password` is hashed by a bcryptjs `pre('save')` hook with 12 salt rounds that runs only when `password` is modified; `comparePassword(candidatePassword)` uses `bcrypt.compare` (REQ-167). | §24.7, §11 |
 | DM-06 | The Report status enum is `draft | audio_attached | transcribed | reviewed | completed` (default `draft`); transitions follow the §6 lifecycle (REQ-168). | §24.4 |
-| DM-07 | Archived-at TTL indexes (30 days, partial filter `archivedAt: { $ne: null }`) exist on Report and Branch; the archive/delete/restore lifecycle rules themselves are Phase 35 scope. | §24.4, §24.8 |
+| DM-07 | Archived-at TTL indexes (30 days, partial filter `archivedAt: { $ne: null }`) exist on Report and Branch; the archive/delete/restore lifecycle rules themselves live in `## Archive Delete Restore Lifecycle` (Phase 35). | §24.4, §24.8 |
 
 ### 4. Field-Level Schema (Phase 24)
 
@@ -1960,7 +1982,7 @@ Plus: User 1—N Report ownership (BR-06, REQ-041); User 1—N Branch (§5.1); R
 | `audio` | Array of ObjectId ref Audio, default `[]` | Starts empty; populated after audio upload |
 | `transcription` | ObjectId ref Transcription, default `null` | Populated after transcription completes |
 | `status` | String enum `draft | audio_attached | transcribed | reviewed | completed`, default `draft` | Lifecycle in §6 |
-| `isArchived` | Boolean, default `false` | Archive flag; lifecycle rules Phase 35 |
+| `isArchived` | Boolean, default `false` | Archive flag; lifecycle rules in `## Archive Delete Restore Lifecycle` |
 | `archivedAt` | Date, default `null` | Set on archive; 30-day TTL index below |
 | `generated` | String, default `""` | Latest AI-generated report text (report format §6.1); empty until the first successful generation; set together with `status → completed`; lives on Report, not Transcription — generation consumes `Transcription.latest` |
 | `generatedHistory[]` | Array of `{ provider: String enum addis | gemini | nvidia required, text: String required, generatedAt: Date default now }` | The unified ReportVersion (AD-010); appended on every successful generation; re-generation overwrites `generated` and appends an entry; no UI in this cycle (the details History card is the transcription history) |
@@ -2048,7 +2070,7 @@ One Audio document per uploaded clip (the upload accepts the full recorded clips
 |---|---|---|
 | `name` | String, required | |
 | `location` | String | |
-| `isArchived` | Boolean, default `false` | Archive flag; lifecycle rules Phase 35 |
+| `isArchived` | Boolean, default `false` | Archive flag; lifecycle rules in `## Archive Delete Restore Lifecycle` |
 | `archivedAt` | Date, default `null` | 30-day TTL index below |
 | `user` | ObjectId ref User | Owner |
 
@@ -2059,7 +2081,7 @@ One Audio document per uploaded clip (the upload accepts the full recorded clips
 | Field | Type / constraints | Notes |
 |---|---|---|
 | `user` | ObjectId ref User, required | |
-| `report` | ObjectId ref Report, required | Deleting a report does NOT delete its conversations (the conversation keeps the `report` id for deep links) |
+| `report` | ObjectId ref Report, required | Cascade-deletes this conversation when the report is deleted (Phase 35.2 supersedes the earlier "deleting a report does NOT delete its conversations" behavior; ADR-018, see `## Final Coverage Audit`) |
 | `title` | String, default `"New Chat"` | |
 | `messages[]` | Array of message objects | See below |
 
@@ -2093,13 +2115,13 @@ Lifecycle: `draft → audio_attached → transcribed → reviewed → completed`
 - Phase 11 (§11 Authentication): **DONE — field-level User definition in §4.4.**
 - Phase 20 (§20 Audio Recording And STT Pipeline): **DONE — field-level Audio/Transcription definitions in §4.2/§4.3 and the status reconciliation in §5.**
 - Phase 23 (§23 Mock Data): **DONE — seeded entity set reconciled in §5; exact seed records in `## Mock Data Seeding` §4.**
-- Phase 35 (Archive, Delete, And Restore Lifecycle): archive/delete/restore lifecycle rules and the final status-machine state names.
+- Phase 35 (Archive, Delete, And Restore Lifecycle): **DONE — the archive/delete/restore lifecycle rules live in `## Archive Delete Restore Lifecycle`; the `Report.status` enum is unchanged — archive is a flag (`isArchived`/`archivedAt`), not an enum value (35.9).**
 
 ---
 
 ## Business Rules
 
-> **Phase 5 seed — rules derived from §5. Phase 24 delivered the data-model rules from §24.2/§24.4/§24.7 (BR-11..14). Phase 35 adds the lifecycle rules. Rule IDs: `BR-<NN>`.**
+> **Phase 5 seed — rules derived from §5. Phase 24 delivered the data-model rules from §24.2/§24.4/§24.7 (BR-11..14). Phase 35 added the lifecycle rules (BR-15..17). Rule IDs: `BR-<NN>`.**
 
 | ID | Rule | Source |
 |---|---|---|
@@ -2117,6 +2139,9 @@ Lifecycle: `draft → audio_attached → transcribed → reviewed → completed`
 | BR-12 | No schema field combines `unique: true` with separate indexes; uniqueness and other indexes are declared through `schema.index(..)`. | §24.2 (REQ-166) |
 | BR-13 | User passwords are hashed with bcryptjs (12 salt rounds) in a `pre('save')` hook; `comparePassword` compares via `bcrypt.compare`. | §24.7 (REQ-167) |
 | BR-14 | The Report status follows the enum `draft → audio_attached → transcribed → reviewed → completed`. | §24.4 (REQ-168) |
+| BR-15 | Every archivable resource (Report, Branch) follows the two-path deletion lifecycle: archive is always the first step and permanent delete is reachable only from the archived state — user-initiated or automatically after the 30-day window; restore is possible only while archived and before the deadline. | §35.1, §35.4 |
+| BR-16 | The Report cascade hard-delete removes, in one transaction, the Report document (including `generatedHistory`), its Transcription, its Audio documents plus their physical `filePath` files, and all linked ChatConversation documents; the Branch cascade removes only the Branch document — reports keep their embedded branch snapshot and are never deleted. | §35.2, §35.5 |
+| BR-17 | The cleanup sweeper enforces the automatic 30-day path (interval constant in `backend/utils/constants.js`, started with the HTTP server, stopped during graceful shutdown): the expired sweep cascade-deletes archived resources past their deadline (each in its own transaction) and the orphan sweep removes dependent documents whose report no longer exists; the `archivedAt` TTL indexes remain the MongoDB-internal safety net. | §35.6 |
 
 ---
 
@@ -2135,8 +2160,8 @@ Lifecycle: `draft → audio_attached → transcribed → reviewed → completed`
 
 | Resource | Operations | Detail phase |
 |---|---|---|
-| Branches | list, get, create, update, delete (Branch CRUD, §5.1) | Paths: Phase 10; schemas: Phase 24 (§8) |
-| Daily reports | list, get, create, update, delete (Report CRUD, §5.2) | Paths: Phase 10; schemas: Phase 24 (§8) |
+| Branches | list, get, create, update, delete, archive, restore (Branch CRUD, §5.1) | Paths: Phase 10; schemas: Phase 24 (§8); lifecycle: Phase 35 (§9) |
+| Daily reports | list, get, create, update, delete, archive, restore (Report CRUD, §5.2) | Paths: Phase 10; schemas: Phase 24 (§8); lifecycle: Phase 35 (§9) |
 | Narrations / audio | upload, playback, re-record support | Phase 20 |
 | Transcriptions | review/update, AI correction | Phase 20 |
 | AI conversations | list/get per report; message schemas Phase 24 (§8) | Phases 18/21 |
@@ -2186,6 +2211,48 @@ Lifecycle: `draft → audio_attached → transcribed → reviewed → completed`
 - **Upload endpoint** — accepts the full recorded clips array as the multipart field `clips` (§20.1; REQ-140): multer storage in `backend/uploads/audio/` (gitignored), 50 MB max per clip (`AUDIO_MAX_SIZE_BYTES`), server-side ffprobe duration validation and type/size validation (§20.2/§20.3; REQ-142, REQ-143); success sets the report status `audio_attached` (§24.4 enum, AD-011, REQ-168).
 - **Re-transcription endpoint** — re-runs STT on the stored audio for accuracy verification (§20.5; REQ-145): the backend must accept both `audio_attached` and `transcribed` statuses (status name reconciled in Phase 24, AD-011); the STT call itself always targets the Addis AI `v2/stt` endpoint with chunking per `## Audio Recording STT` §8 (REQ-128, REQ-144).
 
+#### 6.1 Create Report — `POST /api/v1/reports` (source 3.5.1.8; Phase 36 enrichment)
+
+Single-request create: one call carries the report metadata and all audio clips; the server runs create → upload → transcribe before responding (source 3.5.1.7).
+
+**Request:** `multipart/form-data` with `metadata` (JSON string: `{ date, branches: [{ branchId, clockIn, clockOut }], clockIn, clockOut, audio: [{ id, duration }] }`) and `clips` (the audio blobs, max 10 files — `upload.array("audio", 10)`, source 3.5.1.8).
+
+**Middleware chain (fixed order, source 3.5.1.8):**
+1. `authenticate` — JWT verification from `req.cookies.accessToken` (`## Auth Cookies` §2).
+2. `upload.array("audio", 10)` — multer receives the clips into `backend/uploads/audio/`.
+3. `createReportRules` (`backend/middlewares/validators/reportValidator.js`): `metadata` must be parseable JSON; `branches` must be an array with min 1 (`"At least one branch required"`); `branches.*.branchId|clockIn|clockOut` and top-level `clockIn`/`clockOut` notEmpty.
+4. Shared `validation` middleware (`backend/middlewares/validators/validation.js`): on `validationResult` errors → `422 { success: false, message: "Validation failed", data: { errors: errors.array() } }` (REQ-198); otherwise stores `req.validated = { body, params, query }` from `matchedData` and calls `next()`.
+5. Controller extracts `req.validated.body` (all controllers wrapped with `express-async-handler`, errors forwarded via `next(error)`).
+
+**Controller pipeline (transactional, source 3.5.1.8):**
+- STEP 1 — parse `metadata`, validate each file: MIME ∈ whitelist → else `415`; `fileSize` ≤ 50 MB → else `413`; ffprobe `duration` ≤ 900 s.
+- STEP 2 — create Report (`status: "draft"`) in a MongoDB session transaction.
+- STEP 3 — create one Audio doc per clip, push ids into `Report.audio`; any failure aborts the transaction → `502 { success: false, message: "Audio upload failed", data: null }`.
+- STEP 4 — Report status → `audio_attached`.
+- STEP 5 — per clip: ffmpeg WAV single pass (`pcm_s16le`, 16 kHz, mono) → wavSplitter 60 s chunks → Addis AI `v2/stt` (`language_code: "am"`); network failures retried 3× with 1s/2s/4s backoff; provider 4xx/5xx marks the chunk failed and continues. If transcription fails for **all** audio: commit, keep `audio_attached` with audio preserved → `502 { success: false, message: "Transcription failed", data: { reportId, status: "audio_attached" } }` (frontend retry per `## Transcription Review` §2.1).
+- STEP 6 — create Transcription doc (`raw` = concatenated chunks, `latest: ""`, `history: []`).
+- STEP 7 — link `Report.transcription`, status → `transcribed`.
+- STEP 8 — commit; return `201 { success: true, message: "Report created successfully", data: { report } }` (populated user/branches/audio/transcription).
+
+#### 6.2 Transcription Retry — `POST /api/v1/reports/:id/transcribe` (source 3.5.1.7, 3.5.1.10; Phase 36 enrichment)
+
+Re-runs the STEP 5–8 pipeline on the report's stored audio (no re-upload). On success: `Transcription.raw` updated, `latest` + `history` reset, Report status → `transcribed`. On failure: toast "Transcription failed, try again"; status stays `audio_attached` (retry banner per `## Transcription Review` §2.1).
+
+#### 6.3 Transcription Correction And History (source 3.5.1.9 backend behaviors; Phase 36 enrichment)
+
+These endpoints remain valid and are exercised through the Assistant chat (`save_transcription` tool performs the same update after user approval; the old edit-page UI is superseded):
+
+- `PATCH /api/v1/transcriptions/:id` — body `{ reviewed: "..." }`; pushes a history entry (`reviewer` = `req.user._id` for direct edits, provider string for accepted AI corrections), updates `latest`, Report status → `reviewed`.
+- `POST /api/v1/transcriptions/:id/correct` — body `{ instruction, provider }`; backend sends raw text + instruction to the selected provider and returns the corrected text for preview.
+- `POST /api/v1/transcriptions/:id/correct-by-voice` — `multipart/form-data` with the `audio` blob; STT via Addis AI returns the instruction text, then follows the correct flow.
+- `DELETE /api/v1/transcriptions/:id/history/:historyId` — `$pull: { history: { _id: historyId } }` (source 3.5.1.9; note: the source also mentions `PATCH` on the same path at one point — `DELETE` is the endpoint line (3.5.1.9 "Endpoint for history deletion") and matches the controller).
+- Reviewer display rule (source 3.5.1.9): `mongoose.Types.ObjectId.isValid(entry.reviewer)` → user name ("You (Beza Ayalew)"); otherwise provider string `"addis" | "gemini" | "nvidia"` → "AI (Gemini)".
+
+#### 6.4 Audio Stream And Download (source 3.5.1.9 Audio tab, 3.5.1.11; used by the ReportDetails audio card)
+
+- `GET /api/v1/audio/:audioId/stream` — streams the stored file into an inline `<audio>` player (ReportDetails audio card, source 3.6).
+- `GET /api/v1/audio/:audioId/download` — file attachment response with `originalName`.
+
 ### 7. Export (Phase 22)
 
 - **Client-side formats need no backend endpoints** — PDF, TXT, CSV, and XLSX exports are generated entirely in the browser (`## Export Spec` §2, §3; REQ-159). The frontend generates the file from the report data it already holds (via the RTK Query API client, REQ-104) and triggers the download directly; there is no `/api/v1/export` route for these formats.
@@ -2208,7 +2275,7 @@ Request and response bodies map field-for-field to the `## Data Modeling` §4 sc
 | `audio` | — (separate upload) | Array of Audio | Empty at creation |
 | `transcription` | — | ObjectId or `null` | Set by the pipeline |
 | `status` | — (computed) | enum `draft | audio_attached | transcribed | reviewed | completed` | Lifecycle in `## Data Modeling` §6 |
-| `isArchived` / `archivedAt` | — | Boolean / Date | Lifecycle rules Phase 35 |
+| `isArchived` / `archivedAt` | — | Boolean / Date | Lifecycle rules in `## Archive Delete Restore Lifecycle` |
 | `generated` / `generatedHistory[]` | — | String / Array | Set by generation; see `## AI Prompt Spec` §11 |
 
 **Branch documents:** `{ name (required), location, isArchived, archivedAt, user }` — create/update bodies carry only `name` and `location`; `user` is taken from auth; uniqueness is enforced on `{ user, name }` (DM-02, REQ-166).
@@ -2221,11 +2288,29 @@ Request and response bodies map field-for-field to the `## Data Modeling` §4 sc
 
 **Pagination/sort keys (per model, DM-04):** Report list sorts by `{ user: 1, createdAt: -1 }`; Branch list by `{ user: 1, name: 1 }`; ChatConversation list by `{ user: 1, updatedAt: -1 }` (§24.4, §24.8, §24.9).
 
+### 9. Archive, Delete, And Restore Endpoints (Phase 35, §35)
+
+All endpoints below are authenticated, mounted under `/api/v1`, registered in `routes/index.js` (§10.1), and take no request body. They are the API surface of the two-path deletion lifecycle (`## Archive Delete Restore Lifecycle` §1–§4).
+
+- **Report**
+  - `PATCH /api/v1/reports/:id/archive` → 200 `{ success: true, message: "Report archived", data: { report } }`; 404 if not found; 409 if already archived
+  - `PATCH /api/v1/reports/:id/restore` → 200 `{ success: true, message: "Report restored", data: { report } }`; 404 if not found; 409 if not archived or the 30-day window has passed
+  - `DELETE /api/v1/reports/:id` → 200 `{ success: true, message: "Report deleted", data: null }`; 404 if not found; 409 if not archived ("Archive the report before deleting")
+- **Branch**
+  - `PATCH /api/v1/branches/:id/archive` → 200 `{ success: true, message: "Branch archived", data: { branch } }`; 404 if not found; 409 if already archived
+  - `PATCH /api/v1/branches/:id/restore` → 200 `{ success: true, message: "Branch restored", data: { branch } }`; 404 if not found; 409 if not archived or the 30-day window has passed
+  - `DELETE /api/v1/branches/:id` → 200 `{ success: true, message: "Branch deleted", data: null }`; 404 if not found; 409 if not archived ("Archive the branch before deleting")
+
+- **List behavior:** all list and selection endpoints default to returning only active resources (`isArchived: false`); archived resources are returned only when the caller explicitly requests them (the Reports list endpoint supports the explicit `isArchived` query parameter, §12.6).
+- **Lifecycle guard order** (in every controller): resource exists (else 404, existing §12.6 wording) → lifecycle precondition (else 409, exact messages in `## Archive Delete Restore Lifecycle` §4) → operation.
+- **409 is established:** duplicate key 11000 and register duplicate email already use 409; status codes come by semantic name from `utils/httpStatus.js` — `CONFLICT: 409` is added there if not already present (§10.6).
+- **Transactions:** archive, restore, and cascade delete run inside a Mongoose session transaction (`## Archive Delete Restore Lifecycle` §5); cascade delete removes all dependents in one transaction, with post-commit best-effort `fs.unlink` of deleted Audio `filePath` files.
+
 ---
 
 ## Status Machine
 
-> **Phase 5 seed — report lifecycle statuses derived from the Work Flow (W-01..W-12) and §5.2. State names reconciled with the Phase 24 model enum (§24.4); the archive/delete/restore transitions and their naming remain Phase 35.**
+> **Phase 5 seed — report lifecycle statuses derived from the Work Flow (W-01..W-12) and §5.2. State names reconciled with the Phase 24 model enum (§24.4); the archive/delete/restore transitions are detailed in Phase 35 (`## Archive Delete Restore Lifecycle` — archive is a flag, not an enum value).**
 
 ### 1. Report States (seeds)
 
@@ -2237,14 +2322,14 @@ Request and response bodies map field-for-field to the `## Data Modeling` §4 sc
 | GENERATED | AI report produced from reviewed transcription | W-05, W-06 |
 | FINALIZED | Supervisor satisfied; report accepted | W-07..W-11 |
 | EXPORTED | Report delivered in an export format | W-12 |
-| ARCHIVED / DELETED | Lifecycle end states | Phase 35 |
+| ARCHIVED / DELETED | Lifecycle end states | Phase 35 — `## Archive Delete Restore Lifecycle` |
 
 ### 2. Transition Rules (seeds)
 
 - Generation happens only from TRANSCRIPTION_REVIEWED (reviewed transcription), never from raw audio (§5.2, BR-05, DR-6).
 - Review–correction loops (W-07..W-10) keep the report in GENERATED until the supervisor finalizes it (REQ-038).
 - FINALIZED reports remain editable after generation and preserve historical versions (§5.2, BR-07/08).
-- Archive/delete/restore transitions and their exact naming: Phase 35.
+- Archive/delete/restore transitions and their exact naming: Phase 35 — `## Archive Delete Restore Lifecycle` (archive is a flag, not an enum value; the `Report.status` enum is unchanged).
 
 ### 3. Work-Flow To Model-Enum Mapping (Phase 24)
 
@@ -2259,13 +2344,118 @@ The work-flow states (seeds, §1) map to the `Report.status` enum (`## Data Mode
 | GENERATED | `completed` | `Report.generated` set; `generatedHistory[]` appended (AD-010) |
 | FINALIZED | — (work-flow only) | No model field; satisfies "reports remain editable after generation" (BR-07/08) |
 | EXPORTED | — (work-flow only) | Export formats are client-side (Phase 22) |
-| ARCHIVED / DELETED | — (Phase 35) | `isArchived`/`archivedAt` exist on the model; lifecycle rules Phase 35 |
+| ARCHIVED / DELETED | — (not enum values) | Archive is a flag (`isArchived`/`archivedAt`), not an enum value; lifecycle rules in `## Archive Delete Restore Lifecycle` (Phase 35) |
 
 The `transcribed` enum value maps to the in-flight STT completion: once all clips are transcribed (`Transcription.raw` populated), the status moves from `audio_attached` to `transcribed`, and after review to `reviewed` (REQ-168).
 
 ### 4. Scope
 
 The status machine covers the daily report lifecycle only; branch and user records have no status lifecycle (the source does not define one).
+
+---
+
+## Archive Delete Restore Lifecycle
+
+> **Phase 35 build — the archive, delete, and restore lifecycle from §35 (Archive, Delete, And Restore Lifecycle). Implements ADR-015 (Two-Path Deletion Lifecycle) and ADR-018 (Session-Based Transactions); the glossary term "Two-Path Deletion" is unchanged. The `Report.status` enum is unchanged — archive is a flag (`isArchived`/`archivedAt`), not an enum value.**
+
+### 1. Two-Path Deletion Model (§35.1)
+
+Every archivable resource — **Report** (§24.4) and **Branch** (§24.8) — follows the two-path deletion lifecycle. Archiving is always the first step; permanent deletion is only reachable from the archived state.
+
+```
+Path 1 (user-initiated):  Active → Archive → User clicks Delete → MuiConfirmDialog → Cascade hard-delete
+Path 2 (automatic):       Active → Archive → 30-day wait → Auto cascade hard-delete
+```
+
+- **Archive** — the resource is marked `isArchived: true` and `archivedAt` is set to the current time. An archived resource is hidden from selection lists (branch picker, global search, default list queries). All list and selection endpoints default to returning only active resources (`isArchived: false`) unless the caller explicitly requests archived ones (the Reports list endpoint already supports an explicit `isArchived` query parameter, §12.6).
+- **Restore** — the resource is put back into active use: `isArchived: false` and `archivedAt: null`. Restore is only possible while the resource is archived and before the 30-day deletion deadline (§4 and §6 below). It cannot be invoked on an active resource.
+- **Permanent delete** — a cascade hard-delete that removes the resource and all of its dependents (§2). It is never reachable from the active state; it only runs after archive, through Path 1 or Path 2.
+
+### 2. Archivable Resources And Cascade Scope (§35.2)
+
+- **Report** cascade hard-delete removes, in one transaction:
+  - the Report document itself (including its embedded `generatedHistory`)
+  - its Transcription document (§24.6)
+  - its Audio documents (§24.5) plus their physical files on disk (`filePath`)
+  - all ChatConversation documents linked to the report (§24.9)
+- **Branch** cascade hard-delete removes only the Branch document (§24.8). Reports that reference the branch are **never** deleted: branch data is embedded in each report's `branches[]` entries (branchId + name snapshot) and remains fully readable (§12.6).
+- No other model is archivable. A model becomes archivable only when it is explicitly added here, gains `isArchived` / `archivedAt` fields, a TTL-compatible `archivedAt` index, and the same lifecycle.
+
+### 3. Endpoints (§35.3)
+
+All endpoints below are authenticated, mounted under `/api/v1`, registered in `routes/index.js` (§10.1), and take no request body.
+
+- **Report**
+  - `PATCH /api/v1/reports/:id/archive` → 200 `{ success: true, message: "Report archived", data: { report } }`
+  - `PATCH /api/v1/reports/:id/restore` → 200 `{ success: true, message: "Report restored", data: { report } }`
+  - `DELETE /api/v1/reports/:id` → 200 `{ success: true, message: "Report deleted", data: null }`
+- **Branch**
+  - `PATCH /api/v1/branches/:id/archive` → 200 `{ success: true, message: "Branch archived", data: { branch } }`
+  - `PATCH /api/v1/branches/:id/restore` → 200 `{ success: true, message: "Branch restored", data: { branch } }`
+  - `DELETE /api/v1/branches/:id` → 200 `{ success: true, message: "Branch deleted", data: null }`
+
+### 4. Preconditions And Status Codes (§35.4)
+
+Guards are checked in this order inside every archive / restore / delete controller:
+
+1. Resource exists — else 404 `{ success: false, message: "Report not found" | "Branch not found", data: null }` (existing 404 wording, §12.6).
+2. Lifecycle precondition (else 409 Conflict, `{ success: false, message, data: null }`):
+   - Archive an already-archived resource → `"Report is already archived"` / `"Branch is already archived"`
+   - Restore a non-archived resource → `"Report is not archived"` / `"Branch is not archived"`
+   - Delete a non-archived resource → `"Archive the report before deleting"` / `"Archive the branch before deleting"`
+   - Restore a resource whose 30-day deadline has already passed → `"Report can no longer be restored; the 30-day deletion window has passed"` / `"Branch can no longer be restored; the 30-day deletion window has passed"`
+3. Proceed with the operation.
+
+- 409 is already an established code in this project (duplicate key 11000, register duplicate email). Status codes are imported from `utils/httpStatus.js` by semantic name; `CONFLICT: 409` is added there if it is not already present (§10.6).
+- Archived-state blocking for other operations is unchanged: operating on an archived resource that is not archive/restore/delete returns 403 (e.g. generate, §12.6).
+- The automatic path deletes the same way as Path 1 but is triggered by the sweeper (§6), never by the user.
+
+### 5. Session And Transaction Requirements (§35.5)
+
+- Archive, restore, and cascade delete always run inside a Mongoose session with a transaction: `startSession → startTransaction → writes → commitTransaction → catch → abortTransaction → finally → endSession` (§10.3, §29.10; ADR-018).
+- Model hooks, instance methods, and static methods used by these flows accept a `session` option where relevant (§10.11).
+- Cascade delete executes inside a single transaction: all dependents (§2) and the parent document are removed together — no partial deletes.
+- Physical audio file removal (`fs.unlink` of each deleted `Audio.filePath`) runs **after** `commitTransaction`, as best-effort post-commit cleanup. File removal failures never roll back or block the transaction; they are logged via Winston (`logger.warn`) and retried by the orphan sweep (§6). This is the only step of the flow that is not transactional.
+- Read-only endpoints (get, list) do not need transactions (§10.3).
+
+### 6. Automatic 30-Day Path (§35.6)
+
+- The deadline for every archived resource is `archivedAt + 30 days` (30 × 24 × 60 × 60 = 2592000 seconds, the same value used by the TTL indexes, §24.4 and §24.8).
+- An app-level **cleanup sweeper** enforces the automatic path:
+  - Runs periodically on an interval defined in `backend/utils/constants.js` (§10.5) — no magic values; a per-hour run is the default (3600000 ms).
+  - Started alongside the HTTP server and stopped during graceful shutdown (§10.8).
+  - **Expired sweep** — finds resources with `isArchived: true` and `archivedAt` at or before the deadline, then performs the same cascade delete (§5) for each one, each in its own transaction.
+  - **Orphan sweep** — finds dependent documents whose report no longer exists (or whose report passed the deadline) and removes them: Audio documents + physical files, Transcription documents, ChatConversation documents. This covers the case where the TTL safety net fired before the sweeper.
+- The TTL indexes on `archivedAt` (§24.4 Report, §24.8 Branch) remain as the MongoDB-internal safety net: if the app is down when the deadline passes, MongoDB deletes the parent document automatically after 30 days. TTL deletion runs server-side, cannot cascade dependents, and cannot use a Mongoose session — it is the single documented exception to §5, and the orphan sweep exists precisely to clean up after it.
+- When both mechanisms race, the sweeper wins: it deletes the parent inside a transaction first, so the TTL index never fires for that document.
+
+### 7. Frontend Flows (§35.7)
+
+The flows below apply to every surface that lists or shows an archivable resource: Reports list cards (§12.6), Reports MuiDataGrid action column, and the Report Details page header (§12.6).
+
+- **Active resource** — shows Archive only (ArchiveIcon, warning, tooltip "Archive"):
+  - Click → MuiConfirmDialog (title "Archive Report" / "Archive Branch", message "Are you sure you want to archive this report?" / "Are you sure you want to archive this branch?", confirmText "Archive") → confirm → dispatch `PATCH /:id/archive` → toast "Report archived" / "Branch archived" → the item moves to the archived state in the UI.
+- **Archived resource** — shows Restore and Delete (Restore replaces Archive):
+  - **Restore** — RestoreIcon (success), tooltip "Restore" → MuiConfirmDialog (title "Restore Report" / "Restore Branch", message "Restore this report to active use?" / "Restore this branch to active use?", confirmText "Restore") → confirm → dispatch `PATCH /:id/restore` → toast "Report restored" / "Branch restored" → the item returns to the active state in the UI.
+  - **Delete** — DeleteIcon (error), tooltip "Delete" → MuiConfirmDialog (title "Delete Report" / "Delete Branch", message "This permanently deletes the report, its transcription, audio files, and chat history. This cannot be undone." / "This permanently deletes this branch. This cannot be undone.", confirmText "Delete", confirmColor "error") → confirm → dispatch `DELETE /:id` → toast "Report deleted" / "Branch deleted".
+- On the Report Details page, after a successful delete the page navigates to `/reports` (existing behavior, §12.6); after a successful restore the header refreshes to the active state (Edit Report, Copy, Print, Archive reappear).
+- On failure, the API message is toasted and the UI stays unchanged: 409 → the lifecycle message; 404 → "Report not found" / "Branch not found".
+- Archived resources appear in lists only when the user explicitly filters for archived ones, and are shown with an "Archived" indicator.
+
+### 8. Edge Cases (§35.8)
+
+- **Restore after deadline but before the sweeper ran** — the resource still exists but restore returns 409 with the 30-day window message (§4). The resource is deleted on the next sweeper run.
+- **Double delete or delete/restore race with the sweeper** — the second request returns 404; the UI toasts "Report not found" / "Branch not found" and refreshes (existing 404 handling, §12.6).
+- **Sweeper crash mid-transaction** — the transaction aborts, nothing is partially deleted, and the next run retries.
+- **TTL fires before the sweeper** — the parent document is gone; the orphan sweep removes its dependents on the next run; any open UI shows the existing 404 behavior.
+- **Physical file deletion fails after commit** — database state is already consistent; the failure is logged and the orphan sweep retries the file removal.
+- **Archived branch** — reports keep their embedded branch snapshot and stay fully readable; the branch picker and selection lists simply stop offering the archived branch (§1).
+
+### 9. Consistency Notes (§35.9)
+
+- ADR-015 (Two-Path Deletion Lifecycle) and ADR-018 (Session-Based Transactions) remain authoritative and are implemented by this section.
+- The glossary term "Two-Path Deletion" is unchanged.
+- The existing statements that `archivedAt` "is used by TTL index for automatic deletion after 30 days" (§24.4 field notes) remain true — the TTL index is the safety net, the sweeper is the primary in-app mechanism (§6).
 
 ---
 
@@ -2988,7 +3178,7 @@ Addis AI is selected because it is specialized in Ethiopian Amharic and is expec
 
 - Page Header: left title "Reports" + subtitle "Manage daily supervision reports"; right: FilterIconButton (MuiBadge `badgeContent={activeFilterCount}`, hidden when 0), ToggleButtonGroup (ViewListIcon / ViewGridView), CreateButton (AddIcon).
 - Filter Dialog: MuiDialog `maxWidth="sm"`, title "Filter Reports"; row 1 — MuiDatePicker (left) + MuiSelectField single branch (right) in `Grid container spacing={2}`; both carry ClearIcon end adornments (`slotProps.input.endAdornment`) — clearing resets the field, decrements `activeFilterCount`, updates the badge immediately; row 2 — MuiSwitch label "Archived"; Cancel resets all filters and badge → 0; Apply sets filter state, closes, badge → count of active filters (1–3).
-- List toggle → cards: `Grid container spacing={2}`; each report a MuiCard; icon-button actions with MuiTooltip — View (VisibilityIcon, primary → `/reports/:id/details`), Edit (EditIcon, primary → opens the report in the Assistant chat (§11), Archive/Restore/Delete conditional: not archived → ArchiveIcon (warning) + MuiConfirmDialog → `PATCH /api/v1/reports/:id/archive`; archived → RestoreIcon (success) + confirm → `PATCH /api/v1/reports/:id/restore`, DeleteIcon (error) + confirm → `DELETE /api/v1/reports/:id`; below the cards MuiPagination (`page`/`count` from server `totalPages`, `onChange` refetches).
+- List toggle → cards: `Grid container spacing={2}`; each report a MuiCard; icon-button actions with MuiTooltip — View (VisibilityIcon, primary → `/reports/:id/details`), Edit (EditIcon, primary → opens the report in the Assistant chat (§11), Archive/Restore/Delete conditional: not archived → ArchiveIcon (warning) + MuiConfirmDialog → `PATCH /api/v1/reports/:id/archive`; archived → RestoreIcon (success) + confirm → `PATCH /api/v1/reports/:id/restore`, DeleteIcon (error) + confirm → `DELETE /api/v1/reports/:id`; below the cards MuiPagination (`page`/`count` from server `totalPages`, `onChange` refetches). Exact dialog copy, toasts, the "Archived" indicator, and the archived-filter-only visibility rule per `## Archive Delete Restore Lifecycle` §7.
 - Grid toggle → MuiDataGrid: server-side pagination, toolbar, export selection, action column (same behaviors).
 - The Filter Dialog and all dialogs on this page use MuiDialog, which applies responsive fullscreen below 600px (and below 768px landscape) (`## MUI Component Standards` §5); the Page Header subtitle hides on viewport widths below 600px in portrait (§14 1.12; `## MUI Component Standards` §4).
 
@@ -3000,6 +3190,7 @@ Addis AI is selected because it is specialized in Ethiopian Amharic and is expec
 - **Profile** (`client/src/pages/Profile.jsx`, route `profile`): renders inside AppShell; detailed spec in a later phase.
 - **NotFound** (`client/src/pages/NotFound.jsx`, route `*` — catch-all inside AppShell children): renders inside AppShell; logged-out users hitting an unknown URL are redirected to `/login` instead.
 - **Assistant** (`client/src/pages/Assistant.jsx`, route `assistant` — the only protected route outside AppShell; full-screen): ChatBox with `adapter={assistantAdapter}` and `features={{ conversationList: true }}`, `sx={{ height: '100vh' }}`; conversation rail (title, last message preview, relative timestamp); "New Chat" → report picker dialog → create conversation (welcome message injects raw transcription + report metadata); conversation title `"Report {date}"`; deep link `/assistant?conversation=<id>`; tool-approval UI built into ChatBox (Approve/Reject with reason; "expired" on 60s timeout); adapter file `client/src/components/assistant/chatAdapter.js` (plain JS object: `sendMessage`, `listConversations`, `listMessages`, `addToolApprovalResponse`); Redux `aiConversationSlice` + RTK Query endpoints in `assistantApi.js` (`## Redux RTK Query` §3); package `@mui/x-chat` v9.0.0-alpha.15 (already in the manifest). Report editing happens here — the Reports list "Edit" action and the ReportDetails "Edit Report" action open the Assistant chat for that report (new conversation via the report picker, `POST /api/v1/assistant/conversations` with `reportId`); there is no report edit page.
+- **CreateReportDialog** (`client/src/components/report/CreateReportDialog.jsx`, source 3.5.1.1/3.5.1.3; Phase 36 enrichment): MuiDialog `maxWidth="sm"` fullWidth; `disableEscapeKeyDown={true}`; `onClose` is a no-op (no backdrop-click/Escape close); closes only via Cancel (clears all local state) or a successful submit. Vertical stack: Row 1 = MuiDatePicker (xs 12 / md 6) + "Select Branches" MuiButton (xs 12 / md 6) → opens **BranchSelectorDialog** (MuiList of MuiListItems with checkbox + branch name + location secondary text; Cancel + Apply footer; list from `GET /api/v1/branches` via Redux; already-selected branches pre-checked; unchecking + Apply removes from `branches[]`); selected-branches display below (≥600px: `[BranchName] [MuiTimePicker in] [MuiTimePicker out] [✕ Remove]` inline, <600px: branch name row + time-picker sub-row; new branches append below); Divider 1 (only when `branches.length > 0`); global times row (clockIn/clockOut MuiTimePickers, xs 12 / md 6 each); Divider 2 (always); audio recording section (recorder per `## Audio Recording STT` §5.1); footer Grid `justifyContent="space-between"` with outlined Cancel + contained Submit (`loading={isSubmitting}`). Local RHF state per source 3.5.1.1 (`date`, `branches`, `clockIn`, `clockOut`, `audio`, `recordingState`); the form fields map to the Amharic report sections per source 3.5.1.2 (ቀን / ብራንች / ስራ የገባሁበት ሰዓት / ከስራ የወጣሁበት ሰዓት — section names already canonical in `## Report Format` §2); validation and submit per `## Audio Recording STT` §6.1–6.2; endpoint per `## API Contract` §6.1.
 
 ### 12. UI Rules (§16)
 
@@ -3064,11 +3255,54 @@ Accuracy regression is a blocking defect (§8, REQ-073). Any change to the STT p
 - MIME priority: `audio/webm;codecs=opus` → `audio/webm` → `audio/mp4` → browser default.
 - `react-media-recorder` and `react-player` are already installed in `client/package.json`.
 
+#### 5.1 Recorder State Machine (source 3.5.1.5; Phase 36 enrichment)
+
+The recorder inside the create-report dialog (`client/src/hooks/useAudioRecorder.js`) is a five-state machine. The `recordingState` field (`"idle" | "countdown" | "recording" | "paused" | "review"`, source 3.5.1.1) drives the audio section of the dialog:
+
+| State | UI | Transitions |
+|---|---|---|
+| IDLE_EMPTY (no clips) | "Start Recording" MuiButton with FiberManualRecordIcon (red) | Click → COUNTDOWN |
+| COUNTDOWN | Lightbox overlay on the audio section; shows "3" → "2" → "1" (1 second each) | Auto → RECORDING |
+| RECORDING | Live waveform canvas (Web Audio API AnalyserNode connected to the MediaStream, real-time FFT bars); "⏸ Pause" + "⏹ Stop" MuiIconButtons; live duration ticker `[MM:SS / 15:00]` | Pause → PAUSED; Stop → finalizes blob → REVIEW; auto-stop at `AUDIO_MAX_DURATION_SEC` = 900 (15 min, `## Environment Config` §5) |
+| PAUSED | Waveform frozen; "▶ Resume" + "⏹ Stop" buttons | Resume → RECORDING; Stop → REVIEW |
+| REVIEW (clips exist) | Each clip in `audio[]` as a card/row: "▶/⏸" PlayPauseIconButton (toggles playback), draggable MuiSlider seek bar (updates `currentTime`), duration label `[MM:SS / MM:SS]`, "✕" DeleteIconButton (removes the clip; if the array becomes empty → IDLE_EMPTY); "+ Add Another Recording" text button below the clip list → COUNTDOWN | Playback via HTMLAudioElement or react-player; play/pause toggles per clip independently |
+
+Implementation stack (source 3.5.1.5): MediaRecorder API for capture, Web Audio API AnalyserNode for the waveform, `URL.createObjectURL(blob)` for playback; all state lives in the `useAudioRecorder` custom hook. Blobs stay in component state only (never Redux/localStorage, §5).
+
 ### 6. Audio Validation (§20.2)
 
 - At least one clip is required before submit.
 - Max 50 MB per clip (configurable via `AUDIO_MAX_SIZE_BYTES`); the MIME type must be in the whitelist (the four types in section 5); duration metadata is informational only.
 - Server-side: ffprobe duration validation and multer type/size validation.
+
+#### 6.1 Create-Report Validation Rules (source 3.5.1.6; Phase 36 enrichment)
+
+Client-side (react-hook-form) rules checked before submit; errors surface on the respective field, toasts for form-level rules:
+
+| Field | Rule |
+|---|---|
+| `date` | Required; valid Ethiopian date. Error + helperText on MuiDatePicker. |
+| `branches` | `branches.length >= 1`. Toast "Select at least one branch" on submit attempt. |
+| Each `branches[i].clockIn` | Required. Error on respective MuiTimePicker. |
+| Each `branches[i].clockOut` | Required. Error on respective MuiTimePicker. Cross-field: "Out time must be after in time". |
+| `clockIn` | Required. Error on MuiTimePicker. |
+| `clockOut` | Required. Error on MuiTimePicker. Cross-field: "End time must be after start time". |
+| `audio` | `audio.length >= 1`. Toast "Record at least one audio clip". |
+| Each `audio[i].blob.size` | `<= 50 MB`. Blocked client-side with a warning; the supervisor is asked to re-record. |
+
+**Server-side validation repeats all of the above** via `express-validator` middleware + multer validation for files (source 3.5.1.6; mechanics in `## API Contract` §6).
+
+#### 6.2 Create-Report Submit Flow (source 3.5.1.7; Phase 36 enrichment)
+
+1. Frontend validation passes (rules above).
+2. Build one FormData request:
+   - `metadata` field = `JSON.stringify({ date: "30-07-2026", branches: [{ branchId: "br_001", clockIn: "02:30 PM", clockOut: "07:40 PM" }], clockIn: "02:30 PM", clockOut: "12:20 AM", audio: [{ id: "clip_1", duration: 185 }] })` (12-hour strings as in the source example).
+   - `clips` = the audio blobs (`audio[].id` ↔ `metadata.audio[].id`).
+3. `POST /api/v1/reports` via RTK Query `useCreateReportMutation()`.
+4. While submitting: `isSubmitting = true`; the dialog shows an indeterminate `LinearProgress` bar + overlay message "Creating report..."; all fields frozen, Cancel disabled. The submit is **one request** — the entire backend pipeline (create report → upload audio → transcribe) runs server-side before responding; the frontend does not see individual steps (source 3.5.1.7; backend steps in `## API Contract` §6).
+5. On **201** (success): close the dialog, toast "Report created", refetch the report list via `GET /api/v1/reports`.
+6. On **502 Transcription Failed**: show "Transcription failed, retry?" with a button that calls `POST /api/v1/reports/:id/transcribe` (status stays `audio_attached`; `## Transcription Review` §2).
+7. On **other error** (including audio upload failure): toast the error message, re-enable the form fields (metadata + audio blobs kept). The dialog stays open; the supervisor can Submit again to retry or Cancel to discard.
 
 ### 7. Upload Storage (§20.3)
 
@@ -3108,6 +3342,14 @@ The supervisor reviews the transcription and, if needed, corrects it with AI hel
 ### 2. Re-Transcription For Accuracy Verification (§8)
 
 Re-transcription must be available to verify accuracy on every audio recording (§8, REQ-072): the supervisor can re-run STT on the stored audio and confirm the transcription matches the recording before generation. Re-transcription is the accuracy safeguard for the review step. Mechanics (`## Audio Recording STT` §9): the backend accepts both `audio_attached` and `transcribed` statuses for re-transcription (status name reconciled in Phase 24, AD-011), and the frontend shows a "Re-transcribe" button on a completed transcription that re-runs STT on the stored audio (REQ-145).
+
+#### 2.1 Failed-Creation Retry Path — `POST /api/v1/reports/:id/transcribe` (source 3.5.1.7, 3.5.1.10; Phase 36 enrichment)
+
+When a create-report request fails at the transcription step (STEP 5 of the backend pipeline, `## API Contract` §6), the backend commits the transaction with the Report at status `audio_attached` (audio preserved) and returns `502 { success: false, message: "Transcription failed", data: { reportId, status: "audio_attached" } }`. The create dialog then shows "Transcription failed, retry?" with a retry button:
+
+- The retry button calls `POST /api/v1/reports/:id/transcribe`, which re-runs the §8 chunking pipeline on the report's stored audio and — on success — creates the Transcription doc, links it, and moves the report to `transcribed` (the same STEP 5–8 logic as create, without re-uploading audio).
+- On success the dialog closes, the list refetches, and the report is immediately reviewable; on repeated failure the report stays at `audio_attached` and is visible in the list with that status badge (REQ-145).
+- This is distinct from the manual "Re-transcribe" button on a completed transcription (§2), which re-runs STT on stored audio for accuracy verification (REQ-072).
 
 ### 3. Expansion Markers
 
@@ -4235,6 +4477,7 @@ client/
   4. `process.exit(1)`
 - Graceful shutdown must not be removed or replaced.
 - The HTTP server starts before the database connection so the health endpoint is reachable without the DB (REQ-084).
+- The cleanup sweeper (`## Archive Delete Restore Lifecycle` §6) is started alongside the HTTP server and stopped during graceful shutdown (before `mongoose.connection.close()`); its interval comes from `backend/utils/constants.js` — no magic values.
 
 ### 9. Validation (§10.10)
 
@@ -4341,7 +4584,7 @@ Task seeds for the Tasks And Implementation Plan section (Phase 32):
 
 - Phase 24 (§24 Data Model): **DONE — the seeded entity set and its field-level definitions are delivered in §4 above (`## Data Modeling` §4).**
 - Phase 32 (Tasks And Implementation Plan): the §7 tasks are consolidated into the section — **DONE (Phase 32)**.
-- Phase 35 (Archive, Delete, And Restore Lifecycle): the archive/delete/restore lifecycle rules may adjust the seeded report statuses.
+- Phase 35 (Archive, Delete, And Restore Lifecycle): **DONE — lifecycle rules in `## Archive Delete Restore Lifecycle`; seeded report statuses are unchanged (archive is a flag, not an enum value).**
 
 ---
 
@@ -4549,7 +4792,7 @@ This order is intentional and must not be changed (REQ-081; `## Backend Architec
 |---|---|---|
 | authSlice | register, login, me, refresh (via `injectEndpoints`; `useLoginMutation`, `useRegisterMutation` used by Login/Register) | §12.6, §13.1 |
 | branchSlice | Branch CRUD endpoints | Branch pages (Phase 12 §12.6; Phase 16) |
-| reportSlice | Report list/create/details/update/archive/restore/delete/generate | §12.6; Phases 20/21/22 |
+| reportSlice | Report list/create/details/update/archive/restore/delete/generate | §12.6; Phases 20/21/22; lifecycle Phase 35 |
 | audioSlice | Audio upload and re-transcription | Phase 20 |
 | transcriptionSlice | Transcription list/update and AI correction | Phases 20/21 |
 | userSlice | Profile endpoints | Phase 4; Profile page |
@@ -4891,7 +5134,16 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 - **Props:** `status` (string, required — one of `draft` | `audio_attached` | `transcribed` | `reviewed` | `completed`).
 - **Color mapping:** `draft` → default; `audio_attached` → warning; `transcribed` → info; `reviewed` → primary; `completed` → success.
 - **Usage:** Report Details header (§12.6 3.6).
-- **Reconciliation note:** these five status names are the Phase 24 report status enum (`## Status Machine` §3 mapping; `## Data Modeling` §4.1; AD-011, REQ-168); Phase 35 (§35 Archive, Delete, And Restore Lifecycle) owns the archive/delete/restore lifecycle rules and their naming.
+- **Reconciliation note:** these five status names are the Phase 24 report status enum (`## Status Machine` §3 mapping; `## Data Modeling` §4.1; AD-011, REQ-168); the archive/delete/restore lifecycle rules live in `## Archive Delete Restore Lifecycle` (Phase 35 — archive is a flag, not an enum value).
+
+#### 9.9 MuiTimePicker (source 3.5.1.4; Phase 36 enrichment)
+
+- **File:** `client/src/components/reusable/MuiTimePicker.jsx`.
+- **Pattern:** follows the MuiDatePicker pattern (§9.4): `DesktopTimePicker` on md+ (popper) and `MobileTimePicker` below md (dialog), switched via `useMediaQuery(theme.breakpoints.up('md'))`.
+- **API:** `forwardRef`, `size="small"`, `format="hh:mm A"`, default `null`.
+- **Form integration:** requires the RHF `Controller` wrapper (same as MuiDatePicker — custom `onChange`).
+- **displayName:** `"MuiTimePicker"`.
+- **Usage:** create-report dialog per-branch `clockIn`/`clockOut` and global times (`## UI/UX Spec` §11 CreateReportDialog; source 3.5.1.3); validation per `## Audio Recording STT` §6.1.
 
 ### 10. MUI X Usage (§14.5)
 
@@ -5080,6 +5332,8 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 | AI Generation | AI_TOP_K | 40 | Top-k sampling |
 | AI Correction | AI_CORRECTION_MAX_OUTPUT_TOKENS | 2048 | Report correction max output tokens |
 | AI Correction | AI_CORRECTION_TEMPERATURE | 0.15 | Report correction temperature |
+| Archive | ARCHIVE_TTL_SECONDS | 2592000 | Automatic-deletion deadline — 30 days (matches the `archivedAt` TTL indexes; `## Archive Delete Restore Lifecycle` §6) |
+| Archive | CLEANUP_SWEEPER_INTERVAL_MS | 3600000 | Cleanup sweeper run interval — per-hour default (`## Archive Delete Restore Lifecycle` §6) |
 
 - Codebase fact: `backend/config/env.js` and `backend/utils/constants.js` do not exist yet — `backend/` currently holds only `.env` and `package.json`; both files are created during implementation (Phase 25) (REQ-083, REQ-124).
 
@@ -5213,7 +5467,7 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 
 - **Date:** 2026-08-02. **Status:** Accepted (user decision, Phase 24).
 - **Context:** §24 defines the authoritative data model, and four earlier-phase facts need reconciliation: the Phase 20 upload status `audio_recorded` vs the §24.4 enum `audio_attached`; the `aiCorrectedText` field vs the §24.6 `latest` + `history[]` review modes; the missing provider field on chat messages (REQ-133); and the Phase 5 "Analytics" entity vs the §24 model set.
-- **Decision:** (1) The upload status is `audio_attached` everywhere (Status Machine mapping, API Contract, Audio STT §9, Transcription Review §2, REQ-145); archive/delete/restore naming remains Phase 35. (2) `aiCorrectedText` is superseded — AI transcription corrections write `Transcription.latest` with a `history[]` entry whose `reviewer` is the provider string (REQ-149). (3) `ChatConversation.messages[]` gains `provider` (`addis | gemini | nvidia`) — user-approved extension satisfying REQ-133. (4) Reporting analytics are derived on demand via aggregation over Report documents — no analytics collection; the metric set stays Phase 31 (AD-007).
+- **Decision:** (1) The upload status is `audio_attached` everywhere (Status Machine mapping, API Contract, Audio STT §9, Transcription Review §2, REQ-145); archive/delete/restore naming remains Phase 35 (superseded by AD-017 — the lifecycle rules are built in `## Archive Delete Restore Lifecycle`, archive is a flag, not an enum value). (2) `aiCorrectedText` is superseded — AI transcription corrections write `Transcription.latest` with a `history[]` entry whose `reviewer` is the provider string (REQ-149). (3) `ChatConversation.messages[]` gains `provider` (`addis | gemini | nvidia`) — user-approved extension satisfying REQ-133. (4) Reporting analytics are derived on demand via aggregation over Report documents — no analytics collection; the metric set stays Phase 31 (AD-007).
 - **Rationale:** §24 is the authoritative schema; keeping one status vocabulary, one correction storage, and one message shape avoids divergent models; derived analytics keep the model set minimal per §24.
 - **Consequences:** All spec sections now use `audio_attached`; transcription corrections store `latest` + `history`; assistant messages record the provider; no Analytics collection is created in Phase 25.
 - **Source:** §24.4, §24.6, §24.9, §20.5, §21.4, §19 (REQ-133, REQ-145, REQ-149, REQ-168, REQ-172).
@@ -5262,6 +5516,15 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 - **Rationale:** Keeps raw Mongoose documents out of API responses, gives every endpoint a stable UI-shaped contract, and satisfies the §13.2 "proper backend response transformation" requirement the Redux layer already depends on.
 - **Consequences:** Response shapes in `## API Contract` are DTO shapes (not raw documents); the `## Redux RTK Query` `transformResponse` unwrapping (REQ-106) is the client-side counterpart; implementation places the transform logic in the controllers/services layer (Phase 25 services layout).
 - **Source:** §33 (ADR-017), §13.2 (REQ-106).
+
+#### AD-017 — Archive/delete/restore lifecycle rules (two-path deletion)
+
+- **Date:** 2026-08-02. **Status:** Accepted.
+- **Context:** §35 defines the Archive, Delete, And Restore Lifecycle; AD-011 left the archive/delete/restore naming to Phase 35; §33 ADR-015 names the Two-Path Deletion Lifecycle (archive → permanent delete).
+- **Decision:** The lifecycle follows the two-path model — archive is a flag (`isArchived`/`archivedAt`), never an enum value: the `Report.status` enum is unchanged (35.9). Two resources are archivable/deletable (35.2): Report (cascade = Report document incl. `generatedHistory`, Transcription, Audio, linked ChatConversations, and the physical `filePath` files — one session/transaction) and Branch (document only; reports keep the embedded snapshot, 35.2). Guards: 404 for missing/non-archived targets, 409 (established `CONFLICT`) for lifecycle violations, in the documented order (35.3–35.4). The 30-day automatic deletion is primary (TTL indexes on `archivedAt`), with the cleanup sweeper (`CLEANUP_SWEEPER_INTERVAL_MS = 3600000`, per-hour default) as the safety net that also sweeps orphaned physical files (35.6); physical-file unlinking is best-effort and post-commit (35.5). Transactions per 10.3/29.10 (ADR-018); session-capable hooks per 10.11 (35.5).
+- **Rationale:** The flag-not-enum design keeps the entire Phase 24 status machine intact (AD-011); the session/transaction requirement keeps the cascade atomic; TTL plus sweeper guarantees permanent deletion even when no user deletes explicitly; 409 with the established constant follows the §10.8 `httpStatus` contract (REQ-216).
+- **Consequences:** `## Archive Delete Restore Lifecycle` is the authoritative lifecycle spec (supersedes AD-011's Phase 35 placeholder); `## API Contract` §9 carries the six endpoints; `## Backend Architecture` §8 starts/stops the sweeper; `## Environment Config` §5 carries `ARCHIVE_TTL_SECONDS`/`CLEANUP_SWEEPER_INTERVAL_MS`; requirements REQ-225..229.
+- **Source:** §35, §33 (ADR-015), §10.8 (REQ-216).
 
 ### Decision Log open items
 
@@ -5718,9 +5981,9 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 
 **T-8-02 — Archive/delete/restore (§35)**
 
-- a. Report archive/delete/restore behavior per the §35 spec once the section is built.
+- a. Report archive/delete/restore behavior per `## Archive Delete Restore Lifecycle` (§35): the archive/restore UI (dialog copy, toasts, "Archived" indicator), the permanent delete (cascade within one session/transaction, post-commit best-effort physical-file unlink), and the 30-day automatic-deletion sweeper.
 
-- **Validations:** S-8-02a archive, delete, and restore flows work with the §35 rules.
+- **Validations:** S-8-02a archive, delete, and restore flows work with the `## Archive Delete Restore Lifecycle` rules (API Contract §9).
 
 **T-8-03 — Polish**
 
@@ -5744,7 +6007,7 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 
 ### 3. Expansion Markers
 
-- Phase 8 T-8-02 depends on the §35 archive/delete/restore spec; when `## Archive Delete Restore` (Phase 35) is built, its expansion marker here is flipped to DONE and T-8-02 is aligned.
+- Phase 8 T-8-02 depends on the §35 archive/delete/restore spec: **DONE — built as `## Archive Delete Restore Lifecycle` (Phase 35); T-8-02 is aligned with it (the archive/restore/delete UI and the 30-day automatic-deletion sweeper).**
 - Phase 36 final consolidation: verify `## Phase Protocol` and `## Tasks And Implementation Plan` remain the sole execution contract and that no `docs/*` file is needed for implementation.
 
 ---
@@ -5883,3 +6146,85 @@ Phases 1–33 are GREEN (2026-08-02). Phase 33 finalized the decision log from �
 ## End Of Phase 34 Content
 
 Phases 1–34 are GREEN (2026-08-02). Phase 34 finalized the glossary from §34 (Glossary): flipped the `## Glossary` header blockquote to Phase 34 DONE; verified all 16 §34 terms are defined — 7 already present from Phases 1–33 (Area Supervisor, STT, RTK Query, react-hook-form (RHF), Noto Sans Ethiopic, httpOnly cookie, baseQueryWithReauth) and 9 added in Phase 34 with spec-accurate definitions and §34 source refs (MUI, Addis AI (Addis), Gemini, Nvidia, PCM, ffmpeg, wavSplitter — `backend/utils/wavSplitter.js`, Multer — `backend/uploads/audio/` with validation, Two-Path Deletion — ADR-015 lifecycle with the 30-day TTL); flipped the glossary-driven requirement re-check marker in `## Requirements` to Phase 34 DONE (all §34 terms defined; requirements unchanged); updated the Checklist (phase map row 34 GREEN; Required Output row Glossary — Phase 34 finalization); and added the Phase 34 Source Trace Map (16 §34 rows — 9 marked as added in Phase 34) and the `## Source Traceability` row 34 (all 34 rows GREEN). Phase 35 will build the archive, delete, and restore lifecycle.
+
+## End Of Phase 35 Content
+
+Phases 1–35 are GREEN (2026-08-02). Phase 35 built the archive, delete, and restore lifecycle from §35: added the new `## Archive Delete Restore Lifecycle` section (between `## Status Machine` §4 and `## Report Format`) — §1 Two-Path Deletion Model (archive is a flag — `isArchived`/`archivedAt` — never an enum value; the `Report.status` enum is unchanged, 35.9), §2 Archivable Resources And Cascade Scope (Report cascade — Report document incl. `generatedHistory`, Transcription, Audio, linked ChatConversations, and the physical `filePath` files, all within one session/transaction (10.3/29.10, ADR-018); Branch cascade — Branch document only, reports keep the embedded snapshot, 35.2), §3 Endpoints (the six endpoints with exact 200 envelopes — `PATCH /api/v1/reports/:id/archive`, `PATCH /api/v1/reports/:id/restore`, `DELETE /api/v1/reports/:id` (permanent, requires archived), `PATCH /api/v1/branches/:id/archive`, `PATCH /api/v1/branches/:id/restore`, `DELETE /api/v1/branches/:id`), §4 Preconditions And Status Codes (guard order 404 → 409, exact 409 messages; `CONFLICT: 409` is established per §10.8 — duplicate key, duplicate email), §5 Session And Transaction Requirements (session-capable hooks per 10.11; post-commit best-effort `fs.unlink`; TTL deletion is the single documented exception to the session rule), §6 Automatic 30-Day Path (`ARCHIVE_TTL_SECONDS = 2592000` TTL indexes primary; cleanup sweeper `CLEANUP_SWEEPER_INTERVAL_MS = 3600000` per-hour default as safety net; sweeper wins races; the orphan sweep cleans post-TTL files), §7 Frontend Flows (exact dialog copy, toasts, "Archived" indicator, archived-filter-only visibility, navigation after actions), §8 Edge Cases (re-archive, delete-while-deleting, TTL/sweeper race, orphan files, snapshot-preserving branch delete, archived login enforcement), §9 Consistency Notes (AD-015/ADR-018 authoritative); enriched `## Report Management` (two-path CRUD semantics), `## Data Modeling` (DM-07 note, `isArchived`/`archivedAt` field notes, §7 expansion marker DONE), `## Business Rules` (BR-15..17), `## Work Flow` (W-11 and the sub-flow map row), `## Status Machine` (ARCHIVED/DELETED rows, transition rule, header blockquote), `## API Contract` (inventory rows, new §9 Archive, Delete, And Restore Endpoints), `## Backend Architecture` (§8 sweeper start/stop on graceful shutdown, §5 Archive constants group), `## Environment Config` (`ARCHIVE_TTL_SECONDS`, `CLEANUP_SWEEPER_INTERVAL_MS`), `## UI/UX Spec` (reports list-card lifecycle actions per §35.7), `## Mock Data Seeding` (marker DONE — seeded statuses unchanged), added REQ-225..229 (archive/restore flag semantics, cascade scope, branch snapshot rule, 404/409 guard order, 30-day TTL/sweeper) with the requirement-expansion marker (`Archive/delete/restore lifecycle rules: Phase 35 — DONE (REQ-225..229)`), added AD-017 (Archive/delete/restore lifecycle rules — supersedes AD-011's Phase 35 placeholder), flipped the T-8-02 expansion marker in `## Tasks And Implementation Plan` and aligned T-8-02 with the built section, updated the Checklist (phase map row 35 GREEN; Required Output rows Report Management, Data Modeling, Business Rules, Work Flow, Status Machine, API Contract, Backend Architecture, Mock Data Seeding, Requirements, UI/UX Spec — GREEN Phase 35 enrichment), and added the Phase 35 Source Trace Map (9 §35 rows) and the `## Source Traceability` row 35 (all 35 rows GREEN). No commit is made for Phase 35 (user instruction: "proceed and don't commit"). Phase 36 remains: final consolidation — coverage verification, open-question resolution (OQ-001..003), and the final quality gate.
+
+## Final Coverage Audit
+
+> **Phase 36 — final consolidation (no source section).** This section records the systematic coverage verification of the entire specification against `docs/initial-doc.md`, the triage of every miss, the reconciliation of contradictions, and the resulting quality gate. Method and findings below; per-phase status lives in `## Phase Status And Coverage Map` (36 rows, all GREEN) and `## Source Traceability` (36 rows, all GREEN).
+
+### 1. Audit Method
+
+1. **Requirement-gap sweep** — a corpus of distinctive strings from the source (REQ-ids, status names, Amharic sample fragments, codebase artifacts, section headings, component names) was grepped against the spec; every hit was checked to be a real recording, not a coincidental echo.
+2. **Batch-1 verification (23/23 FOUND)** — deep-verified strings included the Amharic §6.2–6.4 samples (ቀን: 29-10-18 / መድኃኒዓለም / ኤርፖርት / ቡልቡላ), the exact format-critical samples, `pcm_s16le`, 16 kHz mono, ~60 s chunks, `ADDIS_AI_STT_MAX_DURATION_SEC`, `AUDIO_MAX_DURATION_SEC` = 900, `AUDIO_MAX_SIZE_BYTES` = 52428800, the §6.1 template vs §6.2–6.4 `፡`/`:` punctuation note, MIME priority list, `bcryptjs` 12 rounds, `gemini-3.1-flash-lite`, `z-ai/glm-5.2`, `addis`/`gemini`/`nvidia` provider strings, the five status names, `useCreateReportMutation()`, `audio_attached`, "Microphone access required", "Transcription failed", the `save_transcription` tool, and the MUI catalog names. All present.
+3. **Batch-2 triage** — misses were classified: **1 real gap** (the recorder state-machine "idle" state — present in the source 4×, zero spec matches) and **8 false alarms** (strings absent from the source as well — recorded, no action).
+4. **Contradiction check** — every behavioral claim duplicated across phases was compared; one real contradiction found (report-deletion cascade, §2.3 below).
+5. **Checklist reconciliation** — every `## Required Output Sections Checklist` PENDING row was assessed and either closed or explicitly retained with a reason.
+
+### 2. Findings And Closures
+
+#### 2.1 Gaps Closed (Phase 36 enrichment)
+
+| # | Gap (absent from spec, present in source) | Source | Spec resolution |
+|---|---|---|---|
+| 1 | Recorder UI state machine: IDLE_EMPTY → COUNTDOWN → RECORDING ⇄ PAUSED → REVIEW, waveform (AnalyserNode FFT), auto-stop 900 s, delete-to-empty → IDLE_EMPTY, "+ Add Another Recording", mic-blocked toast, dialog-closed-mid-recording cleanup | 3.5.1.5, 3.5.1.10 | `## Audio Recording STT` §5.1 (new) |
+| 2 | MuiTimePicker reusable component: DesktopTimePicker md+/MobileTimePicker below md, `format="hh:mm A"`, `size="small"`, `forwardRef`, RHF Controller, `displayName="MuiTimePicker"` | 3.5.1.4 | `## MUI Component Standards` §9.9 (new) |
+| 3 | Create-report validation rules (8 rows) and single-request submit flow (FormData `metadata` JSON, `useCreateReportMutation()`, LinearProgress "Creating report...", 201/502/other outcomes) | 3.5.1.6, 3.5.1.7 | `## Audio Recording STT` §6.1–6.2 (new) |
+| 4 | CreateReportDialog composition: dialog shell, vertical stack, BranchSelectorDialog (checkbox list, pre-check, uncheck-removes), responsive selected-branch rows, local RHF state fields | 3.5.1.1–3 | `## UI/UX Spec` §11 (CreateReportDialog bullet) |
+| 5 | Backend create pipeline: middleware chain (authenticate → `upload.array("audio", 10)` → `createReportRules` → shared `validation` → controller), 422 shape + `req.validated`, `reportValidator.js` rules, STEP 1–8 transactional pipeline, 201/502/413/415 outcomes | 3.5.1.8, 3.5.1.11 | `## API Contract` §6.1 (new) |
+| 6 | Transcription retry endpoint `POST /api/v1/reports/:id/transcribe` (retry banner, `raw` update, `latest`/`history` reset, status → `transcribed`) | 3.5.1.7, 3.5.1.10 | `## Transcription Review` §2.1 (new); `## API Contract` §6.2 |
+| 7 | Correction/history endpoints: `PATCH /api/v1/transcriptions/:id`, `POST .../correct`, `POST .../correct-by-voice`, `DELETE .../history/:historyId` (`$pull`), reviewer display rule (ObjectId → user name, provider string → "AI (Gemini)") | 3.5.1.9 | `## API Contract` §6.3 (new) |
+| 8 | Audio stream/download endpoints `GET /api/v1/audio/:audioId/stream` and `GET /api/v1/audio/:audioId/download` (used by the ReportDetails audio card) | 3.5.1.9, 3.5.1.11, §3.6 | `## API Contract` §6.4 (new) |
+
+#### 2.2 Superseded-Source Triage (no spec action beyond recording)
+
+Source 3.5.1.9 carries a **SUPERSEDED marker (2026-08-02)**: the `/reports/:id/edit` page is replaced by chat-based report editing in the Assistant (3.5.2) — no edit route, no ReportCorrection page; the Reports list "Edit" and ReportDetails "Edit Report" actions open the Assistant chat. The spec already reflects this (UI/UX §11 Assistant; no edit page). Phase 36 therefore did **not** add the superseded 4-tab edit UI; only the marker's "backend behaviors remain valid" items were recorded (corrections/history/stream/download in `## API Contract` §6.3–6.4). Source-history variant recorded: the history-deletion path appears once as `PATCH` (3.5.1.9 table row) and once as `DELETE` (3.5.1.9 "Endpoint for history deletion") — `DELETE` is canonical (matches the `$pull` controller).
+
+#### 2.3 Contradiction Reconciliation — Report Deletion Cascade
+
+| Location | Claim |
+|---|---|
+| Spec `## Data Modeling` relationship diagram (2) and §4.6 field note; Phase 24 source trace map row §24.9 | "Deleting a report does NOT delete its conversations (the conversation keeps the `report` id for deep links)" |
+| Source §24.9 (source's own data-model section) | Same "keeps" claim |
+| Source §3.5.1.10 edge-case row | "Report deleted while conversation exists — Conversation stays (keeps `report` id)" |
+| Spec `## Archive Delete Restore Lifecycle` §2 (Phase 35) | Report cascade deletes Transcription, Audio (incl. physical files), **and all linked ChatConversation documents** (source §35.2, ADR-018, REQ-226) |
+| Source §35.2 | Same cascade claim (source L3818–3822) |
+
+**Resolution — Phase 35 wins:** the §35.2 cascade is the later, authoritative behavior (ADR-018; REQ-226). Phase 36 fixed the three spec locations — relationship-diagram line, §4.6 `report` field note, and the Phase 24 trace-map row §24.9 — each now records the cascade and points to this reconciliation. The source-internal contradiction (§24.9/3.5.1.10 vs §35.2) is recorded here and resolved the same way for implementation.
+
+### 3. Per-Phase Audit Result
+
+| Phase | Result | Phase | Result | Phase | Result |
+|---|---|---|---|---|---|
+| 1 | GREEN | 13 | GREEN | 25 | GREEN |
+| 2 | GREEN | 14 | GREEN | 26 | GREEN |
+| 3 | GREEN | 15 | GREEN | 27 | GREEN |
+| 4 | GREEN | 16 | GREEN | 28 | GREEN |
+| 5 | GREEN | 17 | GREEN | 29 | GREEN |
+| 6 | GREEN | 18 | GREEN | 30 | GREEN |
+| 7 | GREEN | 19 | GREEN | 31 | GREEN |
+| 8 | GREEN | 20 | GREEN | 32 | GREEN |
+| 9 | GREEN | 21 | GREEN | 33 | GREEN |
+| 10 | GREEN | 22 | GREEN | 34 | GREEN |
+| 11 | GREEN | 23 | GREEN | 35 | GREEN |
+| 12 | GREEN | 24 | GREEN | 36 | GREEN |
+
+Every phase's source facts are recorded in its source trace map and indexed in `## Source Traceability`; every phase's produced sections are listed in `## Phase Status And Coverage Map`. No source section (1–35) has an unreferenced behavioral requirement; the 23 deep-verified strings and the 8 gap closures above are the spot checks behind this result.
+
+### 4. Remaining PENDING Items (intentional)
+
+| Item | Status reason |
+|---|---|
+| Analytics | Product feature deferred at Phase 4 (out-of-scope requirement only; REQ records the decision, no section built) |
+| Risk Register | Assessed in Phase 36 — no new risks surfaced; mitigations already live across `## Security`, `## Error Handling`, and `## Requirements`. An explicit risk table remains unassigned. |
+| OQ-001..003 | Open questions from the Decision Log awaiting user input (Phase 33 marker) |
+
+### 5. Quality Gate
+
+The final gate for `docs/specification.md`: coverage sweep clean, contradictions reconciled, checklist fully GREEN or explicitly retained, source traceability complete through row 36. Validation run: `python scripts/verify-initial-doc.py` (exit 0; known L923 warning). No commit — per user instruction.
+
+## End Of Phase 36 Content
+
+Phases 1–36 are GREEN (2026-08-02). Phase 36 performed the final consolidation (no source section): ran the coverage verification documented in the new `## Final Coverage Audit` — a requirement-gap string sweep (23 deep-verified strings all FOUND; batch-2 misses triaged into 1 real gap + 8 false alarms), a contradiction check, and checklist reconciliation; closed the recorder state machine gap (new `## Audio Recording STT` §5.1 — IDLE_EMPTY/COUNTDOWN/RECORDING/PAUSED/REVIEW, waveform canvas, auto-stop 900 s, clip delete-to-empty, mic-blocked toast, close-mid-recording cleanup), the MuiTimePicker gap (new `## MUI Component Standards` §9.9), the create-dialog validation/submit gap (new `## Audio Recording STT` §6.1–6.2 — the eight validation rules, FormData `metadata` shape, `useCreateReportMutation()`, "Creating report..." overlay, 201/502/other outcomes), the CreateReportDialog composition gap (new `## UI/UX Spec` §11 bullet — dialog shell, BranchSelectorDialog, responsive branch rows, local RHF state, Amharic §-mapping cross-ref), the backend create-pipeline gap (new `## API Contract` §6.1 — middleware chain, 422 `req.validated`, `reportValidator.js` rules, STEP 1–8 transactional pipeline), the transcription-retry gap (new `## Transcription Review` §2.1 + `## API Contract` §6.2), the correction/history endpoints (new `## API Contract` §6.3 — `PATCH`/`correct`/`correct-by-voice`/history `DELETE` with the `$pull` controller and the reviewer-display rule), and the audio stream/download endpoints (new `## API Contract` §6.4, used by the ReportDetails audio card); triaged source 3.5.1.9 as SUPERSEDED (no edit-page UI added — chat-based editing stands; backend behaviors recorded), recording the source's internal PATCH-vs-DELETE history-endpoint variant (DELETE canonical); reconciled the report-deletion cascade contradiction (Phase 35/§35.2 wins over the Phase 24 "conversations kept" claim; ADR-018, REQ-226) by fixing the three spec locations — the Data Modeling relationship-diagram line, the §4.6 `report` field note, and the Phase 24 trace-map row §24.9 — each pointing to the reconciliation; updated the Checklist (Design and File Storage Uploads flipped GREEN; API Contract, Audio Recording STT, Data Modeling, MUI Component Standards, Source Traceability, Transcription Review, UI/UX Spec — GREEN Phase 36 enrichment; Risk Register noted assessed, stays PENDING for an explicit table; Analytics and OQ-001..003 retained PENDING with reasons), flipped the coverage map row 36 and the Source Traceability row 36 to GREEN, and appended this audit. Validation: `python scripts/verify-initial-doc.py` exit 0 (known L923 warning). No commit — per user instruction ("proceed, ensure your todos are complete and don't commit").
