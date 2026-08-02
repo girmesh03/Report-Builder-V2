@@ -58,7 +58,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 24 | 24. Data Model | GREEN | Data Modeling, API Contract, Business Rules, Report Domain |
 | 25 | 25. Project Directory Structure | GREEN | Project Directory Structure, Coding Conventions, Architecture |
 | 26 | 26. Code Quality And Coding Conventions | GREEN | Coding Conventions, Rules, JSDoc Standards, Checklists |
-| 27 | 27. JSDoc Conventions | PENDING | JSDoc Standards, Coding Conventions |
+| 27 | 27. JSDoc Conventions | GREEN | JSDoc Standards, Coding Conventions |
 | 28 | 28. Error Handling Patterns | PENDING | Error Handling, API Contract, Validation Audit |
 | 29 | 29. Security | PENDING | Security, Requirements, Environment Config, Rules |
 | 30 | 30. New File Creation Rules | PENDING | Rules, Checklists, Project Directory Structure |
@@ -88,7 +88,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
 | Business Rules | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
 | Checklists | 26, 30, 31 | GREEN (Phase 26 seed) |
-| Coding Conventions | 9, 25, 26, 27 | GREEN (Phase 9 seed, Phase 25, 26 enrichment) |
+| Coding Conventions | 9, 25, 26, 27 | GREEN (Phase 9 seed, Phase 25, 26, 27 enrichment) |
 | Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11, 20, 23, 24 enrichment) |
 | Decision Log | 1, 2, 24, 33 | GREEN |
 | Design | consolidated across phases; finalized in 36 | PENDING |
@@ -100,7 +100,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Git Workflow | 32 | PENDING |
 | Glossary | 1, 2, 24, 34 (final) | GREEN |
 | Implementation Plan | 32 | PENDING |
-| JSDoc Standards | 26, 27 | GREEN (Phase 26 seed) |
+| JSDoc Standards | 26, 27 | GREEN (Phase 26 seed, Phase 27 enrichment) |
 | Logging | 10, 28 | GREEN (Phase 10 seed) |
 | Mock Data Seeding | 23, 24 | GREEN (Phase 23 seed, Phase 24 enrichment) |
 | MUI Component Standards | 12, 14, 24 | GREEN (Phase 14, 24 enrichment) |
@@ -527,6 +527,23 @@ All `§` references below identify sections of the original source brief. They a
 | Codebase (`client/eslint.config.js`, `client/package.json`) | ESLint 10 flat config (`@eslint/js` recommended + react-hooks flat recommended + react-refresh vite, browser globals, JSX, ignores `dist`); `lint` script is `eslint .`; no ESLint config or lint script exists in `backend/` — lint is scoped to the frontend (codebase fact) | Coding Conventions (13), Rules (7), Checklists (2) |
 | Codebase (`client/src/theme/*`, `client/src/main.jsx`, `client/src/App.jsx`) | Theme files already carry `@module <path>` JSDoc blocks (Phase 14-aligned); `main.jsx` and `App.jsx` are Vite template remnants (no JSDoc, double quotes) — replaced during implementation per REQ-175 | JSDoc Standards (2), Requirements (REQ-175, REQ-185) |
 
+## Source Trace Map — Phase 27 (source §27)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §27 | Every file opens with a `@module` JSDoc block: `@module <path>/<name>` — the path is relative to the package source root (`client/src/` for the frontend, `backend/` for the backend), e.g. `@module components/reusable/FormTextField`, `@module models/dailyReport`, `@module customizations/surfaces` | JSDoc Standards (3), Requirements (REQ-187) |
+| §27 | Theme customizations and the app theme provider use `@module`, never `@file` — `AppTheme.jsx` opens with `@module theme/AppTheme` (live codebase fact) | JSDoc Standards (3), Requirements (REQ-187) |
+| §27 | Function tags: `@param {type} name - description`, `@returns {type}`, `@throws {ErrorType} reason` — every tag used where applicable; components and controllers use arrow functions | JSDoc Standards (4), Requirements (REQ-188) |
+| §27 | Constants carry `@type` with the full type definition, e.g. `@type {Object<string, string>}` for the HTTP status map, `@type {number}` for durations | JSDoc Standards (5), Requirements (REQ-189) |
+| §27 | Express types written via `import('express')` — `import('express').Request`, `import('express').Response`, `import('express').NextFunction`; Mongoose async middleware documents `@returns {Promise<void>}` | JSDoc Standards (6), Requirements (REQ-190) |
+| §27 | Component JSDoc documents `@param {Object} props` and each named prop — `name`, `label`, `error`, `helperText`, `control` for RHF-bound inputs — plus the `ref` for forwardRef-wrapped inputs | JSDoc Standards (7), Requirements (REQ-191) |
+| §27 | Model JSDoc: `@typedef {Object} ModelName` plus one `@property {Type} fieldName - description` line per schema field | JSDoc Standards (8), Requirements (REQ-192) |
+| §27 | Middleware JSDoc documents the req/res/next triple; intentionally unused parameters carry the `_` prefix (`_req`, `_res`, `_next`) per REQ-181 | JSDoc Standards (9), Requirements (REQ-193) |
+| §27 | No TypeScript — JSDoc is the type layer: `@typedef` shapes, `@param {Object}` destructured props, `@returns {Promise<Type>}` for async functions | JSDoc Standards (10), Requirements (REQ-194) |
+| §27 | Six canonical sample files: theme customization, constants, model, controller, middleware, component | JSDoc Standards (11) |
+| Codebase (`client/src/theme/AppTheme.jsx`) | Live function triple: `@param {{ children: React.ReactNode }} props - Theme provider props.`, `@returns {JSX.Element} Theme provider wrapper.`, `@throws {never} This component does not throw.` | JSDoc Standards (2, 4, 11) |
+| Codebase (`client/src/theme/customizations/surfaces.js`, `client/src/theme/themePrimitives.js`) | `surfaces.js` opens `@module customizations/surfaces`; `themePrimitives.js` exports brand/gray/green/orange/red/blue/error/success constants without `@type` — the REQ-186 gap; constants gain `@type` during implementation (no file replacement planned) | JSDoc Standards (2, 5), Requirements (REQ-186) |
+
 ---
 
 ## Project Overview
@@ -869,6 +886,7 @@ Secondary features should not distract from the core workflow of generating a bo
 | Google Drive export | The Google Docs export mechanism (Phase 25 user decision): the backend creates the document with the user's own Google OAuth token — the login flow extended with the `drive.file` scope — so the document lands in the user's own Google Drive, fully owned and editable by the user. | §22 |
 | Mock data | Development/demo-only records injected into MongoDB via `backend/mock/*`; injection and wipe run inside MongoDB sessions, mock narrations are metadata-only (no audio files), and the commands refuse to run when `NODE_ENV` is `production` (AD-009). | §23, §33 (ADR-037) |
 | JSDoc | JavaScript documentation comments: a JSDoc block comment at the top of every file or module, plus `@module` on public modules, `@param`/`@returns`/`@throws` on functions, `@type` on constants, and JSDoc on exports (REQ-185/186). | §26 |
+| `@typedef` | JSDoc tag that defines a reusable type shape — used to document Mongoose models (`@typedef {Object} ModelName` with one `@property` line per field) and other compound types in place of TypeScript (REQ-192, REQ-194). | §27 |
 | Dead code | Code that is never executed or never used: unused imports, unused exports, unused constants/variables/methods; unused parameters carry the `_` prefix (`_req`, `_res`, `_next`) (REQ-181). | §26 |
 
 ---
@@ -1298,6 +1316,14 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-184 | The frontend passes `npx vite build` with 0 errors and passes lint (`eslint .` with the existing `client/eslint.config.js`). §26 mandates no backend lint. | Running the build and lint commands in `client/` succeeds without errors. | §26 |
 | REQ-185 | Every single file or module carries a JSDoc block comment at the top of the file. | A file sweep finds no source file without a JSDoc block comment. | §26 |
 | REQ-186 | JSDoc tags: `@module` on all public modules; `@param`, `@returns`, and `@throws` on functions; `@type` on constants; JSDoc on exports. | A documentation audit finds public modules and functions documented per the tag contract (deepened in Phase 27). | §26 |
+| REQ-187 | Every file opens with a `@module <path>/<name>` block; the path is relative to the package source root (`client/src/` for the frontend, `backend/` for the backend). Theme customizations and the app theme provider use `@module`, never `@file`. | A file sweep finds every source file opening with a `@module` block carrying a path relative to its package source root. | §27 |
+| REQ-188 | Function JSDoc carries `@param {type} name - description`, `@returns {type}`, and `@throws {ErrorType} reason` — every tag used where applicable; components and controllers are arrow functions. | A code review finds function JSDoc with the tag form and applicable tags present. | §27 |
+| REQ-189 | Constants carry a `@type` tag with the full type definition (e.g. `@type {Object<string, string>}`, `@type {number}`, `@type {string[]}`). | A code review finds every exported constant documented with `@type`. | §27 |
+| REQ-190 | Express types are written via `import('express')` — `import('express').Request`, `import('express').Response`, `import('express').NextFunction`; Mongoose async middleware documents `@returns {Promise<void>}`. | A code review of handlers and middleware finds the `import('express')` type forms and the Mongoose `Promise<void>` return form. | §27 |
+| REQ-191 | Component JSDoc documents `@param {Object} props` and every named prop used — for RHF-bound inputs at minimum `name`, `label`, `error`, `helperText`, `control` — plus `ref` for forwardRef-wrapped inputs. | A code review of client components finds the props object and named props documented. | §27 |
+| REQ-192 | Model files document `@typedef {Object} ModelName` plus one `@property {Type} fieldName - description` line per schema field. | A code review of the models finds the typedef and a property line per field. | §27 |
+| REQ-193 | Middleware JSDoc documents the req/res/next triple; intentionally unused parameters carry the `_` prefix (`_req`, `_res`, `_next`). | A code review of middleware finds the triple documented and unused parameters `_`-prefixed. | §27 |
+| REQ-194 | No TypeScript anywhere: JSDoc is the type layer — `@typedef` shapes, `@param {Object}` destructured props, `@returns {Promise<Type>}` on async functions. | A code review finds no `.ts`/`.tsx` files and JSDoc used as the typing mechanism. | §27 |
 
 ### Non-Functional Requirements (Phase 1)
 
@@ -1333,6 +1359,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Data model rules: **Phase 24 — DONE (REQ-165..172)**.
 - Project directory structure rules: **Phase 25 — DONE (REQ-173..177)**.
 - Code quality rules: **Phase 26 — DONE (REQ-178..186)**.
+- JSDoc rules: **Phase 27 — DONE (REQ-187..194)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -2975,7 +3002,7 @@ Backend architecture mandated by §10 (full detail in `## Backend Architecture`)
 
 ## Coding Conventions
 
-> **Phase 9 seed — the code-level conventions from §9. Backend file-organization conventions arrived in Phase 25; the §26 code-level conventions (formatting, naming, imports, dead code, backend/frontend conventions, build and lint gates) arrived in Phase 26; JSDoc sample conventions arrive in Phase 27 (§27 JSDoc Conventions).**
+> **Phase 9 seed — the code-level conventions from §9. Backend file-organization conventions arrived in Phase 25; the §26 code-level conventions (formatting, naming, imports, dead code, backend/frontend conventions, build and lint gates) arrived in Phase 26; the §27 JSDoc conventions arrived in `## JSDoc Standards` §§3–11 (REQ-187..194).**
 
 ### 1. Language And Modules
 
@@ -3060,13 +3087,13 @@ Structure-scoped conventions from §25 and §10 (code-level conventions live in 
 
 - Phase 25 (§25 Project Directory Structure): **DONE (Phase 25)** — backend file organization in §6.
 - Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — code-level conventions in §§7–13; the JSDoc rules live in `## JSDoc Standards` (REQ-178..186).
-- Phase 27 (§27 JSDoc Conventions): JSDoc sample conventions (`## JSDoc Standards` §3).
+- Phase 27 (§27 JSDoc Conventions): **DONE (Phase 27)** — the JSDoc tag conventions and sample documented files live in `## JSDoc Standards` §§3–11 (REQ-187..194).
 
 ---
 
 ## JSDoc Standards
 
-> **Phase 26 seed — the JSDoc rules from §26 (Code Quality And Coding Conventions). The detailed §27 conventions — Express/Mongoose types, `@typedef` model shapes, component/middleware JSDoc — and sample documented files arrive in Phase 27.**
+> **Phase 26 seed + Phase 27 enrichment — the mandatory-documentation rules from §26 (Code Quality And Coding Conventions), deepened with the full §27 JSDoc conventions (REQ-187..194) and the six canonical sample files in §11.**
 
 ### 1. Mandatory Documentation (Phase 26)
 
@@ -3076,17 +3103,253 @@ Structure-scoped conventions from §25 and §10 (code-level conventions live in 
 - JSDoc on constants with `@type` (REQ-186).
 - JSDoc on exports (REQ-186).
 
-The tag-level detail — `@module path/name` form, `import('express').Request` types, Mongoose `@returns {Promise<void>}`, component `@param {Object} props`, model `@typedef`/`@property`, middleware req/res/next triple, and the no-TypeScript typing rules — is Phase 27 scope (§27).
+The tag-level detail — the `@module path/name` form, `import('express').Request` types, Mongoose `@returns {Promise<void>}`, component `@param {Object} props`, model `@typedef`/`@property`, middleware req/res/next triple, and the no-TypeScript typing rules — is Phase 27 scope, now built in §§3–11 (REQ-187..194).
 
 ### 2. Codebase Facts (Phase 26)
 
 - `client/src/theme/*` (`AppTheme.jsx`, `themePrimitives.js`, `customizations/*`) already carry `@module <path>` JSDoc blocks — matching the §27 rule that theme customizations use `@module`, not `@file` (Phase 14-aligned).
 - `client/src/main.jsx` and `App.jsx` are Vite template remnants with no JSDoc; they are replaced during implementation per `## Project Directory Structure` §5 (REQ-175), so no current file is exempted from the mandatory-documentation rule.
+- `client/src/theme/AppTheme.jsx` documents the full §27 function triple on its export: `@param {{ children: React.ReactNode }} props - Theme provider props.`, `@returns {JSX.Element} Theme provider wrapper.`, `@throws {never} This component does not throw.` — the live model for the function tag form in §4.
+- `client/src/theme/customizations/surfaces.js` opens with `@module customizations/surfaces` — the live model for the `@module` path form in §3 (relative to `client/src/`).
+- `client/src/theme/themePrimitives.js` exports the brand/gray/green/orange/red/blue/error/success constants without `@type` — the REQ-186 gap documented in Phase 26; the file is not slated for replacement, so the constants gain `@type` tags during implementation.
 
-### 3. Expansion Markers
+### 3. Module-Level Documentation (Phase 27)
+
+Every file opens with a `@module` JSDoc block. The `@module` path is relative to the package source root — `client/src/` for the frontend, `backend/` for the backend — and uses forward slashes (REQ-187):
+
+- `@module components/reusable/FormTextField`
+- `@module models/dailyReport`
+- `@module customizations/surfaces` (a theme customization inside `client/src/theme/customizations/`)
+
+Theme customizations and the app theme provider use `@module`, never `@file` — `client/src/theme/AppTheme.jsx` opens with `@module theme/AppTheme` (live codebase fact; REQ-187).
+
+### 4. Function-Level Tags (Phase 27)
+
+Functions carry the §26 tag triple, each tag used where applicable (REQ-188):
+
+- `@param {type} name - description` — one tag per parameter, lowercase first letter after the dash.
+- `@returns {type}` — present on every function that returns a value.
+- `@throws {ErrorType} reason` — one tag per documented throw (e.g. `@throws {CustomError} 404 - Report not found`).
+
+Components and controllers are **arrow functions** — `const Component = (props) => {...}`, `const handler = asyncHandler(async (req, res, next) => {...})` (REQ-188, REQ-182).
+
+### 5. Constants (Phase 27)
+
+Constants carry a `@type` tag with the full type definition (REQ-189):
+
+- `@type {number}` — durations, sizes, limits.
+- `@type {Object<string, string>}` — maps such as the HTTP status map.
+- `@type {string[]}` — enumerations such as report statuses.
+
+### 6. Express And Mongoose Types (Phase 27)
+
+Express request/response types are written via the `import('express')` type syntax — no global `Request`/`Response`/`NextFunction` names (REQ-190):
+
+- `@param {import('express').Request} req`
+- `@param {import('express').Response} res`
+- `@param {import('express').NextFunction} next`
+
+Mongoose middleware and pre/post hooks are async and document `@returns {Promise<void>}` (REQ-190).
+
+### 7. Component JSDoc (Phase 27)
+
+Components document `@param {Object} props` and every named prop used (REQ-191). For RHF-bound inputs the documented props are at minimum:
+
+- `props.name` — the field name; must match a registered RHF field.
+- `props.label` — the visible field label.
+- `props.error` — the field error message, or `undefined` when valid.
+- `props.helperText` — helper text, or `undefined`.
+- `props.control` — the RHF control passed down for field registration.
+
+Reusable Mui input components are wrapped with `forwardRef` (REQ-108/113, `## MUI Component Standards` §8) so RHF `register('fieldName')` binds the input directly; the `ref` parameter is documented with `@param {import('react').Ref} ref` (REQ-191). Presentation wrappers (e.g. `MuiButton` wrappers) do not use `forwardRef`.
+
+### 8. Model JSDoc (Phase 27)
+
+Model files open with the file `@module`, then define the document shape with `@typedef {Object} ModelName` plus one `@property {Type} fieldName - description` line per schema field (REQ-192) — the JSDoc replacement for TypeScript interfaces (REQ-194). The typedef appears above the schema so it documents the exported model; field types use plain JSDoc types (`string`, `ObjectId`, `Date`, `number`, `ObjectId[]`).
+
+### 9. Middleware JSDoc (Phase 27)
+
+Middleware documents the req/res/next triple (REQ-193):
+
+- `@param {import('express').Request} req`
+- `@param {import('express').Response} res`
+- `@param {import('express').NextFunction} next`
+
+Intentionally unused parameters carry the `_` prefix (`_req`, `_res`, `_next`) per REQ-181, and the triple still documents them by name (REQ-193).
+
+### 10. No-TypeScript Typing Rules (Phase 27)
+
+The project is JavaScript-only (§9.1, REQ-074) — JSDoc is the type layer (REQ-194):
+
+- Compound shapes are declared with `@typedef`.
+- Props and options objects are typed as `@param {Object} props` with named props.
+- Async functions document `@returns {Promise<Type>}`.
+- No `.ts`, no `.tsx`, no TS config files anywhere.
+
+### 11. Sample Documented Files (Phase 27)
+
+The six samples below are the canonical JSDoc forms for each file kind in `## Project Directory Structure` §§4–5. New files must match these forms, and existing files must be brought into compliance during implementation (REQ-187..194).
+
+**Theme customization** (`client/src/theme/customizations/*.js` — the live `surfaces.js` form):
+
+```js
+/**
+ * @module customizations/surfaces
+ */
+
+import { alpha } from '@mui/material/styles';
+
+import { gray } from '../themePrimitives';
+
+export const surfacesCustomizations = {
+  MuiCard: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        border: '1px solid',
+        borderColor: (theme.vars || theme).palette.divider,
+        backgroundColor: (theme.vars || theme).palette.background.default,
+        // ...
+      }),
+    },
+  },
+};
+```
+
+**Constants** (`backend/utils/constants.js` form):
+
+```js
+/**
+ * @module utils/constants
+ */
+
+/** @type {number} Maximum audio clip duration in seconds (80 KiB/minute upper bound). */
+export const AUDIO_MAX_DURATION_SEC = 900;
+
+/** @type {number} Maximum single audio file size in bytes. */
+export const AUDIO_MAX_SIZE_BYTES = 52428800;
+
+/** @type {string[]} The report lifecycle statuses in workflow order. */
+export const REPORT_STATUSES = ['draft', 'generating', 'review', 'finalized'];
+```
+
+**Mongoose model** (`backend/models/dailyReport.js` form):
+
+```js
+/**
+ * @module models/dailyReport
+ */
+
+import mongoose from 'mongoose';
+
+/**
+ * Daily supervision report document.
+ *
+ * @typedef {Object} DailyReport
+ * @property {ObjectId} user - The supervisor who owns the report.
+ * @property {Date} date - The report date.
+ * @property {ObjectId[]} branches - Branches visited that day.
+ * @property {string} status - Current lifecycle status (REPORT_STATUSES).
+ * @property {string} transcription - The reviewed transcription text.
+ */
+
+const dailyReportSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  date: { type: Date, required: true },
+  branches: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Branch' }],
+  status: { type: String, enum: ['draft', 'generating', 'review', 'finalized'], default: 'draft' },
+  transcription: { type: String, default: '' },
+});
+
+export default mongoose.model('DailyReport', dailyReportSchema);
+```
+
+**Express controller** (`backend/controllers/user.controller.js` form — arrow function, `req.user._id.toString()` per REQ-183, response shape `{ success, message, data }`):
+
+```js
+/**
+ * @module controllers/user.controller
+ */
+
+import asyncHandler from 'express-async-handler';
+
+/**
+ * Returns the authenticated user's profile.
+ *
+ * @param {import('express').Request} req - The request; `req.user` is set by the authenticate middleware.
+ * @param {import('express').Response} res - The response.
+ * @param {import('express').NextFunction} next - The next middleware.
+ * @returns {Promise<void>} Responds with the profile or delegates to the error handler.
+ * @throws {CustomError} 404 - User not found.
+ */
+const getProfile = asyncHandler(async (req, res, next) => {
+  const userId = req.user._id.toString();
+  // ...
+  res.json({ success: true, message: 'User profile fetched successfully', data: { user } });
+});
+
+export default { getProfile };
+```
+
+**Express middleware** (`backend/middleware/notFound.middleware.js` form — unused params `_`-prefixed per REQ-181):
+
+```js
+/**
+ * @module middleware/notFound
+ */
+
+import { CustomError } from '../utils/error';
+
+/**
+ * 404 handler for unmatched routes.
+ *
+ * @param {import('express').Request} _req - The request.
+ * @param {import('express').Response} _res - The response.
+ * @param {import('express').NextFunction} next - The next middleware.
+ * @returns {Promise<void>} Delegates the 404 error to the error handler.
+ * @throws {CustomError} 404 - Route not found.
+ */
+const notFound = asyncHandler(async (_req, _res, next) => {
+  next(new CustomError(404, 'Route not found'));
+});
+
+export default notFound;
+```
+
+**React component** (`client/src/components/reusable/FormTextField.jsx` form — arrow function wrapped with `forwardRef` so RHF `register` binds the input directly, `displayName` set per REQ-108):
+
+```jsx
+/**
+ * Reusable text-field form control (RHF-registered).
+ *
+ * @module components/reusable/FormTextField
+ */
+
+import { TextField } from '@mui/material';
+import { forwardRef } from 'react';
+
+/**
+ * Text-field wrapper bound to react-hook-form.
+ *
+ * @param {Object} props - Component props.
+ * @param {string} props.name - Field name; must match a registered RHF field.
+ * @param {string} props.label - Visible field label.
+ * @param {string | undefined} props.error - Field error message, or undefined when valid.
+ * @param {string | undefined} props.helperText - Helper text, or undefined.
+ * @param {Object} props.control - RHF control passed down for field registration.
+ * @param {import('react').Ref} ref - Forwarded ref bound to the input element for RHF `register`.
+ * @returns {JSX.Element} The rendered text field.
+ */
+const FormTextField = forwardRef(({ name, label, error, helperText, control }, ref) => {
+  // ...
+});
+
+FormTextField.displayName = 'FormTextField';
+```
+
+### 12. Expansion Markers
 
 - Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — mandatory documentation rules in §1 (REQ-185/186).
-- Phase 27 (§27 JSDoc Conventions): the full §27 tag conventions and sample documented files.
+- Phase 27 (§27 JSDoc Conventions): **DONE (Phase 27)** — the full §27 tag conventions in §§3–10 and the six canonical sample files in §11 (REQ-187..194).
 
 ---
 
@@ -4544,3 +4807,7 @@ Phases 1–25 are GREEN (2026-08-02). Phase 25 built the project directory struc
 ## End Of Phase 26 Content
 
 Phases 1–26 are GREEN (2026-08-02). Phase 26 built the code quality and coding conventions from §26: enriched `## Coding Conventions` (header blockquote updated; new §7 Formatting — ES Modules only with `"type": "module"` and `import`/`export` (cross-ref REQ-075), no `console.log` in backend code (Winston replaces it in all environments, cross-ref `## Logging` REQ-086; `console.log` allowed frontend), no zod — manual resolvers with a consistent error shape (cross-ref REQ-077), semicolons required, single quotes, trailing commas, 2-space indentation, 100-character width, LF line endings, UTF-8 encoding; new §8 Naming — camelCase variables/functions, PascalCase classes/components, kebab-case file names, UPPER_SNAKE_CASE constants and environment variables; new §9 Imports — built-in → npm → local alphabetical, named imports for utilities and functions, default import for React components, never `*` imports; new §10 Dead Code And Unused Parameters — no unused imports/exports/dead code, `_`-prefixed unused parameters (`_req`, `_res`, `_next`); new §11 Backend Conventions — `req.user._id.toString()` for user IDs (REQ-183); new §12 Frontend Conventions — functional components with hooks, props destructured in the function signature, `handle`-prefixed event handlers (REQ-182); new §13 Build And Lint Gates — `npx vite build` 0 errors, lint passes, lint scoped to the frontend with the no-backend-lint codebase fact; new §14 Expansion Markers — Phases 25/26 DONE, Phase 27 pending with JSDoc samples), added new `## JSDoc Standards` (header blockquote; §1 Mandatory Documentation — JSDoc block comment at the top of every file/module (REQ-185), `@module` on public modules, `@param`/`@returns`/`@throws` on functions, `@type` on constants, JSDoc on exports (REQ-186), tag-level detail deferred to Phase 27; §2 Codebase Facts — theme files already carry `@module <path>` JSDoc (Phase 14-aligned), `main.jsx`/`App.jsx` are template remnants replaced per REQ-175; §3 Expansion Markers — Phase 26 DONE, Phase 27 pending), enriched `## Rules` (new §7 Code Quality Rules — REQ-178..186 with cross-refs to `## Coding Conventions`, `## JSDoc Standards`, `## Logging`, and the no-backend-lint codebase fact; §8 markers — Phase 26 DONE), added new `## Checklists` (header blockquote; §1 Code Quality Checklist — checkbox list covering every §26 rule incl. the no-unused-exports rule "every exported function or constant is imported elsewhere"; §2 Frontend Build And Lint Gate — vite build 0 errors, `npm run lint` passes, no backend lint; §3 Expansion Markers — Phases 26 DONE, 30/31 pending), flipped the `## Validation Audit` markers (Phase 26 DONE; scope note now references `## JSDoc Standards` and `## Checklists`), added REQ-178..186 (formatting, naming, imports, dead code/unused parameters, frontend conventions, `req.user._id.toString()`, build+lint gates with no backend lint, every-file JSDoc, JSDoc tag contract), extended `## Glossary` (JSDoc, Dead code), updated the Checklist (Coding Conventions, JSDoc Standards, Rules, Checklists — GREEN Phase 26 seed/enrichment; Validation Audit — GREEN Phase 26 enrichment), added the missing Phase 25 requirement-expansion marker, and added the Phase 26 Source Trace Map with the codebase facts (`client/eslint.config.js` ESLint 10 flat config with `@eslint/js` recommended + react-hooks flat recommended + react-refresh vite, browser globals, JSX, ignores `dist`; `client/package.json` `lint: "eslint ."`; no ESLint config or lint script in `backend/` — lint scoped to the frontend; theme `@module` JSDoc evidence; `main.jsx`/`App.jsx` template-remnant facts). Phase 27 will build the JSDoc samples and full JSDoc conventions.
+
+## End Of Phase 27 Content
+
+Phases 1–27 are GREEN (2026-08-02). Phase 27 built the JSDoc conventions from §27: enriched `## JSDoc Standards` (header blockquote updated — Phase 26 seed + Phase 27 enrichment; §1 Mandatory Documentation kept with the tag-level detail paragraph now pointing at the built §§3–11; §2 Codebase Facts extended — `AppTheme.jsx` carries the live function triple (`@param {{ children: React.ReactNode }} props - Theme provider props.`, `@returns {JSX.Element} Theme provider wrapper.`, `@throws {never} This component does not throw.`), `customizations/surfaces.js` opens `@module customizations/surfaces`, `themePrimitives.js` exports the brand/gray/green/orange/red/blue/error/success constants without `@type` — the REQ-186 gap, constants gain `@type` during implementation with no file replacement; new §3 Module-Level Documentation — `@module <path>/<name>` relative to the package source root (`client/src/`, `backend/`), theme customizations and `AppTheme.jsx` use `@module` never `@file` (REQ-187); new §4 Function-Level Tags — `@param {type} name - description` / `@returns {type}` / `@throws {ErrorType} reason`, arrow functions for components and controllers (REQ-188); new §5 Constants — `@type` with full type definitions (REQ-189); new §6 Express And Mongoose Types — `import('express').Request/Response/NextFunction`, Mongoose async middleware `@returns {Promise<void>}` (REQ-190); new §7 Component JSDoc — `@param {Object} props` with `name`/`label`/`error`/`helperText`/`control` documented, forwardRef-wrapped inputs with `@param {import('react').Ref} ref`, presentation wrappers do not use forwardRef (REQ-191); new §8 Model JSDoc — `@typedef {Object} ModelName` + one `@property {Type} fieldName - description` per field (REQ-192); new §9 Middleware JSDoc — req/res/next triple with `_`-prefixed unused params (REQ-193); new §10 No-TypeScript Typing Rules — JSDoc as the type layer (REQ-194); new §11 Sample Documented Files — six canonical forms: theme customization in the live `customizations/surfaces.js` form, constants with the real `AUDIO_MAX_DURATION_SEC` = 900 / `AUDIO_MAX_SIZE_BYTES` = 52428800 / `REPORT_STATUSES` values, Mongoose model in the `models/dailyReport.js` form with `user`/`date`/`branches`/`status`/`transcription` `@property` lines, Express controller in the `controllers/user.controller.js` form — arrow function `getProfile` using `req.user._id.toString()` per REQ-183 and returning `{ success: true, message: 'User profile fetched successfully', data: { user } }`, Express middleware in the `notFound.middleware.js` form with `_res`/`_req`, React component in the `components/reusable/FormTextField.jsx` form — arrow function wrapped with `forwardRef` (so RHF `register` binds the input directly) with `displayName` set and the §7 props documented; old §3 Expansion Markers renumbered to §12 with both markers DONE), enriched `## Coding Conventions` (header blockquote updated — §27 conventions arrived in `## JSDoc Standards` §§3–11; §14 marker flipped to Phase 27 DONE), added REQ-187..194 (module `@module` path/name with no `@file` for themes, function tag form with arrow functions, constant `@type`, Express `import('express')` types + Mongoose `Promise<void>`, component props, model `@typedef`/`@property`, middleware req/res/next triple with `_` prefix, no-TypeScript JSDoc typing), added the Phase 27 requirement-expansion marker, extended `## Glossary` (`@typedef`), updated the Checklist (Coding Conventions and JSDoc Standards — GREEN Phase 27 enrichment), and added the Phase 27 Source Trace Map (9 §27 rows + 2 codebase rows: the AppTheme.jsx live triple and the surfaces.js `@module` / themePrimitives.js missing-`@type` facts). Phase 28 will build the error handling patterns.
