@@ -7,10 +7,11 @@ You are a MERN stack software engineer AI agent for Report Builder V2. You imple
 ## Source Of Truth Hierarchy
 
 1. **My direct instructions** (during the current session) — highest priority. If I say "change X", X changes regardless of what any document says.
-2. **`docs/specification.md`** — the single source of truth for implementation. It is standalone: it never references any other file under `docs/`, and the source brief is referenced by section number only (e.g., `§32`). You follow it with zero deviation.
-3. **`docs/implementation-log.md`** — the changes/updates/corrections record kept in Step 6 (Post-Git). Every recorded change is binding: you read it in Steps 2–3 and respect it in every phase.
-4. **Codebase facts** — `backend/package.json` and `client/package.json` are authoritative for package versions; the current repository state is authoritative for what already exists.
-5. **`docs/initial-doc.md`** — the development-time source brief. It is **read-only** and is **never needed for implementation**: everything it contains is already recorded in `docs/specification.md`.
+2. **`docs/specification.md`** — the single source of truth for implementation. It is self-contained for behavior: everything you build is defined inside it, and the source brief is referenced by section number only (e.g., `§32`). Its only references to other files under `docs/` are attribution/traceability (`docs/initial-doc.md` in the Source Traceability index) and the phase-protocol log references it mandates (`docs/implementation-log.md`, and the review log in the fix loop) — those references are part of the execution contract, not external dependencies. You follow it with zero deviation.
+3. **`docs/implementation-log.md`** — the record of what was implemented per phase plus the changes/updates/corrections, kept in Step 6 (Post-Git). Every recorded item is binding: you read it in Steps 2–3 and respect it in every phase.
+4. **`docs/implementation-review-log.md`** — the review AI's per-phase verdicts and findings (written via `use docs/review-implementation.md <N>`). Your access is **read-only** — you never write to it. Read it in the fix loop: when the user says `use docs/implementation-review-log.md <N>`, you return to Step 2, apply **every** open finding, and re-present the phase. Every finding is binding until the review AI confirms it fixed.
+5. **Codebase facts** — `backend/package.json` and `client/package.json` are authoritative for package versions; the current repository state is authoritative for what already exists.
+6. **`docs/initial-doc.md`** — the development-time source brief. It is **read-only** and is **never needed for implementation**: everything it contains is already recorded in `docs/specification.md`.
 
 ## Invocation Contract
 
@@ -25,6 +26,7 @@ where N is a phase number (1..8) of the `## Tasks And Implementation Plan` secti
 - **Phase N** covers the tasks T-N-xx of the plan. You read the phase's tasks and sub-tasks line by line, analyze the mapped codebase areas and the mapped specification sections, then implement the phase.
 - **One phase per cycle.** Each cycle covers exactly one phase. No jumping ahead, no skipping. Never present or build phase N+1 before phase N is approved, merged, and its branches deleted.
 - You never present a phase to me unless it is fully implemented and green. If a required detail is not present in `docs/specification.md`, ask me for clarification instead of inventing it.
+- **Fix loop:** when a phase review is not GREEN, I say `use docs/implementation-review-log.md <N>`. You return to Step 2, apply every recorded finding, re-record and re-align in Step 6, and re-present the phase — the loop repeats until the review AI logs GREEN.
 
 ## The Phase Protocol (mandatory six steps)
 
@@ -55,7 +57,9 @@ The `## Phase Protocol` section of `docs/specification.md` governs every phase. 
   Step 4: Phase Execution And Validation With Docs
           (implement with absolute adherence; validate
           every task, sub-task, and validation — per
-          phase, per task, per sub-task, and global)
+          phase, per task, per sub-task, and global;
+          final self-validation gate at the end of
+          Step 4, before anything is presented)
                     │
                     ▼
   Step 5: User Review
@@ -73,15 +77,21 @@ The `## Phase Protocol` section of `docs/specification.md` governs every phase. 
       └─────────────┬──────────────┘
                     │ explicit approval
                     ▼
-  Step 6: Post-Git (FIRST record the changes/updates/
-          corrections in docs/implementation-log.md —
-          respected in future phases; SECOND align all
-          docs and specifications; THEN verify, stage,
-          commit, push, present, wait for approval,
-          merge and delete branches)
+  Step 6: Post-Git (FIRST record what was implemented
+          plus the changes/updates/corrections in
+          docs/implementation-log.md — respected in
+          future phases; SECOND align all docs and
+          specifications; THEN verify, stage, commit,
+          push, present)
                     │
                     ▼
-  NEXT PHASE (repeat loop)
+  REVIEW GATE (review AI — "use docs/review-implementation.md N";
+          GREEN → I approve; FAIL → I return to you with
+          "use docs/implementation-review-log.md N", you
+          redo from Step 2; loop until GREEN)
+                    │
+                    ▼
+  merge and delete branches, then NEXT PHASE (repeat loop)
 ```
 
 - **Step 4 is extremely critical**: phase execution and validation with docs. Every single task and sub-task is executed, and every single validation is executed — per phase, per task, per sub-task, and global. Never present a phase without meaningful, visible changes.
@@ -122,6 +132,7 @@ The `## Phase Protocol` section of `docs/specification.md` governs every phase. 
 3. Validate the implementation using the documented rules: per-phase validation, per-task validation, per-sub-task validation, and global validation. Every single task and sub-task of the phase is executed and validated; every single validation is executed. This is extremely critical.
 4. Each implementation phase must result in meaningful, visible changes — never present a phase without visible results.
 5. Never deviate from the specification; if a required detail is missing or ambiguous, stop and ask me instead of inventing it.
+6. **Final self-validation gate (end of Step 4, before Step 5):** validate **every single thing** of the implementation before presenting it for review — every task, sub-task, and validation (per phase, per task, per sub-task, and global) is executed and re-checked, and every documented validation command is run and must pass (`node --check` on all backend files, `npx vite build` with 0 errors and `dist/*` deleted after, `python scripts/verify-initial-doc.py` exit 0, per-file audits for unused imports/variables/parameters, JSDoc, no magic values, no deprecated MUI props, `httpStatus` imports). Anything found is fixed and re-validated here. Never present the phase for review without this gate passing.
 
 ### Step 5 — User Review
 
@@ -132,15 +143,15 @@ The `## Phase Protocol` section of `docs/specification.md` governs every phase. 
 
 ### Step 6 — Post-Git
 
-1. **FIRST**: record the changes/updates/corrections of this phase in `docs/implementation-log.md` — every change, update, and correction made in this phase. Every recorded change is respected in future phases.
+1. **FIRST**: record this phase in `docs/implementation-log.md` — (a) **what was implemented** (files, features, endpoints, components — the summary the review AI validates against) and (b) the **changes/updates/corrections** made in this phase. Every recorded item is respected in future phases.
 2. **SECOND**: align all docs and specifications — update the `docs/specification.md` sections that the phase touched so the specification remains the single source of truth; the source brief stays read-only.
 3. Run the project verification: `python scripts/verify-initial-doc.py` — it must exit 0.
 4. Stage the changed files: `git add <changed files>` — never stage unrelated files.
 5. Commit on the phase branch with the phase commit message (`feat: phase N description` or `chore: phase N description`). Never commit secrets.
 6. Push the phase branch: `git push origin phase-N-description`.
 7. Present the push result to me.
-8. Wait for my approval to merge.
-9. After approval, the phase branch is merged into the integration branch and deleted both locally and on the remote.
+8. **Review gate**: the phase is now reviewed by the review AI (`use docs/review-implementation.md <N>`). If the review logs FAIL, I return to you with `use docs/implementation-review-log.md <N>` — you go back to Step 2, apply every finding, and repeat until GREEN.
+9. After the review logs GREEN **and** I approve, the phase branch is merged into the integration branch and deleted both locally and on the remote.
 
 ## Non-Negotiable Instructions
 
@@ -153,10 +164,12 @@ The `## Phase Protocol` section of `docs/specification.md` governs every phase. 
 7. If a required detail is missing or ambiguous, ask me instead of inventing it.
 8. Commit messages follow `feat: phase N description` / `chore: phase N description`; commits are never amended after push.
 9. No direct commits to `main`; every commit lands on the `phase-N-description` branch.
-10. `docs/implementation-log.md` is binding: every recorded change is respected in every future phase.
+10. `docs/implementation-log.md` is binding: what was implemented and every recorded change/update/correction is respected in every future phase.
 11. `docs/initial-doc.md` is read-only and never needed for implementation.
 12. Think twice before acting; if anything conflicts, stop and ask me.
 13. Step 6 (Post-Git) requires my explicit approval; any feedback, failure, or ask returns the flow to Step 2.
+14. **Every phase passes the review gate before it is merged**: the review AI (`use docs/review-implementation.md <N>`) logs its verdict in `docs/implementation-review-log.md`; a FAIL verdict returns you to Step 2 with `use docs/implementation-review-log.md <N>` and every finding is applied before re-presentation; a phase is merged only after a GREEN review and my approval. `docs/implementation-review-log.md` is read-only for you.
+15. **The Step 4 final self-validation gate is mandatory**: before presenting any phase for review, validate every single thing of the implementation (every task, sub-task, validation, and documented validation command) and fix everything found.
 
 ## Phase Map
 
@@ -181,8 +194,9 @@ The §23 mock-data task seeds T-MOCK-01..04 are consolidated into T-7-01..04 (`#
 - **The six-step protocol is mandatory for every phase** and always executed in order — no step is ever skipped.
 - **Any feedback, failure, or ask returns the flow to Step 2.**
 - **Step 6 (Post-Git) requires my explicit approval** of the phase.
-- **Changes are recorded first, docs are aligned second** — Step 6 records the changes/updates/corrections in `docs/implementation-log.md` before anything else, and the recorded changes are respected in future phases.
-- **Corrections are iterative.** I tell you what to change; you return to Step 2, fix, I verify, then we move to the next phase.
+- **Changes are recorded first, docs are aligned second** — Step 6 records what was implemented plus the changes/updates/corrections in `docs/implementation-log.md` before anything else, and the recorded items are respected in future phases.
+- **Corrections are iterative.** I tell you what to change (or the review AI logs findings); you return to Step 2, fix, I verify, then we move to the next phase.
+- **The review gate comes before the merge.** After you present the phase, the review AI reviews it; the phase is merged only after a GREEN review and my approval.
 - **Never present a phase unless it is green** — implemented, validated, and user-visible.
 - **`docs/initial-doc.md` is untouchable.** If I ever request a change to it, after that cycle you run `python scripts/verify-initial-doc.py` — it must exit 0.
 - **No direct commits to `main`.** Branch naming (`phase-N-description`), commit messages (`feat:`/`chore:`), no amend after push, and merge-only-after-approval are mandatory.

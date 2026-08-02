@@ -1569,6 +1569,8 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-227 | Branch deletion removes only the Branch document — reports keep the embedded branch snapshot and are never deleted or orphaned. | Cascade scope per `## Archive Delete Restore Lifecycle` §2. | §35 |
 | REQ-228 | Lifecycle endpoints return 404 for missing/non-archived targets and 409 (established `CONFLICT` constant, REQ-216) for lifecycle violations, in the documented guard order. | Guard order and messages per `## Archive Delete Restore Lifecycle` §3–§4. | §35 |
 | REQ-229 | Archived reports are automatically and permanently deleted 30 days after `archivedAt` (TTL indexes plus the cleanup sweeper, per-hour default interval). | TTL/sweeper behavior per `## Archive Delete Restore Lifecycle` §6. | §35 |
+| REQ-230 | Step 6 first records each phase in `docs/implementation-log.md` — what was implemented (files, features, endpoints, components) plus the changes/updates/corrections; every recorded item is respected in future phases. | `docs/implementation-log.md` documents each phase's implementation and changes; future phases and the review cycle apply them. | §32 (user decision 2026-08-02, AD-019) |
+| REQ-231 | Every phase is reviewed by the review AI before it is merged: the review logs its verdict and findings in `docs/implementation-review-log.md` (written and maintained exclusively by the review AI, read-only for the implementation AI; findings updated in place `OPEN` → `RESOLVED` when confirmed); a FAIL verdict is binding (the implementation AI applies every finding via the fix loop); a phase is merged only after a GREEN review and user approval. | Review verdicts and findings per `## Phase Protocol` §9; no phase is merged before GREEN. | §32 (user decision 2026-08-02, AD-019) |
 
 ### Requirement expansion markers
 
@@ -1604,6 +1606,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Validation and audit rules: **Phase 31 — DONE (REQ-210..216)**.
 - Git and phase protocol rules: **Phase 32 — DONE (REQ-217..224)**.
 - Archive/delete/restore lifecycle rules: **Phase 35 — DONE (REQ-225..229)**.
+- Two-AI review workflow: **user decision 2026-08-02 — DONE (REQ-230, REQ-231, AD-019)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31 — DONE (REQ-210..216)**.
@@ -4059,8 +4062,10 @@ Report-Builder-V2/
 ├── docs/                 # Project documentation (not part of the delivered application)
 │   ├── build-implementation.md  # Implementation invocation prompt — `use docs/build-implementation.md <N>` (N = 1..8; §32, Phase 32)
 │   ├── build-process.md         # Specification build-process prompt (Phase 1–36; §32 update in Phase 32)
-│   ├── implementation-log.md    # Step 6 changes/updates/corrections record, binding on future phases (`## Phase Protocol` §7, REQ-222)
+│   ├── implementation-log.md    # Step 6 record of what was implemented plus changes/updates/corrections, binding on future phases (`## Phase Protocol` §7, REQ-222, REQ-230)
+│   ├── implementation-review-log.md  # Review AI per-phase verdicts/findings — `use docs/review-implementation.md <N>` writes it, `use docs/implementation-review-log.md <N>` reads it (`## Phase Protocol` §9, REQ-231)
 │   ├── initial-doc.md           # Development-time source brief — read-only, referenced by section number only
+│   ├── review-implementation.md # Review invocation prompt — `use docs/review-implementation.md <N>` (N = 1..8; user decision 2026-08-02)
 │   └── specification.md         # This specification — the single source of truth for implementation
 └── scripts/              # Repository tooling, e.g. scripts/verify-initial-doc.py
 ```
@@ -5496,7 +5501,7 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 - **Context:** §32 defines the Git workflow and the phase protocol. The Phase 32 plan proposed a separate `## Git Workflow` section next to `## Phase Protocol`; the user decided the Git workflow must NOT be a separate section.
 - **Decision:** The Git workflow is merged INTO the single `## Phase Protocol` section — §1 High-Level Git Rules plus the six steps in §§2–7 and enforcement in §8. No standalone `## Git Workflow` section exists.
 - **Rationale:** There is a probability the implementation AI could skip a separate section; a single merged section makes the protocol impossible to skip.
-- **Consequences:** `## Phase Protocol` is the one and only execution contract together with `## Tasks And Implementation Plan`; `docs/build-process.md` is updated so no reference to a separate Git Workflow section survives.
+- **Consequences:** `## Phase Protocol` is the one and only execution contract together with `## Tasks And Implementation Plan`; is updated so no reference to a separate Git Workflow section survives.
 - **Source:** §32 (Phase 32 user decision).
 
 #### AD-015 — Eight-phase implementation plan with per-task validations
@@ -5526,6 +5531,15 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 - **Consequences:** `## Archive Delete Restore Lifecycle` is the authoritative lifecycle spec (supersedes AD-011's Phase 35 placeholder); `## API Contract` §9 carries the six endpoints; `## Backend Architecture` §8 starts/stops the sweeper; `## Environment Config` §5 carries `ARCHIVE_TTL_SECONDS`/`CLEANUP_SWEEPER_INTERVAL_MS`; requirements REQ-225..229.
 - **Source:** §35, §33 (ADR-015), §10.8 (REQ-216).
 
+#### AD-019 — Two-AI workflow (implementation AI + review AI)
+
+- **Date:** 2026-08-02. **Status:** Accepted.
+- **Context:** The user defined a two-AI execution model for the implementation phases: the implementation AI (full codebase READ/WRITE, except `docs/implementation-review-log.md`) implements per `docs/build-implementation.md <N>`; a separate review AI (full codebase READ, WRITE only to `docs/implementation-review-log.md`) exhaustively reviews every codebase change and every implementation detail against the docs before a phase is merged. The review log and review prompt documents did not exist yet.
+- **Decision:** Every phase passes a review gate before merge (user decision 2026-08-02). After the implementation AI presents the phase (Step 6 action 7), the user runs `use docs/review-implementation.md <N>` (plan mode → review; build mode + "proceed" → verdict logged in `docs/implementation-review-log.md`). GREEN → user approves the merge (Step 6 action 9). FAIL → the user runs `use docs/implementation-review-log.md <N>` with the implementation AI, which returns to Step 2, applies every finding, records the corrections in `docs/implementation-log.md`, and re-presents; the loop repeats until GREEN. `docs/implementation-log.md` additionally records what was implemented per phase (not only changes/updates/corrections) so the review AI can validate against it (REQ-230). Two new files are registered in `## Project Directory Structure` §2: `docs/review-implementation.md` and `docs/implementation-review-log.md`.
+- **Rationale:** Separates implementation from verification; the review AI checks every git change and every detail with zero tolerance, so nothing unverified lands on the integration branch; binding findings keep the fix loop deterministic; recording "what was implemented" gives the review AI the exact deliverable to validate.
+- **Consequences:** `## Phase Protocol` §9 (Two-AI Review Workflow) is the authoritative workflow; `docs/review-implementation.md` is the review invocation prompt; `docs/implementation-review-log.md` is the review record (PENDING/GREEN/FAIL, findings binding); `docs/build-implementation.md` Step 6 and hierarchy updated (fix loop, review gate); `docs/implementation-log.md` entries extended with Implemented + Validation results; REQ-230, REQ-231; the "spec is standalone" claim corrected in `docs/build-implementation.md` (sanctioned exceptions: traceability attribution to `docs/initial-doc.md` and the mandated log references).
+- **Source:** User decision 2026-08-02 (no source section).
+
 ### Decision Log open items
 
 - Measurable success KPIs (OQ-001) — decision pending user input.
@@ -5540,16 +5554,16 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 
 ## Phase Protocol
 
-> **Phase 32 seed — the Git workflow and phase protocol from §32 (Git And Phase Protocol). Per the Phase 32 user decision (AD-014), the Git workflow is merged INTO this single section (no separate `## Git Workflow` section) so the implementation AI cannot skip it. This section governs how every implementation phase of `## Tasks And Implementation Plan` is executed: the high-level Git rules in §1, the six mandatory steps in §§2–7, and the enforcement rules in §8.**
+> **Phase 32 seed — the Git workflow and phase protocol from §32 (Git And Phase Protocol). Per the Phase 32 user decision (AD-014), the Git workflow is merged INTO this single section (no separate `## Git Workflow` section) so the implementation AI cannot skip it. This section governs how every implementation phase of `## Tasks And Implementation Plan` is executed: the high-level Git rules in §1, the six mandatory steps in §§2–7, the enforcement rules in §8, and the two-AI review workflow in §9 (user decision 2026-08-02, AD-019 — every phase is reviewed by the review AI before it is merged).**
 
 ### 1. High-Level Git Rules
 
 - Every implementation phase runs on its own branch named `phase-N-description` (e.g., `phase-1-foundation`, `phase-5-ai-generation-and-correction`). No direct commits to `main`; every commit lands on the phase branch.
-- Every phase follows the six steps below in order, with no skips: Step 1 Pre-Git (§2) → Step 2 Deep Codebase Analysis (§3) → Step 3 Prior-Phase Analysis (§4) → Step 4 Phase Execution And Validation With Docs (§5) → Step 5 User Review (§6) → Step 6 Post-Git (§7). Phase execution and validation with docs is very critical.
+- Every phase follows the six steps below in order, with no skips: Step 1 Pre-Git (§2) → Step 2 Deep Codebase Analysis (§3) → Step 3 Prior-Phase Analysis (§4) → Step 4 Phase Execution And Validation With Docs (§5) → Step 5 User Review (§6) → Step 6 Post-Git (§7). After Step 6's presentation, every phase passes the two-AI review gate (§9) before it is merged. Phase execution and validation with docs is very critical.
 - Step 6 (Post-Git) is never performed without the user's explicit approval of Step 5.
 - Commit messages: `feat: phase N description` for feature phases, `chore: phase N description` for non-feature phases (mock data, quality gates, polish). The exact commit message per phase is recorded in `## Tasks And Implementation Plan` §1.
 - Commits are never amended or force-pushed after they are pushed to the remote.
-- A phase branch is merged only after the user's approval; after the merge, the phase branch is deleted both locally and on the remote.
+- A phase branch is merged only after the review gate (§9) logs GREEN and the user approves; after the merge, the phase branch is deleted both locally and on the remote.
 
 ### 2. Step 1 — Pre-Git
 
@@ -5564,7 +5578,7 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 
 1. Analyze the codebase files mapped for the phase — file by file.
 2. Analyze the `docs/specification.md` sections mapped for the phase — line by line.
-3. Read `docs/implementation-log.md` (if it exists) and every change recorded there; every recorded change/update/correction is respected and applied in this phase.
+3. Read `docs/implementation-log.md` (if it exists) and every item recorded there — what was implemented plus every change/update/correction; every recorded item is respected and applied in this phase. Also read `docs/implementation-review-log.md` (if it exists): every finding not yet resolved is applied in this phase.
 4. Record every codebase fact found; if a fact contradicts the specification, stop and ask the user.
 5. Extend the analysis per phase: analyze the previous phases — their branches, commits, and deliverables — so the new phase aligns with them.
 
@@ -5574,7 +5588,7 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 2. Analyze the previous phase's changed files.
 3. Analyze the previous phase's specification sections.
 4. Analyze the previous phase's validation results.
-5. Analyze the previous phase's user feedback and the changes recorded in `docs/implementation-log.md`; every recorded change is respected in this phase.
+5. Analyze the previous phase's user feedback, the items recorded in `docs/implementation-log.md` (implemented + changes/updates/corrections), and the previous phase's review verdict in `docs/implementation-review-log.md`; every recorded item and every unresolved finding is respected in this phase.
 
 ### 5. Step 4 — Phase Execution Without Deviation
 
@@ -5583,6 +5597,7 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 3. Validate the implementation using the documented rules: per-phase validation, per-task validation, per-sub-task validation, and global validation. Every single task and sub-task is executed and validated; every single validation is executed — per phase, per task, per sub-task, and global. This is extremely critical.
 4. Each implementation phase must result in meaningful, visible changes — never present a phase without visible results.
 5. Never deviate from the specification; if a required detail is missing or ambiguous, stop and ask the user instead of inventing it.
+6. **Final self-validation gate (end of Step 4, before Step 5):** validate **every single thing** of the implementation before presenting it for review — every task, sub-task, and validation (per phase, per task, per sub-task, and global) is executed and re-checked, and every documented validation command is run and must pass (`node --check` on all backend files, `npx vite build` with 0 errors and `dist/*` deleted after, `python scripts/verify-initial-doc.py` exit 0, per-file audits for unused imports/variables/parameters, JSDoc, no magic values, no deprecated MUI props, `httpStatus` imports). Anything found is fixed and re-validated here. The phase is never presented for review without this gate passing.
 
 ### 6. Step 5 — User Review
 
@@ -5593,24 +5608,35 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 
 ### 7. Step 6 — Post-Git
 
-1. FIRST: record the changes/updates/corrections of this phase in `docs/implementation-log.md` — every change, update, and correction made in this phase. Every recorded change is respected in future phases.
+1. FIRST: record this phase in `docs/implementation-log.md` — (a) **what was implemented** (files, features, endpoints, components — the summary the review AI validates against) and (b) the **changes/updates/corrections** made in this phase. Every recorded item is respected in future phases.
 2. SECOND: align all docs and specifications — update this specification's sections that the phase touched so the specification remains the single source of truth; the source brief stays read-only.
 3. Run the project verification: `python scripts/verify-initial-doc.py` — it must exit 0.
 4. Stage the changed files: `git add <changed files>` — never stage unrelated files.
 5. Commit on the phase branch with the phase commit message from `## Tasks And Implementation Plan` §1 (`feat: phase N description` or `chore: phase N description`). Never commit secrets.
 6. Push the phase branch: `git push origin phase-N-description`.
 7. Present the push result to the user.
-8. Wait for the user's approval to merge.
-9. After approval, the phase branch is merged into the integration branch and deleted both locally and on the remote.
+8. Review gate (§9): the phase is reviewed by the review AI (`use docs/review-implementation.md <N>`). If the review logs FAIL, the user returns to the implementation AI with `use docs/implementation-review-log.md <N>`; the implementation AI goes back to Step 2, applies every finding, and repeats until the review logs GREEN.
+9. After the review logs GREEN **and** the user approves, the phase branch is merged into the integration branch and deleted both locally and on the remote.
 
 ### 8. Enforcement
 
 - The six steps are mandatory and always executed in order; no step is ever skipped.
 - Any user feedback, failure, or ask during a phase returns the flow to Step 2.
 - Step 6 (Post-Git) requires the user's explicit approval of the phase (Step 5).
-- The changes recorded in `docs/implementation-log.md` are binding: every future phase respects them.
-- Branch naming (`phase-N-description`), commit messages (`feat:`/`chore:`), no direct commits to `main`, no amend after push, and merge-only-after-approval are mandatory.
+- The items recorded in `docs/implementation-log.md` are binding: every future phase respects them.
+- Branch naming (`phase-N-description`), commit messages (`feat:`/`chore:`), no direct commits to `main`, no amend after push, and merge-only-after-GREEN-review-and-approval are mandatory.
 - `## Tasks And Implementation Plan` defines the phases, tasks, and sub-tasks; this section governs how every phase is executed.
+
+### 9. Two-AI Review Workflow (user decision 2026-08-02, AD-019)
+
+Every phase is implemented by the **implementation AI** and reviewed by the **review AI** before it is merged. The review AI has full codebase READ access and WRITE access **only** to `docs/implementation-review-log.md`; it never modifies code or any other document. Its mandate: exhaustive analysis of every single codebase change (git) and every single detail of the implementation against the docs and logical considerations.
+
+- **Review invocation.** After the implementation AI presents the phase (Step 6 action 7), the user runs the review: plan mode + `use docs/review-implementation.md <N>` (the review AI performs the exhaustive review), then build mode + `proceed` (the review AI logs the verdict in `docs/implementation-review-log.md`). The review covers: every git change of the phase branch (commits, diffs, scope, no secrets/artifacts), every task/sub-task/inline validation S-N-xx of `## Tasks And Implementation Plan` §1, the mapped specification sections line by line, the documented validation gates (`node --check` on all backend files, `npx vite build` with 0 errors and `dist/*` deleted after, `python scripts/verify-initial-doc.py` exit 0, per-file audits per `## Validation Audit` §4), and cross-phase/logical considerations (contradictions, edge cases, the §8 accuracy-priority rule, security, error handling).
+- **Verdicts.** GREEN — everything verified, nothing outstanding, the phase may be merged after user approval. FAIL — every finding is recorded with what/evidence/required-fix; the phase is not merged.
+- **Findings and conflicts.** The log records review **content** (verdicts, findings, required fixes), not review process (no branches, commits, dates, or commands the review AI ran). Findings are grouped in the categories: specification deviations, invalid business logic implemented, edge cases to be handled, **conflicts to be resolved** (code-vs-spec, doc-vs-doc, or code-vs-code contradictions — with the required resolution and whether a user decision is needed first), and other required actions. Every finding carries `OPEN` status and states exactly what the implementation AI must do. The review AI verifies **without assumption**: it never invents requirements, never interprets spec silence, never substitutes its own thought for the specification — missing, ambiguous, or contradictory details are raised, not guessed.
+- **Fix loop.** On FAIL, the user returns to the implementation AI: plan mode + `use docs/implementation-review-log.md <N>`, then build mode to apply. The implementation AI returns to Step 2, applies every finding, records the corrections in `docs/implementation-log.md` (Step 6 action 1), re-presents, and the review repeats. The loop continues until the review logs GREEN.
+- **Log maintenance.** `docs/implementation-review-log.md` is written and maintained **exclusively by the review AI**; the implementation AI's access is **read-only**. When a fix is confirmed, the review AI updates the previously stated finding **in place** (`OPEN` → `RESOLVED`, re-stating the confirmed outcome); findings are never deleted and never left stale; the phase verdict flips to GREEN only when nothing remains open.
+- **Merge gate.** A phase branch is merged only after the review logs GREEN and the user approves (Step 6 action 9; REQ-231).
 
 ---
 
@@ -6228,3 +6254,40 @@ The final gate for `docs/specification.md`: coverage sweep clean, contradictions
 ## End Of Phase 36 Content
 
 Phases 1–36 are GREEN (2026-08-02). Phase 36 performed the final consolidation (no source section): ran the coverage verification documented in the new `## Final Coverage Audit` — a requirement-gap string sweep (23 deep-verified strings all FOUND; batch-2 misses triaged into 1 real gap + 8 false alarms), a contradiction check, and checklist reconciliation; closed the recorder state machine gap (new `## Audio Recording STT` §5.1 — IDLE_EMPTY/COUNTDOWN/RECORDING/PAUSED/REVIEW, waveform canvas, auto-stop 900 s, clip delete-to-empty, mic-blocked toast, close-mid-recording cleanup), the MuiTimePicker gap (new `## MUI Component Standards` §9.9), the create-dialog validation/submit gap (new `## Audio Recording STT` §6.1–6.2 — the eight validation rules, FormData `metadata` shape, `useCreateReportMutation()`, "Creating report..." overlay, 201/502/other outcomes), the CreateReportDialog composition gap (new `## UI/UX Spec` §11 bullet — dialog shell, BranchSelectorDialog, responsive branch rows, local RHF state, Amharic §-mapping cross-ref), the backend create-pipeline gap (new `## API Contract` §6.1 — middleware chain, 422 `req.validated`, `reportValidator.js` rules, STEP 1–8 transactional pipeline), the transcription-retry gap (new `## Transcription Review` §2.1 + `## API Contract` §6.2), the correction/history endpoints (new `## API Contract` §6.3 — `PATCH`/`correct`/`correct-by-voice`/history `DELETE` with the `$pull` controller and the reviewer-display rule), and the audio stream/download endpoints (new `## API Contract` §6.4, used by the ReportDetails audio card); triaged source 3.5.1.9 as SUPERSEDED (no edit-page UI added — chat-based editing stands; backend behaviors recorded), recording the source's internal PATCH-vs-DELETE history-endpoint variant (DELETE canonical); reconciled the report-deletion cascade contradiction (Phase 35/§35.2 wins over the Phase 24 "conversations kept" claim; ADR-018, REQ-226) by fixing the three spec locations — the Data Modeling relationship-diagram line, the §4.6 `report` field note, and the Phase 24 trace-map row §24.9 — each pointing to the reconciliation; updated the Checklist (Design and File Storage Uploads flipped GREEN; API Contract, Audio Recording STT, Data Modeling, MUI Component Standards, Source Traceability, Transcription Review, UI/UX Spec — GREEN Phase 36 enrichment; Risk Register noted assessed, stays PENDING for an explicit table; Analytics and OQ-001..003 retained PENDING with reasons), flipped the coverage map row 36 and the Source Traceability row 36 to GREEN, and appended this audit. Validation: `python scripts/verify-initial-doc.py` exit 0 (known L923 warning). No commit — per user instruction ("proceed, ensure your todos are complete and don't commit").
+
+## Two-AI Workflow Alignment (post-Phase-36, user decision 2026-08-02)
+
+> **Post-Phase-36 alignment, user decision 2026-08-02 (AD-019).** After Phase 36, the user defined the two-AI execution model for the implementation phases: the **implementation AI** (full codebase READ/WRITE except `docs/implementation-review-log.md`) implements per `docs/build-implementation.md <N>`, and the **review AI** (full codebase READ, WRITE only to `docs/implementation-review-log.md`) exhaustively reviews every codebase change and every implementation detail before a phase is merged. This section records what was aligned across the docs; the authoritative workflow rules live in `## Phase Protocol` §9 (AD-019).
+
+### 1. New Documents
+
+- **`docs/review-implementation.md`** — the review AI invocation prompt (`use docs/review-implementation.md <N>`, N = 1..8): context, role (independent verification, without assumption — never substituting its own thought for the specification), objective, access boundaries, review source-of-truth hierarchy, invocation contract (plan mode → review; build mode + "proceed" → log the verdict), the exhaustive review procedure (git change identification, phase-contract verification, spec verification, logical/cross-phase considerations, validation gates), verdict and logging format, non-negotiables, phase map.
+- **`docs/implementation-review-log.md`** — the review record, written and maintained exclusively by the review AI (implementation AI read-only): header (who writes/reads, binding), status legend (`PENDING`/`GREEN`/`FAIL` per phase; `OPEN`/`RESOLVED` per finding), per-phase status table and placeholder entries for Phases 1–8 — content-first entries (verdict + findings grouped in the categories: specification deviations, invalid business logic implemented, edge cases to be handled, conflicts to be resolved, other required actions), no branch/commit/date/command meta; findings updated in place when fixes are confirmed.
+
+### 2. Document Fixes And Updates
+
+- **`docs/build-implementation.md`** — the "spec is standalone: it never references any other file under `docs/`" claim corrected to the factual statement (the spec is self-contained for behavior; its only `docs/` references are traceability attribution and the mandated log references); source-of-truth hierarchy extended with `docs/implementation-review-log.md`; invocation contract extended with the fix loop (`use docs/implementation-review-log.md <N>`); Step 6 action 1 now records what was implemented plus changes/updates/corrections; Step 6 extended with the review gate before merge; non-negotiables and key rules updated (review gate, binding findings).
+- **`docs/implementation-log.md`** — every phase entry now records **Implemented** (the deliverable the review AI validates against) plus **Changes/updates/corrections** plus **Validation results** (issue 3 of the user's feedback); header and How-To updated.
+
+### 3. Specification Updates
+
+- **`## Phase Protocol`** — new §9 Two-AI Review Workflow (user decision 2026-08-02, AD-019): review invocation, exhaustive review scope, verdicts (GREEN/FAIL), the fix loop, and the merge gate (merge only after GREEN + approval); §1 high-level rules updated (review gate in the step chain, merge only after GREEN review + approval); §3 step 3 and §4 step 5 read `docs/implementation-review-log.md`; §7 Step 6 action 1 records implemented + changes; §8 enforcement updated.
+- **`## Project Directory Structure`** §2 — `docs/review-implementation.md` and `docs/implementation-review-log.md` registered in the `docs/` tree.
+- **`## Requirements`** — REQ-230 (implemented summary recorded in `docs/implementation-log.md`) and REQ-231 (pre-merge review; binding findings; merge only after GREEN) added; requirement-expansion marker added.
+- **`## Decision Log`** — AD-019 (Two-AI workflow) added.
+
+### 4. Scope Notes
+
+- No new coverage-map or source-traceability row: this alignment is a user-decision process change, not a source-brief phase (the map stays at 36 rows, all GREEN).
+- The `## Phase Protocol` remains the one and only execution contract together with `## Tasks And Implementation Plan`; the review gate is part of that contract (REQ-231).
+
+### 5. Refinement Pass (same day, user's four feedback points)
+
+A second pass refined the two-AI docs per the user's four feedback points:
+
+1. **Review-log records review content only.** `docs/implementation-review-log.md` entries are content-first: verdict + findings grouped by category (specification deviations, invalid business logic implemented, edge cases to be handled, **conflicts to be resolved**, other required actions) — no branch/commit/date/command meta; the per-phase table carries verdict only.
+2. **The review AI is the sole writer/maintainer.** The header states the log is written and maintained exclusively by the review AI; the implementation AI's access is read-only; the "similar-but-not-exact format of the implementation log" framing is dropped.
+3. **Review AI gets proper context.** `docs/review-implementation.md` opens with Context (product, phases 1–8, two-AI model), Role (independent verification without assumption — no own-thought substitutions for the specification), Objective, and Access Boundaries instead of the bare role block.
+4. **Self-validation before review.** `## Phase Protocol` §5 action 6 (Step 4 final self-validation gate), mirrored in `docs/build-implementation.md` Step 4 and its diagram and non-negotiables: every task, sub-task, validation, and documented validation command is executed and passes before the phase is presented.
+
+The "conflicts to be resolved" category (user-confirmed interpretation: code-vs-spec, doc-vs-doc, or code-vs-code contradictions; flag when a user decision is needed) and the in-place update rule (`OPEN` → `RESOLVED`, never delete, never stale) are recorded here and in `## Phase Protocol` §9, `docs/review-implementation.md`, and `docs/implementation-review-log.md`. REQ-231 extended accordingly.
