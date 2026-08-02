@@ -62,7 +62,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 28 | 28. Error Handling Patterns | GREEN | Error Handling, API Contract, Validation Audit |
 | 29 | 29. Security | GREEN | Security, Requirements, Environment Config, Rules |
 | 30 | 30. New File Creation Rules | GREEN | Rules, Checklists, Project Directory Structure |
-| 31 | 31. Validation And Audit | PENDING | Validation Audit, Checklists, Source Traceability, Non-Functional Requirements |
+| 31 | 31. Validation And Audit | GREEN | Validation Audit, Checklists, Source Traceability, Non-Functional Requirements |
 | 32 | 32. Git And Phase Protocol | PENDING | Git Workflow, Phase Protocol, Tasks, Implementation Plan |
 | 33 | 33. Decision Log (ADRs) | PENDING | Decision Log |
 | 34 | 34. Glossary | PENDING | Glossary, Requirements |
@@ -87,7 +87,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Backend Architecture | 10, 24, 25, 28 | GREEN (Phase 10 seed, Phase 24, 25, 28 enrichment) |
 | Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
 | Business Rules | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
-| Checklists | 26, 30, 31 | GREEN (Phase 26 seed, Phase 30 enrichment) |
+| Checklists | 26, 30, 31 | GREEN (Phase 26 seed, Phase 30, 31 enrichment) |
 | Coding Conventions | 9, 25, 26, 27 | GREEN (Phase 9 seed, Phase 25, 26, 27 enrichment) |
 | Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11, 20, 23, 24 enrichment) |
 | Decision Log | 1, 2, 24, 33 | GREEN |
@@ -104,7 +104,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Logging | 10, 28 | GREEN (Phase 10 seed, Phase 28 enrichment) |
 | Mock Data Seeding | 23, 24 | GREEN (Phase 23 seed, Phase 24 enrichment) |
 | MUI Component Standards | 12, 14, 24 | GREEN (Phase 14, 24 enrichment) |
-| Non-Functional Requirements | 31 | PENDING |
+| Non-Functional Requirements | 1, 31 | GREEN (Phase 1 seed, Phase 31 enrichment) |
 | Other AI Providers | 19, 24 | GREEN (Phase 19 seed, Phase 24 enrichment) |
 | Phase Protocol | 32 | PENDING |
 | PRD | 1, 2, 3, 4 | GREEN (Phase 4 enrichment) |
@@ -122,7 +122,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Routing Layout | 12 | GREEN |
 | Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16, 17, 21, 26, 29, 30 enrichment) |
 | Security | 11, 17, 18, 25, 29 | GREEN (Phase 11 seed, Phase 17, 18, 25, 29 enrichment) |
-| Source Traceability | 31 | PENDING |
+| Source Traceability | 31 | GREEN (Phase 31 seed) |
 | Status Machine | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
 | Tasks | 23 (seed — content lives in ## Mock Data Seeding), 32 | PENDING |
 | Theme Standards | 14 | GREEN (Phase 14 seed) |
@@ -130,7 +130,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 15, 16 enrichment) |
 | User Interactions | 3, 16, 22, 35 | GREEN (Phase 3 seed, Phase 16 enrichment) |
 | User Stories | 2 (seed), 4 | GREEN (Phase 2 seed) |
-| Validation Audit | 8, 15, 24, 28, 31 | GREEN (Phase 8 seed, Phase 15, 24, 28 enrichment) |
+| Validation Audit | 8, 15, 24, 28, 31 | GREEN (Phase 8 seed, Phase 15, 24, 28, 31 enrichment) |
 | Work Flow | 3, 22, 25, 35 | GREEN (Phase 3 seed, Phase 22, 25 enrichment) |
 
 ---
@@ -584,6 +584,53 @@ All `§` references below identify sections of the original source brief. They a
 | Source ref | Fact | Recorded in spec section |
 |---|---|---|
 | §30 | New file creation rules: files are created only when the phase requires them, verified not to already exist, and written to match the existing code conventions (style, libraries, patterns); documentation files (`*.md`) and README files are never created proactively; code explanation summaries are never added unless requested; placeholder/stub/boilerplate files are never created without an explicit request; after working on a file, just stop | Rules (9), Checklists (3), Project Directory Structure (6, 7), Requirements (REQ-206..209) |
+
+## Source Trace Map — Phase 31 (source §31)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §31 | Validation gates: `node --check` on all backend files after changes; `npx vite build` on the client with 0 errors; `dist/*` always deleted after the build check | Validation Audit (4), Checklists (4), Requirements (REQ-210, REQ-211) |
+| §31 | Per-file audit: unused imports, unused variables, unused parameters, missing JSDoc | Validation Audit (4), Coding Conventions (10), JSDoc Standards (1), Checklists (4), Requirements (REQ-212, REQ-213) |
+| §31 | No hardcoded magic values — everything in `constants.js` or config; no deprecated MUI props; all new components checked; HTTP status codes imported from `httpStatus`, never hardcoded | Validation Audit (4), Backend Architecture (utils), MUI Component Standards, Requirements (REQ-214, REQ-215, REQ-216) |
+| Codebase (`client/package.json`) | The `build` script runs `vite build`; the §31 gate deletes `dist/*` after every build check — no `dist/` is committed | Validation Audit (4), Checklists (4) |
+
+## Source Traceability
+
+Every fact extracted from `docs/initial-doc.md` is recorded in the per-phase source trace maps above (`## Source Trace Map — Phase N (source §N)`), one map per phase listing each source fact and the exact spec section that records it. This section is the index: one row per phase, with the spec sections each phase produced or updated. No source fact is recorded only here — the maps above carry the per-fact detail.
+
+| Phase | Source ref (`docs/initial-doc.md`) | Spec sections built | Status |
+|---|---|---|---|
+| 1 | §1 Project Identity | Project Overview, PRD | GREEN |
+| 2 | §2 Problem Statement | Problem Statement, User Stories, Decision Log, Requirements | GREEN |
+| 3 | §3 Manual Reporting Mental Model | Report Domain, User Interactions, Work Flow | GREEN |
+| 4 | §4 Supporting Features Needed Because Of The Core Problem | PRD, Report Management, Resource Management, Profile Management, Analytics | GREEN |
+| 5 | §5 Report And Branch Domain | Report Domain, Business Rules, Status Machine, Data Modeling, API Contract | GREEN |
+| 6 | §6 Report Format, Samples, And Tone | Report Format, Export Spec, AI Prompt Spec | GREEN |
+| 7 | §7 Language Rules | Report Format, AI Prompt Spec, UI/UX Spec | GREEN |
+| 8 | §8 Transcription Accuracy Requirement | Transcription Review, Audio Recording STT, Validation Audit | GREEN |
+| 9 | §9 Technical Stack And Package Rules | Rules, Architecture, Coding Conventions, Requirements | GREEN |
+| 10 | §10 Backend Architecture | Backend Architecture, API Contract, Logging, Requirements | GREEN |
+| 11 | §11 Authentication, Authorization, Cookies, And Tokens | Auth Cookies, Security, Data Modeling, API Contract | GREEN |
+| 12 | §12 Frontend Architecture | Frontend Architecture, Routing Layout, Project Directory Structure | GREEN |
+| 13 | §13 Redux, RTK Query, And API Client | Redux RTK Query, API Contract, MUI Component Standards, Frontend Architecture | GREEN |
+| 14 | §14 MUI, MUI X, Theme, And Component Standards | MUI Component Standards, Theme Standards, UI/UX Spec, Design | GREEN |
+| 15 | §15 React Hook Form Standards | React Hook Form Standards, Validation Audit, UI/UX Spec | GREEN |
+| 16 | §16 UI Rules | UI/UX Spec, User Interactions, Rules | GREEN |
+| 17 | §17 Environment Variables | Environment Config, Security, Rules | GREEN |
+| 18 | §18 Addis AI Integration | Addis AI, API Contract, Audio Recording STT, Security | GREEN |
+| 19 | §19 Other AI Providers | Other AI Providers, Environment Config | GREEN |
+| 20 | §20 Audio Recording And STT Pipeline | Audio Recording STT, File Storage Uploads, API Contract, Transcription Review | GREEN |
+| 21 | §21 AI Prompt Requirements | AI Prompt Spec, Report Format, Rules | GREEN |
+| 22 | §22 Export | Export Spec, API Contract, Work Flow | GREEN |
+| 23 | §23 Mock Data | Mock Data Seeding, Data Modeling, Tasks | GREEN |
+| 24 | §24 Data Model | Data Modeling, API Contract, Business Rules, Report Domain | GREEN |
+| 25 | §25 Project Directory Structure | Project Directory Structure, Coding Conventions, Architecture | GREEN |
+| 26 | §26 Code Quality And Coding Conventions | Coding Conventions, Rules, JSDoc Standards, Checklists | GREEN |
+| 27 | §27 JSDoc Conventions | JSDoc Standards, Coding Conventions | GREEN |
+| 28 | §28 Error Handling Patterns | Error Handling, API Contract, Validation Audit | GREEN |
+| 29 | §29 Security | Security, Requirements, Environment Config, Rules | GREEN |
+| 30 | §30 New File Creation Rules | Rules, Checklists, Project Directory Structure | GREEN |
+| 31 | §31 Validation And Audit | Validation Audit, Checklists, Source Traceability, Non-Functional Requirements | GREEN |
 
 ---
 
@@ -1394,6 +1441,13 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 |---|---|---|---|
 | REQ-101 | The application must be delivered as a web application accessible from a normal work environment. | Deployed web app reachable via browser. | §1.7 |
 | REQ-102 | All UI/UX, performance, security, and quality non-functional requirements must be defined before implementation (Phases 9, 14, 26, 29, 31). | This spec contains them by the end of Phase 36. | §1.2 (implied by build process) |
+| REQ-210 | After every change, all backend files pass `node --check`. | `node --check` exits 0 on every backend file after changes. | §31 |
+| REQ-211 | After every change, the client passes `npx vite build` with 0 errors, and `dist/*` is always deleted after the build check. | The build completes with 0 errors; no `dist/*` remains in the working tree. | §31 |
+| REQ-212 | Every file is checked for unused imports, unused variables, and unused parameters. | A review finds no unused imports, variables, or parameters in any file. | §31 |
+| REQ-213 | Every file is checked for missing JSDoc — the §27 JSDoc standards apply to all files. | A review finds JSDoc on every file (REQ-185/186). | §31 |
+| REQ-214 | No hardcoded magic values — everything lives in `constants.js` or config. | A review finds no hardcoded magic values outside `constants.js` or config. | §31 |
+| REQ-215 | No deprecated MUI props; every new component is checked against the MUI component standards. | A review finds no deprecated MUI props; new components pass the standards audit. | §31 |
+| REQ-216 | HTTP status codes are imported from `httpStatus` — never hardcoded in handlers or clients. | A review finds no hardcoded HTTP status codes (REQ-174). | §31 |
 
 ### Requirement expansion markers
 
@@ -1426,9 +1480,10 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Error handling rules: **Phase 28 — DONE (REQ-195..202)**.
 - Security rules: **Phase 29 — DONE (REQ-203..205)**.
 - File creation rules: **Phase 30 — DONE (REQ-206..209)**.
+- Validation and audit rules: **Phase 31 — DONE (REQ-210..216)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
-- Non-functional requirements finalization: **Phase 31**.
+- Non-functional requirements finalization: **Phase 31 — DONE (REQ-210..216)**.
 - Glossary-driven requirement re-check: **Phase 34**.
 
 ---
@@ -3135,7 +3190,7 @@ export default AppErrorBoundary;
 
 ## Validation Audit
 
-> **Phase 8 seed — the accuracy verification gates from §8. Broader validation and audit (error handling, checklists, source traceability, non-functional requirements) arrives in Phases 26, 28, 30, 31.**
+> **Phase 8 seed — the accuracy verification gates from §8. Broader validation and audit (error handling, checklists, source traceability, non-functional requirements) arrives in Phases 26, 28, 30, 31 — Phase 31 built the §31 validation audit rules in §4 below.**
 
 ### 1. Accuracy Verification Gate
 
@@ -3163,16 +3218,28 @@ Every error path is audited against `## Error Handling` §§1–3 (REQ-195..202)
 - No raw error internals reach production responses (generic message only, REQ-196); no raw provider messages surface to users (REQ-129).
 - The `onQueryStarted` `if (error)` pattern, per-field `error.data.data.errors` display, and `AppToastContainer` toasts are present on every mutation (`## Redux RTK Query` §5, REQ-201).
 
-### 4. Scope Note
+### 4. Validation And Audit Rules (§31)
 
-This seed covers transcription accuracy and form validation. Full validation and audit sections arrive in later phases: Phases 31 (Validation And Audit — checklists, source traceability, non-functional requirements), 32 (Git Workflow); the Phase 26 code documentation audit landed in `## JSDoc Standards` and `## Checklists`, and the Phase 28 error handling audit landed in `## Error Handling` §3.
+Every change is audited against all of the following (REQ-210..216; `## Checklists` §4):
 
-### 5. Expansion Markers
+- After every change, all backend files pass `node --check` (REQ-210).
+- After every change, the client passes `npx vite build` with 0 errors; after the build check, `dist/*` is always deleted (REQ-211).
+- Every file is checked for unused imports, unused variables, and unused parameters (REQ-212; `## Coding Conventions` §10, REQ-181).
+- Every file is checked for missing JSDoc (REQ-213; `## JSDoc Standards` §§1–11, REQ-185/186).
+- No hardcoded magic values — everything lives in `constants.js` or config (REQ-214; REQ-083/124).
+- No deprecated MUI props; every new component is checked (REQ-215; `## MUI Component Standards`).
+- HTTP status codes are imported from `httpStatus` — never hardcoded (REQ-216; REQ-174).
+
+### 5. Scope Note
+
+This seed covers transcription accuracy and form validation. Full validation and audit sections arrive in later phases: Phase 31 built the §31 validation audit rules in §4 above (with the checklist in `## Checklists` §4, the source traceability index in `## Source Traceability`, and the quality NFRs in REQ-210..216), Phase 32 (Git Workflow); the Phase 26 code documentation audit landed in `## JSDoc Standards` and `## Checklists`, and the Phase 28 error handling audit landed in `## Error Handling` §3.
+
+### 6. Expansion Markers
 
 - Phase 15 (§15 React Hook Form Standards): **DONE (Phase 15)** — form validation rules in §2 above.
 - Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — code documentation audit rules in `## JSDoc Standards` and `## Checklists`.
 - Phase 28 (§28 Error Handling): **DONE (Phase 28)** — error handling audit in §3 above (`## Error Handling` §§1–3, REQ-195..202).
-- Phase 31 (§31 Validation And Audit): full validation audit, checklists, source traceability, non-functional requirements.
+- Phase 31 (§31 Validation And Audit): **DONE (Phase 31)** — validation audit rules in §4 above (REQ-210..216), checklist in `## Checklists` §4, source traceability in `## Source Traceability`, quality NFRs REQ-210..216.
 - Phase 32 (§32 Git Workflow): branch/commit rules that carry the accuracy gate.
 
 ---
@@ -3218,11 +3285,27 @@ Every file created during the build must satisfy all of the following (REQ-206..
 - [ ] No code explanation summaries were added unless requested (REQ-208).
 - [ ] No placeholder, stub, or boilerplate files were created without an explicit request (REQ-209).
 
-### 4. Expansion Markers
+### 4. Validation And Audit Checklist (Phase 31)
+
+Every change must pass all of the following before it is done (REQ-210..216; `## Validation Audit` §4):
+
+- [ ] `node --check` passes on every backend file changed (REQ-210).
+- [ ] `npx vite build` completes with 0 errors (REQ-211).
+- [ ] `dist/*` is deleted after the build check (REQ-211).
+- [ ] No unused imports in any file (REQ-212).
+- [ ] No unused variables in any file (REQ-212).
+- [ ] No unused parameters in any file (REQ-212).
+- [ ] No file is missing its JSDoc (REQ-213).
+- [ ] No hardcoded magic values — everything is in `constants.js` or config (REQ-214).
+- [ ] No deprecated MUI props (REQ-215).
+- [ ] All new components were checked (REQ-215).
+- [ ] HTTP status codes are imported from `httpStatus` — none hardcoded (REQ-216).
+
+### 5. Expansion Markers
 
 - Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — checklists in §§1–2.
 - Phase 30 (§30 New File Creation Rules): **DONE (Phase 30)** — file creation checklist in §3 above.
-- Phase 31 (§31 Validation And Audit): full validation and audit checklists.
+- Phase 31 (§31 Validation And Audit): **DONE (Phase 31)** — validation and audit checklist in §4 above.
 
 ---
 
@@ -5168,3 +5251,7 @@ Phases 1–29 are GREEN (2026-08-02). Phase 29 built the security rules from §2
 ## End Of Phase 30 Content
 
 Phases 1–30 are GREEN (2026-08-02). Phase 30 built the new file creation rules from §30: added `## Rules` §9 File Creation Rules (new files only when explicitly required by the phase with existence verified first — REQ-206; existing code conventions understood first — mimic style, use existing libraries, follow existing patterns — REQ-207; no proactive `*.md`/README files and no code explanation summaries unless explicitly requested — REQ-208; no placeholder/stub/boilerplate files without explicit request and stop after working on a file — REQ-209), renumbered the `## Rules` expansion markers to §10 (Phase 30 DONE; the git marker relabeled to Phase 32 — the old "§30 Git Workflow" label was a mislabel, git is §32 — and the `## Rules` header blockquote corrected to "Phases 29 (security), 30 (new file creation), and 32 (git)"), added `## Checklists` §3 File Creation Checklist (the six REQ-206..209 checks, markers renumbered to §4 with Phase 30 DONE), enriched `## Project Directory Structure` (§6 new cross-ref bullet — new files follow the §30 creation rules, REQ-206..209; §7 new Phase 30 DONE marker and the git marker relabeled to Phase 32), added REQ-206..209 to the requirements table (source §30) with the Phase 30 requirement-expansion marker (`File creation rules: Phase 30 — DONE (REQ-206..209)`), updated the Checklist (phase map row 30 GREEN; Required Output rows Rules/Checklists/Project Directory Structure — GREEN Phase 30 enrichment), and added the Phase 30 Source Trace Map (1 §30 row — no codebase artifact; §30 is a pure convention phase). Phase 31 will build the validation and audit rules.
+
+## End Of Phase 31 Content
+
+Phases 1–31 are GREEN (2026-08-02). Phase 31 built the validation and audit rules from §31: added `## Validation Audit` §4 Validation And Audit Rules (the `node --check` backend gate, the `npx vite build` 0-errors client gate with `dist/*` always deleted after the check — REQ-210, REQ-211; the per-file audit for unused imports, unused variables, and unused parameters — REQ-212 with the `## Coding Conventions` §10/REQ-181 cross-ref; the missing-JSDoc check — REQ-213 with the `## JSDoc Standards` §§1–11/REQ-185/186 cross-ref; no hardcoded magic values — everything in `constants.js` or config — REQ-214 with the REQ-083/124 cross-ref; no deprecated MUI props and every new component checked — REQ-215; HTTP status codes imported from `httpStatus`, never hardcoded — REQ-216 with the REQ-174 cross-ref), renumbered the §4 Scope Note to §5 (its Phase 31 mention now points at the built §4, `## Checklists` §4, `## Source Traceability`, and REQ-210..216) and the §5 Expansion Markers to §6 (Phase 31 DONE, Phase 32 pending), added `## Checklists` §4 Validation And Audit Checklist (the eleven REQ-210..216 checks, markers renumbered to §5 with Phase 31 DONE), added the new `## Source Traceability` section (the per-phase trace maps record every extracted fact; the section adds the 31-row index — Phase | Source ref | Spec sections built | Status — all GREEN) with the Phase 31 Source Trace Map (3 §31 rows + 1 codebase row: the `client/package.json` `build: vite build` script and the never-committed `dist/*`), added REQ-210..216 to the Non-Functional Requirements table (quality NFRs, source §31) with the requirement-expansion markers flipped and added (`Non-functional requirements finalization: Phase 31 — DONE (REQ-210..216)`; new `Validation and audit rules: Phase 31 — DONE (REQ-210..216)`), and updated the Checklist (phase map row 31 GREEN; Required Output rows Validation Audit and Checklists — GREEN Phase 31 enrichment; Source Traceability — GREEN Phase 31 seed; Non-Functional Requirements — GREEN Phase 1 seed, Phase 31 enrichment). Phase 32 will build the git and phase protocol rules.
