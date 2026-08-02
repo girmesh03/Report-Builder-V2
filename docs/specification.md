@@ -60,7 +60,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 26 | 26. Code Quality And Coding Conventions | GREEN | Coding Conventions, Rules, JSDoc Standards, Checklists |
 | 27 | 27. JSDoc Conventions | GREEN | JSDoc Standards, Coding Conventions |
 | 28 | 28. Error Handling Patterns | GREEN | Error Handling, API Contract, Validation Audit |
-| 29 | 29. Security | PENDING | Security, Requirements, Environment Config, Rules |
+| 29 | 29. Security | GREEN | Security, Requirements, Environment Config, Rules |
 | 30 | 30. New File Creation Rules | PENDING | Rules, Checklists, Project Directory Structure |
 | 31 | 31. Validation And Audit | PENDING | Validation Audit, Checklists, Source Traceability, Non-Functional Requirements |
 | 32 | 32. Git And Phase Protocol | PENDING | Git Workflow, Phase Protocol, Tasks, Implementation Plan |
@@ -92,7 +92,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11, 20, 23, 24 enrichment) |
 | Decision Log | 1, 2, 24, 33 | GREEN |
 | Design | consolidated across phases; finalized in 36 | PENDING |
-| Environment Config | 17, 19, 25 | GREEN (Phase 17 seed, Phase 19, 25 enrichment) |
+| Environment Config | 17, 19, 25, 29 | GREEN (Phase 17 seed, Phase 19, 25, 29 enrichment) |
 | Error Handling | 28 | GREEN (Phase 28 seed) |
 | Export Spec | 6, 22, 25 | GREEN (Phase 6 seed, Phase 22, 25 enrichment) |
 | File Storage Uploads | 20 | PENDING |
@@ -117,11 +117,11 @@ Status of every section the target document must contain at minimum. Extra secti
 | Report Domain | 3, 5, 24 | GREEN (Phase 5, 24 enrichment) |
 | Report Format | 6, 7, 21 | GREEN (Phase 7, 21 enrichment) |
 | Report Management | 4, 5, 24, 35 | GREEN (Phase 5, 24 enrichment) |
-| Requirements | 1, 2, 4, 9, 24, 25, 29, 31, 34 | GREEN (Phase 9, 24, 25 enrichment) |
+| Requirements | 1, 2, 4, 9, 24, 25, 29, 31, 34 | GREEN (Phase 9, 24, 25, 29 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
 | Routing Layout | 12 | GREEN |
-| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16, 17, 21, 26 enrichment) |
-| Security | 11, 17, 18, 25, 29 | GREEN (Phase 11 seed, Phase 17, 18, 25 enrichment) |
+| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16, 17, 21, 26, 29 enrichment) |
+| Security | 11, 17, 18, 25, 29 | GREEN (Phase 11 seed, Phase 17, 18, 25, 29 enrichment) |
 | Source Traceability | 31 | PENDING |
 | Status Machine | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
 | Tasks | 23 (seed — content lives in ## Mock Data Seeding), 32 | PENDING |
@@ -309,14 +309,14 @@ All `§` references below identify sections of the original source brief. They a
 
 | Source ref | Fact | Recorded in spec section |
 |---|---|---|
-| §11 | JWT-based authentication; access token duration `15m`; refresh token duration `7d`; both stored in httpOnly cookies; cookie options `httpOnly: true`, `secure` in production, `sameSite: lax` | Auth Cookies (1), Security (1), API Contract (4), Requirements (REQ-087) |
+| §11 | JWT-based authentication; access token duration `15m`; refresh token duration `7d`; both stored in httpOnly cookies; cookie options `httpOnly: true`, `secure` in production, `sameSite: lax` | Auth Cookies (1), Security (2), API Contract (4), Requirements (REQ-087) |
 | §11 | No sessions MongoDB collection — zero DB lookups for auth on each request; refresh token rotated on each use to prevent replay | Auth Cookies (1), Security (2), Requirements (REQ-087) |
 | §11 | `authenticate` middleware extracts JWT from `req.cookies.accessToken`, verifies the token, looks up the user, checks the user, attaches the user document to `req.user`; uses `req.user._id.toString()` throughout, not `req.user.id` | Auth Cookies (2), Requirements (REQ-088) |
-| §11 | Password hashing uses `bcryptjs` in a `pre('save')` hook with 12 salt rounds; `comparePassword(candidatePassword)` uses `bcrypt.compare`; plaintext passwords never compared | Auth Cookies (3), Security (2), Requirements (REQ-089) |
+| §11 | Password hashing uses `bcryptjs` in a `pre('save')` hook with 12 salt rounds; `comparePassword(candidatePassword)` uses `bcrypt.compare`; plaintext passwords never compared | Auth Cookies (3), Security (11), Requirements (REQ-089) |
 | §11 | Registration form collects only `email` and `password`; no name field; backend auto-extracts `firstName`/`lastName` from the email local part (`beza@gmail.com` → beza/beza; `beza.ayalew@gmail.com` → beza/ayalew); `avatar` and `position` optional, updated later from the Profile page | Auth Cookies (4), Data Modeling (4), Requirements (REQ-090), User Stories (US-026) |
 | §11 | Google OAuth registration uses Google-provided data (`firstName`/`lastName` from profile name, `email` from Google account, `avatar` from Google profile picture); no password required; existing users matched by email and signed in; new users auto-created | Auth Cookies (5), Data Modeling (4), Requirements (REQ-091), User Stories (US-027) |
 | §11 | OAuth architecture provider-neutral; `oauth.service.js` checks `env.OAUTH_GOOGLE_*` credentials; Google stubbed until credentials configured; future providers extend the service; `GET /oauth/google` route exists with `googleOAuth` controller using `getGoogleOAuthUrl()` service | Auth Cookies (5), API Contract (4), Requirements (REQ-091) |
-| §11 | Rate limiting three tiers: global 100 requests per 15 minutes on all endpoints; auth 20 requests per 15 minutes on register and login; AI 10 requests per 1 minute on generation and correction endpoints | Auth Cookies (6), Security (3), Requirements (REQ-092) |
+| §11 | Rate limiting three tiers: global 100 requests per 15 minutes on all endpoints; auth 20 requests per 15 minutes on register and login; AI 10 requests per 1 minute on generation and correction endpoints | Auth Cookies (6), Security (4), Requirements (REQ-092) |
 | §11 | Frontend uses `credentials: 'include'` on all calls, including public pages | Auth Cookies (7), Requirements (REQ-093) |
 | §11 + §12 (cross-aligned) | Google OAuth button on login/register pages uses a Google icon start adornment and a loading spinner on click; §12 shows the OAuth browser redirect at `http://localhost:4000/api/v1/auth/google`; route naming finalized in Phase 12 | Auth Cookies (5) |
 
@@ -404,10 +404,10 @@ All `§` references below identify sections of the original source brief. They a
 
 | Source ref | Fact | Recorded in spec section |
 |---|---|---|
-| §17.1 | `.env` files are gitignored and not committed; they exist locally with placeholder or correct values; no `.env.example` files; new env vars added in three steps (local `.env` → config object → validation/default in `config/env.js`); `process.env` never accessed outside `config/env.js`; client vars `VITE_`-prefixed via `import.meta.env.*` | Environment Config (1), Rules (5), Security (4), Requirements (REQ-120) |
-| §17.2 | Backend env contract: 22 required vars with defaults (NODE_ENV development, PORT 4000, CLIENT_ORIGIN http://localhost:3000, MONGODB_URI report-builder-v2, JWT secrets min 32 chars with 15m/7d TTLs, seven ADDIS_AI_* vars with `sk_` placeholder key, LOG_LEVEL debug/info, NVIDIA/GEMINI keys and base URLs, FFMPEG/FFPROBE system paths) and 3 optional vars (OAUTH_GOOGLE_*; the GOOGLE_SERVICE_ACCOUNT_* pair was part of the original 5 and is retired in Phase 25 — REQ-177) | Environment Config (2), Security (4), Rules (5), Requirements (REQ-121) |
+| §17.1 | `.env` files are gitignored and not committed; they exist locally with placeholder or correct values; no `.env.example` files; new env vars added in three steps (local `.env` → config object → validation/default in `config/env.js`); `process.env` never accessed outside `config/env.js`; client vars `VITE_`-prefixed via `import.meta.env.*` | Environment Config (1), Rules (5), Security (1), Requirements (REQ-120) |
+| §17.2 | Backend env contract: 22 required vars with defaults (NODE_ENV development, PORT 4000, CLIENT_ORIGIN http://localhost:3000, MONGODB_URI report-builder-v2, JWT secrets min 32 chars with 15m/7d TTLs, seven ADDIS_AI_* vars with `sk_` placeholder key, LOG_LEVEL debug/info, NVIDIA/GEMINI keys and base URLs, FFMPEG/FFPROBE system paths) and 3 optional vars (OAUTH_GOOGLE_*; the GOOGLE_SERVICE_ACCOUNT_* pair was part of the original 5 and is retired in Phase 25 — REQ-177) | Environment Config (2), Security (1), Rules (5), Requirements (REQ-121) |
 | §17.3 | Client env contract: VITE_API_BASE_URL (default http://localhost:4000/api/v1) and VITE_APP_NAME (default Report Builder V2), both required, read via `import.meta.env` | Environment Config (3), Rules (5), Requirements (REQ-122) |
-| §17.4 | AI key rules: Addis AI `sk_` keys never in client code, browser-sent Vite env vars, localStorage, Redux state, or client logs; Nvidia and Gemini keys in `backend/.env` only | Environment Config (4), Security (4), Rules (5), Requirements (REQ-123) |
+| §17.4 | AI key rules: Addis AI `sk_` keys never in client code, browser-sent Vite env vars, localStorage, Redux state, or client logs; Nvidia and Gemini keys in `backend/.env` only | Environment Config (4), Security (1), Rules (5), Requirements (REQ-123) |
 | §17.5 | Backend constants as one frozen object in `utils/constants.js`: Audio (900, 52428800, four MIME types), Pagination (1, 10, 100), STT (60), Auth (12), AI Generation (0.2, 2048, 0.9, 40), AI Correction (2048, 0.15) | Environment Config (5), Backend Architecture (5), Requirements (REQ-124) |
 | §17 + codebase (`backend/.env`, `client/.env`, `.gitignore`, `backend/package.json`) | `backend/.env` exists with all required keys except LOG_LEVEL (absent — add during implementation) plus OAUTH_GOOGLE_*; `client/.env` exists with both `VITE_` keys; root `.gitignore` line 1 is `.env`; no `.env.example`; `dotenv` `^17.4.2` in `backend/package.json`; `config/env.js` and `utils/constants.js` do not exist yet — created during implementation (Phase 25) | Environment Config (1–5), Rules (5) |
 
@@ -417,7 +417,7 @@ All `§` references below identify sections of the original source brief. They a
 |---|---|---|
 | §18.1–18.2 | Primary sources: addisai.ch plus the 12 docs.addisassistant.com pages (get-started, capabilities, integration, platform/errors); provider identity — African-language AI infrastructure for voice, chat, retrieval, translation, and localization, including voice AI, cross-lingual RAG, STT, TTS, translation, and enterprise deployments | Addis AI (1) |
 | §18.3 | Base URLs: API `https://api.addisassistant.com`, playground `https://platform.addisassistant.com`, realtime relay `wss://relay.addisassistant.com/ws?apiKey=<API_KEY>` | Addis AI (2), API Contract (5) |
-| §18.4 | Authentication: dashboard-generated keys, `sk_` prefix, `x-api-key` header, key never in frontend code, backend-only proxy (no direct client-to-Addis AI calls), AI endpoints protected by authentication, rate limits on auth and AI endpoints | Addis AI (3), Security (5), Requirements (REQ-125, REQ-126) |
+| §18.4 | Authentication: dashboard-generated keys, `sk_` prefix, `x-api-key` header, key never in frontend code, backend-only proxy (no direct client-to-Addis AI calls), AI endpoints protected by authentication, rate limits on auth and AI endpoints | Addis AI (3), Security (1), Requirements (REQ-125, REQ-126) |
 | §18.5 | Core model families: text `Addis-፩-አሌፍ`, voice `አሌፍ-Audio-AM`/`አሌፍ-Audio-OM`, realtime `አሌፍ-1.2-realtime-audio` | Addis AI (4), Requirements (REQ-127) |
 | §18.6 | Language support: English, Amharic, Afan Oromo, Tigrinya; am + English-aware prompting first-class; language constants extensible for om/ti | Addis AI (5), Requirements (REQ-131) |
 | §18.7 | Text generation: POST /api/v1/chat_generate with model/prompt/target_language/conversation_history/generation_config (0.2, 2048, 0.9, 40); response shape (response_text, finish_reason, usage_metadata, modelVersion); project use — after transcription review, strict prompt + JSON-like output, low temperature, keys backend-only, native fetch | Addis AI (6), AI Prompt Spec (7), API Contract (5), Requirements (REQ-127) |
@@ -425,7 +425,7 @@ All `§` references below identify sections of the original source brief. They a
 | §18.9 | TTS: POST /api/v1/audio JSON text/language/voice_id/stream; Base64 WAV under `audio`; not required for the first workflow — service support kept | Addis AI (8), API Contract (5), Requirements (REQ-130) |
 | §18.10 | Multimodal: POST /api/v1/chat_generate multipart `image`/`audio` + `request_data`; not part of the first workflow | Addis AI (9), API Contract (5), Requirements (REQ-130) |
 | §18.11 | Translation: POST /api/v1/translate, response nests under `data.translation`; optional — no default translation (report may be intentionally Amharic/English/mixed), possible later UI control | Addis AI (10), API Contract (5), Requirements (REQ-130) |
-| §18.12 | Realtime: wss relay; `setupComplete`; base64 PCM16 JSON envelopes; `serverContent.modelTurn.parts[0].inlineData.data`; never expose keys in browser WS URLs; not required for V2; backend-controlled strategy if later | Addis AI (11), API Contract (5), Security (5), Requirements (REQ-130) |
+| §18.12 | Realtime: wss relay; `setupComplete`; base64 PCM16 JSON envelopes; `serverContent.modelTurn.parts[0].inlineData.data`; never expose keys in browser WS URLs; not required for V2; backend-controlled strategy if later | Addis AI (11), API Contract (5), Security (1), Requirements (REQ-130) |
 | §18.13 | Errors: `{ status, error { code, message, param } }`; 400/401/403/404/429/500/503; project handling — safe user messages, log request IDs/status codes not raw content, timeout, retry 3x backoff, provider error marks chunk failed and continues | Addis AI (12), API Contract (5), Requirements (REQ-129) |
 | §18.14 | Implementation implications: backend proxy only, native fetch, multer, Node FormData/Blob, small documented multipart helper if needed, no Addis AI SDK (SDKs coming soon) | Addis AI (13), Requirements (REQ-125) |
 | §18 + codebase (`backend/.env`) | Seven `ADDIS_AI_*` vars exist with real values — base URL, `sk_` key, text model `Addis-፩-አሌፍ`, target language `am`, STT language code `am`, STT model `default`, timeout 360000; the spec documents a placeholder `sk_` only (REQ-123) | Addis AI (2–5), Environment Config (2), Requirements (REQ-121) |
@@ -558,6 +558,26 @@ All `§` references below identify sections of the original source brief. They a
 | §28.3 | `onQueryStarted` `if (error)` pattern; per-field `error.data.data.errors`; `AppToastContainer` toasts; message extraction chain `error.data?.message || error.data?.data?.errors?.[0]?.message || 'Something went wrong'` | Error Handling (3), Redux RTK Query (5), Requirements (REQ-201) |
 | §28.3 | `AppErrorBoundary`: class component catching React render errors with a fallback UI | Error Handling (3), Frontend Architecture (2), Requirements (REQ-202) |
 | Codebase (`client/package.json`) | `react-toastify` `^11.1.0` (AppToastContainer toasts) and `react-error-boundary` `^6.1.2` (AppErrorBoundary) are installed; no error components, `utils/error.js`, or `middleware/error.middleware.js` exist yet — created during implementation | Error Handling (3), Redux RTK Query (5) |
+
+---
+
+## Source Trace Map — Phase 29 (source §29)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §29.1 | `.env` files gitignored, never committed; no `.env.example` files; API keys only in `backend/.env`; all service calls proxied through the backend; no keys in frontend code, Vite env vars, localStorage, Redux state, or client logs | Security (1), Environment Config (1, 4), Rules (8), Requirements (REQ-120, REQ-121, REQ-123, REQ-125) |
+| §29.2 | Two-token system with httpOnly cookies: access 15min TTL path `/`, refresh 7d TTL path `/api/v1`; `secure` in production, `sameSite: lax`; tokens never exposed to JavaScript; refresh token rotated per use; no sessions MongoDB collection | Security (2), Auth Cookies (1), Requirements (REQ-087) |
+| §29.3 | CORS origin from `CLIENT_ORIGIN` (default `http://localhost:3000`), `credentials: true` | Security (3), Environment Config (2), Requirements (REQ-203) |
+| §29.4 | Rate limiting three tiers: global 100/15min all endpoints, auth 20/15min register+login, AI 10/1min generation/correction; overflow returns 429 with the error envelope | Security (4), Error Handling (2), Requirements (REQ-092, REQ-204) |
+| §29.5 | Fixed middleware stack order `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit` with per-step rationale; never reordered or removed | Security (5), Backend Architecture (2), Requirements (REQ-081) |
+| §29.6 | `express-mongo-sanitize` strips `$` and `.` from `req.body`, `req.query`, `req.params` globally | Security (6), Requirements (REQ-081) |
+| §29.7 | All inputs validated with `express-validator`; validation errors return 422 `{ success: false, message: 'Validation failed', data: { errors: [...] } }` | Security (7), Error Handling (1), API Contract (3), Requirements (REQ-198) |
+| §29.8 | Audio upload validation server-side: MIME type check, file size check, ffprobe duration validation | Security (8), Audio Recording STT (6), Requirements (REQ-142) |
+| §29.9 | Safe logging: production logs never include passwords, JWT values, raw cookies, API keys, raw audio contents, full transcriptions, or full report texts — message IDs or truncated previews instead | Security (9), Logging, Requirements (REQ-086) |
+| §29.10 | Multi-document writes use Mongoose sessions with transactions: `startSession → startTransaction → writes → commitTransaction → catch → abortTransaction → finally → endSession` | Security (10), Backend Architecture (3), Requirements (REQ-082) |
+| §29.11 | Password handling: `bcryptjs`, 12 salt rounds; plaintext never compared — `User.comparePassword()`; password excluded from JSON serialization | Security (11), Auth Cookies (3), Data Modeling (4.4), Requirements (REQ-089, REQ-167/170) |
+| §29.12 | Graceful shutdown on SIGINT/SIGTERM: `server.close()` → cleanup temp audio files → `mongoose.connection.close()` → `process.exit(1)`; force exit after 30 seconds if hangs | Security (12), Backend Architecture (8), Requirements (REQ-084, REQ-205) |
+| Codebase (`backend/package.json`) | Security-relevant deps installed: `bcryptjs` `^3.0.3`, `compression` `^1.8.1`, `cookie-parser` `^1.4.7`, `cors` `^2.8.6`, `dotenv` `^17.4.2`, `express-async-handler` `^1.2.0`, `express-mongo-sanitize` `^2.2.0`, `express-rate-limit` `^8.5.2`, `express-validator` `^7.3.2`, `helmet` `^8.3.0`, `multer` `^2.2.0` | Security (3, 5, 6, 7, 8, 11) |
 
 ---
 
@@ -905,6 +925,10 @@ Secondary features should not distract from the core workflow of generating a bo
 | CustomError | The backend error class in `backend/utils/error.js` carrying `statusCode`, `message`, and `isOperational`; operational `CustomError`s respond with their status and the §10.7 envelope, while unexpected errors are logged and get a generic production message (REQ-195, REQ-196). | §28.1 |
 | AppErrorBoundary | The class-component error boundary (react-error-boundary `^6.1.2`) that catches React render errors and shows a fallback UI; it wraps the router content in `App.jsx` alongside `AppToastContainer` (REQ-202). | §28.3 |
 | AppToastContainer | The react-toastify toast container (`^11.1.0`) composed in `App.jsx`; success/error toasts fire from the RTK Query `onQueryStarted` error pattern (REQ-201). | §28.3 |
+| CORS | Cross-Origin Resource Sharing: the backend allows only the `CLIENT_ORIGIN` origin (default `http://localhost:3000`) with `credentials: true` so the httpOnly auth cookies are sent; a wildcard origin is never used (REQ-203). | §29.3 |
+| helmet | The backend middleware that sets secure HTTP response headers; it is the first step of the fixed security middleware stack (REQ-081). | §29.5 |
+| express-mongo-sanitize | The backend middleware that strips `$` and `.` from `req.body`, `req.query`, and `req.params` globally, preventing NoSQL injection; the fifth step of the fixed security middleware stack (REQ-081). | §29.6 |
+| 429 Too Many Requests | The HTTP status returned when a rate-limit tier is exceeded, with the §10.7 error envelope (REQ-204). | §29.4 |
 | Dead code | Code that is never executed or never used: unused imports, unused exports, unused constants/variables/methods; unused parameters carry the `_` prefix (`_req`, `_res`, `_next`) (REQ-181). | §26 |
 
 ---
@@ -1350,6 +1374,9 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-200 | The global error handler maps Mongoose and JWT errors to their statuses — CastError → 400, ValidationError → 422, duplicate key (11000) → 409, JsonWebTokenError → 401, TokenExpiredError → 401; AI provider failures map to 502 for generation/correction endpoints (unified across Addis AI, Gemini, and Nvidia); STT chunk failures keep the mark-failed-and-continue behavior (REQ-129). | The listed error classes produce the mapped statuses; provider failures respond 502; STT chunk handling unchanged. | §28.2 |
 | REQ-201 | Frontend error pattern: every RTK Query mutation lifecycle uses the `onQueryStarted` `if (error)` guard; server validation errors display per field via `error.data.data.errors`; success/error toasts fire through `AppToastContainer`; message extraction uses `error.data?.message || error.data?.data?.errors?.[0]?.message || 'Something went wrong'`. | All mutations follow the pattern; the extraction chain is present; toasts render. | §28.3 |
 | REQ-202 | `AppErrorBoundary` is a class component (react-error-boundary, `^6.1.2` in `client/package.json`) that catches React render errors and shows a fallback UI; it wraps the router content in `App.jsx` alongside `AppToastContainer`. | `App.jsx` composes `AppErrorBoundary`; render errors show the fallback UI. | §28.3, §12.1 |
+| REQ-203 | The backend must enable CORS with the origin from the `CLIENT_ORIGIN` environment variable (default `http://localhost:3000`) and `credentials: true` so the httpOnly auth cookies are sent; a wildcard origin must never be used. | CORS allows only the configured origin with credentials; no `*` origin exists. | §29.3 |
+| REQ-204 | When a rate-limit tier is exceeded the request must return `429` with the §10.7 error envelope; the three tier limits (global 100/15min, auth 20/15min, AI 10/1min) hold. | Overflow requests return `429` `{ success: false, message, data }`; the tier limits are enforced. | §29.4 |
+| REQ-205 | Graceful shutdown on SIGINT/SIGTERM must force-exit after 30 seconds if the shutdown sequence hangs, completing the REQ-084 sequence. | A hung shutdown is force-terminated within 30 seconds. | §29.12 |
 
 ### Non-Functional Requirements (Phase 1)
 
@@ -1387,6 +1414,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Code quality rules: **Phase 26 — DONE (REQ-178..186)**.
 - JSDoc rules: **Phase 27 — DONE (REQ-187..194)**.
 - Error handling rules: **Phase 28 — DONE (REQ-195..202)**.
+- Security rules: **Phase 29 — DONE (REQ-203..205)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -2474,7 +2502,7 @@ The prompt must enforce all 14 §21.5 rules (REQ-150..153). The mapping to the e
 - REST authentication uses the `x-api-key` header on every Addis AI call (REQ-126).
 - The key is never exposed in frontend code (REQ-123).
 - The app calls Addis AI only from the backend: backend-only proxy, no direct client-to-Addis AI calls (REQ-125, REQ-078).
-- AI endpoints are protected by authentication; rate limits apply on auth and AI endpoints (echo of `## Security` §3, REQ-092; AI tier 10/1min).
+- AI endpoints are protected by authentication; rate limits apply on auth and AI endpoints (echo of `## Security` §4, REQ-092; AI tier 10/1min).
 
 ### 4. Core Model Families (§18.5)
 
@@ -2612,7 +2640,7 @@ Error object: `{ "status": "error", "error": { "code": "invalid_api_key", "messa
 | 401 | Missing or invalid API key | Config error — key lives in `backend/.env` (REQ-123) |
 | 403 | Key lacks permission | Config error |
 | 404 | Endpoint or model missing | Config error — verify the model name |
-| 429 | Rate limit or quota | Backoff; AI tier 10/1min echo (`## Security` §3, REQ-092) |
+| 429 | Rate limit or quota | Backoff; AI tier 10/1min echo (`## Security` §4, REQ-092) |
 | 500 | Addis AI server error | Provider error — mark chunk failed and continue (REQ-129) |
 | 503 | Service overloaded | Retry with backoff (REQ-129) |
 
@@ -3027,6 +3055,7 @@ export default notFound;
 | JsonWebTokenError | 401 | Invalid token |
 | TokenExpiredError | 401 | Expired access token — triggers the refresh flow |
 | AI service error | 502 | Provider returned error |
+| Rate limit exceeded | 429 | Three tiers (`## Security` §4, REQ-204) |
 
 - The global error handler maps the Mongoose and JWT error classes to the table statuses: `CastError` → 400, `ValidationError` → 422, duplicate-key code 11000 → 409, `JsonWebTokenError` → 401, `TokenExpiredError` → 401 (REQ-200).
 - AI provider failures map to `502` at the backend boundary — the unified rule across Addis AI, Gemini, and Nvidia for generation and correction endpoints (REQ-200; `## Addis AI` §12, `## Other AI Providers` §3, REQ-136, REQ-137). STT chunk failures keep their per-chunk behavior — mark the chunk failed and continue (REQ-129) — the 502 applies to generation/correction responses.
@@ -3089,7 +3118,7 @@ export default AppErrorBoundary;
 
 - Phase 13 (§13 Redux): **DONE (Phase 13)** — the `baseQueryWithReauth` refresh flow in `## Redux RTK Query` §2 (REQ-104..106).
 - Phase 28 (§28 Error Handling Patterns): **DONE (Phase 28)** — server-side error handling in §1, the error status mapping in §2, frontend error handling in §3 (REQ-195..202).
-- Phase 29 (§29 Security): rate-limit errors (`429`, three tiers) and security-related error rules in `## Security`.
+- Phase 29 (§29 Security): **DONE (Phase 29)** — rate-limit errors (`429`, three tiers) and the security-related error rules live in `## Security` (§§4/7) and the 429 row in §2 above (REQ-203..205).
 
 ---
 
@@ -3891,14 +3920,23 @@ client/
 - The frontend must pass `npx vite build` with 0 errors and must pass lint (`eslint .` with `client/eslint.config.js`); §26 mandates no backend lint — `backend/` has no ESLint config or lint script (REQ-184).
 - JSDoc rules live in `## JSDoc Standards` (REQ-185/186).
 
-### 8. Expansion Markers
+### 8. Security Rules (§29)
+
+- CORS is configured with the `CLIENT_ORIGIN` origin (default `http://localhost:3000`) and `credentials: true`; a wildcard origin is never used (REQ-203; `## Security` §3).
+- The global security middleware stack runs in the fixed order `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit` and is never reordered or removed (REQ-081; `## Security` §5).
+- Rate-limit overflow returns `429` with the §10.7 error envelope (REQ-204; `## Security` §4, `## Error Handling` §2).
+- All inputs are validated with `express-validator`; validation failures return the `422` shape `{ success: false, message: 'Validation failed', data: { errors: [...] } }` (REQ-198; `## Security` §7).
+- Production logs never include passwords, JWT token values, raw cookies, API keys or secrets, raw audio contents, full transcription texts, or full generated report texts (REQ-086; `## Security` §9).
+- Graceful shutdown on SIGINT/SIGTERM force-exits after 30 seconds if the sequence hangs (REQ-205; `## Security` §12).
+
+### 9. Expansion Markers
 
 - Phase 13 (§13 Redux RTK Query): **DONE (Phase 13)** — Redux and RTK Query rules in §3 above.
 - Phase 16 (§16 UI Rules): **DONE (Phase 16)** — UI rules in §4 above.
 - Phase 17 (§17 Environment Config): **DONE (Phase 17)** — environment rules in §5 above.
 - Phase 21 (§21 AI Prompt Requirements): **DONE (Phase 21)** — AI prompt rules in §6 above (REQ-146..153).
 - Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — code quality rules in §7 above (REQ-178..186).
-- Phase 29 (§29 Security): security rules.
+- Phase 29 (§29 Security): **DONE (Phase 29)** — security rules in §8 above (REQ-203..205).
 - Phase 30 (§30 Git Workflow): git rules.
 
 ---
@@ -4159,49 +4197,101 @@ Three tiers:
 - Phase 12 (§12 Frontend Architecture): **DONE (Phase 12)** — login/register page behavior, OAuth redirect handling, route guards.
 - Phase 13 (§13 Redux, RTK Query, And API Client): **DONE (Phase 13)** — `baseQueryWithReauth`, cookie-aware client (`## Redux RTK Query` §2).
 - Phase 17 (§17 Environment Variables): **DONE (Phase 17)** — `JWT_*` and `OAUTH_GOOGLE_*` env contract in `## Environment Config` §2.
-- Phase 29 (§29 Security): deep security rules.
+- Phase 29 (§29 Security): **DONE (Phase 29)** — the deep security rules are consolidated in `## Security` (§§2/4/11, REQ-203..205).
 
 ---
 
 ## Security
 
-> **Phase 11 seed — the authentication-adjacent security rules from §11. Environment secrets built in Phase 17; AI provider security in Phase 18; the full security section in Phase 29.**
+> **Phase 11 seed — the authentication-adjacent security rules from §11. Environment secrets built in Phase 17; AI provider security in Phase 18; the user-OAuth token rule in Phase 25; the full security section from §29 (Security) built in Phase 29 — subsections mirror §29.1–29.12.**
 
-### 1. Cookie Security (§11)
+### 1. Environment And Secrets (§29.1)
 
-- Access and refresh tokens travel only in httpOnly cookies: `httpOnly: true`, `secure` in production, `sameSite: lax` (detail in `## Auth Cookies` §1).
-
-### 2. Authentication Security (§11)
-
-- Refresh token rotated on each use to prevent replay.
-- No sessions MongoDB collection — no session store to attack or maintain.
-- Passwords are never plaintext: bcryptjs hashing with 12 salt rounds; plaintext passwords are never compared (detail in `## Auth Cookies` §3).
-
-### 3. Rate Limiting (§11)
-
-- Three tiers: global 100/15min (all endpoints), auth 20/15min (register and login), AI 10/1min (generation and correction) (REQ-092).
-
-### 4. Environment Secret Handling (§17)
-
+- `.env` files are gitignored and never committed; no `.env.example` files are created; `.env` files exist locally with placeholder or correct values (REQ-120; `## Environment Config` §1).
+- All API keys live only in `backend/.env` (REQ-121, REQ-123; `## Environment Config` §§2/4).
+- Every service call is proxied through the backend — no frontend-to-provider calls, no keys in frontend code (REQ-125; `## Addis AI` §3).
+- No API keys in frontend code, Vite env vars sent to the browser, localStorage, Redux state, or client logs (REQ-123; `## Environment Config` §4).
 - `JWT_ACCESS_SECRET` and `JWT_REFRESH_SECRET` live in `backend/.env` only and are each at least 32 characters (env contract in `## Environment Config` §2, REQ-121).
 - `OAUTH_GOOGLE_CLIENT_ID`, `OAUTH_GOOGLE_CLIENT_SECRET`, and `OAUTH_GOOGLE_CALLBACK_URL` are optional and live in `backend/.env`; Google login stays stubbed until credentials are configured (echo of `## Auth Cookies` §5, REQ-121).
 - The user's Google OAuth token — used for the Google Docs export with the `drive.file` scope — is stored and refreshed server-side only and must never be exposed to the client (REQ-158, REQ-177; `## Export Spec` §4).
-- Addis AI `sk_` keys never appear in client code, Vite env vars sent to the browser, localStorage, Redux state, or client logs; Nvidia and Gemini API keys are placed in `backend/.env` only (§17.4, REQ-123; key rules in `## Environment Config` §4).
 - `process.env` is never accessed outside `config/env.js`, which validates all required vars at startup (REQ-083, REQ-120).
-
-### 5. AI Provider Security (§18)
-
-- Every Addis AI call authenticates with the `x-api-key` header; secret keys start with `sk_` and live only in `backend/.env` (REQ-126, REQ-123, `## Addis AI` §3).
-- Backend-only proxy: no direct client-to-Addis AI calls; keys are never exposed in frontend code (REQ-125, REQ-123).
-- AI endpoints are protected by authentication, and rate limits apply on auth and AI endpoints (echo of §3; AI tier 10/1min, REQ-092).
+- Every Addis AI call authenticates with the `x-api-key` header; secret keys start with `sk_` (REQ-126, REQ-123; `## Addis AI` §3).
 - Keys are never logged; provider request IDs and status codes are logged, never raw sensitive report content (REQ-129, `## Addis AI` §12).
 - Realtime WebSocket URLs never carry real keys in the browser; a later realtime strategy must be backend-controlled (REQ-130, `## Addis AI` §11).
 
-### 6. Expansion Markers
+### 2. JWT Cookie Security (§29.2)
 
-- Phase 17 (§17 Environment Variables): **DONE (Phase 17)** — secret handling in §4 above.
-- Phase 18 (§18 Addis AI Integration): **DONE — AI provider security in §5 above.**
-- Phase 29 (§29 Security): full security section.
+- Two-token system with httpOnly cookies: access token 15 min TTL, path `/`, signed with `JWT_ACCESS_SECRET`; refresh token 7 days TTL, path `/api/v1`, signed with `JWT_REFRESH_SECRET` (REQ-087, REQ-121; `## Auth Cookies` §1).
+- Cookie options: `httpOnly: true`, `secure` in production, `sameSite: lax` (REQ-087).
+- Tokens never exposed to JavaScript — httpOnly prevents XSS token theft (REQ-087).
+- Refresh token rotated on each use to prevent replay (REQ-087).
+- No sessions MongoDB collection — zero DB lookups for auth on each request (REQ-087).
+
+### 3. CORS (§29.3)
+
+- The backend enables CORS with the origin from the `CLIENT_ORIGIN` environment variable (default: `http://localhost:3000`) and `credentials: true` so the httpOnly cookies are sent; a wildcard origin is never used (REQ-203; env contract in `## Environment Config` §2).
+
+### 4. Rate Limiting (§29.4)
+
+| Limiter | Window | Max Requests | Applied To |
+|---|---|---|---|
+| Global | 15 minutes | 100 | All endpoints |
+| Auth | 15 minutes | 20 | `/auth/register`, `/auth/login` |
+| AI | 1 minute | 10 | Generation/correction endpoints |
+
+- Three tiers: global 100/15min (all endpoints), auth 20/15min (register and login), AI 10/1min (generation and correction) (REQ-092).
+- When a tier limit is exceeded the request returns `429` with the §10.7 error envelope (REQ-204; row in `## Error Handling` §2).
+
+### 5. Middleware Stack (Fixed Order) (§29.5)
+
+`helmet → cors → compression → cookie-parser → mongo-sanitize → rate-limit`
+
+This order is intentional and must not be changed (REQ-081; `## Backend Architecture` §2):
+
+1. `helmet` — security headers first.
+2. `cors` — cross-origin before cookie parsing.
+3. `compression` — compress responses with gzip.
+4. `cookie-parser` — parse cookies before route handlers.
+5. `mongo-sanitize` — strip `$` and `.` from request data before it reaches controllers.
+6. `rate-limit` — global rate limiting before API routes.
+
+### 6. NoSQL Injection Prevention (§29.6)
+
+- `express-mongo-sanitize` strips `$` and `.` from `req.body`, `req.query`, and `req.params` globally — the mongo-sanitize step in the fixed stack (REQ-081).
+
+### 7. Input Validation (§29.7)
+
+- All inputs are validated with `express-validator` (per-domain validators in `backend/validators/*.js`, `## Project Directory Structure` §4).
+- Validation failures return `422` with the response shape `{ success: false, message: 'Validation failed', data: { errors: [...] } }` — `data.errors` carries the per-field messages the frontend surfaces under each field (REQ-198; `## Error Handling` §1, `## API Contract` §3).
+
+### 8. Audio Upload Validation (§29.8)
+
+- Server-side validation: multer MIME type and file size checks plus ffprobe duration validation (REQ-142; `## Audio Recording STT` §6, `## API Contract` §6).
+
+### 9. Safe Logging (§29.9)
+
+- In production, logs never include: passwords, JWT token values, raw cookies, API keys or secrets, raw audio file contents, full transcription texts, or full generated report texts — message IDs or truncated previews are used instead (REQ-086; `## Logging`).
+
+### 10. MongoDB Transactions (§29.10)
+
+- All multi-document write operations use Mongoose sessions with transactions: `startSession → startTransaction → writes → commitTransaction → catch → abortTransaction → finally → endSession` (REQ-082; `## Backend Architecture` §3, REQ-160/161/165).
+
+### 11. Password Handling (§29.11)
+
+- Algorithm: `bcryptjs`; salt rounds: 12; plaintext passwords are never compared — always `User.comparePassword()` (REQ-089; `## Auth Cookies` §3).
+- Password field excluded from JSON serialization: `select: false` on the schema plus the `toJSON` transform (REQ-167/170; `## Data Modeling` §4.4).
+
+### 12. Graceful Shutdown (§29.12)
+
+- On `SIGINT`/`SIGTERM`: `server.close()` → cleanup temporary audio files → `mongoose.connection.close()` → `process.exit(1)` (REQ-084; `## Backend Architecture` §8).
+- Force exit after 30 seconds if the shutdown hangs (REQ-205).
+
+### 13. Expansion Markers
+
+- Phase 17 (§17 Environment Variables): **DONE (Phase 17)** — secret handling in §1 above.
+- Phase 18 (§18 Addis AI Integration): **DONE — AI provider security in §1 above.**
+- Phase 25 (§25 Project Directory Structure): **DONE (Phase 25)** — the user-OAuth token server-side-only rule in §1 (REQ-158, REQ-177).
+- Phase 29 (§29 Security): **DONE (Phase 29)** — the full security section above: §§1–12 mirror §29.1–29.12 (REQ-203..205).
 
 ---
 
@@ -4774,7 +4864,7 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 
 - Phase 18 (§18 Addis AI Integration): **DONE — `ADDIS_AI_*` consumption is documented in `## Addis AI` §2 (base URL), §3 (key), §4 (models), §5 (language codes), §6–7 (endpoints), and §13 (implementation).**
 - Phase 19 (§19 Other AI Providers): **DONE — Nvidia and Gemini keys and base URLs are consumed per `## Other AI Providers` §4–5; `backend/.env` holds real keys and `change me` base-URL placeholders.**
-- Phase 29 (§29 Security): deep environment-secret handling rules.
+- Phase 29 (§29 Security): **DONE (Phase 29)** — the deep environment-secret handling rules are consolidated in `## Security` §1 (REQ-203..205).
 
 ---
 
@@ -5036,3 +5126,7 @@ Phases 1–27 are GREEN (2026-08-02). Phase 27 built the JSDoc conventions from 
 ## End Of Phase 28 Content
 
 Phases 1–28 are GREEN (2026-08-02). Phase 28 built the error handling patterns from §28: new `## Error Handling` seed (header blockquote; §1 Server-Side Error Handling — `CustomError` in `backend/utils/error.js` carrying `statusCode`/`message`/`isOperational` (REQ-195), the global `error.middleware.js` distinguishing operational `CustomError` from unexpected errors — development returns the full stack trace, production returns a generic message and logs programmer errors via `## Logging` (REQ-196), `notFound.middleware.js` creating `CustomError(404)` and forwarding via `next()` (REQ-197), validation failures `422` with `data.errors` per-field messages (REQ-198), all async controllers wrapped with `express-async-handler` (REQ-199), with the error-handler, CustomError, and notFound code samples; §2 Error Types And HTTP Status Codes — the full §28.2 table (validation 422, auth 401 ×2, not found 404, file size 413, MIME 415, CastError 400, ValidationError 422, duplicate key 11000 → 409, JsonWebTokenError 401, TokenExpiredError 401, AI service 502) with Mongoose/JWT mapping in the global handler and the unified 502 rule for all three providers — STT chunk failures keep the mark-failed-and-continue behavior (REQ-129, REQ-200); §3 Frontend Error Handling — the `baseQueryWithReauth` refresh flow cross-ref, the `onQueryStarted` `if (error)` pattern with per-field `error.data.data.errors`, `AppToastContainer` toasts (react-toastify), the message extraction chain, `AppErrorBoundary` class component (react-error-boundary) catching React render errors with fallback UI (REQ-201, REQ-202), with the onQueryStarted and AppErrorBoundary code samples; §4 Expansion Markers — Phase 13 DONE, Phase 28 DONE, Phase 29 pending), enriched `## API Contract` (header blockquote updated; §3 — `data.errors` per-field note, error status mapping cross-ref, AI service 502 rule), enriched `## Validation Audit` (new §3 Error Handling Audit — STT failure states, AI generation failure error states, no-internals rule, mutation error-pattern audit; scope note and markers updated; §3→§4/§5 renumbering), enriched `## Logging` (error-handling logging detail — unexpected errors logged with stack and status, production generic message, AI provider error log fields, safe-logging applies to error logs; marker flipped DONE), enriched `## Redux RTK Query` (header blockquote updated; new §5 Frontend Error Handling — onQueryStarted pattern, 422-to-setError, toasts, AppErrorBoundary, render-vs-request error split; §4→§6 marker renumbering; marker flipped DONE), enriched `## Backend Architecture` (header blockquote; §2 error pipeline note; §11 marker flipped DONE), `## Project Directory Structure` §4 tree (`utils/error.js` node added; error.middleware.js comment updated), `## Addis AI` (§12 unified-502 note; marker flipped), `## Other AI Providers` (marker flipped), `## Audio Recording STT` (§10 marker flipped), `## React Hook Form Standards` (header blockquote; marker flipped), UI/UX Spec / Work Flow / User Interactions phase-attribution updates, added REQ-195..202, added the Phase 28 requirement-expansion marker, extended `## Glossary` (CustomError, AppErrorBoundary, AppToastContainer), updated the Checklist (Error Handling — GREEN seed; API Contract, Validation Audit, Logging, Redux RTK Query, Backend Architecture — GREEN Phase 28 enrichment), and added the Phase 28 Source Trace Map (7 §28 rows + 1 codebase row: `react-toastify` `^11.1.0` and `react-error-boundary` `^6.1.2` in `client/package.json`, no error components or backend error files exist yet). Phase 29 will build the security rules.
+
+## End Of Phase 29 Content
+
+Phases 1–29 are GREEN (2026-08-02). Phase 29 built the security rules from §29: rebuilt `## Security` as the full security section — §1 Environment And Secrets (§29.1 — `.env` gitignored and never committed, no `.env.example`, all API keys only in `backend/.env`, backend-only proxy, no keys in frontend code/Vite env/localStorage/Redux/client logs (REQ-120, REQ-121, REQ-123, REQ-125); the JWT/OAuth secret rules; the user-OAuth token server-side-only rule (REQ-158, REQ-177); the `x-api-key` authentication, no-key-logging, and backend-controlled realtime rules from the old §5 (REQ-126, REQ-129, REQ-130)), §2 JWT Cookie Security (§29.2 — 15m access path `/` / 7d refresh path `/api/v1` TTLs with the two secrets, `httpOnly`/`secure` production/`sameSite: lax`, httpOnly-XSS rationale, rotation against replay, no sessions collection — REQ-087), §3 CORS (§29.3 — `CLIENT_ORIGIN` origin, default `http://localhost:3000`, `credentials: true`, no wildcard — REQ-203), §4 Rate Limiting (§29.4 — the three-tier table and the 429 overflow rule with the §10.7 envelope — REQ-092, REQ-204), §5 Middleware Stack Fixed Order (§29.5 — `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit` with the per-step rationale, never reordered or removed — REQ-081), §6 NoSQL Injection Prevention (§29.6 — `express-mongo-sanitize` strips `$` and `.` from body/query/params globally), §7 Input Validation (§29.7 — `express-validator` everywhere; the exact 422 shape `{ success: false, message: 'Validation failed', data: { errors: [...] } }` — REQ-198), §8 Audio Upload Validation (§29.8 — multer MIME/size plus ffprobe duration — REQ-142), §9 Safe Logging (§29.9 — the production never-list with message IDs/truncated previews — REQ-086), §10 MongoDB Transactions (§29.10 — the `startSession → startTransaction → writes → commitTransaction → catch → abortTransaction → finally → endSession` pattern — REQ-082), §11 Password Handling (§29.11 — bcryptjs 12 rounds, `comparePassword`, `select: false` plus the `toJSON` exclusion — REQ-089, REQ-167/170), §12 Graceful Shutdown (§29.12 — the SIGINT/SIGTERM sequence plus the new 30-second force-exit — REQ-084, REQ-205), §13 Expansion Markers (Phases 17, 18, 25, 29 DONE); the old §1–5 green content was folded into the new §1–12 numbering and every `## Security §N` reference was updated (9 source-trace-map rows and 2 `## Addis AI` echoes, plus the `## Security` §6→§13 and `## Rules` §8→§9 marker renumbering); enriched `## Error Handling` (new `| Rate limit exceeded | 429 |` row in the §2 status table with the three-tier ref and REQ-204; §4 Phase 29 marker DONE), enriched `## Rules` (new §8 Security Rules — CORS, fixed stack, 429, 422 validation shape, safe logging, 30s force-exit; §9 markers — Phase 29 DONE), flipped the Phase 29 markers in `## Auth Cookies` (§8) and `## Environment Config` (§6) to DONE, added REQ-203..205 (CORS, 429 overflow envelope, 30-second force-exit), added the Phase 29 requirement-expansion marker, extended `## Glossary` (CORS, helmet, express-mongo-sanitize, 429 Too Many Requests), updated the Checklist (Security — GREEN Phase 29 enrichment; Requirements, Environment Config, Rules — GREEN Phase 29 enrichment), and added the Phase 29 Source Trace Map (12 §29 rows + 1 codebase row: the security dependencies in `backend/package.json` — `bcryptjs` `^3.0.3`, `compression` `^1.8.1`, `cookie-parser` `^1.4.7`, `cors` `^2.8.6`, `dotenv` `^17.4.2`, `express-async-handler` `^1.2.0`, `express-mongo-sanitize` `^2.2.0`, `express-rate-limit` `^8.5.2`, `express-validator` `^7.3.2`, `helmet` `^8.3.0`, `multer` `^2.2.0`). Phase 30 will build the new file creation rules.
