@@ -61,7 +61,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 27 | 27. JSDoc Conventions | GREEN | JSDoc Standards, Coding Conventions |
 | 28 | 28. Error Handling Patterns | GREEN | Error Handling, API Contract, Validation Audit |
 | 29 | 29. Security | GREEN | Security, Requirements, Environment Config, Rules |
-| 30 | 30. New File Creation Rules | PENDING | Rules, Checklists, Project Directory Structure |
+| 30 | 30. New File Creation Rules | GREEN | Rules, Checklists, Project Directory Structure |
 | 31 | 31. Validation And Audit | PENDING | Validation Audit, Checklists, Source Traceability, Non-Functional Requirements |
 | 32 | 32. Git And Phase Protocol | PENDING | Git Workflow, Phase Protocol, Tasks, Implementation Plan |
 | 33 | 33. Decision Log (ADRs) | PENDING | Decision Log |
@@ -87,7 +87,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Backend Architecture | 10, 24, 25, 28 | GREEN (Phase 10 seed, Phase 24, 25, 28 enrichment) |
 | Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
 | Business Rules | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
-| Checklists | 26, 30, 31 | GREEN (Phase 26 seed) |
+| Checklists | 26, 30, 31 | GREEN (Phase 26 seed, Phase 30 enrichment) |
 | Coding Conventions | 9, 25, 26, 27 | GREEN (Phase 9 seed, Phase 25, 26, 27 enrichment) |
 | Data Modeling | 5, 11, 20, 23, 24, 35 | GREEN (Phase 11, 20, 23, 24 enrichment) |
 | Decision Log | 1, 2, 24, 33 | GREEN |
@@ -110,7 +110,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | PRD | 1, 2, 3, 4 | GREEN (Phase 4 enrichment) |
 | Problem Statement | 1, 2 | GREEN |
 | Profile Management | 4 | GREEN (Phase 4 seed) |
-| Project Directory Structure | 9, 10, 12, 13, 25, 30 | GREEN (Phase 14, 25 enrichment) |
+| Project Directory Structure | 9, 10, 12, 13, 25, 30 | GREEN (Phase 14, 25, 30 enrichment) |
 | Project Overview | 1 | GREEN |
 | React Hook Form Standards | 15 | GREEN (Phase 15 seed) |
 | Redux RTK Query | 13, 28 | GREEN (Phase 13 seed, Phase 28 enrichment) |
@@ -120,7 +120,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Requirements | 1, 2, 4, 9, 24, 25, 29, 31, 34 | GREEN (Phase 9, 24, 25, 29 enrichment) |
 | Risk Register | pending assignment (candidate: 33/36) | PENDING |
 | Routing Layout | 12 | GREEN |
-| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16, 17, 21, 26, 29 enrichment) |
+| Rules | 9, 13, 16, 17, 21, 26, 29, 30 | GREEN (Phase 13, 16, 17, 21, 26, 29, 30 enrichment) |
 | Security | 11, 17, 18, 25, 29 | GREEN (Phase 11 seed, Phase 17, 18, 25, 29 enrichment) |
 | Source Traceability | 31 | PENDING |
 | Status Machine | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
@@ -578,6 +578,12 @@ All `§` references below identify sections of the original source brief. They a
 | §29.11 | Password handling: `bcryptjs`, 12 salt rounds; plaintext never compared — `User.comparePassword()`; password excluded from JSON serialization | Security (11), Auth Cookies (3), Data Modeling (4.4), Requirements (REQ-089, REQ-167/170) |
 | §29.12 | Graceful shutdown on SIGINT/SIGTERM: `server.close()` → cleanup temp audio files → `mongoose.connection.close()` → `process.exit(1)`; force exit after 30 seconds if hangs | Security (12), Backend Architecture (8), Requirements (REQ-084, REQ-205) |
 | Codebase (`backend/package.json`) | Security-relevant deps installed: `bcryptjs` `^3.0.3`, `compression` `^1.8.1`, `cookie-parser` `^1.4.7`, `cors` `^2.8.6`, `dotenv` `^17.4.2`, `express-async-handler` `^1.2.0`, `express-mongo-sanitize` `^2.2.0`, `express-rate-limit` `^8.5.2`, `express-validator` `^7.3.2`, `helmet` `^8.3.0`, `multer` `^2.2.0` | Security (3, 5, 6, 7, 8, 11) |
+
+## Source Trace Map — Phase 30 (source §30)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §30 | New file creation rules: files are created only when the phase requires them, verified not to already exist, and written to match the existing code conventions (style, libraries, patterns); documentation files (`*.md`) and README files are never created proactively; code explanation summaries are never added unless requested; placeholder/stub/boilerplate files are never created without an explicit request; after working on a file, just stop | Rules (9), Checklists (3), Project Directory Structure (6, 7), Requirements (REQ-206..209) |
 
 ---
 
@@ -1377,6 +1383,10 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-203 | The backend must enable CORS with the origin from the `CLIENT_ORIGIN` environment variable (default `http://localhost:3000`) and `credentials: true` so the httpOnly auth cookies are sent; a wildcard origin must never be used. | CORS allows only the configured origin with credentials; no `*` origin exists. | §29.3 |
 | REQ-204 | When a rate-limit tier is exceeded the request must return `429` with the §10.7 error envelope; the three tier limits (global 100/15min, auth 20/15min, AI 10/1min) hold. | Overflow requests return `429` `{ success: false, message, data }`; the tier limits are enforced. | §29.4 |
 | REQ-205 | Graceful shutdown on SIGINT/SIGTERM must force-exit after 30 seconds if the shutdown sequence hangs, completing the REQ-084 sequence. | A hung shutdown is force-terminated within 30 seconds. | §29.12 |
+| REQ-206 | New files are created only when explicitly required by the phase; before creating a file, its non-existence is verified so nothing existing is overwritten. | No file exists in the repository that the build process did not explicitly require; no pre-existing file was overwritten. | §30 |
+| REQ-207 | When creating a new file, the existing code conventions are understood first — the file mimics the code style, uses the existing libraries, and follows the existing patterns. | A review of created files finds style, library, and pattern consistency with the surrounding codebase. | §30 |
+| REQ-208 | Documentation files (`*.md`) and README files are never created proactively, and code explanation summaries are never added, unless explicitly requested. | No unreviewed `*.md`/README files or explanation summaries exist outside explicit requests. | §30 |
+| REQ-209 | Placeholder, stub, and boilerplate files are never created without an explicit request, and work on a file stops once the file is done. | No placeholder/stub/boilerplate files exist; no file has leftover unfinished scaffolding. | §30 |
 
 ### Non-Functional Requirements (Phase 1)
 
@@ -1415,6 +1425,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - JSDoc rules: **Phase 27 — DONE (REQ-187..194)**.
 - Error handling rules: **Phase 28 — DONE (REQ-195..202)**.
 - Security rules: **Phase 29 — DONE (REQ-203..205)**.
+- File creation rules: **Phase 30 — DONE (REQ-206..209)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -3196,10 +3207,21 @@ Every source file must satisfy all of the following (REQ-178..186; `## Coding Co
 - [ ] `npm run lint` (`eslint .`) passes with `client/eslint.config.js` (REQ-184).
 - No backend lint gate: §26 mandates lint for the frontend only (codebase fact).
 
-### 3. Expansion Markers
+### 3. File Creation Checklist (Phase 30)
+
+Every file created during the build must satisfy all of the following (REQ-206..209; `## Rules` §9):
+
+- [ ] No new file was created unless the phase explicitly required it (REQ-206).
+- [ ] Every created file was verified not to already exist — nothing existing was overwritten (REQ-206).
+- [ ] Each new file mirrors the existing code style, uses the existing libraries, and follows the existing patterns of its package (REQ-207).
+- [ ] No `*.md` or README files were created unless explicitly requested (REQ-208).
+- [ ] No code explanation summaries were added unless requested (REQ-208).
+- [ ] No placeholder, stub, or boilerplate files were created without an explicit request (REQ-209).
+
+### 4. Expansion Markers
 
 - Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — checklists in §§1–2.
-- Phase 30 (§30 New File Creation Rules): new-file-creation checklist.
+- Phase 30 (§30 New File Creation Rules): **DONE (Phase 30)** — file creation checklist in §3 above.
 - Phase 31 (§31 Validation And Audit): full validation and audit checklists.
 
 ---
@@ -3833,6 +3855,7 @@ client/
 - §25.3 is fulfilled here: the complete final tree above was generated from the current `backend/*` and `client/*` codebases plus the §25.1/§25.2 explicit paths and this document (REQ-173).
 - Backend file names are kebab-case, following the §25.1 explicit names (`env.js`, `oauth.service.js`, `notFound.middleware.js`): per-domain files follow `<domain>.controller.js`, `<domain>.routes.js`, `<domain>.validator.js`, and `<domain>.model.js` (REQ-176).
 - Every file created during implementation must land in the subtree documented above; when later phases introduce new paths, those paths are added to this tree (REQ-173).
+- New files are created only when a phase requires them — never proactively; the §30 file creation rules apply to every file created during implementation (REQ-206..209; `## Rules` §9, `## Checklists` §3).
 
 | ID | Requirement | Acceptance criteria | Source |
 |---|---|---|---|
@@ -3848,13 +3871,14 @@ client/
 - Phase 13 (§13 Redux, RTK Query, And API Client): **DONE (Phase 13)** — `redux/` subtree and `utils/constants.js` added above.
 - Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): **DONE (Phase 14)** — `components/reusable/`, `components/columns/`, and `utils/ethiopianDate.js` added above.
 - Phase 25 (§25 Project Directory Structure): **DONE (Phase 25)** — final structure: backend tree §4, frontend tree §5, rules and requirements §6.
-- Phase 30 (§30 Git Workflow): workflow structure.
+- Phase 30 (§30 New File Creation Rules): **DONE (Phase 30)** — new files follow the §30 file creation rules (§6, REQ-206..209).
+- Phase 32 (§32 Git And Phase Protocol): workflow structure.
 
 ---
 
 ## Rules
 
-> **Phase 9 seed — the technical stack rules from §9. Rules deepened in Phases 13 (Redux), 16 (UI rules), 17 (environment config), 21 (AI prompts), and 26 (code quality); further rules arrive in Phases 29 (security) and 30 (git).**
+> **Phase 9 seed — the technical stack rules from §9. Rules deepened in Phases 13 (Redux), 16 (UI rules), 17 (environment config), 21 (AI prompts), and 26 (code quality); further rules arrive in Phases 29 (security), 30 (new file creation), and 32 (git).**
 
 ### 1. Stack Rules (§9.1)
 
@@ -3929,7 +3953,16 @@ client/
 - Production logs never include passwords, JWT token values, raw cookies, API keys or secrets, raw audio contents, full transcription texts, or full generated report texts (REQ-086; `## Security` §9).
 - Graceful shutdown on SIGINT/SIGTERM force-exits after 30 seconds if the sequence hangs (REQ-205; `## Security` §12).
 
-### 9. Expansion Markers
+### 9. File Creation Rules (§30)
+
+- New files are created only when explicitly required by the phase; before creating a file, verify it does not already exist (REQ-206).
+- When creating a new file, understand the existing code conventions first — mimic the code style, use the existing libraries, follow the existing patterns (REQ-207).
+- Documentation files (`*.md`) and README files are never created proactively; they are created only when explicitly requested (REQ-208).
+- Code explanation summaries are never added unless requested (REQ-208).
+- Placeholder, stub, and boilerplate files are never created without an explicit request (REQ-209).
+- After working on a file, just stop (REQ-209).
+
+### 10. Expansion Markers
 
 - Phase 13 (§13 Redux RTK Query): **DONE (Phase 13)** — Redux and RTK Query rules in §3 above.
 - Phase 16 (§16 UI Rules): **DONE (Phase 16)** — UI rules in §4 above.
@@ -3937,7 +3970,8 @@ client/
 - Phase 21 (§21 AI Prompt Requirements): **DONE (Phase 21)** — AI prompt rules in §6 above (REQ-146..153).
 - Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — code quality rules in §7 above (REQ-178..186).
 - Phase 29 (§29 Security): **DONE (Phase 29)** — security rules in §8 above (REQ-203..205).
-- Phase 30 (§30 Git Workflow): git rules.
+- Phase 30 (§30 New File Creation Rules): **DONE (Phase 30)** — file creation rules in §9 above (REQ-206..209).
+- Phase 32 (§32 Git And Phase Protocol): git rules.
 
 ---
 
@@ -5130,3 +5164,7 @@ Phases 1–28 are GREEN (2026-08-02). Phase 28 built the error handling patterns
 ## End Of Phase 29 Content
 
 Phases 1–29 are GREEN (2026-08-02). Phase 29 built the security rules from §29: rebuilt `## Security` as the full security section — §1 Environment And Secrets (§29.1 — `.env` gitignored and never committed, no `.env.example`, all API keys only in `backend/.env`, backend-only proxy, no keys in frontend code/Vite env/localStorage/Redux/client logs (REQ-120, REQ-121, REQ-123, REQ-125); the JWT/OAuth secret rules; the user-OAuth token server-side-only rule (REQ-158, REQ-177); the `x-api-key` authentication, no-key-logging, and backend-controlled realtime rules from the old §5 (REQ-126, REQ-129, REQ-130)), §2 JWT Cookie Security (§29.2 — 15m access path `/` / 7d refresh path `/api/v1` TTLs with the two secrets, `httpOnly`/`secure` production/`sameSite: lax`, httpOnly-XSS rationale, rotation against replay, no sessions collection — REQ-087), §3 CORS (§29.3 — `CLIENT_ORIGIN` origin, default `http://localhost:3000`, `credentials: true`, no wildcard — REQ-203), §4 Rate Limiting (§29.4 — the three-tier table and the 429 overflow rule with the §10.7 envelope — REQ-092, REQ-204), §5 Middleware Stack Fixed Order (§29.5 — `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit` with the per-step rationale, never reordered or removed — REQ-081), §6 NoSQL Injection Prevention (§29.6 — `express-mongo-sanitize` strips `$` and `.` from body/query/params globally), §7 Input Validation (§29.7 — `express-validator` everywhere; the exact 422 shape `{ success: false, message: 'Validation failed', data: { errors: [...] } }` — REQ-198), §8 Audio Upload Validation (§29.8 — multer MIME/size plus ffprobe duration — REQ-142), §9 Safe Logging (§29.9 — the production never-list with message IDs/truncated previews — REQ-086), §10 MongoDB Transactions (§29.10 — the `startSession → startTransaction → writes → commitTransaction → catch → abortTransaction → finally → endSession` pattern — REQ-082), §11 Password Handling (§29.11 — bcryptjs 12 rounds, `comparePassword`, `select: false` plus the `toJSON` exclusion — REQ-089, REQ-167/170), §12 Graceful Shutdown (§29.12 — the SIGINT/SIGTERM sequence plus the new 30-second force-exit — REQ-084, REQ-205), §13 Expansion Markers (Phases 17, 18, 25, 29 DONE); the old §1–5 green content was folded into the new §1–12 numbering and every `## Security §N` reference was updated (9 source-trace-map rows and 2 `## Addis AI` echoes, plus the `## Security` §6→§13 and `## Rules` §8→§9 marker renumbering); enriched `## Error Handling` (new `| Rate limit exceeded | 429 |` row in the §2 status table with the three-tier ref and REQ-204; §4 Phase 29 marker DONE), enriched `## Rules` (new §8 Security Rules — CORS, fixed stack, 429, 422 validation shape, safe logging, 30s force-exit; §9 markers — Phase 29 DONE), flipped the Phase 29 markers in `## Auth Cookies` (§8) and `## Environment Config` (§6) to DONE, added REQ-203..205 (CORS, 429 overflow envelope, 30-second force-exit), added the Phase 29 requirement-expansion marker, extended `## Glossary` (CORS, helmet, express-mongo-sanitize, 429 Too Many Requests), updated the Checklist (Security — GREEN Phase 29 enrichment; Requirements, Environment Config, Rules — GREEN Phase 29 enrichment), and added the Phase 29 Source Trace Map (12 §29 rows + 1 codebase row: the security dependencies in `backend/package.json` — `bcryptjs` `^3.0.3`, `compression` `^1.8.1`, `cookie-parser` `^1.4.7`, `cors` `^2.8.6`, `dotenv` `^17.4.2`, `express-async-handler` `^1.2.0`, `express-mongo-sanitize` `^2.2.0`, `express-rate-limit` `^8.5.2`, `express-validator` `^7.3.2`, `helmet` `^8.3.0`, `multer` `^2.2.0`). Phase 30 will build the new file creation rules.
+
+## End Of Phase 30 Content
+
+Phases 1–30 are GREEN (2026-08-02). Phase 30 built the new file creation rules from §30: added `## Rules` §9 File Creation Rules (new files only when explicitly required by the phase with existence verified first — REQ-206; existing code conventions understood first — mimic style, use existing libraries, follow existing patterns — REQ-207; no proactive `*.md`/README files and no code explanation summaries unless explicitly requested — REQ-208; no placeholder/stub/boilerplate files without explicit request and stop after working on a file — REQ-209), renumbered the `## Rules` expansion markers to §10 (Phase 30 DONE; the git marker relabeled to Phase 32 — the old "§30 Git Workflow" label was a mislabel, git is §32 — and the `## Rules` header blockquote corrected to "Phases 29 (security), 30 (new file creation), and 32 (git)"), added `## Checklists` §3 File Creation Checklist (the six REQ-206..209 checks, markers renumbered to §4 with Phase 30 DONE), enriched `## Project Directory Structure` (§6 new cross-ref bullet — new files follow the §30 creation rules, REQ-206..209; §7 new Phase 30 DONE marker and the git marker relabeled to Phase 32), added REQ-206..209 to the requirements table (source §30) with the Phase 30 requirement-expansion marker (`File creation rules: Phase 30 — DONE (REQ-206..209)`), updated the Checklist (phase map row 30 GREEN; Required Output rows Rules/Checklists/Project Directory Structure — GREEN Phase 30 enrichment), and added the Phase 30 Source Trace Map (1 §30 row — no codebase artifact; §30 is a pure convention phase). Phase 31 will build the validation and audit rules.
