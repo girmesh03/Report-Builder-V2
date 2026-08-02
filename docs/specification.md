@@ -59,7 +59,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 25 | 25. Project Directory Structure | GREEN | Project Directory Structure, Coding Conventions, Architecture |
 | 26 | 26. Code Quality And Coding Conventions | GREEN | Coding Conventions, Rules, JSDoc Standards, Checklists |
 | 27 | 27. JSDoc Conventions | GREEN | JSDoc Standards, Coding Conventions |
-| 28 | 28. Error Handling Patterns | PENDING | Error Handling, API Contract, Validation Audit |
+| 28 | 28. Error Handling Patterns | GREEN | Error Handling, API Contract, Validation Audit |
 | 29 | 29. Security | PENDING | Security, Requirements, Environment Config, Rules |
 | 30 | 30. New File Creation Rules | PENDING | Rules, Checklists, Project Directory Structure |
 | 31 | 31. Validation And Audit | PENDING | Validation Audit, Checklists, Source Traceability, Non-Functional Requirements |
@@ -80,11 +80,11 @@ Status of every section the target document must contain at minimum. Extra secti
 | Addis AI | 18 | GREEN (Phase 18 seed) |
 | AI Prompt Spec | 6, 7, 18, 19, 21, 24 | GREEN (Phase 7, 18, 19, 21, 24 enrichment) |
 | Analytics | 4 (out-of-scope requirement only; product feature deferred) | PENDING |
-| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 25, 28 | GREEN (Phase 13, 18, 20, 22, 24, 25 enrichment) |
+| API Contract | 5, 10, 11, 13, 18, 20, 22, 24, 25, 28 | GREEN (Phase 13, 18, 20, 22, 24, 25, 28 enrichment) |
 | Architecture | 9, 10, 25 | GREEN (Phase 10, 25 enrichment) |
 | Audio Recording STT | 8, 20, 24 | GREEN (Phase 8 seed, Phase 20, 24 enrichment) |
 | Auth Cookies | 11 | GREEN (Phase 11 seed) |
-| Backend Architecture | 10, 24, 25 | GREEN (Phase 10 seed, Phase 24, 25 enrichment) |
+| Backend Architecture | 10, 24, 25, 28 | GREEN (Phase 10 seed, Phase 24, 25, 28 enrichment) |
 | Resource Management | 4, 35 | GREEN (Phase 4 seed — content lives in `## Report Management`) |
 | Business Rules | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
 | Checklists | 26, 30, 31 | GREEN (Phase 26 seed) |
@@ -93,7 +93,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Decision Log | 1, 2, 24, 33 | GREEN |
 | Design | consolidated across phases; finalized in 36 | PENDING |
 | Environment Config | 17, 19, 25 | GREEN (Phase 17 seed, Phase 19, 25 enrichment) |
-| Error Handling | 28 | PENDING |
+| Error Handling | 28 | GREEN (Phase 28 seed) |
 | Export Spec | 6, 22, 25 | GREEN (Phase 6 seed, Phase 22, 25 enrichment) |
 | File Storage Uploads | 20 | PENDING |
 | Frontend Architecture | 12, 13, 14 | GREEN (Phase 13 enrichment) |
@@ -101,7 +101,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Glossary | 1, 2, 24, 34 (final) | GREEN |
 | Implementation Plan | 32 | PENDING |
 | JSDoc Standards | 26, 27 | GREEN (Phase 26 seed, Phase 27 enrichment) |
-| Logging | 10, 28 | GREEN (Phase 10 seed) |
+| Logging | 10, 28 | GREEN (Phase 10 seed, Phase 28 enrichment) |
 | Mock Data Seeding | 23, 24 | GREEN (Phase 23 seed, Phase 24 enrichment) |
 | MUI Component Standards | 12, 14, 24 | GREEN (Phase 14, 24 enrichment) |
 | Non-Functional Requirements | 31 | PENDING |
@@ -113,7 +113,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Project Directory Structure | 9, 10, 12, 13, 25, 30 | GREEN (Phase 14, 25 enrichment) |
 | Project Overview | 1 | GREEN |
 | React Hook Form Standards | 15 | GREEN (Phase 15 seed) |
-| Redux RTK Query | 13 | GREEN (Phase 13 seed) |
+| Redux RTK Query | 13, 28 | GREEN (Phase 13 seed, Phase 28 enrichment) |
 | Report Domain | 3, 5, 24 | GREEN (Phase 5, 24 enrichment) |
 | Report Format | 6, 7, 21 | GREEN (Phase 7, 21 enrichment) |
 | Report Management | 4, 5, 24, 35 | GREEN (Phase 5, 24 enrichment) |
@@ -130,7 +130,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 15, 16 enrichment) |
 | User Interactions | 3, 16, 22, 35 | GREEN (Phase 3 seed, Phase 16 enrichment) |
 | User Stories | 2 (seed), 4 | GREEN (Phase 2 seed) |
-| Validation Audit | 8, 15, 24, 28, 31 | GREEN (Phase 8 seed, Phase 15, 24 enrichment) |
+| Validation Audit | 8, 15, 24, 28, 31 | GREEN (Phase 8 seed, Phase 15, 24, 28 enrichment) |
 | Work Flow | 3, 22, 25, 35 | GREEN (Phase 3 seed, Phase 22, 25 enrichment) |
 
 ---
@@ -546,6 +546,21 @@ All `§` references below identify sections of the original source brief. They a
 
 ---
 
+## Source Trace Map — Phase 28 (source §28)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §28.1 | `CustomError` class carries `statusCode`, `message`, and `isOperational`; the global error handler distinguishes operational `CustomError` from unexpected errors; development returns the full stack trace, production returns a generic message and logs programmer errors | Error Handling (1), Logging, Requirements (REQ-195, REQ-196) |
+| §28.1 | `notFound.middleware.js` creates `CustomError(404)` with a descriptive message and forwards via `next()` — never responds directly | Error Handling (1), Project Directory Structure (4), Requirements (REQ-197) |
+| §28.1 | Validation failures return `422` with the error envelope; `data.errors` carries per-field messages; all async controllers wrapped with `express-async-handler` | Error Handling (1), API Contract (3), Requirements (REQ-198, REQ-199) |
+| §28.2 | Error/status table: validation 422, auth missing/invalid token 401, auth refresh expired 401, not found 404, file size exceeded 413, invalid MIME type 415, Mongoose CastError 400, Mongoose ValidationError 422, duplicate key (11000) 409, JsonWebTokenError 401, TokenExpiredError 401, AI service error 502 | Error Handling (2), Requirements (REQ-200) |
+| §28.3 | `baseQueryWithReauth`: 401 → `POST /api/v1/auth/refresh` → retry the original request on success → on refresh failure clear auth state and redirect to login | Redux RTK Query (2), Error Handling (3) |
+| §28.3 | `onQueryStarted` `if (error)` pattern; per-field `error.data.data.errors`; `AppToastContainer` toasts; message extraction chain `error.data?.message || error.data?.data?.errors?.[0]?.message || 'Something went wrong'` | Error Handling (3), Redux RTK Query (5), Requirements (REQ-201) |
+| §28.3 | `AppErrorBoundary`: class component catching React render errors with a fallback UI | Error Handling (3), Frontend Architecture (2), Requirements (REQ-202) |
+| Codebase (`client/package.json`) | `react-toastify` `^11.1.0` (AppToastContainer toasts) and `react-error-boundary` `^6.1.2` (AppErrorBoundary) are installed; no error components, `utils/error.js`, or `middleware/error.middleware.js` exist yet — created during implementation | Error Handling (3), Redux RTK Query (5) |
+
+---
+
 ## Project Overview
 
 ### 1. Product Identity
@@ -887,6 +902,9 @@ Secondary features should not distract from the core workflow of generating a bo
 | Mock data | Development/demo-only records injected into MongoDB via `backend/mock/*`; injection and wipe run inside MongoDB sessions, mock narrations are metadata-only (no audio files), and the commands refuse to run when `NODE_ENV` is `production` (AD-009). | §23, §33 (ADR-037) |
 | JSDoc | JavaScript documentation comments: a JSDoc block comment at the top of every file or module, plus `@module` on public modules, `@param`/`@returns`/`@throws` on functions, `@type` on constants, and JSDoc on exports (REQ-185/186). | §26 |
 | `@typedef` | JSDoc tag that defines a reusable type shape — used to document Mongoose models (`@typedef {Object} ModelName` with one `@property` line per field) and other compound types in place of TypeScript (REQ-192, REQ-194). | §27 |
+| CustomError | The backend error class in `backend/utils/error.js` carrying `statusCode`, `message`, and `isOperational`; operational `CustomError`s respond with their status and the §10.7 envelope, while unexpected errors are logged and get a generic production message (REQ-195, REQ-196). | §28.1 |
+| AppErrorBoundary | The class-component error boundary (react-error-boundary `^6.1.2`) that catches React render errors and shows a fallback UI; it wraps the router content in `App.jsx` alongside `AppToastContainer` (REQ-202). | §28.3 |
+| AppToastContainer | The react-toastify toast container (`^11.1.0`) composed in `App.jsx`; success/error toasts fire from the RTK Query `onQueryStarted` error pattern (REQ-201). | §28.3 |
 | Dead code | Code that is never executed or never used: unused imports, unused exports, unused constants/variables/methods; unused parameters carry the `_` prefix (`_req`, `_res`, `_next`) (REQ-181). | §26 |
 
 ---
@@ -1324,6 +1342,14 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-192 | Model files document `@typedef {Object} ModelName` plus one `@property {Type} fieldName - description` line per schema field. | A code review of the models finds the typedef and a property line per field. | §27 |
 | REQ-193 | Middleware JSDoc documents the req/res/next triple; intentionally unused parameters carry the `_` prefix (`_req`, `_res`, `_next`). | A code review of middleware finds the triple documented and unused parameters `_`-prefixed. | §27 |
 | REQ-194 | No TypeScript anywhere: JSDoc is the type layer — `@typedef` shapes, `@param {Object}` destructured props, `@returns {Promise<Type>}` on async functions. | A code review finds no `.ts`/`.tsx` files and JSDoc used as the typing mechanism. | §27 |
+| REQ-195 | `CustomError` lives in `backend/utils/error.js` with `statusCode`, `message`, and `isOperational` (`true` for expected, handled errors; `false` for programmer errors); it is created as `new CustomError(statusCode, message)` and used by `notFound.middleware.js` and `error.middleware.js`. | `utils/error.js` exports the class; the two middlewares import it and construct `CustomError` instances. | §28.1 |
+| REQ-196 | The global error handler in `backend/middleware/error.middleware.js` distinguishes operational `CustomError` instances from unexpected errors: operational errors respond with their `statusCode` and the §10.7 error envelope; unexpected errors are logged (REQ-086) — development returns the full stack trace, production returns a generic message with internal details never exposed. | Operational errors carry their mapped status; production error responses never leak internals; unexpected errors appear in the logs. | §28.1 |
+| REQ-197 | `notFound.middleware.js` handles unmatched routes by creating `new CustomError(404, "..")` with a descriptive message and calling `next(error)` — it never responds directly, so every unmatched request reaches the global handler with a 404. | Unmatched `/api/v1` requests return 404 with the envelope via the global handler. | §28.1, §25.1 |
+| REQ-198 | Validation failures return `422` with the §10.7 error envelope; `data.errors` carries the per-field validation messages that the frontend surfaces under each field via `error.data.data.errors`. | Validator failure responses carry per-field messages under `data.errors`. | §28.1, §10.10 |
+| REQ-199 | All async controllers are wrapped with `express-async-handler` (imported as `asyncHandler`); no custom async wrapper; rejected promises forward to the global error handler automatically. | No unwrapped async controller handlers exist; rejected promises reach the global handler. | §28.1, §10.3 |
+| REQ-200 | The global error handler maps Mongoose and JWT errors to their statuses — CastError → 400, ValidationError → 422, duplicate key (11000) → 409, JsonWebTokenError → 401, TokenExpiredError → 401; AI provider failures map to 502 for generation/correction endpoints (unified across Addis AI, Gemini, and Nvidia); STT chunk failures keep the mark-failed-and-continue behavior (REQ-129). | The listed error classes produce the mapped statuses; provider failures respond 502; STT chunk handling unchanged. | §28.2 |
+| REQ-201 | Frontend error pattern: every RTK Query mutation lifecycle uses the `onQueryStarted` `if (error)` guard; server validation errors display per field via `error.data.data.errors`; success/error toasts fire through `AppToastContainer`; message extraction uses `error.data?.message || error.data?.data?.errors?.[0]?.message || 'Something went wrong'`. | All mutations follow the pattern; the extraction chain is present; toasts render. | §28.3 |
+| REQ-202 | `AppErrorBoundary` is a class component (react-error-boundary, `^6.1.2` in `client/package.json`) that catches React render errors and shows a fallback UI; it wraps the router content in `App.jsx` alongside `AppToastContainer`. | `App.jsx` composes `AppErrorBoundary`; render errors show the fallback UI. | §28.3, §12.1 |
 
 ### Non-Functional Requirements (Phase 1)
 
@@ -1360,6 +1386,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Project directory structure rules: **Phase 25 — DONE (REQ-173..177)**.
 - Code quality rules: **Phase 26 — DONE (REQ-178..186)**.
 - JSDoc rules: **Phase 27 — DONE (REQ-187..194)**.
+- Error handling rules: **Phase 28 — DONE (REQ-195..202)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31**.
@@ -1514,7 +1541,7 @@ Authentication exists so reports belong to the correct user (§4, REQ-041). All 
 | Export to PDF/TXT/CSV/spreadsheet | Phase 22 | W-12 |
 | Supporting-resource flows (branches, history, analytics) | Phase 4 | (parallel flows) |
 | Archive, delete, restore lifecycle | Phase 35 | W-11 onward |
-| Error states and loading states | Phase 28 | all steps |
+| Error states and loading states | Phase 28 (`## Error Handling` §3) | all steps |
 
 ### 5. Export Sub-Flow (W-12, Phase 22)
 
@@ -1529,7 +1556,7 @@ The supervisor exports the finalized report (after W-11) from the report UI:
 | E-05 | Supervisor | Views and, if desired, edits the document freely in their own Google Drive; edits happen outside the app and are not synced back | Edited document (in the user's Google Drive) | `## Export Spec` §4, REQ-158 |
 
 - Export is available only on a finalized report (W-11 precedes W-12); the exported content is the report as it exists at export time — no AI re-processing (REQ-159).
-- Failure outcomes: a client-side generation failure shows an error state (Phase 28); a Google Docs failure surfaces the backend error through the §10.7 envelope (REQ-158).
+- Failure outcomes: a client-side generation failure shows an error state (Phase 28 — `## Error Handling` §3); a Google Docs failure surfaces the backend error through the §10.7 envelope (REQ-158).
 
 ---
 
@@ -1546,9 +1573,9 @@ The supervisor exports the finalized report (after W-11) from the report UI:
 | UI-005 | Supervisor requests a correction | Report not satisfactory | Supervisor states what is wrong, missing, unclear, or not written in the desired way | Correction request captured and routed to the AI | Request not submitted; retry | §3.2, §2.3.7 |
 | UI-006 | System updates the report | Correction request received | AI updates only the relevant part; correct unrelated sections are not unnecessarily rewritten (behavior §6.9) | Updated report shown for re-review | Update failure; previous version intact (versioning Phases 24/35) | §3.2, §2.3.7, §6.9 |
 | UI-007 | Supervisor finalizes | Report satisfies the supervisor | Supervisor accepts the report; the correction loop ends | Final report version stored | — | §3.2 |
-| UI-008 | Supervisor uses the app on a small screen | Viewport below 600px, or below 768px in landscape | Action buttons keep their icons (`vw < 600` / `vw < 768 && landscape`); long text ellipsizes instead of overflowing | Every action stays identifiable and no text overflows or overlaps | Icons or ellipsis missing; the app never scrolls horizontally (Phase 28 error states) | §16 |
+| UI-008 | Supervisor uses the app on a small screen | Viewport below 600px, or below 768px in landscape | Action buttons keep their icons (`vw < 600` / `vw < 768 && landscape`); long text ellipsizes instead of overflowing | Every action stays identifiable and no text overflows or overlaps | Icons or ellipsis missing; the app never scrolls horizontally (Phase 28 error states — `## Error Handling` §3) | §16 |
 
-**Later-phase interaction markers:** recording start/stop/re-record and file-size validation (Phase 20), transcription review/edit UI (Phase 20), export flow (Phase 22), login/logout and protected routes (Phase 11), branch/report/transcription/AI-conversation/profile CRUD (Phase 4), archive/delete/restore (Phase 35), loading/error/empty/unauthenticated states (Phase 28). Phase 16 is DONE — the UI rules interaction (UI-008: icon-first on small screens, ellipsis) is recorded above.
+**Later-phase interaction markers:** recording start/stop/re-record and file-size validation (Phase 20), transcription review/edit UI (Phase 20), export flow (Phase 22), login/logout and protected routes (Phase 11), branch/report/transcription/AI-conversation/profile CRUD (Phase 4), archive/delete/restore (Phase 35), loading/error/empty/unauthenticated states (Phase 28 — `## Error Handling` §3). Phase 16 is DONE — the UI rules interaction (UI-008: icon-first on small screens, ellipsis) is recorded above.
 
 ---
 
@@ -1900,7 +1927,7 @@ Lifecycle: `draft → audio_attached → transcribed → reviewed → completed`
 
 ## API Contract
 
-> **Phase 5 seed — conventions and endpoint inventory from §5; response envelope, status codes, and validation shapes added in Phase 10 (§10); authentication endpoints added in Phase 11 (§11); model-driven request/response schemas added in Phase 24 (§24 Data Model). Detailed request/response schemas and paths continue in Phases 12, 18, 20, 22, and 28.**
+> **Phase 5 seed — conventions and endpoint inventory from §5; response envelope, status codes, and validation shapes added in Phase 10 (§10); authentication endpoints added in Phase 11 (§11); model-driven request/response schemas added in Phase 24 (§24 Data Model); error handling added in Phase 28 (`## Error Handling`). Detailed request/response schemas and paths continue in Phases 12, 18, 20, and 22.**
 
 ### 1. Conventions (seeds)
 
@@ -1924,7 +1951,9 @@ Lifecycle: `draft → audio_attached → transcribed → reviewed → completed`
 
 - **Response envelope (§10.7):** every successful backend response uses `{ success: true, message: "..", data: {..} }`; every error response uses `{ success: false, message: "..", data: {..} }`.
 - **HTTP status codes (§10.6):** imported by semantic name from `backend/utils/httpStatus.js`; numeric status codes are never hardcoded.
-- **Validation errors (§10.10):** `express-validator` middleware in `backend/validators/*.js` (one file per domain), applied on the route before the controller handler; failures return `422` with the standard error envelope `{ success: false, message, data }`.
+- **Validation errors (§10.10):** `express-validator` middleware in `backend/validators/*.js` (one file per domain), applied on the route before the controller handler; failures return `422` with the standard error envelope `{ success: false, message, data }` — `data.errors` carries per-field messages the frontend surfaces via `error.data.data.errors` (REQ-198, `## Error Handling` §1).
+- **Error status mapping (§28.2):** the full error-to-status table — validation 422, auth 401, not found 404, file size 413, MIME 415, Mongoose CastError 400 / ValidationError 422 / duplicate key 409, JsonWebTokenError 401, TokenExpiredError 401 — lives in `## Error Handling` §2 (REQ-200).
+- **AI service errors (Phase 28):** provider failures return `502` with the §10.7 envelope for generation/correction endpoints — the unified rule across Addis AI, Gemini, and Nvidia (REQ-136, REQ-137, REQ-200); STT chunk failures keep the per-chunk mark-failed-and-continue behavior (`## Addis AI` §12, REQ-129).
 - **Pagination (§10.4):** every list endpoint uses `mongoose-paginate-v2` with default page `1`, default limit `10`, and max limit `100` (REQ-053).
 
 ### 4. Authentication Endpoints (Phase 11)
@@ -2426,7 +2455,7 @@ The prompt must enforce all 14 §21.5 rules (REQ-150..153). The mapping to the e
 
 ## Addis AI
 
-> **Phase 18 seed — Addis AI integration from §18. Provider fallbacks arrive in Phase 19, STT pipeline mechanics in Phase 20, final prompt construction in Phase 21, and unified error handling in Phase 28.**
+> **Phase 18 seed — Addis AI integration from §18. Provider fallbacks arrive in Phase 19, STT pipeline mechanics in Phase 20, final prompt construction in Phase 21, and unified error handling in Phase 28 (`## Error Handling` §2).**
 
 ### 1. Provider Identity And Primary Sources (§18.1–18.2)
 
@@ -2592,6 +2621,7 @@ Project handling (REQ-129):
 - Map Addis AI errors to safe user messages; never surface raw provider messages.
 - Log provider request IDs and status codes, not raw sensitive report content (echo of `## Logging` AI provider log fields).
 - Implement timeout; on network failure retry 3 times with exponential backoff (1s, 2s, 4s); on provider error (4xx, 5xx) mark the chunk as failed and continue.
+- Unified 502 rule (Phase 28): generation/correction responses map an ultimately failed provider call to `502` at the backend boundary; STT chunk failures keep the mark-failed-and-continue behavior above (REQ-200, `## Error Handling` §2).
 
 ### 13. Package And Implementation Implications (§18.14)
 
@@ -2606,13 +2636,13 @@ Project handling (REQ-129):
 - Phase 19 (§19 Other AI Providers): **DONE — Nvidia and Gemini contracts and the fallback chain are in `## Other AI Providers`; STT always stays with Addis AI.**
 - Phase 20 (§20 Audio Recording And STT Pipeline): chunking mechanics, MIME priority, `wavSplitter`, and retry wiring against the §7 endpoint.
 - Phase 21 (§21 AI Prompt Requirements): final prompt construction and system-prompt structure delivered through §6.
-- Phase 28 (§28 Error Handling): unified error handling across providers.
+- Phase 28 (§28 Error Handling): **DONE (Phase 28)** — unified error handling across providers in `## Error Handling` §2 (REQ-200).
 
 ---
 
 ## Other AI Providers
 
-> **Phase 19 seed — Nvidia and Gemini integration from §19. Final prompt construction arrives in Phase 21, the conversation data model in Phase 24, and unified error handling in Phase 28.**
+> **Phase 19 seed — Nvidia and Gemini integration from §19. Final prompt construction arrives in Phase 21, the conversation data model in Phase 24, and unified error handling in Phase 28 (`## Error Handling` §2).**
 
 ### 1. Provider Set And Free-AI Rule (§19)
 
@@ -2654,7 +2684,7 @@ Project handling (REQ-129):
 
 - Phase 21 (§21 AI Prompt Requirements): final prompt construction delivered through Gemini `contents`/`systemInstruction` and the Nvidia message format.
 - Phase 24 (§24 Data Model): **DONE — the provider field is stored per AI conversation message (`## Data Modeling` §4.6 `messages[].provider`; `## API Contract` §8; REQ-133, AD-011).**
-- Phase 28 (§28 Error Handling): unified error handling across all three providers.
+- Phase 28 (§28 Error Handling): **DONE (Phase 28)** — unified error handling across all three providers in `## Error Handling` §2 (REQ-200).
 
 ---
 
@@ -2868,7 +2898,7 @@ The only approved chunking pipeline (cross-aligned with `## Addis AI` §7; REQ-1
 - Phase 18 (§18 Addis AI Integration): **DONE — STT endpoint, constraints, and retry rules are in `## Addis AI` §7.**
 - Phase 20 (§20 Audio Recording And STT Pipeline): **DONE — MediaRecorder, MIME priority, wavSplitter chunking, language code, re-transcription endpoint, error handling and retries (sections 5–9; REQ-139..145).**
 - Phase 24 (§24 Data Model): **DONE — the upload status name is `audio_attached` (`## Data Modeling` §4.1; AD-011, REQ-168).**
-- Phase 28 (§28 Error Handling): STT error states.
+- Phase 28 (§28 Error Handling): **DONE (Phase 28)** — STT error states follow the frontend error pattern (`## Error Handling` §3, REQ-201) and the error/status mapping (`## Error Handling` §2, REQ-200); per-chunk retry behavior stays per §5–9 and REQ-129.
 
 ---
 
@@ -2890,9 +2920,182 @@ Re-transcription must be available to verify accuracy on every audio recording (
 
 ---
 
+## Error Handling
+
+> **Phase 28 seed — the error handling patterns from §28 (Error Handling Patterns).**
+
+### 1. Server-Side Error Handling (§28.1)
+
+- `CustomError` lives in `backend/utils/error.js` (imported by `notFound.middleware.js` and `error.middleware.js` per the `## JSDoc Standards` §11 samples; REQ-195): the class carries `statusCode`, `message`, and `isOperational` — `isOperational` is `true` when the error is an expected, handled condition and `false` for programmer errors.
+- The global error handler is `backend/middleware/error.middleware.js`, the terminal middleware in `app.js` mounted after the routes and the notFound middleware. It distinguishes operational `CustomError` instances from unexpected errors (REQ-196).
+- Operational `CustomError` responses use the `statusCode` and the §10.7 error envelope `{ success: false, message: "..", data: {..} }` (`## Backend Architecture` §7).
+- Unexpected errors are logged as programmer errors through `## Logging` (REQ-086); the response returns a generic message in production — internal details never reach the client. In development (`NODE_ENV === 'development'`) the response includes the full stack trace (REQ-196).
+
+```js
+// backend/middleware/error.middleware.js — global error handler (REQ-196)
+/**
+ * @module middleware/error
+ */
+import { CustomError } from '../utils/error';
+import logger from '../utils/logger';
+
+/**
+ * Global error handler: operational CustomError → statusCode + envelope;
+ * unexpected errors are logged and get a generic production message.
+ * @param {import('express').ErrorRequestHandler} err - The forwarded error.
+ * @param {import('express').Request} _req - Request (unused).
+ * @param {import('express').Response} res - Response.
+ * @param {import('express').NextFunction} _next - Next (unused).
+ * @returns {import('express').Response} The JSON error response.
+ */
+const errorHandler = (err, _req, res, _next) => {
+  if (err instanceof CustomError && err.isOperational) {
+    return res.status(err.statusCode).json({ success: false, message: err.message, data: {} });
+  }
+  logger.error('Unexpected error', { stack: err.stack, statusCode: err.statusCode });
+  if (process.env.NODE_ENV === 'development') {
+    return res.status(500).json({ success: false, message: err.message, data: { stack: err.stack } });
+  }
+  return res.status(500).json({ success: false, message: 'Something went wrong', data: {} });
+};
+
+export default errorHandler;
+```
+
+```js
+// backend/utils/error.js — CustomError class (REQ-195)
+/**
+ * @module utils/error
+ */
+
+/**
+ * Operational error carrying an HTTP status and an isOperational flag.
+ * @extends Error
+ */
+export class CustomError extends Error {
+  /**
+   * @param {number} statusCode - HTTP status for the response.
+   * @param {string} message - Client-safe error message.
+   * @param {boolean} [isOperational] - True for expected, handled errors.
+   */
+  constructor(statusCode, message, isOperational = true) {
+    super(message);
+    this.statusCode = statusCode;
+    this.isOperational = isOperational;
+  }
+}
+```
+
+- `notFound.middleware.js` handles unmatched routes: it creates `new CustomError(404, "..")` with a descriptive message and calls `next(error)` — it never responds directly, so every unmatched `/api/v1` request reaches the global handler with a 404 (REQ-197; `## Project Directory Structure` §4).
+
+```js
+// backend/middleware/notFound.middleware.js (REQ-197)
+/**
+ * @module middleware/notFound
+ */
+import { CustomError } from '../utils/error';
+
+/**
+ * Unmatched routes → CustomError(404) → next(); never responds directly.
+ * @param {import('express').Request} _req - Request (unused).
+ * @param {import('express').Response} _res - Response (unused).
+ * @param {import('express').NextFunction} next - Next; receives the error.
+ */
+const notFound = (_req, _res, next) => {
+  next(new CustomError(404, 'Resource not found'));
+};
+
+export default notFound;
+```
+
+- Validation failures: the validators check `express-validator` results and return `422` with the error envelope; `data.errors` carries the per-field validation messages that the frontend surfaces under each field via `error.data.data.errors` (§28.3; REQ-198; `## API Contract` §3, `## Backend Architecture` §9).
+- All async controllers are wrapped with `express-async-handler` (imported as `asyncHandler`) — no custom async wrapper; rejected promises forward automatically to the global error handler through `next(error)` (REQ-199; `## Backend Architecture` §3).
+
+### 2. Error Types And HTTP Status Codes (§28.2)
+
+| Error | Status | Notes |
+|---|---|---|
+| Validation | 422 | `express-validator` failures; `data.errors` per-field messages |
+| Auth (missing/invalid token) | 401 | No access token, invalid signature, or expired token |
+| Auth (refresh expired) | 401 | Refresh token expired or invalid — frontend refresh flow in §3 |
+| Not Found | 404 | Resource not found with a descriptive message |
+| File size exceeded | 413 | Audio upload too large (`## Audio Recording STT` §6) |
+| Invalid MIME type | 415 | Audio format not allowed (multer type validation) |
+| Mongoose CastError | 400 | Invalid ObjectId |
+| Mongoose ValidationError | 422 | Field-format error messages |
+| Mongoose duplicate key (11000) | 409 | Unique constraint violation |
+| JsonWebTokenError | 401 | Invalid token |
+| TokenExpiredError | 401 | Expired access token — triggers the refresh flow |
+| AI service error | 502 | Provider returned error |
+
+- The global error handler maps the Mongoose and JWT error classes to the table statuses: `CastError` → 400, `ValidationError` → 422, duplicate-key code 11000 → 409, `JsonWebTokenError` → 401, `TokenExpiredError` → 401 (REQ-200).
+- AI provider failures map to `502` at the backend boundary — the unified rule across Addis AI, Gemini, and Nvidia for generation and correction endpoints (REQ-200; `## Addis AI` §12, `## Other AI Providers` §3, REQ-136, REQ-137). STT chunk failures keep their per-chunk behavior — mark the chunk failed and continue (REQ-129) — the 502 applies to generation/correction responses.
+- All error statuses use the §10.7 error envelope; numeric codes are never hardcoded — they come by semantic name from `backend/utils/httpStatus.js` (§10.6).
+
+### 3. Frontend Error Handling (§28.3)
+
+- `baseQueryWithReauth` handles 401 responses: `POST /api/v1/auth/refresh` → on success, retry the original request (the backend re-issues both httpOnly cookies automatically) → on refresh failure, clear auth state and redirect to login. Full flow in `## Redux RTK Query` §2 (REQ-105, REQ-106).
+- Every RTK Query lifecycle (`onQueryStarted` for mutations, query callbacks where relevant) catches the baseQuery result with the `if (error)` guard (REQ-201): server-formatted validation errors display per field via `error.data.data.errors`, and success/error toasts fire through `AppToastContainer` (react-toastify `^11.1.0`, `client/package.json`).
+
+```js
+// onQueryStarted error pattern — report generation mutation (REQ-201)
+import { toast } from 'react-toastify';
+
+onQueryStarted: async (_arg, { queryFulfilled }) => {
+  try {
+    const { data } = await queryFulfilled;
+    toast.success(data.message);
+  } catch (error) {
+    const message = error.data?.message || error.data?.data?.errors?.[0]?.message || 'Something went wrong';
+    toast.error(message);
+  }
+}
+```
+
+- Error message extraction chain: `error.data?.message || error.data?.data?.errors?.[0]?.message || 'Something went wrong'` (REQ-201).
+- `AppErrorBoundary` is a class component (react-error-boundary `^6.1.2`, `client/package.json`) that catches React render errors and shows a fallback UI; it wraps the router content in `App.jsx` alongside `AppToastContainer` (REQ-202; `## Frontend Architecture` §2). Render errors only — async and event-handler errors are handled by the RTK Query pattern above.
+
+```jsx
+// client/src/components/layout/AppErrorBoundary.jsx (REQ-202)
+/**
+ * @module components/layout/AppErrorBoundary
+ */
+import { Component } from 'react';
+
+/**
+ * Class-component error boundary catching React render errors
+ * and rendering a fallback UI (react-error-boundary contract).
+ * @extends Component
+ */
+class AppErrorBoundary extends Component {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h1>Something went wrong. Please reload the page.</h1>;
+    }
+    return this.props.children;
+  }
+}
+
+export default AppErrorBoundary;
+```
+
+### 4. Expansion Markers
+
+- Phase 13 (§13 Redux): **DONE (Phase 13)** — the `baseQueryWithReauth` refresh flow in `## Redux RTK Query` §2 (REQ-104..106).
+- Phase 28 (§28 Error Handling Patterns): **DONE (Phase 28)** — server-side error handling in §1, the error status mapping in §2, frontend error handling in §3 (REQ-195..202).
+- Phase 29 (§29 Security): rate-limit errors (`429`, three tiers) and security-related error rules in `## Security`.
+
+---
+
 ## Validation Audit
 
-> **Phase 8 seed — the accuracy verification gates from §8. Broader validation and audit (checklists, source traceability, non-functional requirements) arrives in Phases 26, 28, 30, 31.**
+> **Phase 8 seed — the accuracy verification gates from §8. Broader validation and audit (error handling, checklists, source traceability, non-functional requirements) arrives in Phases 26, 28, 30, 31.**
 
 ### 1. Accuracy Verification Gate
 
@@ -2911,15 +3114,24 @@ Every form is reviewed against `## React Hook Form Standards` (REQ-112..116):
 
 A form that does not follow the `register`-first RHF contract is a review failure.
 
-### 3. Scope Note
+### 3. Error Handling Audit (Phase 28)
 
-This seed covers transcription accuracy and form validation. Full validation and audit sections arrive in later phases: Phases 28 (Error Handling), 31 (Validation And Audit — checklists, source traceability, non-functional requirements), 32 (Git Workflow); the Phase 26 code documentation audit landed in `## JSDoc Standards` and `## Checklists`.
+Every error path is audited against `## Error Handling` §§1–3 (REQ-195..202):
 
-### 4. Expansion Markers
+- STT failure states: an STT failure surfaces an error state with retry (UI-002, `## Audio Recording STT` §10); the error state follows the frontend error pattern (`## Error Handling` §3) and the STT error/status mapping (`## Error Handling` §2).
+- AI generation failures: a client-side generation failure shows an error state (UI-002/UI-003 failure cases, `## Work Flow` §3); a backend failure surfaces through the §10.7 envelope — provider failures return 502 for generation/correction endpoints (`## Error Handling` §2, REQ-200).
+- No raw error internals reach production responses (generic message only, REQ-196); no raw provider messages surface to users (REQ-129).
+- The `onQueryStarted` `if (error)` pattern, per-field `error.data.data.errors` display, and `AppToastContainer` toasts are present on every mutation (`## Redux RTK Query` §5, REQ-201).
+
+### 4. Scope Note
+
+This seed covers transcription accuracy and form validation. Full validation and audit sections arrive in later phases: Phases 31 (Validation And Audit — checklists, source traceability, non-functional requirements), 32 (Git Workflow); the Phase 26 code documentation audit landed in `## JSDoc Standards` and `## Checklists`, and the Phase 28 error handling audit landed in `## Error Handling` §3.
+
+### 5. Expansion Markers
 
 - Phase 15 (§15 React Hook Form Standards): **DONE (Phase 15)** — form validation rules in §2 above.
 - Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — code documentation audit rules in `## JSDoc Standards` and `## Checklists`.
-- Phase 28 (§28 Error Handling): error handling audit.
+- Phase 28 (§28 Error Handling): **DONE (Phase 28)** — error handling audit in §3 above (`## Error Handling` §§1–3, REQ-195..202).
 - Phase 31 (§31 Validation And Audit): full validation audit, checklists, source traceability, non-functional requirements.
 - Phase 32 (§32 Git Workflow): branch/commit rules that carry the accuracy gate.
 
@@ -3478,7 +3690,7 @@ backend/
 ├── middleware/
 │   ├── authenticate.middleware.js  # JWT verification on protected routes (§11)
 │   ├── notFound.middleware.js      # Unmatched routes → CustomError(404) → next() (§25.1, §28.1)
-│   └── error.middleware.js         # Global error handler; operational vs unexpected (§28)
+│   └── error.middleware.js         # Global error handler; operational vs unexpected (§28.1, REQ-196)
 ├── models/                    # Mongoose schemas (`## Data Modeling` §4)
 │   ├── user.model.js          # User
 │   ├── branch.model.js        # Branch
@@ -3508,6 +3720,7 @@ backend/
 │   └── audio/                 # Multer destination for clips; runtime-created; gitignored (§20.1, §25.1)
 ├── utils/
 │   ├── constants.js           # Frozen constants; no magic values (§10.5; `## Environment Config` §5)
+│   ├── error.js               # CustomError class: statusCode, message, isOperational (§28.1, REQ-195)
 │   ├── httpStatus.js          # Semantic HTTP status codes (§10.6)
 │   ├── logger.js              # Winston logger; backend-only logging (§10.9)
 │   └── wavSplitter.js         # In-memory PCM-level chunk splitter for STT (§20)
@@ -3692,7 +3905,7 @@ client/
 
 ## Backend Architecture
 
-> **Phase 10 seed — the backend architecture from §10 (Backend Architecture). Deeper backend implementation details arrive in Phase 24 (Data Model) and Phase 28 (error handling); the implementation-level architecture and the final file tree were finalized in Phase 25 (`## Project Directory Structure` §4).**
+> **Phase 10 seed — the backend architecture from §10 (Backend Architecture). Deeper backend implementation details arrived in Phase 24 (Data Model) and Phase 28 (error handling — `## Error Handling` §§1–2); the implementation-level architecture and the final file tree were finalized in Phase 25 (`## Project Directory Structure` §4).**
 
 ### 1. Routing (§10.1)
 
@@ -3704,6 +3917,7 @@ client/
 ### 2. Middleware (§10.2)
 
 - The error handling pipeline is required.
+- The error pipeline (Phase 28): `error.middleware.js` is the terminal middleware distinguishing operational `CustomError` from unexpected errors; `notFound.middleware.js` creates `CustomError(404)` and forwards via `next()`; the full contract and the error status mapping live in `## Error Handling` §§1–2 (REQ-195..197, REQ-200).
 - The fixed global security middleware stack order is: `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit`.
 - The security middleware stack must not be reordered or removed.
 - All middleware must be present (REQ-081).
@@ -3778,13 +3992,13 @@ client/
 
 - Phase 24 (§24 Data Model): **DONE — full schema definitions delivered in `## Data Modeling` §4 (Report, Audio, Transcription, User, Branch, ChatConversation).**
 - Phase 25 (§25 Project Directory Structure): **DONE (Phase 25) — implementation-level backend architecture: complete file tree in `## Project Directory Structure` §4 (app, server, config, controllers, middleware, models, mock, routes, services, uploads, utils, validators, logs).**
-- Phase 28 (§28 Error Handling): global error handler detail.
+- Phase 28 (§28 Error Handling): **DONE (Phase 28)** — global error handler detail in `## Error Handling` §§1–2 (REQ-195..200).
 
 ---
 
 ## Logging
 
-> **Phase 10 seed — the logging rules from §10.9. Error-handling logging detail arrives in Phase 28 (§28 Error Handling Patterns).**
+> **Phase 10 seed — the logging rules from §10.9. The error-handling logging detail arrived in Phase 28 (§28 Error Handling Patterns, `## Error Handling` §§1–2).**
 
 - All logging goes through `backend/utils/logger.js`.
 - Winston is used on the backend only; Morgan is used in development mode only.
@@ -3794,10 +4008,11 @@ client/
 - Log files are written to the `logs/` directory (gitignored), rotated daily via the Winston daily-rotate-file transport, and auto-deleted after 30 days.
 - Safe logging in production: logs must not include passwords, JWT token values, raw cookies, API keys or secrets, raw audio file contents, full transcription texts, or full generated report texts — use message IDs or truncated previews instead.
 - AI provider logs: log provider, model, status code, and timing; do not log request or response bodies in production.
+- Error-handling logging (Phase 28, `## Error Handling` §1): unexpected errors are logged by the global error handler with the stack trace and status code; in production the client gets a generic message and internals stay in the logs only (REQ-196). AI provider failures log provider, model, status code, and timing — never raw provider messages or response bodies; the client-facing 502 mapping lives in `## Error Handling` §2 (REQ-200). Safe-logging rules above apply to error logs too (REQ-086).
 
 ### Expansion Markers
 
-- Phase 28 (§28 Error Handling Patterns): error-handling logging detail.
+- Phase 28 (§28 Error Handling Patterns): **DONE (Phase 28)** — error-handling logging detail in the bullets above (`## Error Handling` §§1–2, REQ-196, REQ-200).
 
 ---
 
@@ -3992,7 +4207,7 @@ Three tiers:
 
 ## Redux RTK Query
 
-> **Phase 13 seed — Redux, RTK Query, and the API client from §13. Error-handling patterns on queries/mutations (the `onQueryStarted` `if (error)` pattern, per-field `error.data.data.errors`, toast notifications) arrive in Phase 28; endpoint set details arrive with their feature phases (15, 20, 21, 22).**
+> **Phase 13 seed — Redux, RTK Query, and the API client from §13. Error-handling patterns on queries/mutations (the `onQueryStarted` `if (error)` pattern, per-field `error.data.data.errors`, toast notifications) built in Phase 28 (§5); endpoint set details arrive with their feature phases (15, 20, 21, 22).**
 
 ### 1. Redux Structure (§13.1)
 
@@ -4028,13 +4243,20 @@ Three tiers:
 | aiConversationSlice | Assistant chat endpoints (`assistantApi.js` consumed by `chatAdapter.js`) | §12.6 (3.5.2); Phases 18/21 |
 | analyticsSlice | Dashboard analytics endpoints | Phase 4; Phase 31 |
 
-### 4. Expansion Markers
+### 5. Frontend Error Handling (Phase 28, §28.3)
+
+- Every mutation lifecycle uses the `onQueryStarted` `if (error)` guard (REQ-201): on success the message from the unwrapped envelope drives a success toast; on error, server-formatted validation errors display per field via `error.data.data.errors` and an error toast fires through `AppToastContainer` (react-toastify `^11.1.0`, `client/package.json`). Forms map 422 `data.errors` to field-level `setError` (`## React Hook Form Standards` §6–7).
+- Error message extraction chain: `error.data?.message || error.data?.data?.errors?.[0]?.message || 'Something went wrong'` (REQ-201).
+- `AppErrorBoundary` (react-error-boundary `^6.1.2`) is a class component that catches React render errors with a fallback UI; it wraps the router content in `App.jsx` (REQ-202; `## Frontend Architecture` §2).
+- Render errors are handled by `AppErrorBoundary`; request/response errors by the `onQueryStarted` pattern. Full rules and samples in `## Error Handling` §3.
+
+### 6. Expansion Markers
 
 - Phase 15 (§15 React Hook Form Standards): **DONE (Phase 15)** — forms submit via RTK Query mutation hooks; `handleSubmit(onSubmit)` try/catch reads the mutation error; 422 → field-level `setError`; `isSubmitting` drives MuiButton `loading` (`## React Hook Form Standards` §6–7).
 - Phase 20 (§20 Audio Recording And STT Pipeline): audio/transcription endpoint sets.
 - Phase 21 (§21 AI Prompt Requirements): AI correction/generation endpoint sets.
 - Phase 22 (§22 Export): export endpoint set.
-- Phase 28 (§28 Error Handling Patterns): `onQueryStarted` error pattern, per-field `error.data.data.errors`, toast notifications.
+- Phase 28 (§28 Error Handling Patterns): **DONE (Phase 28)** — `onQueryStarted` error pattern, per-field `error.data.data.errors`, toast notifications, and `AppErrorBoundary` in §5 above (`## Error Handling` §3, REQ-201, REQ-202).
 
 ---
 
@@ -4402,7 +4624,7 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 
 ## React Hook Form Standards
 
-> **Phase 15 seed — the React Hook Form standards from §15. `react-hook-form` `^7.81.0` is installed (`client/package.json`, source of truth — REQ-079); no forms exist in `client/src` yet, so these rules define the contract every future form follows. Error-handling patterns on form submissions arrive in Phase 28; general UI rules built in Phase 16.**
+> **Phase 15 seed — the React Hook Form standards from §15. `react-hook-form` `^7.81.0` is installed (`client/package.json`, source of truth — REQ-079); no forms exist in `client/src` yet, so these rules define the contract every future form follows. Error-handling patterns on form submissions built in Phase 28 (`## Error Handling` §3); general UI rules built in Phase 16.**
 
 ### 1. Form Setup (§15 1–2)
 
@@ -4453,7 +4675,7 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 ### 9. Expansion Markers
 
 - Phase 16 (§16 UI Rules): **DONE (Phase 16)** — general UI rules; submit buttons are `size="small"` with `flexShrink: 0` (see §7).
-- Phase 28 (§28 Error Handling Patterns): form error patterns, `onQueryStarted` error handling.
+- Phase 28 (§28 Error Handling Patterns): **DONE (Phase 28)** — form error patterns and `onQueryStarted` error handling in `## Redux RTK Query` §5 (`## Error Handling` §3, REQ-201).
 
 ---
 
@@ -4811,3 +5033,6 @@ Phases 1–26 are GREEN (2026-08-02). Phase 26 built the code quality and coding
 ## End Of Phase 27 Content
 
 Phases 1–27 are GREEN (2026-08-02). Phase 27 built the JSDoc conventions from §27: enriched `## JSDoc Standards` (header blockquote updated — Phase 26 seed + Phase 27 enrichment; §1 Mandatory Documentation kept with the tag-level detail paragraph now pointing at the built §§3–11; §2 Codebase Facts extended — `AppTheme.jsx` carries the live function triple (`@param {{ children: React.ReactNode }} props - Theme provider props.`, `@returns {JSX.Element} Theme provider wrapper.`, `@throws {never} This component does not throw.`), `customizations/surfaces.js` opens `@module customizations/surfaces`, `themePrimitives.js` exports the brand/gray/green/orange/red/blue/error/success constants without `@type` — the REQ-186 gap, constants gain `@type` during implementation with no file replacement; new §3 Module-Level Documentation — `@module <path>/<name>` relative to the package source root (`client/src/`, `backend/`), theme customizations and `AppTheme.jsx` use `@module` never `@file` (REQ-187); new §4 Function-Level Tags — `@param {type} name - description` / `@returns {type}` / `@throws {ErrorType} reason`, arrow functions for components and controllers (REQ-188); new §5 Constants — `@type` with full type definitions (REQ-189); new §6 Express And Mongoose Types — `import('express').Request/Response/NextFunction`, Mongoose async middleware `@returns {Promise<void>}` (REQ-190); new §7 Component JSDoc — `@param {Object} props` with `name`/`label`/`error`/`helperText`/`control` documented, forwardRef-wrapped inputs with `@param {import('react').Ref} ref`, presentation wrappers do not use forwardRef (REQ-191); new §8 Model JSDoc — `@typedef {Object} ModelName` + one `@property {Type} fieldName - description` per field (REQ-192); new §9 Middleware JSDoc — req/res/next triple with `_`-prefixed unused params (REQ-193); new §10 No-TypeScript Typing Rules — JSDoc as the type layer (REQ-194); new §11 Sample Documented Files — six canonical forms: theme customization in the live `customizations/surfaces.js` form, constants with the real `AUDIO_MAX_DURATION_SEC` = 900 / `AUDIO_MAX_SIZE_BYTES` = 52428800 / `REPORT_STATUSES` values, Mongoose model in the `models/dailyReport.js` form with `user`/`date`/`branches`/`status`/`transcription` `@property` lines, Express controller in the `controllers/user.controller.js` form — arrow function `getProfile` using `req.user._id.toString()` per REQ-183 and returning `{ success: true, message: 'User profile fetched successfully', data: { user } }`, Express middleware in the `notFound.middleware.js` form with `_res`/`_req`, React component in the `components/reusable/FormTextField.jsx` form — arrow function wrapped with `forwardRef` (so RHF `register` binds the input directly) with `displayName` set and the §7 props documented; old §3 Expansion Markers renumbered to §12 with both markers DONE), enriched `## Coding Conventions` (header blockquote updated — §27 conventions arrived in `## JSDoc Standards` §§3–11; §14 marker flipped to Phase 27 DONE), added REQ-187..194 (module `@module` path/name with no `@file` for themes, function tag form with arrow functions, constant `@type`, Express `import('express')` types + Mongoose `Promise<void>`, component props, model `@typedef`/`@property`, middleware req/res/next triple with `_` prefix, no-TypeScript JSDoc typing), added the Phase 27 requirement-expansion marker, extended `## Glossary` (`@typedef`), updated the Checklist (Coding Conventions and JSDoc Standards — GREEN Phase 27 enrichment), and added the Phase 27 Source Trace Map (9 §27 rows + 2 codebase rows: the AppTheme.jsx live triple and the surfaces.js `@module` / themePrimitives.js missing-`@type` facts). Phase 28 will build the error handling patterns.
+## End Of Phase 28 Content
+
+Phases 1–28 are GREEN (2026-08-02). Phase 28 built the error handling patterns from §28: new `## Error Handling` seed (header blockquote; §1 Server-Side Error Handling — `CustomError` in `backend/utils/error.js` carrying `statusCode`/`message`/`isOperational` (REQ-195), the global `error.middleware.js` distinguishing operational `CustomError` from unexpected errors — development returns the full stack trace, production returns a generic message and logs programmer errors via `## Logging` (REQ-196), `notFound.middleware.js` creating `CustomError(404)` and forwarding via `next()` (REQ-197), validation failures `422` with `data.errors` per-field messages (REQ-198), all async controllers wrapped with `express-async-handler` (REQ-199), with the error-handler, CustomError, and notFound code samples; §2 Error Types And HTTP Status Codes — the full §28.2 table (validation 422, auth 401 ×2, not found 404, file size 413, MIME 415, CastError 400, ValidationError 422, duplicate key 11000 → 409, JsonWebTokenError 401, TokenExpiredError 401, AI service 502) with Mongoose/JWT mapping in the global handler and the unified 502 rule for all three providers — STT chunk failures keep the mark-failed-and-continue behavior (REQ-129, REQ-200); §3 Frontend Error Handling — the `baseQueryWithReauth` refresh flow cross-ref, the `onQueryStarted` `if (error)` pattern with per-field `error.data.data.errors`, `AppToastContainer` toasts (react-toastify), the message extraction chain, `AppErrorBoundary` class component (react-error-boundary) catching React render errors with fallback UI (REQ-201, REQ-202), with the onQueryStarted and AppErrorBoundary code samples; §4 Expansion Markers — Phase 13 DONE, Phase 28 DONE, Phase 29 pending), enriched `## API Contract` (header blockquote updated; §3 — `data.errors` per-field note, error status mapping cross-ref, AI service 502 rule), enriched `## Validation Audit` (new §3 Error Handling Audit — STT failure states, AI generation failure error states, no-internals rule, mutation error-pattern audit; scope note and markers updated; §3→§4/§5 renumbering), enriched `## Logging` (error-handling logging detail — unexpected errors logged with stack and status, production generic message, AI provider error log fields, safe-logging applies to error logs; marker flipped DONE), enriched `## Redux RTK Query` (header blockquote updated; new §5 Frontend Error Handling — onQueryStarted pattern, 422-to-setError, toasts, AppErrorBoundary, render-vs-request error split; §4→§6 marker renumbering; marker flipped DONE), enriched `## Backend Architecture` (header blockquote; §2 error pipeline note; §11 marker flipped DONE), `## Project Directory Structure` §4 tree (`utils/error.js` node added; error.middleware.js comment updated), `## Addis AI` (§12 unified-502 note; marker flipped), `## Other AI Providers` (marker flipped), `## Audio Recording STT` (§10 marker flipped), `## React Hook Form Standards` (header blockquote; marker flipped), UI/UX Spec / Work Flow / User Interactions phase-attribution updates, added REQ-195..202, added the Phase 28 requirement-expansion marker, extended `## Glossary` (CustomError, AppErrorBoundary, AppToastContainer), updated the Checklist (Error Handling — GREEN seed; API Contract, Validation Audit, Logging, Redux RTK Query, Backend Architecture — GREEN Phase 28 enrichment), and added the Phase 28 Source Trace Map (7 §28 rows + 1 codebase row: `react-toastify` `^11.1.0` and `react-error-boundary` `^6.1.2` in `client/package.json`, no error components or backend error files exist yet). Phase 29 will build the security rules.
