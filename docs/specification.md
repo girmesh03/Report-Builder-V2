@@ -65,7 +65,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 31 | 31. Validation And Audit | GREEN | Validation Audit, Checklists, Source Traceability, Non-Functional Requirements |
 | 32 | 32. Git And Phase Protocol | GREEN | Phase Protocol, Tasks And Implementation Plan |
 | 33 | 33. Decision Log (ADRs) | GREEN | Decision Log |
-| 34 | 34. Glossary | PENDING | Glossary, Requirements |
+| 34 | 34. Glossary | GREEN | Glossary, Requirements |
 | 35 | 35. Archive, Delete, And Restore Lifecycle | PENDING | Report Management, Data Modeling, Business Rules, Work Flow |
 | 36 | Final Consolidation (no source section) | PENDING | Full `docs/specification.md` — coverage verification, open-question resolution, final quality gate |
 
@@ -98,7 +98,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | File Storage Uploads | 20 | PENDING |
 | Frontend Architecture | 12, 13, 14 | GREEN (Phase 13 enrichment) |
 | Git Workflow | 32 | GREEN (Phase 32 — merged into `## Phase Protocol` per AD-014) |
-| Glossary | 1, 2, 24, 34 (final) | GREEN |
+| Glossary | 1, 2, 24, 34 (final) | GREEN (Phase 1–2 seed, Phase 24 enrichment, Phase 34 finalization) |
 | Implementation Plan | 32 | GREEN (Phase 32 seed) |
 | JSDoc Standards | 26, 27 | GREEN (Phase 26 seed, Phase 27 enrichment) |
 | Logging | 10, 28 | GREEN (Phase 10 seed, Phase 28 enrichment) |
@@ -651,6 +651,29 @@ All `§` references below identify sections of the original source brief. They a
 | §33 (ADR-036) | No Roles/RBAC — Single User Type | Decision Log (AD-004), Auth Cookies, Requirements (REQ-007) |
 | §33 (ADR-037) | Mock Data Seeding Strategy (metadata-only audio clips) | Mock Data Seeding (5), Data Modeling (6), Decision Log (AD-009), Requirements (REQ-162) |
 
+## Source Trace Map — Phase 34 (source §34)
+
+§34 is the glossary — 16 terms. Seven were already defined in `## Glossary` by Phases 1–33; nine are added in Phase 34:
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §34 | Area Supervisor — the primary user who visits restaurant branches and prepares daily reports | Glossary (already present) |
+| §34 | STT — speech-to-text processing | Glossary (already present) |
+| §34 | MUI — Material UI component library | Glossary (added in Phase 34) |
+| §34 | RTK Query — Redux Toolkit Query for data fetching | Glossary (already present) |
+| §34 | RHF — React Hook Form | Glossary (already present, as "react-hook-form (RHF)") |
+| §34 | Noto Sans Ethiopic — font used for Amharic text rendering | Glossary (already present) |
+| §34 | Addis — the primary language model provider for speech-to-text and text generation | Glossary (added in Phase 34, as "Addis AI (Addis)") |
+| §34 | Gemini — alternative language model provider (Google) | Glossary (added in Phase 34) |
+| §34 | Nvidia — alternative language model provider | Glossary (added in Phase 34) |
+| §34 | PCM — pulse-code modulation audio format | Glossary (added in Phase 34) |
+| §34 | ffmpeg — multimedia framework used for audio conversion | Glossary (added in Phase 34) |
+| §34 | wavSplitter — service that splits WAV files into 60-second chunks for STT | Glossary (added in Phase 34) |
+| §34 | Multer — Node.js middleware for handling multipart/form-data file uploads | Glossary (added in Phase 34) |
+| §34 | httpOnly — cookie flag that prevents JavaScript access (prevents XSS token theft) | Glossary (already present, as "httpOnly cookie") |
+| §34 | baseQueryWithReauth — RTK Query wrapper that handles token refresh on 401 responses | Glossary (already present) |
+| §34 | Two-Path Deletion — archive then permanent delete (user-initiated or after 30 days) | Glossary (added in Phase 34) |
+
 ## Source Traceability
 
 Every fact extracted from `docs/initial-doc.md` is recorded in the per-phase source trace maps above (`## Source Trace Map — Phase N (source §N)`), one map per phase listing each source fact and the exact spec section that records it. This section is the index: one row per phase, with the spec sections each phase produced or updated. No source fact is recorded only here — the maps above carry the per-fact detail.
@@ -690,6 +713,7 @@ Every fact extracted from `docs/initial-doc.md` is recorded in the per-phase sou
 | 31 | §31 Validation And Audit | Validation Audit, Checklists, Source Traceability, Non-Functional Requirements | GREEN |
 | 32 | §32 Git And Phase Protocol | Phase Protocol, Tasks And Implementation Plan, Requirements, Decision Log, Rules, Project Directory Structure, Validation Audit, Mock Data Seeding, Source Traceability | GREEN |
 | 33 | §33 Decision Log (ADRs) | Decision Log, Tasks And Implementation Plan, Source Traceability | GREEN |
+| 34 | §34 Glossary | Glossary, Requirements, Source Traceability | GREEN |
 
 ---
 
@@ -941,7 +965,7 @@ Secondary features should not distract from the core workflow of generating a bo
 
 ## Glossary
 
-> **Terms added in Phases 1–9. The full glossary is built in Phase 34 (§34 Glossary).**
+> **Phase 34 finalization (DONE) — the full glossary is built from §34 (Glossary): all 16 source terms are defined — 7 carried from Phases 1–33 (Area Supervisor, STT, RTK Query, react-hook-form (RHF), Noto Sans Ethiopic, httpOnly cookie, baseQueryWithReauth) and 9 added in Phase 34 (MUI, Addis AI, Gemini, Nvidia, PCM, ffmpeg, wavSplitter, Multer, Two-Path Deletion).**
 
 | Term | Definition | Source |
 |---|---|---|
@@ -1042,6 +1066,15 @@ Secondary features should not distract from the core workflow of generating a bo
 | express-mongo-sanitize | The backend middleware that strips `$` and `.` from `req.body`, `req.query`, and `req.params` globally, preventing NoSQL injection; the fifth step of the fixed security middleware stack (REQ-081). | §29.6 |
 | 429 Too Many Requests | The HTTP status returned when a rate-limit tier is exceeded, with the §10.7 error envelope (REQ-204). | §29.4 |
 | Dead code | Code that is never executed or never used: unused imports, unused exports, unused constants/variables/methods; unused parameters carry the `_` prefix (`_req`, `_res`, `_next`) (REQ-181). | §26 |
+| MUI | Material UI — the React component library used for the entire frontend; imported tree-shaken (never the `@mui/material` barrel), styled via `sx`/`styled()` only, Tailwind CSS forbidden; the MUI X line is used in the community edition only. | §34, §9.1, §14 |
+| Addis AI (Addis) | The primary language model provider for speech-to-text and text generation, chosen for its Ethiopian Amharic specialization; STT always uses Addis AI, text generation is user-selectable across Addis/Gemini/Nvidia with Addis as the default. | §34, §18, §19.1 |
+| Gemini | The alternative language model provider (Google) for text generation; used as a fallback provider via `generateContent` with the `gemini-3.1-flash-lite` model and 3x exponential-backoff retries. | §34, §19.1 |
+| Nvidia | The alternative language model provider for text generation; used as a fallback provider via the Nvidia message format with a bearer token (`z-ai/glm-5.2` model). | §34, §19.2 |
+| PCM | Pulse-code modulation — the uncompressed audio sample format of the STT chunking pipeline: the full recording is converted to WAV (`pcm_s16le`, 16 kHz, mono) in a single ffmpeg pass, then split in-memory at the PCM level into ~60 s chunks; per-chunk re-encoding never happens. | §34, §20.4, REQ-144 |
+| ffmpeg | The multimedia framework used for audio conversion in the STT pipeline; converts the full recording to WAV (`pcm_s16le`, 16 kHz, mono) in a single pass before the PCM-level split. | §34, §20.4, REQ-144 |
+| wavSplitter | The backend service (`backend/utils/wavSplitter.js`) that splits a WAV file in-memory at the PCM level into ~60 s chunks (`ADDIS_AI_STT_MAX_DURATION_SEC` = 60) for STT. | §34, §20.4 |
+| Multer | The Node.js middleware handling multipart/form-data file uploads; the audio upload endpoint uses it to store clips under `backend/uploads/audio/` with MIME and size validation (whitelist, 50 MB max) plus server-side ffprobe duration validation. | §34, §20.7, §29.8 |
+| Two-Path Deletion | The lifecycle where deletion always starts with archive (`isArchived: true` + `archivedAt`), and permanent delete is reachable only from the archived state — either user-initiated or automatically after the 30-day window (TTL 30-day partial index); restore is possible only while archived and before the deadline (ADR-015). | §34, §33 (ADR-015), §35 |
 
 ---
 
@@ -1552,7 +1585,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31 — DONE (REQ-210..216)**.
-- Glossary-driven requirement re-check: **Phase 34**.
+- Glossary-driven requirement re-check: **Phase 34 — DONE** (all 16 §34 glossary terms defined; requirements unchanged).
 
 ---
 
@@ -5846,3 +5879,7 @@ Phases 1–32 are GREEN (2026-08-02). Phase 32 built the Git and phase protocol 
 ## End Of Phase 33 Content
 
 Phases 1–33 are GREEN (2026-08-02). Phase 33 finalized the decision log from §33 (Decision Log (ADRs)): flipped the `## Decision Log` header blockquote to Phase 33 DONE and added the finalization rules (AD-<NNN> numbering, mandatory source citation including the source §33 ADR number, supersession rule, later-phase decisions recorded here, sequential numbering never reusing a retired number); added AD-016 (Transform Layer for API Responses — DTO mapping, source §33 ADR-017) — the only §33 ADR without prior spec coverage — with cross-refs in `## Redux RTK Query` (response transformation via `transformResponse`, REQ-106) and the §13.2 source trace row; added `## Source Trace Map — Phase 33` — the full 37-row ADR-001..037 → spec-coverage trace proving every §33 decision is implemented in the spec (ADR-037 ↔ AD-009 was already traced) — and the `## Source Traceability` row 33 (all 33 rows GREEN); corrected the three Phase 32 plan texts that contradicted AD-010 (T-3-03a now reads inline `generated`/`generatedHistory[]` versioning with no separate ReportVersion model; T-5-02b now reads a ChatConversation record plus `Report.generated`/`generatedHistory[]` updates with no AIConversation/GeneratedReport collections; T-7-01b now seeds ChatConversation with no AIConversation/GeneratedReport/ReportVersion collections); and updated the Checklist (phase map row 33 GREEN; Required Output row Decision Log — Phase 33 finalization). The Decision Log open items OQ-001..003 remain pending user input (Phase 36).
+
+## End Of Phase 34 Content
+
+Phases 1–34 are GREEN (2026-08-02). Phase 34 finalized the glossary from §34 (Glossary): flipped the `## Glossary` header blockquote to Phase 34 DONE; verified all 16 §34 terms are defined — 7 already present from Phases 1–33 (Area Supervisor, STT, RTK Query, react-hook-form (RHF), Noto Sans Ethiopic, httpOnly cookie, baseQueryWithReauth) and 9 added in Phase 34 with spec-accurate definitions and §34 source refs (MUI, Addis AI (Addis), Gemini, Nvidia, PCM, ffmpeg, wavSplitter — `backend/utils/wavSplitter.js`, Multer — `backend/uploads/audio/` with validation, Two-Path Deletion — ADR-015 lifecycle with the 30-day TTL); flipped the glossary-driven requirement re-check marker in `## Requirements` to Phase 34 DONE (all §34 terms defined; requirements unchanged); updated the Checklist (phase map row 34 GREEN; Required Output row Glossary — Phase 34 finalization); and added the Phase 34 Source Trace Map (16 §34 rows — 9 marked as added in Phase 34) and the `## Source Traceability` row 34 (all 34 rows GREEN). Phase 35 will build the archive, delete, and restore lifecycle.
