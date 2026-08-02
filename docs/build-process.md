@@ -158,7 +158,7 @@ You build one single exhaustive specification document at `docs/specification.md
 - [ ] Export Spec
 - [ ] File Storage Uploads
 - [ ] Frontend Architecture
-- [ ] Git Workflow
+- [x] Git Workflow (merged into Phase Protocol — AD-014, Phase 32)
 - [ ] Glossary
 - [ ] Implementation Plan
 - [ ] JSDoc Standards
@@ -492,7 +492,7 @@ Each phase N (1–35) reads `docs/initial-doc.md` section N and produces/updates
 | 29 | 29. Security | Security, Requirements, Environment Config, Rules | `backend/middleware`, auth, `.env` |
 | 30 | 30. New File Creation Rules | Rules, Checklists, Project Directory Structure | — (source only) |
 | 31 | 31. Validation And Audit | Validation Audit, Checklists, Source Traceability, Non-Functional Requirements | `docs/initial-doc.md` cross-check |
-| 32 | 32. Git And Phase Protocol | Git Workflow, Phase Protocol, Tasks And Implementation Plan | git history, branch state |
+| 32 | 32. Git And Phase Protocol | Phase Protocol, Tasks And Implementation Plan | git history, branch state |
 | 33 | 33. Decision Log (ADRs) | Decision Log | prior ADRs if any |
 | 34 | 34. Glossary | Glossary, Requirements | — (source only) |
 | 35 | 35. Archive, Delete, And Restore Lifecycle | Report Management, Data Modeling, Business Rules, Work Flow | `backend/models`, resource routes |

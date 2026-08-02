@@ -63,7 +63,7 @@ Status legend: `GREEN` = completed and validated; `PENDING` = not yet built; `IN
 | 29 | 29. Security | GREEN | Security, Requirements, Environment Config, Rules |
 | 30 | 30. New File Creation Rules | GREEN | Rules, Checklists, Project Directory Structure |
 | 31 | 31. Validation And Audit | GREEN | Validation Audit, Checklists, Source Traceability, Non-Functional Requirements |
-| 32 | 32. Git And Phase Protocol | PENDING | Git Workflow, Phase Protocol, Tasks, Implementation Plan |
+| 32 | 32. Git And Phase Protocol | GREEN | Phase Protocol, Tasks And Implementation Plan |
 | 33 | 33. Decision Log (ADRs) | PENDING | Decision Log |
 | 34 | 34. Glossary | PENDING | Glossary, Requirements |
 | 35 | 35. Archive, Delete, And Restore Lifecycle | PENDING | Report Management, Data Modeling, Business Rules, Work Flow |
@@ -97,16 +97,16 @@ Status of every section the target document must contain at minimum. Extra secti
 | Export Spec | 6, 22, 25 | GREEN (Phase 6 seed, Phase 22, 25 enrichment) |
 | File Storage Uploads | 20 | PENDING |
 | Frontend Architecture | 12, 13, 14 | GREEN (Phase 13 enrichment) |
-| Git Workflow | 32 | PENDING |
+| Git Workflow | 32 | GREEN (Phase 32 — merged into `## Phase Protocol` per AD-014) |
 | Glossary | 1, 2, 24, 34 (final) | GREEN |
-| Implementation Plan | 32 | PENDING |
+| Implementation Plan | 32 | GREEN (Phase 32 seed) |
 | JSDoc Standards | 26, 27 | GREEN (Phase 26 seed, Phase 27 enrichment) |
 | Logging | 10, 28 | GREEN (Phase 10 seed, Phase 28 enrichment) |
 | Mock Data Seeding | 23, 24 | GREEN (Phase 23 seed, Phase 24 enrichment) |
 | MUI Component Standards | 12, 14, 24 | GREEN (Phase 14, 24 enrichment) |
 | Non-Functional Requirements | 1, 31 | GREEN (Phase 1 seed, Phase 31 enrichment) |
 | Other AI Providers | 19, 24 | GREEN (Phase 19 seed, Phase 24 enrichment) |
-| Phase Protocol | 32 | PENDING |
+| Phase Protocol | 32 | GREEN (Phase 32 seed) |
 | PRD | 1, 2, 3, 4 | GREEN (Phase 4 enrichment) |
 | Problem Statement | 1, 2 | GREEN |
 | Profile Management | 4 | GREEN (Phase 4 seed) |
@@ -124,7 +124,7 @@ Status of every section the target document must contain at minimum. Extra secti
 | Security | 11, 17, 18, 25, 29 | GREEN (Phase 11 seed, Phase 17, 18, 25, 29 enrichment) |
 | Source Traceability | 31 | GREEN (Phase 31 seed) |
 | Status Machine | 5, 24, 35 | GREEN (Phase 5 seed, Phase 24 enrichment) |
-| Tasks | 23 (seed — content lives in ## Mock Data Seeding), 32 | PENDING |
+| Tasks | 23 (seed — content lives in ## Mock Data Seeding), 32 | GREEN (Phase 23 seed, Phase 32 consolidation — content lives in `## Tasks And Implementation Plan`) |
 | Theme Standards | 14 | GREEN (Phase 14 seed) |
 | Transcription Review | 8, 20, 24 | GREEN (Phase 8 seed, Phase 20, 24 enrichment) |
 | UI/UX Spec | 7, 12, 14, 15, 16 | GREEN (Phase 15, 16 enrichment) |
@@ -594,6 +594,19 @@ All `§` references below identify sections of the original source brief. They a
 | §31 | No hardcoded magic values — everything in `constants.js` or config; no deprecated MUI props; all new components checked; HTTP status codes imported from `httpStatus`, never hardcoded | Validation Audit (4), Backend Architecture (utils), MUI Component Standards, Requirements (REQ-214, REQ-215, REQ-216) |
 | Codebase (`client/package.json`) | The `build` script runs `vite build`; the §31 gate deletes `dist/*` after every build check — no `dist/` is committed | Validation Audit (4), Checklists (4) |
 
+## Source Trace Map — Phase 32 (source §32)
+
+| Source ref | Fact | Recorded in spec section |
+|---|---|---|
+| §32 | Git workflow rules: branch per implementation phase named `phase-N-description`; no direct commits to `main`; every commit on the phase branch; six steps in order with no skips; Step 6 never without explicit user approval; commit messages `feat:`/`chore:`; no amend after push; merge after approval; delete local and remote branches | Phase Protocol (1), Requirements (REQ-217, REQ-218, REQ-220, REQ-221, REQ-224) |
+| §32 | Step 1 Pre-Git: confirm branch, clean tree, previous phase commits on the remote, current phase N and source section N, read previous phase's changes, think twice before acting and halt on conflicts | Phase Protocol (2) |
+| §32 | Step 2 Deep Codebase Analysis: analyze mapped codebase files and spec sections line by line; read the implementation log; record codebase facts; extend the analysis per phase with the previous phases | Phase Protocol (3) |
+| §32 | Step 3 Prior-Phase Analysis: analyze the previous phase's branch, commits, changed files, spec sections, validation results, and user feedback; the recorded changes are respected | Phase Protocol (4) |
+| §32 | Step 4 Phase Execution Without Deviation: absolute adherence to requirements, design, and code; validation with the documented rules — per-phase, per-task, per-sub-task, and global; every task and sub-task validated; meaningful visible changes; never deviate — ask instead of inventing | Phase Protocol (5), Requirements (REQ-219, REQ-223) |
+| §32 | Step 5 User Review: present the implementation; any feedback, failure, or ask returns to Step 2; impossible to reach Step 6 without explicit approval | Phase Protocol (6), Requirements (REQ-220) |
+| §32 | Step 6 Post-Git: FIRST record the changes/updates/corrections in the implementation log (respected in future phases); SECOND align all docs and specifications; then verification, stage, commit, push, present, wait for approval, merge and delete | Phase Protocol (7), Requirements (REQ-222, REQ-224) |
+| §32 | Complete implementation plan: phases, tasks, sub-tasks — the 8-phase plan | Tasks And Implementation Plan (1), Requirements (REQ-219) |
+
 ## Source Traceability
 
 Every fact extracted from `docs/initial-doc.md` is recorded in the per-phase source trace maps above (`## Source Trace Map — Phase N (source §N)`), one map per phase listing each source fact and the exact spec section that records it. This section is the index: one row per phase, with the spec sections each phase produced or updated. No source fact is recorded only here — the maps above carry the per-fact detail.
@@ -631,6 +644,7 @@ Every fact extracted from `docs/initial-doc.md` is recorded in the per-phase sou
 | 29 | §29 Security | Security, Requirements, Environment Config, Rules | GREEN |
 | 30 | §30 New File Creation Rules | Rules, Checklists, Project Directory Structure | GREEN |
 | 31 | §31 Validation And Audit | Validation Audit, Checklists, Source Traceability, Non-Functional Requirements | GREEN |
+| 32 | §32 Git And Phase Protocol | Phase Protocol, Tasks And Implementation Plan, Requirements, Decision Log, Rules, Project Directory Structure, Validation Audit, Mock Data Seeding, Source Traceability | GREEN |
 
 ---
 
@@ -1448,6 +1462,14 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-214 | No hardcoded magic values — everything lives in `constants.js` or config. | A review finds no hardcoded magic values outside `constants.js` or config. | §31 |
 | REQ-215 | No deprecated MUI props; every new component is checked against the MUI component standards. | A review finds no deprecated MUI props; new components pass the standards audit. | §31 |
 | REQ-216 | HTTP status codes are imported from `httpStatus` — never hardcoded in handlers or clients. | A review finds no hardcoded HTTP status codes (REQ-174). | §31 |
+| REQ-217 | Every implementation phase runs on its own branch named `phase-N-description`; no direct commits to `main`. | Each phase has a `phase-N-description` branch; `main` receives only merges. | §32 |
+| REQ-218 | Every implementation phase follows the six protocol steps in order — Pre-Git, Deep Codebase Analysis, Prior-Phase Analysis, Phase Execution And Validation With Docs, User Review, Post-Git — with no skips. | Each phase's git history shows all six steps executed in order. | §32 |
+| REQ-219 | Phase execution and validation uses the documented rules — per-phase, per-task, per-sub-task, and global; every task and sub-task of the plan is executed and validated. | Every task, sub-task, and validation of `## Tasks And Implementation Plan` is executed and passes. | §32 |
+| REQ-220 | Step 6 (Post-Git) is never performed without the user's explicit approval of the phase. | No Post-Git step appears in history before user approval; any feedback or failure returns the flow to Step 2. | §32 |
+| REQ-221 | Commit messages follow `feat: phase N description` (feature phases) and `chore: phase N description` (non-feature phases); commits are never amended after push. | Commit messages match the §32 convention per phase; no amend after push. | §32 |
+| REQ-222 | Step 6 first records the phase's changes/updates/corrections in `docs/implementation-log.md`; every recorded change is respected in future phases. | `docs/implementation-log.md` documents each phase's changes and future phases apply them. | §32 |
+| REQ-223 | Each implementation phase results in meaningful, visible changes and is never presented without visible results. | Each phase's review shows meaningful, visible changes. | §32 |
+| REQ-224 | Phase branches are merged only after user approval, then deleted locally and remotely. | Merged branches are deleted both locally and on the remote. | §32 |
 
 ### Requirement expansion markers
 
@@ -1481,6 +1503,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 - Security rules: **Phase 29 — DONE (REQ-203..205)**.
 - File creation rules: **Phase 30 — DONE (REQ-206..209)**.
 - Validation and audit rules: **Phase 31 — DONE (REQ-210..216)**.
+- Git and phase protocol rules: **Phase 32 — DONE (REQ-217..224)**.
 - Stack/package rules requirements: **Phase 9**.
 - Security requirements: **Phase 29**.
 - Non-functional requirements finalization: **Phase 31 — DONE (REQ-210..216)**.
@@ -3232,7 +3255,7 @@ Every change is audited against all of the following (REQ-210..216; `## Checklis
 
 ### 5. Scope Note
 
-This seed covers transcription accuracy and form validation. Full validation and audit sections arrive in later phases: Phase 31 built the §31 validation audit rules in §4 above (with the checklist in `## Checklists` §4, the source traceability index in `## Source Traceability`, and the quality NFRs in REQ-210..216), Phase 32 (Git Workflow); the Phase 26 code documentation audit landed in `## JSDoc Standards` and `## Checklists`, and the Phase 28 error handling audit landed in `## Error Handling` §3.
+This seed covers transcription accuracy and form validation. Full validation and audit sections arrive in later phases: Phase 31 built the §31 validation audit rules in §4 above (with the checklist in `## Checklists` §4, the source traceability index in `## Source Traceability`, and the quality NFRs in REQ-210..216), Phase 32 built the merged `## Phase Protocol` (Git And Phase Protocol, REQ-217..224); the Phase 26 code documentation audit landed in `## JSDoc Standards` and `## Checklists`, and the Phase 28 error handling audit landed in `## Error Handling` §3.
 
 ### 6. Expansion Markers
 
@@ -3240,7 +3263,7 @@ This seed covers transcription accuracy and form validation. Full validation and
 - Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — code documentation audit rules in `## JSDoc Standards` and `## Checklists`.
 - Phase 28 (§28 Error Handling): **DONE (Phase 28)** — error handling audit in §3 above (`## Error Handling` §§1–3, REQ-195..202).
 - Phase 31 (§31 Validation And Audit): **DONE (Phase 31)** — validation audit rules in §4 above (REQ-210..216), checklist in `## Checklists` §4, source traceability in `## Source Traceability`, quality NFRs REQ-210..216.
-- Phase 32 (§32 Git Workflow): branch/commit rules that carry the accuracy gate.
+- Phase 32 (§32 Git And Phase Protocol): branch/commit rules that carry the accuracy gate — **DONE (Phase 32)**.
 
 ---
 
@@ -3714,6 +3737,11 @@ Report-Builder-V2/
 ├── backend/              # Backend package — structure in §4
 ├── client/               # Frontend package — structure in §5
 ├── docs/                 # Project documentation (not part of the delivered application)
+│   ├── build-implementation.md  # Implementation invocation prompt — `use docs/build-implementation.md <N>` (N = 1..8; §32, Phase 32)
+│   ├── build-process.md         # Specification build-process prompt (Phase 1–36; §32 update in Phase 32)
+│   ├── implementation-log.md    # Step 6 changes/updates/corrections record, binding on future phases (`## Phase Protocol` §7, REQ-222)
+│   ├── initial-doc.md           # Development-time source brief — read-only, referenced by section number only
+│   └── specification.md         # This specification — the single source of truth for implementation
 └── scripts/              # Repository tooling, e.g. scripts/verify-initial-doc.py
 ```
 
@@ -3955,13 +3983,13 @@ client/
 - Phase 14 (§14 MUI, MUI X, Theme, And Component Standards): **DONE (Phase 14)** — `components/reusable/`, `components/columns/`, and `utils/ethiopianDate.js` added above.
 - Phase 25 (§25 Project Directory Structure): **DONE (Phase 25)** — final structure: backend tree §4, frontend tree §5, rules and requirements §6.
 - Phase 30 (§30 New File Creation Rules): **DONE (Phase 30)** — new files follow the §30 file creation rules (§6, REQ-206..209).
-- Phase 32 (§32 Git And Phase Protocol): workflow structure.
+- Phase 32 (§32 Git And Phase Protocol): workflow structure — **DONE (Phase 32)**.
 
 ---
 
 ## Rules
 
-> **Phase 9 seed — the technical stack rules from §9. Rules deepened in Phases 13 (Redux), 16 (UI rules), 17 (environment config), 21 (AI prompts), and 26 (code quality); further rules arrive in Phases 29 (security), 30 (new file creation), and 32 (git).**
+> **Phase 9 seed — the technical stack rules from §9. Rules deepened in Phases 13 (Redux), 16 (UI rules), 17 (environment config), 21 (AI prompts), and 26 (code quality); further rules arrive in Phases 29 (security), 30 (new file creation), and 32 (git and phase protocol).**
 
 ### 1. Stack Rules (§9.1)
 
@@ -4054,7 +4082,7 @@ client/
 - Phase 26 (§26 Code Quality And Coding Conventions): **DONE (Phase 26)** — code quality rules in §7 above (REQ-178..186).
 - Phase 29 (§29 Security): **DONE (Phase 29)** — security rules in §8 above (REQ-203..205).
 - Phase 30 (§30 New File Creation Rules): **DONE (Phase 30)** — file creation rules in §9 above (REQ-206..209).
-- Phase 32 (§32 Git And Phase Protocol): git rules.
+- Phase 32 (§32 Git And Phase Protocol): git rules — **DONE (Phase 32)**.
 
 ---
 
@@ -4234,7 +4262,7 @@ Task seeds for the Tasks And Implementation Plan section (Phase 32):
 ### 8. Expansion Markers
 
 - Phase 24 (§24 Data Model): **DONE — the seeded entity set and its field-level definitions are delivered in §4 above (`## Data Modeling` §4).**
-- Phase 32 (Tasks And Implementation Plan): the §7 tasks are consolidated into the section.
+- Phase 32 (Tasks And Implementation Plan): the §7 tasks are consolidated into the section — **DONE (Phase 32)**.
 - Phase 35 (Archive, Delete, And Restore Lifecycle): the archive/delete/restore lifecycle rules may adjust the seeded report statuses.
 
 ---
@@ -5121,6 +5149,24 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 - **Consequences:** The `## Project Directory Structure` §4 tree carries the five `services/*.service.js` files; `## Architecture` §5 and `## Coding Conventions` §6 document the services layer.
 - **Source:** §25.1, §10.3, §18.14, §19 (Phase 25 user decision).
 
+#### AD-014 — Single merged `## Phase Protocol` section (Git Workflow folded in)
+
+- **Date:** 2026-08-02. **Status:** Accepted (user decision, Phase 32).
+- **Context:** §32 defines the Git workflow and the phase protocol. The Phase 32 plan proposed a separate `## Git Workflow` section next to `## Phase Protocol`; the user decided the Git workflow must NOT be a separate section.
+- **Decision:** The Git workflow is merged INTO the single `## Phase Protocol` section — §1 High-Level Git Rules plus the six steps in §§2–7 and enforcement in §8. No standalone `## Git Workflow` section exists.
+- **Rationale:** There is a probability the implementation AI could skip a separate section; a single merged section makes the protocol impossible to skip.
+- **Consequences:** `## Phase Protocol` is the one and only execution contract together with `## Tasks And Implementation Plan`; `docs/build-process.md` is updated so no reference to a separate Git Workflow section survives.
+- **Source:** §32 (Phase 32 user decision).
+
+#### AD-015 — Eight-phase implementation plan with per-task validations
+
+- **Date:** 2026-08-02. **Status:** Accepted (user decision, Phase 32).
+- **Context:** §32 requires a complete implementation plan (phases, tasks, sub-tasks) executed under the phase protocol.
+- **Decision:** The implementation is executed in 8 phases — 1 Foundation, 2 Authentication And User Management, 3 Domain Models And Core Reporting, 4 Audio Recording And STT, 5 AI Report Generation And Correction, 6 Export And Analytics, 7 Mock Data And Hardening, 8 Quality Gates And Polish — each on its own `phase-N-description` branch with the §32 commit convention (`feat:` phases 1–6, `chore:` phases 7–8); every task carries sub-tasks with inline validations (`S-<phase>-<task><letter>`), every phase ends with a phase validation, a user-visible result, and its git line; the §23 mock task seeds T-MOCK-01..04 are consolidated into T-7-01..04.
+- **Rationale:** The 8-phase sequence follows the app's real dependency order (scaffold → auth → domain → audio/STT → AI → export/analytics → mock/hardening → gates), and per-task validations make every phase verifiable.
+- **Consequences:** `## Tasks And Implementation Plan` §1 is the exhaustive plan every implementation phase executes; §2 records the T-MOCK consolidation; §3 carries the expansion markers (Phase 35 archive/delete/restore, Phase 36 consolidation).
+- **Source:** §32 (Phase 32 user decision).
+
 ### Decision Log open items
 
 - Measurable success KPIs (OQ-001) — decision pending user input.
@@ -5130,6 +5176,480 @@ Each reusable component wraps the MUI equivalent with safe defaults, uses tree-s
 - Narration merge pipeline behavior (OQ-005, AD-008) — re-confirmed in Phases 20/21.
 - Checklist tool existence (OQ-006) — resolved in Phase 4: no checklist tool in V2; "follow a checklist" is a reportable activity only.
 - Clarifying-question behavior (OQ-007) — resolved in Phase 3: the app processes narrations as-is; no clarifying-Q&A step; re-confirmed in Phases 20/21.
+
+---
+
+## Phase Protocol
+
+> **Phase 32 seed — the Git workflow and phase protocol from §32 (Git And Phase Protocol). Per the Phase 32 user decision (AD-014), the Git workflow is merged INTO this single section (no separate `## Git Workflow` section) so the implementation AI cannot skip it. This section governs how every implementation phase of `## Tasks And Implementation Plan` is executed: the high-level Git rules in §1, the six mandatory steps in §§2–7, and the enforcement rules in §8.**
+
+### 1. High-Level Git Rules
+
+- Every implementation phase runs on its own branch named `phase-N-description` (e.g., `phase-1-foundation`, `phase-5-ai-generation-and-correction`). No direct commits to `main`; every commit lands on the phase branch.
+- Every phase follows the six steps below in order, with no skips: Step 1 Pre-Git (§2) → Step 2 Deep Codebase Analysis (§3) → Step 3 Prior-Phase Analysis (§4) → Step 4 Phase Execution And Validation With Docs (§5) → Step 5 User Review (§6) → Step 6 Post-Git (§7). Phase execution and validation with docs is very critical.
+- Step 6 (Post-Git) is never performed without the user's explicit approval of Step 5.
+- Commit messages: `feat: phase N description` for feature phases, `chore: phase N description` for non-feature phases (mock data, quality gates, polish). The exact commit message per phase is recorded in `## Tasks And Implementation Plan` §1.
+- Commits are never amended or force-pushed after they are pushed to the remote.
+- A phase branch is merged only after the user's approval; after the merge, the phase branch is deleted both locally and on the remote.
+
+### 2. Step 1 — Pre-Git
+
+1. Confirm the current branch is `phase-N-description` — the branch of the current phase N.
+2. Run `git status` and confirm the working tree is clean before starting the phase.
+3. Confirm `git log --oneline -5` shows the previous phase commit(s) on the remote.
+4. Confirm the current phase number N and the source section number N (the source brief is referenced by section number only); the source brief is read-only — never edited.
+5. Read the previous phase's changes (git history) to know what already exists.
+6. Think twice before acting; if anything conflicts with this protocol or the specification, stop and ask the user instead of proceeding.
+
+### 3. Step 2 — Deep Codebase Analysis
+
+1. Analyze the codebase files mapped for the phase — file by file.
+2. Analyze the `docs/specification.md` sections mapped for the phase — line by line.
+3. Read `docs/implementation-log.md` (if it exists) and every change recorded there; every recorded change/update/correction is respected and applied in this phase.
+4. Record every codebase fact found; if a fact contradicts the specification, stop and ask the user.
+5. Extend the analysis per phase: analyze the previous phases — their branches, commits, and deliverables — so the new phase aligns with them.
+
+### 4. Step 3 — Prior-Phase Analysis
+
+1. Analyze the previous phase's branch and its commits.
+2. Analyze the previous phase's changed files.
+3. Analyze the previous phase's specification sections.
+4. Analyze the previous phase's validation results.
+5. Analyze the previous phase's user feedback and the changes recorded in `docs/implementation-log.md`; every recorded change is respected in this phase.
+
+### 5. Step 4 — Phase Execution Without Deviation
+
+1. Implement the phase with absolute adherence to the requirements, designs, specifications, and constraints of this specification.
+2. Mandatory compliance: requirements, design, code.
+3. Validate the implementation using the documented rules: per-phase validation, per-task validation, per-sub-task validation, and global validation. Every single task and sub-task is executed and validated; every single validation is executed — per phase, per task, per sub-task, and global. This is extremely critical.
+4. Each implementation phase must result in meaningful, visible changes — never present a phase without visible results.
+5. Never deviate from the specification; if a required detail is missing or ambiguous, stop and ask the user instead of inventing it.
+
+### 6. Step 5 — User Review
+
+1. Present the implementation and its validation results.
+2. The user reviews the phase.
+3. If the user reports any feedback, failure, or issue — or if any validation fails — return to Step 2 (Deep Codebase Analysis) and redo the phase from there. Every ask or failure returns the flow to Step 2.
+4. It is impossible to move to Step 6 (Post-Git) without the user's explicit approval of the phase.
+
+### 7. Step 6 — Post-Git
+
+1. FIRST: record the changes/updates/corrections of this phase in `docs/implementation-log.md` — every change, update, and correction made in this phase. Every recorded change is respected in future phases.
+2. SECOND: align all docs and specifications — update this specification's sections that the phase touched so the specification remains the single source of truth; the source brief stays read-only.
+3. Run the project verification: `python scripts/verify-initial-doc.py` — it must exit 0.
+4. Stage the changed files: `git add <changed files>` — never stage unrelated files.
+5. Commit on the phase branch with the phase commit message from `## Tasks And Implementation Plan` §1 (`feat: phase N description` or `chore: phase N description`). Never commit secrets.
+6. Push the phase branch: `git push origin phase-N-description`.
+7. Present the push result to the user.
+8. Wait for the user's approval to merge.
+9. After approval, the phase branch is merged into the integration branch and deleted both locally and on the remote.
+
+### 8. Enforcement
+
+- The six steps are mandatory and always executed in order; no step is ever skipped.
+- Any user feedback, failure, or ask during a phase returns the flow to Step 2.
+- Step 6 (Post-Git) requires the user's explicit approval of the phase (Step 5).
+- The changes recorded in `docs/implementation-log.md` are binding: every future phase respects them.
+- Branch naming (`phase-N-description`), commit messages (`feat:`/`chore:`), no direct commits to `main`, no amend after push, and merge-only-after-approval are mandatory.
+- `## Tasks And Implementation Plan` defines the phases, tasks, and sub-tasks; this section governs how every phase is executed.
+
+---
+
+## Tasks And Implementation Plan
+
+> **Phase 32 seed — the complete implementation plan from §32 (Git And Phase Protocol): the 8-phase plan approved by the user (AD-015). Every implementation phase follows `## Phase Protocol` and this plan. Each task lists its sub-tasks and inline validations (`S-<phase>-<task><letter>`); every task, sub-task, and validation is mandatory. Each phase ends with its phase validation, its user-visible result, and its git line.**
+
+### 1. Implementation Plan
+
+#### Phase 1 — Foundation (branch: `phase-1-foundation`; commit: `feat: phase 1 foundation`)
+
+**T-1-01 — Repository and environment scaffold**
+
+- a. Root `.gitignore` with `.env` as the first line (`## Environment Config` §1, REQ-120); `.env`, `backend/logs/`, `backend/uploads/audio/` never committed.
+- b. `README.md` — first heading `# Report Builder V2`.
+- c. `backend/package.json` — `"type": "module"`, the 16 dependencies of `## Project Directory Structure` §2 plus axios (REQ-138), devDependencies morgan + nodemon.
+- d. `client/` Vite scaffolding per `## Project Directory Structure` §5 (`index.html`, `vite.config.js`, `eslint.config.js`, `package.json`).
+- e. `client/src/main.jsx` and `client/src/App.jsx` replaced per `## Project Directory Structure` §5 (REQ-175) with `@module` JSDoc.
+
+- **Validations:** S-1-01a `git check-ignore backend/.env backend/logs/ backend/uploads/audio/` exit 0; S-1-01b README first heading is `# Report Builder V2`; S-1-01c `npm install` succeeds in `backend/`; S-1-01d/e `npm run build` succeeds in `client/` and `npm run dev` boots in `backend/`.
+
+**T-1-02 — Backend app assembly (`app.js`, `server.js`)**
+
+- a. `app.js` — fixed global security middleware order `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit` (§10.2, REQ-080), `/api/v1` mount point via `routes/index.js`, no direct routes (§10.1).
+- b. `server.js` — dotenv → DB connect → listen; server starts before DB connect completes; graceful shutdown on SIGINT/SIGTERM (REQ-084).
+
+- **Validations:** S-1-02a middleware order matches §10.2 exactly; S-1-02b graceful-shutdown log appears on Ctrl-C and the process exits cleanly.
+
+**T-1-03 — Config (`config/env.js`, `config/db.js`)**
+
+- a. `config/env.js` — frozen validated `env` object; the sole `process.env` access point of the backend (REQ-083); every key of `## Environment Config` §2 required-validated.
+- b. `config/db.js` — Mongoose connection/options consumed by `server.js` (§25.1).
+
+- **Validations:** S-1-03a grep finds no `process.env` outside `config/env.js`; S-1-03b DB connects on boot with the §25.1 options.
+
+**T-1-04 — Utils (`utils/constants.js`, `utils/httpStatus.js`, `utils/error.js`, `utils/logger.js`)**
+
+- a. `utils/constants.js` — frozen constants, no magic values (§10.5, REQ-083).
+- b. `utils/httpStatus.js` — semantic HTTP status codes (§10.6).
+- c. `utils/error.js` — `CustomError` with `statusCode`, `message`, `isOperational` (§28.1, REQ-195).
+- d. `utils/logger.js` — Winston backend-only logger; absolute `console.log` ban (REQ-085); gitignored daily-rotated `logs/` with 30-day auto-delete.
+
+- **Validations:** S-1-04a constants are `Object.freeze`d; S-1-04b codes match `## API Contract` §3; S-1-04c `CustomError` carries the three fields; S-1-04d no `console.log` in backend source (grep).
+
+**T-1-05 — Middleware**
+
+- a. `middleware/authenticate.middleware.js` — JWT verification for protected routes (§11), wired with a stub for Phase 2.
+- b. `middleware/notFound.middleware.js` — unmatched routes → `CustomError(404)` → `next()` (§25.1, §28.1).
+- c. `middleware/error.middleware.js` — global error handler, operational vs unexpected (§28.1, REQ-196).
+
+- **Validations:** S-1-05a protected route without token returns 401 envelope; S-1-05b unknown route returns the 404 envelope; S-1-05c thrown error returns the 500 envelope with safe logging.
+
+**T-1-06 — Response envelope, 422 shape, pagination**
+
+- a. Response envelope per `## API Contract` (§10.7) on every endpoint.
+- b. 422 validation error shape per `## API Contract`.
+- c. Pagination convention — page 1, limit 10, max 100, `mongoose-paginate-v2`.
+
+- **Validations:** S-1-06a every response uses the envelope; S-1-06b invalid input returns the 422 shape; S-1-06c paginated queries respect the convention.
+
+**T-1-07 — Routes index**
+
+- a. `routes/index.js` imports and mounts the 8 per-domain route modules under `/api/v1` (§10.1).
+
+- **Validations:** S-1-07a all 8 modules are mounted and each responds on a health probe route.
+
+**T-1-08 — Models**
+
+- a. `models/user.model.js` — b. `models/branch.model.js` — c. `models/report.model.js` — d. `models/transcription.model.js` — e. `models/audio.model.js` — all per `## Data Modeling` §4, each with `@typedef` JSDoc (`## JSDoc Standards` §8, REQ-192).
+
+- **Validations:** S-1-08a..e each model compiles (Mongoose) and its fields match `## Data Modeling` §4 field by field.
+
+**T-1-09 — Validators**
+
+- a..h. The 8 per-domain express-validator files of `## Project Directory Structure` §4, applied as route middleware (§10.10).
+
+- **Validations:** S-1-09a..h invalid payloads on each domain return the 422 shape.
+
+**T-1-10 — JSDoc and quality baseline**
+
+- a. Every file created in Phase 1 complies with `## JSDoc Standards` §§3–11 (REQ-187..194).
+
+- **Validations:** S-1-10a sampled files match the six canonical forms of `## JSDoc Standards` §11.
+
+**T-1-11 — Frontend shell**
+
+- a. `client/src/redux/app/store.js` with the `api` and `assistantApi` RTK Query slices (`## Redux RTK Query`).
+- b. Theme wiring per `## Project Directory Structure` §5 (`theme/*`, `AppTheme.jsx`).
+- c. `client/src/utils/constants.js` and `client/src/utils/ethiopianDate.js`.
+- d. Lazy-loaded page shells per §5.
+
+- **Validations:** S-1-11a store builds with both slices; S-1-11b theme renders with the brand palette; S-1-11c Ethiopian date conversion returns the correct ዓ/ሀ/በ date; S-1-11d `npm run build` succeeds and all routes lazy-load.
+
+**T-1-12 — Phase 1 validation and protocol alignment**
+
+- a. Run every S-1-xx validation; b. Present the phase per `## Phase Protocol` Steps 4–5.
+
+- **Validations:** S-1-12a all Phase 1 validations pass (global); S-1-12b the phase presents user-visible results.
+
+- **Phase 1 validation:** every task and sub-task above is executed and validated; the backend boots with the full security stack and the envelope on `/api/v1`; the frontend builds and renders the shell.
+- **User-visible result:** the repository scaffold exists, the backend serves the envelope, the frontend shell renders in the browser.
+- **Git:** `git add` → commit `feat: phase 1 foundation` → `git push origin phase-1-foundation` → user approval → merge and branch deletion.
+
+#### Phase 2 — Authentication And User Management (branch: `phase-2-authentication-and-user-management`; commit: `feat: phase 2 authentication and user management`)
+
+**T-2-01 — Registration and the User model hooks**
+
+- a. `User.pre('save')` bcrypt password hashing (`## Data Modeling` §4, `## Security`).
+- b. `POST /api/v1/auth/register` — validators, controller, envelope (REQ-081).
+
+- **Validations:** S-2-01a stored password is a bcrypt hash; S-2-01b a valid registration returns the envelope and a usable session cookie.
+
+**T-2-02 — Login, logout, refresh tokens**
+
+- a. `POST /api/v1/auth/login`; b. `POST /api/v1/auth/logout`; c. `POST /api/v1/auth/refresh` — cookie-based JWT lifecycle per §11 (httpOnly, sameSite, secure flags; refresh rotation).
+
+- **Validations:** S-2-02a wrong password → 401; S-2-02b logout invalidates the tokens; S-2-02c refresh issues a new access token and rotates the refresh token.
+
+**T-2-03 — Full authentication middleware**
+
+- a. `authenticate.middleware.js` completed — access-token verification with §11 rules on every protected route.
+
+- **Validations:** S-2-03a protected routes reject missing/expired/tampered tokens with the 401 envelope.
+
+**T-2-04 — Google OAuth**
+
+- a. `services/oauth.service.js` — `getGoogleOAuthUrl()`, token exchange, `drive.file` scope (§25.1, REQ-158, AD-012); b. Google login routes and callback.
+
+- **Validations:** S-2-04a the OAuth URL carries the `drive.file` scope; S-2-04b a mocked exchange completes the login and stores the token server-side only (REQ-177).
+
+**T-2-05 — Profile endpoints**
+
+- a. `user.controller.js` — profile get/update per `## Report Management` §4.
+
+- **Validations:** S-2-05a profile read/write works under authentication and matches the §4 profile fields.
+
+**T-2-06 — Frontend authentication**
+
+- a. Login and register pages; b. session handling in Redux (RTK Query `auth` slice); c. route guards and AppToastContainer feedback; d. Google login button wiring.
+
+- **Validations:** S-2-06a login → guarded routes unlock; S-2-06b logout → guarded routes redirect; S-2-06c error toasts show on failed login.
+
+**T-2-07 — Phase 2 validation and protocol alignment**
+
+- **Validations:** S-2-07a all S-2-xx validations pass (global); S-2-07b user-visible results presented per `## Phase Protocol` Steps 4–5.
+
+- **Phase 2 validation:** every task and sub-task executed and validated; full authentication cycle (register → login → refresh → logout) works end to end; Google OAuth flow wired.
+- **User-visible result:** the user can register, log in (email/password and Google), and reach the protected app; logout and session refresh work.
+- **Git:** commit `feat: phase 2 authentication and user management` → push → approval → merge.
+
+#### Phase 3 — Domain Models And Core Reporting (branch: `phase-3-domain-models-and-core-reporting`; commit: `feat: phase 3 domain models and core reporting`)
+
+**T-3-01 — Branch domain**
+
+- a. Branch CRUD controller/routes/validators; b. branch list used by the reports flow (`## Report Management`).
+
+- **Validations:** S-3-01a branch CRUD returns the envelope and persists per `## Data Modeling` §4; S-3-01b branches appear in the reports UI.
+
+**T-3-02 — Report CRUD and status machine**
+
+- a. DailyReport create/list/detail/update/delete with pagination (`## Report Domain`, `## Report Management`); b. status transitions enforced per `## Status Machine`.
+
+- **Validations:** S-3-02a report lifecycle works; S-3-02b illegal status transitions are rejected.
+
+**T-3-03 — Report versioning**
+
+- a. ReportVersion model per `## Data Modeling` §4; b. version history created on every report update (§6, §22).
+
+- **Validations:** S-3-03a every update creates a version entry with metadata; S-3-03b the version history is readable per report.
+
+**T-3-04 — Narration, transcription, audio domain wiring**
+
+- a. Narration create and list; b. Transcription list/update; c. Audio model lifecycle (metadata first, upload in Phase 4).
+
+- **Validations:** S-3-04a narration → transcription chain persists per `## Work Flow` W-02..W-10.
+
+**T-3-05 — Frontend reporting screens**
+
+- a. Branches screen; b. reports list with list/grid views (§4); c. report detail screen; d. status machine UI states.
+
+- **Validations:** S-3-05a list/grid toggle works; S-3-05b report detail shows status, versions, and content; S-3-05c the UI never offers an illegal status action.
+
+**T-3-06 — Phase 3 validation and protocol alignment**
+
+- **Validations:** S-3-06a all S-3-xx validations pass (global); S-3-06b user-visible results presented.
+
+- **Phase 3 validation:** every task and sub-task executed and validated; full report CRUD + versioning + status machine works end to end.
+- **User-visible result:** branch and report management screens work with real data; statuses and version history are visible.
+- **Git:** commit `feat: phase 3 domain models and core reporting` → push → approval → merge.
+
+#### Phase 4 — Audio Recording And STT (branch: `phase-4-audio-recording-and-stt`; commit: `feat: phase 4 audio recording and stt`)
+
+**T-4-01 — Audio upload**
+
+- a. Multer upload to `backend/uploads/audio/` as `{uuid}.webm` (`## Audio Recording STT`, §25.1); b. Audio model records metadata only (clip path, duration, size, mime); c. `POST /api/v1/audio` endpoint + validators.
+
+- **Validations:** S-4-01a the clip lands in `uploads/audio/` with a UUID name; S-4-01b the audio document is created and is gitignored.
+
+**T-4-02 — WAV splitter**
+
+- a. `utils/wavSplitter.js` — in-memory PCM-level chunk splitter for STT (§20), accuracy-first per REQ-071.
+
+- **Validations:** S-4-02a split chunks reassemble to the original audio (byte-for-byte PCM test).
+
+**T-4-03 — STT integration (Addis)**
+
+- a. `services/addis.service.js` — `chat_generate` speech-to-text call per `## Addis AI` §9; b. transcription persisted to the Transcription model with the pre-created-upload workflow.
+
+- **Validations:** S-4-03a a mocked Addis response produces a Transcription document with `latest` + `history[]` shape (REQ-149); S-4-03b the Addis error table maps into the envelope (`## Addis AI` §8).
+
+**T-4-04 — Re-transcription**
+
+- a. Audio re-transcription endpoint (`transcription.controller.js` per §20).
+
+- **Validations:** S-4-04a re-transcription overwrites `latest` and appends `history[]`.
+
+**T-4-05 — Frontend recording flow**
+
+- a. Recorder with `react-media-recorder`; b. playback with `react-player`; c. upload progress; d. transcription review UI (edit → save per `## Transcription Review`).
+
+- **Validations:** S-4-05a record → upload → transcribe → review works in the browser; S-4-05b edits save through the transcription update endpoint.
+
+**T-4-06 — Phase 4 validation and protocol alignment**
+
+- **Validations:** S-4-06a all S-4-xx validations pass (global); S-4-06b user-visible results presented.
+
+- **Phase 4 validation:** every task and sub-task executed and validated; the full record → upload → STT → review loop works.
+- **User-visible result:** the supervisor records narration in the browser, uploads it, sees the transcription, and can review/correct it.
+- **Git:** commit `feat: phase 4 audio recording and stt` → push → approval → merge.
+
+#### Phase 5 — AI Report Generation And Correction (branch: `phase-5-ai-generation-and-correction`; commit: `feat: phase 5 ai generation and correction`)
+
+**T-5-01 — Prompt delivery**
+
+- a. The 18 prompt seeds PR-01..18 of `## AI Prompt Spec` assembled and delivered via `chat_generate` with the frozen-constants generation config (`## Addis AI` §6–7).
+
+- **Validations:** S-5-01a the payload carries all 18 seeds and the §6–7 config; S-5-01b no prompt text lives inline in controllers (constants only).
+
+**T-5-02 — Generation endpoint**
+
+- a. `POST /api/v1/reports/:reportId/generate` (`ai.controller.js`); b. AIConversation + GeneratedReport records created per `## Data Modeling` §4; c. provider recorded on messages (REQ-133).
+
+- **Validations:** S-5-02a a mocked generation produces the conversation + generated report; S-5-02b the provider field is populated.
+
+**T-5-03 — Fallback providers**
+
+- a. `services/gemini.service.js` and `services/nvidia.service.js` via axios (REQ-138); b. fallback order and error mapping per `## Other AI Providers` §4–5.
+
+- **Validations:** S-5-03a provider fallback fires on Addis failure and the provider name is recorded; S-5-03b axios-only calls (REQ-138).
+
+**T-5-04 — Correction loop**
+
+- a. Transcription correction endpoint updates `latest` + `history[]` (REQ-149); b. report regeneration after correction (`## Work Flow` §5 E-flow, §3).
+
+- **Validations:** S-5-04a correction → regeneration produces a new GeneratedReport with the corrected transcription as raw material.
+
+**T-5-05 — Status machine enforcement**
+
+- a. Generation allowed only from the correct report status; status transitions per `## Status Machine`; generation unavailable on finalized reports.
+
+- **Validations:** S-5-05a generate on an illegal status returns 409/422; S-5-05b finalize locks the report.
+
+**T-5-06 — Frontend generation flow**
+
+- a. Generate button + progress states; b. provider indicator; c. correction UI; d. report preview with the 8 sections.
+
+- **Validations:** S-5-06a the flow ends at a preview rendering the eight Amharic sections; S-5-06b the user can request correction and regeneration.
+
+**T-5-07 — Output validation**
+
+- a. Generated reports validated against `## Report Format` — eight sections, professional tone, 16 generation rules, raw-material rule, Amharic workplace transliteration.
+
+- **Validations:** S-5-07a a validated report passes all 16 rules; S-5-07b a failing report is rejected/regenerated.
+
+**T-5-08 — Error mapping**
+
+- a. The `## Addis AI` §8 status/error table mapped into the response envelope; b. provider errors surface as user-readable messages.
+
+- **Validations:** S-5-08a each error class of the table maps to the correct envelope status and message.
+
+**T-5-09 — Phase 5 validation and protocol alignment**
+
+- **Validations:** S-5-09a all S-5-xx validations pass (global); S-5-09b user-visible results presented.
+
+- **Phase 5 validation:** every task and sub-task executed and validated; generate → correct → regenerate works end to end with provider fallback.
+- **User-visible result:** the supervisor generates an Amharic report from the reviewed transcription, corrects it, and regenerates; the provider used is visible.
+- **Git:** commit `feat: phase 5 ai generation and correction` → push → approval → merge.
+
+#### Phase 6 — Export And Analytics (branch: `phase-6-export-and-analytics`; commit: `feat: phase 6 export and analytics`)
+
+**T-6-01 — PDF export**
+
+- a. `jspdf` + `jspdf-autotable` client-side PDF per `## Export Spec` §2 — A4, Noto Sans Ethiopic for Amharic, section headers, page numbers.
+
+- **Validations:** S-6-01a the PDF downloads with the Amharic sections rendered in Noto Sans Ethiopic; S-6-01b export only on finalized reports.
+
+**T-6-02 — TXT and CSV export**
+
+- a. TXT via UTF-8 Blob preserving the report format; b. CSV via UTF-8 Blob with BOM, structured columns (§22).
+
+- **Validations:** S-6-02a the TXT matches the report content; S-6-02b the CSV opens in Excel with correct columns and Amharic.
+
+**T-6-03 — XLSX export**
+
+- a. Multi-sheet workbook — content, version history (every version with metadata), metadata (provider, dates, status) — workbook library chosen at implementation (REQ-157).
+
+- **Validations:** S-6-03a the `.xlsx` downloads with all three sheets populated.
+
+**T-6-04 — Google Docs export**
+
+- a. `services/googleDocs.service.js` — creates the document in the user's own Drive with the user's OAuth token (`drive.file`, AD-012); b. `POST /api/v1/reports/:reportId/export` (`report.controller.js`); c. the returned URL opens in a new tab (`## Work Flow` §5).
+
+- **Validations:** S-6-04a the document lands in the user's Drive; S-6-04b the URL opens the document; S-6-04c the token never leaves the server (REQ-158, REQ-177).
+
+**T-6-05 — Analytics dashboard**
+
+- a. `analytics.controller.js` aggregation endpoints (`## API Contract` §8, AD-007 derived on demand); b. dashboard UI per §2/§4 with the Phase 31 metric set.
+
+- **Validations:** S-6-05a each endpoint returns the §8 metrics; S-6-05b the dashboard renders the charts/numbers from the endpoints.
+
+- **Phase 6 validation:** every task and sub-task executed and validated; all five export formats work and the dashboard renders.
+- **User-visible result:** the supervisor exports the finalized report as PDF/TXT/CSV/XLSX and to their own Google Drive, and sees the analytics dashboard.
+- **Git:** commit `feat: phase 6 export and analytics` → push → approval → merge.
+
+#### Phase 7 — Mock Data And Hardening (branch: `phase-7-mock-data-and-hardening`; commit: `chore: phase 7 mock data and hardening`)
+
+**T-7-01 — Mock seed module (consolidates T-MOCK-01, `## Mock Data Seeding` §6)**
+
+- a. `backend/mock/seed.js` — wipe-before-inject, all-or-nothing session runs (`startSession`/`startTransaction`/commit-or-abort/`endSession` with `{ session }` on every write, REQ-161); b. seeded entities — User (created through the model so the bcrypt hook applies), Branch, DailyReport (statuses of `## Status Machine`), Narration, Transcription, AIConversation, GeneratedReport, ReportVersion; c. metadata-only audio — no audio files, no STT calls, pre-created mock transcriptions (ADR-037).
+
+- **Validations:** S-7-01a a seeded run is idempotent (REQ-163); S-7-01b all entities exist after seeding; S-7-01c `backend/uploads/audio/` stays untouched.
+
+**T-7-02 — Mock wipe module (consolidates T-MOCK-02)**
+
+- a. `backend/mock/wipe.js` — transactional wipe across the seeded collections; all-or-nothing (REQ-160).
+
+- **Validations:** S-7-02a wipe removes all seeded data; S-7-02b a failed wipe leaves the DB unchanged (session test).
+
+**T-7-03 — Entry points and guard (consolidates T-MOCK-03)**
+
+- a. npm scripts `mock:seed` and `mock:wipe`; b. `NODE_ENV` production guard blocks both in production (REQ-164).
+
+- **Validations:** S-7-03a the scripts run in development; S-7-03b with `NODE_ENV=production` both scripts refuse to run.
+
+**T-7-04 — Mock verification (consolidates T-MOCK-04)**
+
+- a. End-to-end mock demo run: seed → browse reports → generate → export, using the seeded data.
+
+- **Validations:** S-7-04a the demo flow works with seeded data; S-7-04b the mock transcriptions feed the generation flow.
+
+**T-7-05 — Hardening audit**
+
+- a. Security sweep per `## Security` checklists (§11, §28); b. error-handling sweep per `## Error Handling` (REQ-195..196); c. `## Checklists` audit gates.
+
+- **Validations:** S-7-05a the security checklist passes; S-7-05b operational vs unexpected errors handled correctly; S-7-05c the audit gates pass.
+
+- **Phase 7 validation:** every task and sub-task executed and validated; the mock demo flow runs end to end and the hardening audit passes.
+- **User-visible result:** `npm run mock:seed` fills the app with demo data, the demo flow works, and the hardened app passes the security/error-handling checks.
+- **Git:** commit `chore: phase 7 mock data and hardening` → push → approval → merge.
+
+#### Phase 8 — Quality Gates And Polish (branch: `phase-8-quality-gates-and-polish`; commit: `chore: phase 8 quality gates and polish`)
+
+**T-8-01 — Final audit gates**
+
+- a. `## Validation Audit` gates — accuracy gate and zero-deviation gate; b. `## Checklists` full sweep; c. `## Requirements` full trace — every REQ-xxx verified in the running app.
+
+- **Validations:** S-8-01a the accuracy gate passes; S-8-01b the zero-deviation gate passes; S-8-01c every requirement is verifiable in the app.
+
+**T-8-02 — Archive/delete/restore (§35)**
+
+- a. Report archive/delete/restore behavior per the §35 spec once the section is built.
+
+- **Validations:** S-8-02a archive, delete, and restore flows work with the §35 rules.
+
+**T-8-03 — Polish**
+
+- a. UI/UX polish per `## UI/UX Spec`; b. responsive behavior; c. loading and error states; d. final JSDoc sweep (REQ-187..194).
+
+- **Validations:** S-8-03a the UI matches the `## UI/UX Spec` at the reference sizes; S-8-03b every async surface has loading/error states; S-8-03c the JSDoc sweep passes.
+
+**T-8-04 — Close-out**
+
+- a. Final global validation — every phase, task, sub-task, and validation executed; b. this specification is fully implemented; the source brief is no longer needed for implementation.
+
+- **Validations:** S-8-04a the final validation report passes; S-8-04b close-out statement confirmed.
+
+- **Phase 8 validation:** every task and sub-task executed and validated; the final audit gates pass and the app is production-ready.
+- **User-visible result:** a polished, fully implemented application that passes every gate in this specification.
+- **Git:** commit `chore: phase 8 quality gates and polish` → push → approval → merge.
+
+### 2. Tasks
+
+- The §23 mock-data task seeds T-MOCK-01..04 are consolidated into `## Tasks And Implementation Plan` §1: **T-MOCK-01 → T-7-01**, **T-MOCK-02 → T-7-02**, **T-MOCK-03 → T-7-03**, **T-MOCK-04 → T-7-04**; T-7-05 (hardening audit) is new in Phase 7.
+
+### 3. Expansion Markers
+
+- Phase 8 T-8-02 depends on the §35 archive/delete/restore spec; when `## Archive Delete Restore` (Phase 35) is built, its expansion marker here is flipped to DONE and T-8-02 is aligned.
+- Phase 36 final consolidation: verify `## Phase Protocol` and `## Tasks And Implementation Plan` remain the sole execution contract and that no `docs/*` file is needed for implementation.
 
 ---
 
@@ -5255,3 +5775,7 @@ Phases 1–30 are GREEN (2026-08-02). Phase 30 built the new file creation rules
 ## End Of Phase 31 Content
 
 Phases 1–31 are GREEN (2026-08-02). Phase 31 built the validation and audit rules from §31: added `## Validation Audit` §4 Validation And Audit Rules (the `node --check` backend gate, the `npx vite build` 0-errors client gate with `dist/*` always deleted after the check — REQ-210, REQ-211; the per-file audit for unused imports, unused variables, and unused parameters — REQ-212 with the `## Coding Conventions` §10/REQ-181 cross-ref; the missing-JSDoc check — REQ-213 with the `## JSDoc Standards` §§1–11/REQ-185/186 cross-ref; no hardcoded magic values — everything in `constants.js` or config — REQ-214 with the REQ-083/124 cross-ref; no deprecated MUI props and every new component checked — REQ-215; HTTP status codes imported from `httpStatus`, never hardcoded — REQ-216 with the REQ-174 cross-ref), renumbered the §4 Scope Note to §5 (its Phase 31 mention now points at the built §4, `## Checklists` §4, `## Source Traceability`, and REQ-210..216) and the §5 Expansion Markers to §6 (Phase 31 DONE, Phase 32 pending), added `## Checklists` §4 Validation And Audit Checklist (the eleven REQ-210..216 checks, markers renumbered to §5 with Phase 31 DONE), added the new `## Source Traceability` section (the per-phase trace maps record every extracted fact; the section adds the 31-row index — Phase | Source ref | Spec sections built | Status — all GREEN) with the Phase 31 Source Trace Map (3 §31 rows + 1 codebase row: the `client/package.json` `build: vite build` script and the never-committed `dist/*`), added REQ-210..216 to the Non-Functional Requirements table (quality NFRs, source §31) with the requirement-expansion markers flipped and added (`Non-functional requirements finalization: Phase 31 — DONE (REQ-210..216)`; new `Validation and audit rules: Phase 31 — DONE (REQ-210..216)`), and updated the Checklist (phase map row 31 GREEN; Required Output rows Validation Audit and Checklists — GREEN Phase 31 enrichment; Source Traceability — GREEN Phase 31 seed; Non-Functional Requirements — GREEN Phase 1 seed, Phase 31 enrichment). Phase 32 will build the git and phase protocol rules.
+
+## End Of Phase 32 Content
+
+Phases 1–32 are GREEN (2026-08-02). Phase 32 built the Git and phase protocol from §32: added the new `## Phase Protocol` section — per the Phase 32 user decision (AD-014) the Git workflow is MERGED into this single section (no separate `## Git Workflow` section, so the implementation AI cannot skip it): §1 High-Level Git Rules (`phase-N-description` branches, no direct commits to `main`, six steps in order with no skips, Step 6 never without explicit user approval, `feat:`/`chore:` commit convention, no amend after push, merge only after approval with branch deletion); §2 Step 1 Pre-Git (six actions incl. think twice before acting and halt on conflicts); §3 Step 2 Deep Codebase Analysis (codebase + spec analysis line by line, read the implementation log and respect its recorded changes, extend the analysis per phase with the previous phases); §4 Step 3 Prior-Phase Analysis (previous branch, commits, changed files, spec sections, validation results, user feedback); §5 Step 4 Phase Execution Without Deviation (absolute adherence, mandatory compliance, validation with the documented rules — every task, sub-task, and validation per phase, per task, per sub-task, and global — extremely critical; meaningful visible changes); §6 Step 5 User Review (any feedback/failure/ask returns to Step 2; impossible to move to Step 6 without explicit approval); §7 Step 6 Post-Git (FIRST record the changes/updates/corrections in `docs/implementation-log.md` — respected in future phases; SECOND align all docs and specifications; then verification, stage, commit, push, present, approval, merge and delete); §8 Enforcement; added the new `## Tasks And Implementation Plan` section — the exhaustive 8-phase plan approved by the user (AD-015): §1 Implementation Plan (Phase 1 Foundation `feat: phase 1 foundation` T-1-01..12, Phase 2 Authentication And User Management `feat: phase 2 authentication and user management` T-2-01..07, Phase 3 Domain Models And Core Reporting `feat: phase 3 domain models and core reporting` T-3-01..06, Phase 4 Audio Recording And STT `feat: phase 4 audio recording and stt` T-4-01..06, Phase 5 AI Report Generation And Correction `feat: phase 5 ai generation and correction` T-5-01..09, Phase 6 Export And Analytics `feat: phase 6 export and analytics` T-6-01..05, Phase 7 Mock Data And Hardening `chore: phase 7 mock data and hardening` T-7-01..05, Phase 8 Quality Gates And Polish `chore: phase 8 quality gates and polish` T-8-01..04 — every task with sub-tasks and inline validations `S-<phase>-<task><letter>`, every phase with its phase validation, user-visible result, and git line); §2 Tasks (the §23 mock task seeds T-MOCK-01..04 consolidated into T-7-01..04); §3 Expansion Markers (Phase 35 archive/delete/restore dependency of T-8-02, Phase 36 final consolidation), added AD-014 (single merged `## Phase Protocol` section) and AD-015 (eight-phase implementation plan), added REQ-217..224 (git branch/commit rules, six-step protocol, per-task/per-sub-task/global validation, explicit approval gate, implementation-log changes record, meaningful visible changes, merge-and-delete), added the Phase 32 requirement-expansion marker, flipped the four Phase 32 forward markers to DONE — `## Validation Audit` §6, `## Project Directory Structure` §7, `## Rules` §10, `## Mock Data Seeding` §8 (Tasks And Implementation Plan consolidation) — corrected the `## Validation Audit` §5 scope note and the `## Rules` header blockquote to reference the merged `## Phase Protocol`, updated the Checklist (phase map row 32 GREEN; Required Output rows Git Workflow — GREEN merged into `## Phase Protocol` per AD-014, Phase Protocol — GREEN Phase 32 seed, Implementation Plan — GREEN Phase 32 seed, Tasks — GREEN Phase 32 consolidation), added the Phase 32 Source Trace Map (7 §32 rows) and the `## Source Traceability` row 32 (all 32 rows GREEN), and added the new files `docs/build-implementation.md` (the implementation invocation prompt used as `use docs/build-implementation.md <N>`) and `docs/implementation-log.md` (the Step 6 changes/updates/corrections record), both registered in `## Project Directory Structure`. Phase 33 will build the decision log (ADR) rules.
