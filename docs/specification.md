@@ -4212,6 +4212,7 @@ backend/
 │   ├── logger.js              # Winston logger; backend-only logging (§10.9)
 │   └── wavSplitter.js         # In-memory PCM-level chunk splitter for STT (§20)
 ├── validators/                # express-validator files, one per domain, applied as route middleware (§10.10)
+│   ├── validation.js          # Shared 422 response builder: validate() + matchedData() → req.validated (§10.10, REQ-198)
 │   ├── auth.validator.js
 │   ├── branch.validator.js
 │   ├── report.validator.js
@@ -4429,6 +4430,7 @@ client/
 - The fixed global security middleware stack order is: `helmet -> cors -> compression -> cookie-parser -> mongo-sanitize -> rate-limit`.
 - The security middleware stack must not be reordered or removed.
 - All middleware must be present (REQ-081).
+- Express 5 compatibility: `app.js` inserts a `makeQueryWritable` shim between `cookie-parser` and `mongo-sanitize` (Express 5 exposes `req.query` as a getter-only accessor; `express-mongo-sanitize` 2.2.0 assigns to it and would throw). The six mandated steps keep their relative order; rationale recorded in `## Security` §5.
 
 ### 3. Controllers (§10.3)
 
@@ -4725,6 +4727,8 @@ This order is intentional and must not be changed (REQ-081; `## Backend Architec
 4. `cookie-parser` — parse cookies before route handlers.
 5. `mongo-sanitize` — strip `$` and `.` from request data before it reaches controllers.
 6. `rate-limit` — global rate limiting before API routes.
+
+**Express 5 compatibility shim (Phase 1 implementation fact):** `app.js` inserts a `makeQueryWritable` middleware between `cookie-parser` and `mongo-sanitize`. Express 5 defines `req.query` as a getter-only accessor on the request prototype, and `express-mongo-sanitize` 2.2.0 assigns to it — which throws `TypeError: Cannot set property query ... which has only a getter`. The shim redefines `req.query` as a writable own property via `Object.defineProperty` before mongo-sanitize runs. The six mandated steps keep their relative order (REQ-081); the shim is part of the step-5 preparation and must stay between cookie-parser and mongo-sanitize.
 
 ### 6. NoSQL Injection Prevention (§29.6)
 
@@ -5677,7 +5681,7 @@ Every phase is implemented by the **implementation AI** and reviewed by the **re
 - a. `utils/constants.js` — frozen constants, no magic values (§10.5, REQ-083).
 - b. `utils/httpStatus.js` — semantic HTTP status codes (§10.6).
 - c. `utils/error.js` — `CustomError` with `statusCode`, `message`, `isOperational` (§28.1, REQ-195).
-- d. `utils/logger.js` — Winston backend-only logger; absolute `console.log` ban (REQ-085); gitignored daily-rotated `logs/` with 30-day auto-delete.
+- d. `utils/logger.js` — Winston backend-only logger; absolute `console.log` ban (REQ-086); gitignored daily-rotated `logs/` with 30-day auto-delete.
 
 - **Validations:** S-1-04a constants are `Object.freeze`d; S-1-04b codes match `## API Contract` §3; S-1-04c `CustomError` carries the three fields; S-1-04d no `console.log` in backend source (grep).
 

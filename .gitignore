@@ -1,5 +1,8 @@
 .env
 
+# Backend runtime audio uploads
+backend/uploads/audio/
+
 # Logs
 logs
 *.log
