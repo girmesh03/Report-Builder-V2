@@ -14,6 +14,7 @@ import morgan from 'morgan';
 import env from './config/env.js';
 import constants from './utils/constants.js';
 import routes from './routes/index.js';
+import oauthRoutes from './routes/oauth.routes.js';
 import notFound from './middleware/notFound.middleware.js';
 import errorHandler from './middleware/error.middleware.js';
 
@@ -53,6 +54,7 @@ if (env.NODE_ENV === 'development') {
 }
 
 app.use('/api/v1', routes);
+app.use('/oauth', oauthRoutes);
 app.use(notFound);
 app.use(errorHandler);
 

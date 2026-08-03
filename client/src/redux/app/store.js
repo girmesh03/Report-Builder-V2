@@ -6,9 +6,11 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import { api } from '../features/api.js';
 import { assistantApi } from '../features/assistantApi.js';
+import authReducer from '../features/authSlice.js';
 
 const store = configureStore({
   reducer: {
+    auth: authReducer,
     [api.reducerPath]: api.reducer,
     [assistantApi.reducerPath]: assistantApi.reducer,
   },

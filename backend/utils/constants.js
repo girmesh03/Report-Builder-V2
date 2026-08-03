@@ -30,6 +30,12 @@
  * @property {number} RATE_LIMIT_AUTH_MAX - Auth rate-limit cap — 20 requests.
  * @property {number} RATE_LIMIT_AI_WINDOW_MS - AI rate-limit window — 1 minute.
  * @property {number} RATE_LIMIT_AI_MAX - AI rate-limit cap — 10 requests.
+ * @property {string} COOKIE_ACCESS_TOKEN - Access-token httpOnly cookie name (echo of `## Security` §2).
+ * @property {string} COOKIE_REFRESH_TOKEN - Refresh-token httpOnly cookie name (echo of `## Security` §2).
+ * @property {number} COOKIE_ACCESS_MAX_AGE_MS - Access-cookie lifetime — 15 minutes (echo of `## Auth Cookies` §1).
+ * @property {number} COOKIE_REFRESH_MAX_AGE_MS - Refresh-cookie lifetime — 7 days (echo of `## Auth Cookies` §1).
+ * @property {number} PASSWORD_MIN_LENGTH - Minimum registration password length (echo of `## UI/UX Spec` register form rule).
+ * @property {string} OAUTH_GOOGLE_PLACEHOLDER - Unconfigured-credentials placeholder in the local `backend/.env` (REQ-091).
  */
 
 /** @type {Readonly<Constants>} */
@@ -58,6 +64,12 @@ const constants = Object.freeze({
   RATE_LIMIT_AUTH_MAX: 20,
   RATE_LIMIT_AI_WINDOW_MS: 60 * 1000,
   RATE_LIMIT_AI_MAX: 10,
+  COOKIE_ACCESS_TOKEN: 'accessToken',
+  COOKIE_REFRESH_TOKEN: 'refreshToken',
+  COOKIE_ACCESS_MAX_AGE_MS: 15 * 60 * 1000,
+  COOKIE_REFRESH_MAX_AGE_MS: 7 * 24 * 60 * 60 * 1000,
+  PASSWORD_MIN_LENGTH: 6,
+  OAUTH_GOOGLE_PLACEHOLDER: 'change me',
 });
 
 export default constants;

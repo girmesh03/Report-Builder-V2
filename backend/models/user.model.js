@@ -40,6 +40,7 @@ const userSchema = new mongoose.Schema(
         delete ret.id;
         delete ret.__v;
         delete ret.password;
+        delete ret.refreshToken;
         return ret;
       },
     },
@@ -49,6 +50,7 @@ const userSchema = new mongoose.Schema(
         delete ret.id;
         delete ret.__v;
         delete ret.password;
+        delete ret.refreshToken;
         return ret;
       },
     },
@@ -61,10 +63,9 @@ userSchema.virtual('fullName').get(function getFullName() {
   return `${this.firstName} ${this.lastName}`.trim();
 });
 
-userSchema.pre('save', async function hashPassword(next) {
-  if (!this.isModified('password')) return next();
+userSchema.pre('save', async function hashPassword() {
+  if (!this.isModified('password')) return;
   this.password = await bcrypt.hash(this.password, constants.BCRYPT_SALT_ROUNDS);
-  return next();
 });
 
 userSchema.methods.comparePassword = function comparePassword(candidatePassword) {

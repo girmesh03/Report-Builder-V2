@@ -37,3 +37,6 @@ export const INTERNAL_SERVER_ERROR = 500;
 
 /** @type {number} 502 - Upstream provider error. */
 export const BAD_GATEWAY = 502;
+
+/** @type {number} 503 - Service temporarily unavailable, e.g. a stub awaiting configuration. */
+export const SERVICE_UNAVAILABLE = 503;

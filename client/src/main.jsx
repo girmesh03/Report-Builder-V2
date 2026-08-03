@@ -9,9 +9,19 @@ import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import "@fontsource/inter/300.css";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
 
 import App from './App.jsx';
 import { store } from './redux/app/store.js';
+import PublicRoute from './components/routes/PublicRoute.jsx';
+import ProtectedRoute from './components/routes/ProtectedRoute.jsx';
+import PublicLayout from './components/layout/PublicLayout.jsx';
+import AppShell from './components/layout/AppShell.jsx';
+import AppErrorPage from './components/layout/AppErrorPage.jsx';
 
 const Landing = lazy(() => import('./pages/Landing.jsx'));
 const Login = lazy(() => import('./pages/Login.jsx'));
@@ -29,18 +39,39 @@ const router = createBrowserRouter([
   {
     path: '/',
     Component: App,
+    ErrorBoundary: AppErrorPage,
     children: [
-      { index: true, Component: Landing },
-      { path: 'login', Component: Login },
-      { path: 'register', Component: Register },
-      { path: 'dashboard', Component: Dashboard },
-      { path: 'reports', Component: Reports },
-      { path: 'reports/:id/details', Component: ReportDetails },
-      { path: 'branches', Component: Branches },
-      { path: 'branches/:id/details', Component: BranchDetails },
-      { path: 'profile', Component: Profile },
-      { path: 'assistant', Component: Assistant },
-      { path: '*', Component: NotFound },
+      {
+        Component: PublicRoute,
+        children: [
+          {
+            Component: PublicLayout,
+            children: [
+              { index: true, Component: Landing },
+              { path: 'login', Component: Login },
+              { path: 'register', Component: Register },
+            ],
+          },
+        ],
+      },
+      {
+        Component: ProtectedRoute,
+        children: [
+          {
+            Component: AppShell,
+            children: [
+              { path: 'dashboard', Component: Dashboard },
+              { path: 'reports', Component: Reports },
+              { path: 'reports/:id/details', Component: ReportDetails },
+              { path: 'branches', Component: Branches },
+              { path: 'branches/:id/details', Component: BranchDetails },
+              { path: 'profile', Component: Profile },
+              { path: '*', Component: NotFound },
+            ],
+          },
+          { path: 'assistant', Component: Assistant },
+        ],
+      },
     ],
   },
 ]);
