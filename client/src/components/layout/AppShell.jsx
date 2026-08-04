@@ -56,7 +56,7 @@ function AppShell() {
             </IconButton>
           ) : null}
         </Box>
-        <Box component="main" sx={{ flexGrow: 1, overflowY: 'auto' }}>
+        <Box component="main" sx={{ flexGrow: 1, overflowY: 'auto', p:1 }}>
           <Outlet />
         </Box>
       </Box>

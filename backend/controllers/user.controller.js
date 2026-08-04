@@ -26,7 +26,7 @@ const getProfile = asyncHandler(async (req, res) => {
  * @returns {Promise<void>} Responds 200 with the updated profile.
  */
 const updateProfile = asyncHandler(async (req, res) => {
-  const { firstName, lastName, avatar, position } = req.validated;
+  const { firstName, lastName, avatar, position } = req.validated.body;
   if (firstName !== undefined) {
     req.user.firstName = firstName;
   }

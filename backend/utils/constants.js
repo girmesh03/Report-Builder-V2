@@ -36,6 +36,14 @@
  * @property {number} COOKIE_REFRESH_MAX_AGE_MS - Refresh-cookie lifetime — 7 days (echo of `## Auth Cookies` §1).
  * @property {number} PASSWORD_MIN_LENGTH - Minimum registration password length (echo of `## UI/UX Spec` register form rule).
  * @property {string} OAUTH_GOOGLE_PLACEHOLDER - Unconfigured-credentials placeholder in the local `backend/.env` (REQ-091).
+ * @property {string} REPORT_STATUS_DRAFT - Report status: metadata created, no audio yet (echo of `## Data Modeling` §6).
+ * @property {string} REPORT_STATUS_AUDIO_ATTACHED - Report status: audio linked, ready for transcription (echo of `## Data Modeling` §6).
+ * @property {string} REPORT_STATUS_TRANSCRIBED - Report status: transcription produced (echo of `## Data Modeling` §6).
+ * @property {string} REPORT_STATUS_REVIEWED - Report status: transcription reviewed (echo of `## Data Modeling` §6).
+ * @property {string} REPORT_STATUS_COMPLETED - Report status: final report generated (echo of `## Data Modeling` §6).
+ * @property {string} PROVIDER_ADDIS - Text-generation provider Addis AI (echo of `## Data Modeling` §4.1).
+ * @property {string} PROVIDER_GEMINI - Text-generation provider Gemini (echo of `## Data Modeling` §4.1).
+ * @property {string} PROVIDER_NVIDIA - Text-generation provider Nvidia (echo of `## Data Modeling` §4.1).
  */
 
 /** @type {Readonly<Constants>} */
@@ -70,6 +78,14 @@ const constants = Object.freeze({
   COOKIE_REFRESH_MAX_AGE_MS: 7 * 24 * 60 * 60 * 1000,
   PASSWORD_MIN_LENGTH: 6,
   OAUTH_GOOGLE_PLACEHOLDER: 'change me',
+  REPORT_STATUS_DRAFT: 'draft',
+  REPORT_STATUS_AUDIO_ATTACHED: 'audio_attached',
+  REPORT_STATUS_TRANSCRIBED: 'transcribed',
+  REPORT_STATUS_REVIEWED: 'reviewed',
+  REPORT_STATUS_COMPLETED: 'completed',
+  PROVIDER_ADDIS: 'addis',
+  PROVIDER_GEMINI: 'gemini',
+  PROVIDER_NVIDIA: 'nvidia',
 });
 
 export default constants;

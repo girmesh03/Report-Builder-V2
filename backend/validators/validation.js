@@ -10,7 +10,10 @@ import { UNPROCESSABLE_ENTITY } from '../utils/httpStatus.js';
  * Checks `express-validator` results (REQ-198): on failure returns 422 with
  * `{ success: false, message: 'Validation failed', data: { errors } }` where
  * each error carries `{ field, message }`; on success attaches
- * `req.validated` (matchedData) and calls next.
+ * `req.validated = { body, params, query }` (matchedData per location —
+ * `## Backend Architecture` §10.10, mirroring `docs/initial-doc.md`
+ * §3.5.1.8) and calls next. Controllers always read `req.validated.body`
+ * for payload fields.
  *
  * @param {import('express').Request} req - The request; gains `req.validated`.
  * @param {import('express').Response} res - The response.
@@ -27,6 +30,10 @@ export function validate(req, res, next) {
       data: { errors },
     });
   }
-  req.validated = matchedData(req);
+  req.validated = {
+    body: matchedData(req, { locations: ['body'] }),
+    params: matchedData(req, { locations: ['params'] }),
+    query: matchedData(req, { locations: ['query'] }),
+  };
   return next();
 }

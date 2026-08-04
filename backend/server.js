@@ -2,7 +2,7 @@
  * @module server
  */
 
-import 'dotenv/config';
+import { createHash } from 'node:crypto';
 
 import mongoose from 'mongoose';
 
@@ -14,8 +14,14 @@ import { createChildLogger } from './utils/logger.js';
 
 const serverLogger = createChildLogger('Server');
 
+const secretFingerprint = createHash('sha256')
+  .update(`${env.JWT_ACCESS_SECRET}:${env.JWT_REFRESH_SECRET}`)
+  .digest('hex')
+  .slice(0, 12);
+
 const server = app.listen(env.PORT, () => {
   serverLogger.info(`Server listening on port ${env.PORT}`);
+  serverLogger.info(`JWT secret fingerprint: ${secretFingerprint}`);
 });
 
 connectDatabase()

@@ -45,7 +45,13 @@ async function issueTokens(user) {
 
 /**
  * Sets the access (15m, path `/`) and refresh (7d, path `/api/v1`) httpOnly
- * cookies (`## Security` §2).
+ * cookies (`## Security` §2). Also expires any legacy refresh cookie at
+ * path `/` (Phase 3 corrections — stale-cookie cleanup): an old
+ * `refreshToken` cookie stored at path `/` shadows the current one, and
+ * cookie parsing keeps the last value sent, so the browser presents a token
+ * signed with secrets the current server rejects (`invalid signature` on
+ * `/auth/refresh`) — the observed kick-out sequence. The expired
+ * `Set-Cookie` removes the legacy cookie at the next login/refresh.
  *
  * @param {import('express').Response} res - The response.
  * @param {{ accessToken: string, refreshToken: string }} tokens - The token pair.
@@ -67,10 +73,18 @@ function setAuthCookies(res, tokens) {
     maxAge: constants.COOKIE_REFRESH_MAX_AGE_MS,
     path: '/api/v1',
   });
+  res.cookie(constants.COOKIE_REFRESH_TOKEN, '', {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'lax',
+    maxAge: 0,
+    path: '/',
+  });
 }
 
 /**
- * Clears both auth cookies.
+ * Clears both auth cookies, plus any legacy refresh cookie at path `/`
+ * (Phase 3 corrections — stale-cookie cleanup; see `setAuthCookies`).
  *
  * @param {import('express').Response} res - The response.
  * @returns {void}
@@ -78,6 +92,7 @@ function setAuthCookies(res, tokens) {
 function clearAuthCookies(res) {
   res.clearCookie(constants.COOKIE_ACCESS_TOKEN, { path: '/' });
   res.clearCookie(constants.COOKIE_REFRESH_TOKEN, { path: '/api/v1' });
+  res.clearCookie(constants.COOKIE_REFRESH_TOKEN, { path: '/' });
 }
 
 /**
@@ -121,7 +136,7 @@ function extractNamesFromGoogleProfile(displayName, email) {
  * @throws {CustomError} CONFLICT when the email is already registered.
  */
 const register = asyncHandler(async (req, res) => {
-  const { email, password } = req.validated;
+  const { email, password } = req.validated.body;
   const existing = await User.findOne({ email });
   if (existing) {
     throw new CustomError(CONFLICT, 'Email already in use');
@@ -143,7 +158,7 @@ const register = asyncHandler(async (req, res) => {
  * @throws {CustomError} UNAUTHORIZED on unknown email or wrong password.
  */
 const login = asyncHandler(async (req, res) => {
-  const { email, password } = req.validated;
+  const { email, password } = req.validated.body;
   const user = await User.findOne({ email }).select('+password');
   if (!user || !(await user.comparePassword(password))) {
     throw new CustomError(UNAUTHORIZED, 'Invalid email or password');
@@ -181,7 +196,14 @@ const logout = asyncHandler(async (req, res) => {
 
 /**
  * POST /api/v1/auth/refresh — rotates the refresh token on each use against
- * replay (REQ-087) and re-issues the access + refresh cookies.
+ * replay (REQ-087) and re-issues the access + refresh cookies. The rotation
+ * is an atomic compare-and-swap (`findOneAndUpdate` on the stored token), so
+ * concurrent refreshes can never double-rotate: exactly one wins, and a
+ * consumed or replayed token matches nothing (Phase 3 corrections — the
+ * refresh-rotation race fix). On the mismatch path the cookies are NOT
+ * cleared — a response-level cookie wipe racing a concurrent successful
+ * rotation destroyed a valid session; the client logs out on refresh failure
+ * anyway (REQ-105).
  *
  * @param {import('express').Request} req - The request.
  * @param {import('express').Response} res - The response.
@@ -194,13 +216,25 @@ const refresh = asyncHandler(async (req, res) => {
     throw new CustomError(UNAUTHORIZED, 'Refresh token missing');
   }
   const payload = jwt.verify(token, env.JWT_REFRESH_SECRET);
-  const user = await User.findById(payload.id);
-  if (!user || !user.refreshToken || user.refreshToken !== token) {
-    clearAuthCookies(res);
+  const accessToken = jwt.sign(
+    { id: payload.id },
+    env.JWT_ACCESS_SECRET,
+    { expiresIn: env.JWT_ACCESS_EXPIRES_IN },
+  );
+  const refreshToken = jwt.sign(
+    { id: payload.id },
+    env.JWT_REFRESH_SECRET,
+    { expiresIn: env.JWT_REFRESH_EXPIRES_IN },
+  );
+  const user = await User.findOneAndUpdate(
+    { _id: payload.id, refreshToken: token },
+    { $set: { refreshToken } },
+    { new: true },
+  );
+  if (!user) {
     throw new CustomError(UNAUTHORIZED, 'Invalid refresh token');
   }
-  const tokens = await issueTokens(user);
-  setAuthCookies(res, tokens);
+  setAuthCookies(res, { accessToken, refreshToken });
   res.status(OK).json({ success: true, message: 'Session refreshed', data: {} });
 });
 

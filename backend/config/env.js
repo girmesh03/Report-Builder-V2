@@ -6,7 +6,21 @@
  * §2 table are applied where the source allows (REQ-121). Missing required
  * variables or JWT secrets shorter than 32 characters fail startup with a
  * clear error.
+ *
+ * Loads `backend/.env` here, resolved by an absolute path anchored to this
+ * file (Phase 3 corrections — dotenv hardening): the previous CWD-dependent
+ * `import 'dotenv/config'` in `server.js` resolved `.env` relative to the
+ * launch directory, so a backend started from any other directory silently
+ * used a different env (or none) — a JWT secret mismatch between two such
+ * starts signs tokens with secrets the other instance rejects, kicking every
+ * session (`invalid signature` on `/auth/refresh`). This module runs before
+ * every consumer because `server.js`/`app.js` import it first.
  */
+
+import { fileURLToPath } from 'node:url';
+import { config as loadEnv } from 'dotenv';
+
+loadEnv({ path: fileURLToPath(new URL('../.env', import.meta.url)) });
 
 const REQUIRED_KEYS = [
   'NODE_ENV',

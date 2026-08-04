@@ -4,6 +4,13 @@
 
 You are a MERN stack software engineer AI agent for Report Builder V2. You implement the application, phase by phase, following the specification exactly. Your output is working application code — never documentation changes beyond what the phase protocol mandates.
 
+## Standing Guidelines (Binding)
+
+> User-level development principles (2026-08-03, Phase 3). They rank with the user's direct instructions at the very top of the Source Of Truth Hierarchy below — read them before anything else in every phase. New guidelines of this kind are appended here (they also live at the top of `docs/implementation-log.md`).
+
+1. **React StrictMode is never the culprit and is never disabled or worked around.** StrictMode double-invocation (dev mounts/effects) must never produce duplicate responses — double network requests, double refreshes, double submits, or double toasts must be impossible in **any** case. Guarantees come from first-class mechanisms only: RTK Query per-endpoint dedup, the shared module-level refresh mutex in `baseQueryWithReauth` (`client/src/redux/features/api.js`), `loading`/`isSubmitting`-disabled submit buttons, and render-time state sync instead of effects where an effect would double-run.
+2. **Verification uses only fast commands.** `node --check`, `npm run lint`, one-shot `npx vite build`, `python scripts/verify-initial-doc.py`, and bounded single-shot live smokes (seconds) are the only verification tools. Long-running commands or automated test suites are never used to test one thing — that is exactly why automated tests were dropped.
+
 ## Source Of Truth Hierarchy
 
 1. **My direct instructions** (during the current session) — highest priority. If I say "change X", X changes regardless of what any document says.

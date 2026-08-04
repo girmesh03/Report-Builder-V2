@@ -21,10 +21,10 @@ router.get('/health', (_req, res) => {
 });
 
 router.use('/auth', authRoutes);
-router.use('/branch', branchRoutes);
-router.use('/report', reportRoutes);
+router.use('/branches', branchRoutes);
+router.use('/reports', reportRoutes);
 router.use('/audio', audioRoutes);
-router.use('/transcription', transcriptionRoutes);
+router.use('/transcriptions', transcriptionRoutes);
 router.use('/ai', aiRoutes);
 router.use('/user', userRoutes);
 router.use('/analytics', analyticsRoutes);

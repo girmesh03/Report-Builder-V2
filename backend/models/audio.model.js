@@ -3,6 +3,7 @@
  */
 
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 /**
  * Audio document — one per uploaded clip; no status field (Report.status
@@ -24,7 +25,7 @@ const audioSchema = new mongoose.Schema(
     report: { type: mongoose.Schema.Types.ObjectId, ref: 'Report', required: true },
     originalName: { type: String, required: true },
     mimeType: { type: String, required: true },
-    filePath: { type: String, required: true },
+    filePath: { type: String, default: '' },
     fileSize: { type: Number, required: true },
     duration: { type: Number, required: true },
   },
@@ -46,6 +47,8 @@ const audioSchema = new mongoose.Schema(
     },
   },
 );
+
+audioSchema.plugin(mongoosePaginate);
 
 const Audio = mongoose.model('Audio', audioSchema);
 

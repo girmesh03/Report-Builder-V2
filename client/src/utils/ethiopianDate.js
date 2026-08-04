@@ -148,4 +148,38 @@ export function formatEthiopianDate(ethiopianDate) {
   return `${String(day).padStart(2, '0')}-${String(month).padStart(2, '0')}-${twoDigitYear}`;
 }
 
+/**
+ * Formats an Ethiopian date as a DD-MM-YYYY string (the API contract shape,
+ * `## API Contract` §8 — e.g. `30-07-2026`).
+ *
+ * @param {EthiopianDate} ethiopianDate - The Ethiopian date.
+ * @returns {string} The formatted date (e.g. `30-07-2026`).
+ */
+export function formatEthiopianDateLong(ethiopianDate) {
+  const { year, month, day } = ethiopianDate;
+  return `${String(day).padStart(2, '0')}-${String(month).padStart(2, '0')}-${String(year).padStart(4, '0')}`;
+}
+
+/**
+ * Parses an Ethiopian date string in DD-MM-YYYY or DD-MM-YY form.
+ *
+ * A 2-digit year is resolved deterministically as `year + 2000` (the app's
+ * date domain — the current Ethiopian century). Pagume (month 13) holds 6
+ * days in an Ethiopian leap year (`year % 4 === 3`) and 5 otherwise, so the
+ * day cap is leap-year-aware.
+ *
+ * @param {string} value - The date string (e.g. `30-07-2026` or `30-07-26`).
+ * @returns {EthiopianDate | null} The Ethiopian date, or null when unparseable.
+ */
+export function parseEthiopianDate(value) {
+  const match = /^(\d{2})-(\d{2})-(\d{2}|\d{4})$/.exec(value);
+  if (!match) return null;
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  const year = match[3].length === 2 ? Number(match[3]) + 2000 : Number(match[3]);
+  const pagumeMaxDay = year % 4 === 3 ? 6 : 5;
+  if (month < 1 || month > 13 || day < 1 || day > 30 || (month === 13 && day > pagumeMaxDay)) return null;
+  return { day, month, year };
+}
+
 export { ETHIOPIAN_MONTH_NAMES, ETHIOPIAN_DAY_NAMES };
