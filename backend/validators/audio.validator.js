@@ -6,13 +6,18 @@ import { body, param } from 'express-validator';
 
 import { validate } from './validation.js';
 
-/** @type {import('express-validator').ValidationChain[]} */
-export const validateCreateAudio = [
+/**
+ * Multipart audio-upload validation (T-4-01c, `## API Contract` §6): the
+ * clips themselves are validated by multer (MIME whitelist + 50 MB cap,
+ * `## Audio Recording STT` §6) and the reportId form field here — the MIME
+ * whitelist and size caps of `## Audio Recording STT` §2 are enforced by
+ * `middleware/upload.middleware.js`, keeping the §10.7 envelope and 422
+ * shape for express-validator failures (REQ-142, REQ-143).
+ *
+ * @type {import('express-validator').ValidationChain[]}
+ */
+export const validateAudioUpload = [
   body('reportId').isMongoId().withMessage('reportId must reference a valid report'),
-  body('originalName').trim().notEmpty().withMessage('originalName is required'),
-  body('mimeType').trim().notEmpty().withMessage('mimeType is required'),
-  body('fileSize').isInt({ min: 0 }).withMessage('fileSize must be a non-negative number'),
-  body('duration').isFloat({ min: 0 }).withMessage('duration must be a non-negative number'),
   validate,
 ];
 

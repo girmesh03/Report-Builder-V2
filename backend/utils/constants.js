@@ -44,6 +44,17 @@
  * @property {string} PROVIDER_ADDIS - Text-generation provider Addis AI (echo of `## Data Modeling` §4.1).
  * @property {string} PROVIDER_GEMINI - Text-generation provider Gemini (echo of `## Data Modeling` §4.1).
  * @property {string} PROVIDER_NVIDIA - Text-generation provider Nvidia (echo of `## Data Modeling` §4.1).
+ * @property {string} UPLOADS_AUDIO_DIR - Audio upload directory, relative to `backend/` (gitignored, `## Audio Recording STT` §7).
+ * @property {number} UPLOAD_MAX_FILES_PER_REQUEST - Max clips per upload request — 10 (echo of `## API Contract` §6.1).
+ * @property {number} AUDIO_PROBE_TIMEOUT_MS - ffprobe duration-parse timeout — 30 seconds.
+ * @property {number} AUDIO_FFMPEG_MAX_BUFFER_BYTES - ffmpeg stdout capture cap — 100 MB (a 15-minute 16 kHz mono s16le WAV fits).
+ * @property {number} AUDIO_WAV_SAMPLE_RATE - STT chunk sample rate in Hz — 16 kHz (echo of `## Audio Recording STT` §8).
+ * @property {number} AUDIO_WAV_CHANNELS - STT chunk channel count — mono (echo of `## Audio Recording STT` §8).
+ * @property {string} AUDIO_WAV_CODEC - STT chunk ffmpeg codec — PCM s16le (echo of `## Audio Recording STT` §8).
+ * @property {string} AUDIO_WAV_MIME - STT chunk MIME type — `audio/wav`, never `audio/webm` (echo of `## Audio Recording STT` §8).
+ * @property {number} ADDIS_AI_STT_MAX_BYTES_PER_REQUEST - Addis AI per-request cap — 10 MB (echo of `## Addis AI` §7, REQ-128).
+ * @property {number} ADDIS_AI_STT_NETWORK_RETRIES - STT network-failure retry count — 3 (echo of `## Addis AI` §12, REQ-129).
+ * @property {number[]} ADDIS_AI_STT_RETRY_BACKOFF_MS - STT retry backoff schedule in ms — 1s, 2s, 4s (echo of `## Addis AI` §12, REQ-129).
  */
 
 /** @type {Readonly<Constants>} */
@@ -86,6 +97,17 @@ const constants = Object.freeze({
   PROVIDER_ADDIS: 'addis',
   PROVIDER_GEMINI: 'gemini',
   PROVIDER_NVIDIA: 'nvidia',
+  UPLOADS_AUDIO_DIR: 'uploads/audio',
+  UPLOAD_MAX_FILES_PER_REQUEST: 10,
+  AUDIO_PROBE_TIMEOUT_MS: 30000,
+  AUDIO_FFMPEG_MAX_BUFFER_BYTES: 104857600,
+  AUDIO_WAV_SAMPLE_RATE: 16000,
+  AUDIO_WAV_CHANNELS: 1,
+  AUDIO_WAV_CODEC: 'pcm_s16le',
+  AUDIO_WAV_MIME: 'audio/wav',
+  ADDIS_AI_STT_MAX_BYTES_PER_REQUEST: 10485760,
+  ADDIS_AI_STT_NETWORK_RETRIES: 3,
+  ADDIS_AI_STT_RETRY_BACKOFF_MS: [1000, 2000, 4000],
 });
 
 export default constants;

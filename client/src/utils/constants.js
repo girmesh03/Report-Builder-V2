@@ -26,6 +26,15 @@
  * @property {number} PAGINATION_DEFAULT_LIMIT - Default list page size (echo of `## MUI Component Standards` §9.5).
  * @property {number} PAGINATION_MAX_LIMIT - Maximum list page size (echo of `## MUI Component Standards` §9.5).
  * @property {string} DATE_PICKER_OPEN_ARIA_LABEL - Aria label of the MuiDatePicker calendar open button.
+ * @property {number} AUDIO_MAX_DURATION_SEC - Max recording duration in seconds (echo of `## Environment Config` §5).
+ * @property {number} AUDIO_MAX_SIZE_BYTES - Max clip size in bytes (echo of `## Audio Recording STT` §6).
+ * @property {number} AUDIO_COUNTDOWN_SECONDS - Recording countdown length in seconds (echo of `## Audio Recording STT` §5.1).
+ * @property {number} AUDIO_WAVEFORM_BARS - Waveform FFT bar count (echo of `## Audio Recording STT` §5.1).
+ * @property {string} AUDIO_WAVEFORM_COLOR - Waveform FFT bar color (echo of `## Audio Recording STT` §5.1).
+ * @property {string[]} RECORDER_MIME_PRIORITY - MediaRecorder MIME priority, first supported wins (REQ-141).
+ * @property {string} AUDIO_DRAFT_DB_NAME - IndexedDB name for the audio draft store (Phase 4 corrections — REQ-140 exception).
+ * @property {string} AUDIO_DRAFT_STORE_NAME - IndexedDB object store for audio drafts (Phase 4 corrections — REQ-140 exception).
+ * @property {number} AUDIO_DRAFT_DB_VERSION - IndexedDB schema version for the audio draft store.
  */
 
 /** @type {Readonly<ApiConfig>} */
@@ -85,6 +94,38 @@ const PAGINATION_MAX_LIMIT = 100;
 /** @type {string} Aria label of the MuiDatePicker calendar open button. */
 const DATE_PICKER_OPEN_ARIA_LABEL = "Open date picker";
 
+/** @type {number} Max recording duration in seconds — auto-stop at this limit. */
+const AUDIO_MAX_DURATION_SEC = 900;
+
+/** @type {number} Max clip size in bytes — oversized clips block submit. */
+const AUDIO_MAX_SIZE_BYTES = 52428800;
+
+/** @type {number} Recording countdown length in seconds (3-2-1). */
+const AUDIO_COUNTDOWN_SECONDS = 3;
+
+/** @type {number} Waveform FFT bar count. */
+const AUDIO_WAVEFORM_BARS = 48;
+
+/** @type {string} Waveform FFT bar color. */
+const AUDIO_WAVEFORM_COLOR = "#1976d2";
+
+/** @type {Readonly<string[]>} MediaRecorder MIME priority (`## Audio Recording STT` §5, REQ-141). */
+const RECORDER_MIME_PRIORITY = Object.freeze([
+  "audio/webm;codecs=opus",
+  "audio/webm",
+  "audio/mp4",
+  "",
+]);
+
+/** @type {string} IndexedDB name for the audio draft store (REQ-140 exception, Phase 4 corrections). */
+const AUDIO_DRAFT_DB_NAME = "audio-drafts";
+
+/** @type {string} IndexedDB object store holding one record per user (`user:<id>`). */
+const AUDIO_DRAFT_STORE_NAME = "drafts";
+
+/** @type {number} IndexedDB schema version of the audio draft store. */
+const AUDIO_DRAFT_DB_VERSION = 1;
+
 export {
   API_CONFIG,
   AUTH_NO_REFRESH_PATHS,
@@ -104,4 +145,13 @@ export {
   PAGINATION_DEFAULT_LIMIT,
   PAGINATION_MAX_LIMIT,
   DATE_PICKER_OPEN_ARIA_LABEL,
+  AUDIO_MAX_DURATION_SEC,
+  AUDIO_MAX_SIZE_BYTES,
+  AUDIO_COUNTDOWN_SECONDS,
+  AUDIO_WAVEFORM_BARS,
+  AUDIO_WAVEFORM_COLOR,
+  RECORDER_MIME_PRIORITY,
+  AUDIO_DRAFT_DB_NAME,
+  AUDIO_DRAFT_STORE_NAME,
+  AUDIO_DRAFT_DB_VERSION,
 };

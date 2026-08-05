@@ -5,7 +5,9 @@
  * `## Environment Config` §2 is validated at startup and defaults from the
  * §2 table are applied where the source allows (REQ-121). Missing required
  * variables or JWT secrets shorter than 32 characters fail startup with a
- * clear error.
+ * clear error. FFMPEG_PATH/FFPROBE_PATH must resolve to existing binaries
+ * (Phase 4 corrections): placeholder paths used to fail later as a cryptic
+ * 422 `Audio file could not be validated` on the upload endpoint.
  *
  * Loads `backend/.env` here, resolved by an absolute path anchored to this
  * file (Phase 3 corrections — dotenv hardening): the previous CWD-dependent
@@ -17,6 +19,7 @@
  * every consumer because `server.js`/`app.js` import it first.
  */
 
+import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { config as loadEnv } from 'dotenv';
 
@@ -94,6 +97,18 @@ if (env.JWT_ACCESS_SECRET.length < JWT_SECRET_MIN_LENGTH) {
 }
 if (env.JWT_REFRESH_SECRET.length < JWT_SECRET_MIN_LENGTH) {
   throw new Error('JWT_REFRESH_SECRET must be at least 32 characters long');
+}
+
+for (const key of ['FFMPEG_PATH', 'FFPROBE_PATH']) {
+  const binaryPath = env[key];
+  // `child_process` resolves a bare path to `path.exe` via PATHEXT on
+  // Windows, but `existsSync` does not — check both forms.
+  const exists = existsSync(binaryPath) || existsSync(`${binaryPath}.exe`);
+  if (!exists) {
+    throw new Error(
+      `${key} points to a missing binary: "${binaryPath}". Set it to an existing ffmpeg/ffprobe executable in backend/.env (Phase 4 corrections — fail-fast instead of a cryptic 422 at upload time).`,
+    );
+  }
 }
 
 export default Object.freeze(env);

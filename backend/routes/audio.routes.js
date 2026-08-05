@@ -5,8 +5,15 @@
 import { Router } from 'express';
 
 import authenticate from '../middleware/authenticate.middleware.js';
-import { createAudio, getAudio, listAudios } from '../controllers/audio.controller.js';
-import { validateAudioId, validateCreateAudio } from '../validators/audio.validator.js';
+import { uploadAudioClips as receiveUpload } from '../middleware/upload.middleware.js';
+import {
+  downloadAudio,
+  getAudio,
+  listAudios,
+  streamAudio,
+  uploadAudioClips,
+} from '../controllers/audio.controller.js';
+import { validateAudioId, validateAudioUpload } from '../validators/audio.validator.js';
 import { OK } from '../utils/httpStatus.js';
 
 const router = Router();
@@ -16,7 +23,9 @@ router.get('/health', (_req, res) => {
 });
 
 router.get('/', authenticate, listAudios);
+router.get('/:id/stream', authenticate, validateAudioId, streamAudio);
+router.get('/:id/download', authenticate, validateAudioId, downloadAudio);
 router.get('/:id', authenticate, validateAudioId, getAudio);
-router.post('/', authenticate, validateCreateAudio, createAudio);
+router.post('/', authenticate, receiveUpload, validateAudioUpload, uploadAudioClips);
 
 export default router;

@@ -229,7 +229,7 @@ const refresh = asyncHandler(async (req, res) => {
   const user = await User.findOneAndUpdate(
     { _id: payload.id, refreshToken: token },
     { $set: { refreshToken } },
-    { new: true },
+    { returnDocument: 'after' },
   );
   if (!user) {
     throw new CustomError(UNAUTHORIZED, 'Invalid refresh token');

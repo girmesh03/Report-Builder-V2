@@ -25,3 +25,14 @@ export const validateTranscriptionId = [
   param('id').isMongoId().withMessage('Invalid transcription id'),
   validate,
 ];
+
+/**
+ * Report-id parameter for `POST /api/v1/reports/:id/transcribe`
+ * (`## API Contract` §6.2, T-4-04).
+ *
+ * @type {import('express-validator').ValidationChain[]}
+ */
+export const validateTranscribeReportId = [
+  param('id').isMongoId().withMessage('Invalid report id'),
+  validate,
+];

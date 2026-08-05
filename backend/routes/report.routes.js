@@ -5,6 +5,7 @@
 import { Router } from 'express';
 
 import authenticate from '../middleware/authenticate.middleware.js';
+import { transcribeReport } from '../controllers/transcription.controller.js';
 import {
   createReport,
   deleteReport,
@@ -17,6 +18,7 @@ import {
   validateReportId,
   validateUpdateReport,
 } from '../validators/report.validator.js';
+import { validateTranscribeReportId } from '../validators/transcription.validator.js';
 import { OK } from '../utils/httpStatus.js';
 
 const router = Router();
@@ -28,6 +30,7 @@ router.get('/health', (_req, res) => {
 router.get('/', authenticate, listReports);
 router.get('/:id', authenticate, validateReportId, getReport);
 router.post('/', authenticate, validateCreateReport, createReport);
+router.post('/:id/transcribe', authenticate, validateTranscribeReportId, transcribeReport);
 router.put('/:id', authenticate, validateUpdateReport, updateReport);
 router.delete('/:id', authenticate, validateReportId, deleteReport);
 

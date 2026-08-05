@@ -4,11 +4,13 @@
 
 import asyncHandler from 'express-async-handler';
 
+import Audio from '../models/audio.model.js';
 import Report from '../models/report.model.js';
 import Transcription from '../models/transcription.model.js';
+import { transcribeFile } from '../services/addis.service.js';
 import constants from '../utils/constants.js';
 import { CustomError } from '../utils/error.js';
-import { CONFLICT, CREATED, NOT_FOUND, OK } from '../utils/httpStatus.js';
+import { BAD_GATEWAY, CONFLICT, CREATED, NOT_FOUND, OK } from '../utils/httpStatus.js';
 
 /**
  * Creates a transcription document for a report in `audio_attached` status
@@ -37,6 +39,80 @@ export const createTranscription = asyncHandler(async (req, res) => {
   report.status = constants.REPORT_STATUS_TRANSCRIBED;
   await report.save();
   res.status(CREATED).json({ success: true, message: 'Transcription created', data: { transcription } });
+});
+
+/**
+ * Runs the STT pipeline (STEP 5–8 of `## API Contract` §6) over the
+ * report's stored audio (T-4-04, `## API Contract` §6.2): every clip goes
+ * through `services/addis.service.js` (single-pass WAV → PCM-level chunks →
+ * `v2/stt`), the transcriptions are concatenated, and — when no chunk
+ * succeeded — the report keeps `audio_attached` (audio preserved) with a
+ * `502 { success: false, message: 'Transcription failed', data: {
+ * reportId, status: 'audio_attached' } }` response (frontend retry per
+ * `## Transcription Review` §2.1). On success: first transcription creates
+ * the Transcription doc (`raw` set, `latest: ''`, `history: []` — REQ-149),
+ * links it and moves the report to `transcribed`; re-transcription on an
+ * already-transcribed/reviewed report overwrites `raw` and resets
+ * `latest` + `history` (REQ-145).
+ *
+ * @param {import('express').Request} req - The request; `req.params.id` is the report id.
+ * @param {import('express').Response} res - The response.
+ * @returns {Promise<void>}
+ */
+export const transcribeReport = asyncHandler(async (req, res) => {
+  const report = await Report.findOne({ _id: req.params.id, user: req.user._id });
+  if (!report) {
+    throw new CustomError(NOT_FOUND, 'Report not found');
+  }
+  if (report.status === constants.REPORT_STATUS_COMPLETED) {
+    throw new CustomError(CONFLICT, 'Cannot transcribe a completed report');
+  }
+  if (report.audio.length === 0) {
+    throw new CustomError(CONFLICT, 'Report has no audio to transcribe');
+  }
+  const clips = await Audio.find({ _id: { $in: report.audio } });
+  const parts = [];
+  let totalChunks = 0;
+  let succeededChunks = 0;
+  for (const clip of clips) {
+    if (!clip.filePath) {
+      continue;
+    }
+    const result = await transcribeFile(clip.filePath);
+    totalChunks += result.total;
+    succeededChunks += result.succeeded;
+    if (result.text) {
+      parts.push(result.text);
+    }
+  }
+  if (succeededChunks === 0) {
+    return res.status(BAD_GATEWAY).json({
+      success: false,
+      message: 'Transcription failed',
+      data: { reportId: report._id.toString(), status: constants.REPORT_STATUS_AUDIO_ATTACHED },
+    });
+  }
+  const raw = parts.join(' ');
+  const existing = report.transcription ? await Transcription.findById(report.transcription) : null;
+  let transcription;
+  let created = false;
+  if (existing) {
+    existing.raw = raw;
+    existing.latest = '';
+    existing.history = [];
+    transcription = await existing.save();
+  } else {
+    transcription = await Transcription.create({ user: req.user._id, report: report._id, raw });
+    report.transcription = transcription._id;
+    created = true;
+  }
+  report.status = constants.REPORT_STATUS_TRANSCRIBED;
+  await report.save();
+  res.status(created ? CREATED : OK).json({
+    success: true,
+    message: 'Transcription completed',
+    data: { transcription, created },
+  });
 });
 
 /**
