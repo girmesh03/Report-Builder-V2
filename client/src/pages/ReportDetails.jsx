@@ -13,7 +13,6 @@ import LinearProgress from '@mui/material/LinearProgress';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Delete from '@mui/icons-material/Delete';
@@ -26,6 +25,7 @@ import MuiButton from '../components/reusable/MuiButton.jsx';
 import MuiConfirmDialog from '../components/reusable/MuiConfirmDialog.jsx';
 import MuiPageHeader from '../components/reusable/MuiPageHeader.jsx';
 import MuiStatusBadge from '../components/reusable/MuiStatusBadge.jsx';
+import MuiTextField from '../components/reusable/MuiTextField.jsx';
 import { API_CONFIG } from '../utils/constants.js';
 import {
   useDeleteReportMutation,
@@ -44,7 +44,10 @@ import { useUpdateTranscriptionMutation } from '../redux/features/transcriptionS
  * (`## Transcription Review` §2), and the generated report with its
  * `generatedHistory[]` versions (T-3-03b/S-3-05b). The Generate action
  * (status `reviewed`) arrives with Phase 5; Archive/Restore with the §35
- * lifecycle in Phase 8 — the Phase 4 UI never offers them.
+ * lifecycle in Phase 8 — the Phase 4 UI never offers them. The initial-load
+ * spinner gates on `isLoading`, not `isFetching`, so background refetches
+ * (e.g. from an updated mutation cache) never momentarily blank the page
+ * (F-4-16).
  *
  * @returns {JSX.Element} The report details page.
  */
@@ -53,7 +56,7 @@ function ReportDetails() {
   const navigate = useNavigate();
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteReport, { isLoading: isDeleting }] = useDeleteReportMutation();
-  const { data: report, isFetching, isError } = useGetReportQuery(id);
+  const { data: report, isLoading, isError } = useGetReportQuery(id);
   const [updateTranscription, { isLoading: isSaving }] = useUpdateTranscriptionMutation();
   const [transcribeReport, { isLoading: isTranscribing }] = useTranscribeReportMutation();
   const transcription = report?.transcription ?? null;
@@ -99,7 +102,7 @@ function ReportDetails() {
     }
   };
 
-  if (isFetching) {
+  if (isLoading) {
     return <LoadingSpinner minHeight="400px" />;
   }
 
@@ -237,11 +240,10 @@ function ReportDetails() {
               {isTranscribing ? <LinearProgress sx={{ mb: 1 }} /> : null}
               {transcription ? (
                 <>
-                  <TextField
+                  <MuiTextField
                     multiline
                     minRows={4}
                     fullWidth
-                    size="small"
                     value={draft}
                     onChange={(event) => setDraft(event.target.value)}
                     sx={{ mb: 1 }}

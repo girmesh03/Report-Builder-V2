@@ -24,12 +24,21 @@ import {
  *    not a refresh. `saveAudioDraft` resolves `false` in that case so the
  *    consumer can warn the user once.
  *
+ * `memoryAuthoritative` marks a user's key after an IndexedDB write fails:
+ * the freshest record lives in memory, and reading the older IndexedDB
+ * record back would shadow it. While a key is marked, `loadAudioDraft` goes
+ * straight to the memory tier; a later successful write or clear removes the
+ * mark (F-4-17b).
+ *
  * Never throws: failures fall through to the memory tier or resolve to the
  * last known value.
  */
 
 /** @type {Map<string, { clips: object[] }>} Module-level memory tier (REQ-140 exception). */
 const memoryTier = new Map();
+
+/** @type {Set<string>} User keys whose memory tier is fresher than IndexedDB (F-4-17b). */
+const memoryAuthoritative = new Set();
 
 /**
  * Builds the per-user IndexedDB record key.
@@ -70,18 +79,22 @@ function openDatabase() {
  * @returns {Promise<{ clips: Array<{ id: string, blob: Blob, duration: number, mimeType: string, createdAt: number }> } | null>} The preserved draft, or null when none.
  */
 export async function loadAudioDraft(userId) {
+  const key = draftKey(userId);
+  if (memoryAuthoritative.has(key)) {
+    return memoryTier.get(key) ?? null;
+  }
   try {
     const db = await openDatabase();
     const record = await new Promise((resolve, reject) => {
       const transaction = db.transaction(AUDIO_DRAFT_STORE_NAME, "readonly");
-      const request = transaction.objectStore(AUDIO_DRAFT_STORE_NAME).get(draftKey(userId));
+      const request = transaction.objectStore(AUDIO_DRAFT_STORE_NAME).get(key);
       request.onsuccess = () => resolve(request.result ?? null);
       request.onerror = () => reject(request.error ?? new Error("Failed to read draft"));
     });
     db.close();
     return record;
   } catch {
-    return memoryTier.get(draftKey(userId)) ?? null;
+    return memoryTier.get(key) ?? null;
   }
 }
 
@@ -94,6 +107,7 @@ export async function loadAudioDraft(userId) {
  * @returns {Promise<boolean>} True when the IndexedDB tier accepted the write, false when only the memory tier holds it.
  */
 export async function saveAudioDraft(userId, clips) {
+  const key = draftKey(userId);
   const record = {
     clips: clips.map((clip) => ({
       id: clip.id,
@@ -103,18 +117,20 @@ export async function saveAudioDraft(userId, clips) {
       createdAt: clip.createdAt ?? Date.now(),
     })),
   };
-  memoryTier.set(draftKey(userId), record);
+  memoryTier.set(key, record);
   try {
     const db = await openDatabase();
     const accepted = await new Promise((resolve, reject) => {
       const transaction = db.transaction(AUDIO_DRAFT_STORE_NAME, "readwrite");
-      transaction.objectStore(AUDIO_DRAFT_STORE_NAME).put(record, draftKey(userId));
+      transaction.objectStore(AUDIO_DRAFT_STORE_NAME).put(record, key);
       transaction.oncomplete = () => resolve(true);
       transaction.onerror = () => reject(transaction.error ?? new Error("Failed to write draft"));
     });
     db.close();
+    memoryAuthoritative.delete(key);
     return accepted;
   } catch {
+    memoryAuthoritative.add(key);
     return false;
   }
 }
@@ -127,12 +143,14 @@ export async function saveAudioDraft(userId, clips) {
  * @returns {Promise<void>}
  */
 export async function clearAudioDraft(userId) {
-  memoryTier.delete(draftKey(userId));
+  const key = draftKey(userId);
+  memoryTier.delete(key);
+  memoryAuthoritative.delete(key);
   try {
     const db = await openDatabase();
     await new Promise((resolve, reject) => {
       const transaction = db.transaction(AUDIO_DRAFT_STORE_NAME, "readwrite");
-      transaction.objectStore(AUDIO_DRAFT_STORE_NAME).delete(draftKey(userId));
+      transaction.objectStore(AUDIO_DRAFT_STORE_NAME).delete(key);
       transaction.oncomplete = () => resolve();
       transaction.onerror = () => reject(transaction.error ?? new Error("Failed to clear draft"));
     });

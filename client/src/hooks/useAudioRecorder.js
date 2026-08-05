@@ -8,7 +8,11 @@ import {
   AUDIO_COUNTDOWN_SECONDS,
   AUDIO_MAX_DURATION_SEC,
   AUDIO_WAVEFORM_BARS,
+  AUDIO_WAVEFORM_BAR_WIDTH_RATIO,
+  AUDIO_WAVEFORM_CANVAS_HEIGHT,
   AUDIO_WAVEFORM_COLOR,
+  AUDIO_WAVEFORM_FALLBACK_WIDTH,
+  AUDIO_WAVEFORM_FFT_SIZE,
   RECORDER_MIME_PRIORITY,
 } from "../utils/constants.js";
 
@@ -69,6 +73,12 @@ export function useAudioRecorder() {
   const tickerTimerRef = useRef(null);
   const elapsedRef = useRef({ accumulated: 0, startedAt: 0, paused: true });
   const discardRef = useRef(false);
+  // Monotonic recording tag (F-4-11): `startRecording` increments it and
+  // `beginRecording` snapshots it; `onstop` of an older recorder whose tag
+  // no longer matches is a stale stop (e.g. a cancel-discard racing a brand
+  // new recording) and must not run `cleanupMedia`/discard logic that would
+  // kill the new capture's stream.
+  const recordingSessionRef = useRef(0);
 
   const mimeTypeRef = useRef(null);
   if (mimeTypeRef.current === null) {
@@ -104,7 +114,12 @@ export function useAudioRecorder() {
         const value = data[Math.floor((index * data.length) / AUDIO_WAVEFORM_BARS)] / 255;
         const barHeight = value * height;
         context.fillStyle = AUDIO_WAVEFORM_COLOR;
-        context.fillRect(index * barWidth, height - barHeight, barWidth * 0.6, barHeight);
+        context.fillRect(
+          index * barWidth,
+          height - barHeight,
+          barWidth * AUDIO_WAVEFORM_BAR_WIDTH_RATIO,
+          barHeight,
+        );
       }
       animationFrameRef.current = requestAnimationFrame(draw);
     };
@@ -113,8 +128,8 @@ export function useAudioRecorder() {
 
   const resizeWaveform = useCallback((canvas) => {
     const dpr = window.devicePixelRatio ?? 1;
-    const width = Math.round((canvas.clientWidth || 320) * dpr);
-    const height = Math.round((canvas.clientHeight || 64) * dpr);
+    const width = Math.round((canvas.clientWidth || AUDIO_WAVEFORM_FALLBACK_WIDTH) * dpr);
+    const height = Math.round((canvas.clientHeight || AUDIO_WAVEFORM_CANVAS_HEIGHT) * dpr);
     if (width > 0 && (canvas.width !== width || canvas.height !== height)) {
       canvas.width = width;
       canvas.height = height;
@@ -127,7 +142,7 @@ export function useAudioRecorder() {
       if (!AudioContextCtor) return;
       const audioContext = new AudioContextCtor();
       const analyser = audioContext.createAnalyser();
-      analyser.fftSize = 256;
+      analyser.fftSize = AUDIO_WAVEFORM_FFT_SIZE;
       const source = audioContext.createMediaStreamSource(stream);
       source.connect(analyser);
       audioContextRef.current = audioContext;
@@ -176,6 +191,7 @@ export function useAudioRecorder() {
 
   const beginRecording = useCallback(
     (stream) => {
+      const sessionId = recordingSessionRef.current;
       const mimeType = mimeTypeRef.current;
       const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
       chunksRef.current = [];
@@ -183,6 +199,9 @@ export function useAudioRecorder() {
         if (event.data.size > 0) chunksRef.current.push(event.data);
       };
       recorder.onstop = () => {
+        if (sessionId !== recordingSessionRef.current) {
+          return;
+        }
         if (discardRef.current) {
           discardRef.current = false;
           cleanupMedia();
@@ -212,6 +231,8 @@ export function useAudioRecorder() {
   );
 
   const startRecording = useCallback(async () => {
+    recordingSessionRef.current += 1;
+    discardRef.current = false;
     setError("");
     setCountdown(AUDIO_COUNTDOWN_SECONDS);
     setRecordingState(RECORDER_STATE_COUNTDOWN);

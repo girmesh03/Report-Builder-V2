@@ -25,7 +25,7 @@ const audioSchema = new mongoose.Schema(
     report: { type: mongoose.Schema.Types.ObjectId, ref: 'Report', required: true },
     originalName: { type: String, required: true },
     mimeType: { type: String, required: true },
-    filePath: { type: String, default: '' },
+    filePath: { type: String, required: true },
     fileSize: { type: Number, required: true },
     duration: { type: Number, required: true },
   },

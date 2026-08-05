@@ -72,14 +72,9 @@ export const transcribeReport = asyncHandler(async (req, res) => {
   }
   const clips = await Audio.find({ _id: { $in: report.audio } });
   const parts = [];
-  let totalChunks = 0;
   let succeededChunks = 0;
   for (const clip of clips) {
-    if (!clip.filePath) {
-      continue;
-    }
     const result = await transcribeFile(clip.filePath);
-    totalChunks += result.total;
     succeededChunks += result.succeeded;
     if (result.text) {
       parts.push(result.text);
@@ -89,7 +84,7 @@ export const transcribeReport = asyncHandler(async (req, res) => {
     return res.status(BAD_GATEWAY).json({
       success: false,
       message: 'Transcription failed',
-      data: { reportId: report._id.toString(), status: constants.REPORT_STATUS_AUDIO_ATTACHED },
+      data: { reportId: report._id.toString(), status: report.status },
     });
   }
   const raw = parts.join(' ');

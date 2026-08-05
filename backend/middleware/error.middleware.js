@@ -25,10 +25,13 @@ import {
  * @param {import('express').ErrorRequestHandler} err - The forwarded error.
  * @param {import('express').Request} _req - Request (unused).
  * @param {import('express').Response} res - Response.
- * @param {import('express').NextFunction} _next - Next (unused).
- * @returns {import('express').Response} The JSON error response.
+ * @param {import('express').NextFunction} next - Next; forwards errors raised after the headers were already sent (e.g. stream errors, F-4-09) so Express destroys the connection instead of attempting a second response.
+ * @returns {import('express').Response | void} The JSON error response.
  */
-const errorHandler = (err, _req, res, _next) => {
+const errorHandler = (err, _req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
   if (err instanceof CustomError && err.isOperational) {
     return res.status(err.statusCode).json({ success: false, message: err.message, data: {} });
   }

@@ -31,6 +31,10 @@
  * @property {number} AUDIO_COUNTDOWN_SECONDS - Recording countdown length in seconds (echo of `## Audio Recording STT` §5.1).
  * @property {number} AUDIO_WAVEFORM_BARS - Waveform FFT bar count (echo of `## Audio Recording STT` §5.1).
  * @property {string} AUDIO_WAVEFORM_COLOR - Waveform FFT bar color (echo of `## Audio Recording STT` §5.1).
+ * @property {number} AUDIO_WAVEFORM_FFT_SIZE - AnalyserNode FFT size feeding the waveform bars (F-4-17d).
+ * @property {number} AUDIO_WAVEFORM_BAR_WIDTH_RATIO - Fraction of each bar cell filled by the bar (F-4-17d).
+ * @property {number} AUDIO_WAVEFORM_FALLBACK_WIDTH - CSS fallback width in px before the canvas is measured (F-4-17d).
+ * @property {number} AUDIO_WAVEFORM_CANVAS_HEIGHT - CSS fallback height in px before the canvas is measured (F-4-17d).
  * @property {string[]} RECORDER_MIME_PRIORITY - MediaRecorder MIME priority, first supported wins (REQ-141).
  * @property {string} AUDIO_DRAFT_DB_NAME - IndexedDB name for the audio draft store (Phase 4 corrections — REQ-140 exception).
  * @property {string} AUDIO_DRAFT_STORE_NAME - IndexedDB object store for audio drafts (Phase 4 corrections — REQ-140 exception).
@@ -109,6 +113,18 @@ const AUDIO_WAVEFORM_BARS = 48;
 /** @type {string} Waveform FFT bar color. */
 const AUDIO_WAVEFORM_COLOR = "#1976d2";
 
+/** @type {number} AnalyserNode FFT size feeding the waveform bars. */
+const AUDIO_WAVEFORM_FFT_SIZE = 256;
+
+/** @type {number} Fraction of each bar cell filled by the bar. */
+const AUDIO_WAVEFORM_BAR_WIDTH_RATIO = 0.6;
+
+/** @type {number} CSS fallback width in px before the canvas is measured. */
+const AUDIO_WAVEFORM_FALLBACK_WIDTH = 320;
+
+/** @type {number} CSS fallback height in px before the canvas is measured. */
+const AUDIO_WAVEFORM_CANVAS_HEIGHT = 64;
+
 /** @type {Readonly<string[]>} MediaRecorder MIME priority (`## Audio Recording STT` §5, REQ-141). */
 const RECORDER_MIME_PRIORITY = Object.freeze([
   "audio/webm;codecs=opus",
@@ -150,6 +166,10 @@ export {
   AUDIO_COUNTDOWN_SECONDS,
   AUDIO_WAVEFORM_BARS,
   AUDIO_WAVEFORM_COLOR,
+  AUDIO_WAVEFORM_FFT_SIZE,
+  AUDIO_WAVEFORM_BAR_WIDTH_RATIO,
+  AUDIO_WAVEFORM_FALLBACK_WIDTH,
+  AUDIO_WAVEFORM_CANVAS_HEIGHT,
   RECORDER_MIME_PRIORITY,
   AUDIO_DRAFT_DB_NAME,
   AUDIO_DRAFT_STORE_NAME,

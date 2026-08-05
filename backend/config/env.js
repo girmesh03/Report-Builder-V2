@@ -19,7 +19,7 @@
  * every consumer because `server.js`/`app.js` import it first.
  */
 
-import { existsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { config as loadEnv } from 'dotenv';
 
@@ -101,10 +101,15 @@ if (env.JWT_REFRESH_SECRET.length < JWT_SECRET_MIN_LENGTH) {
 
 for (const key of ['FFMPEG_PATH', 'FFPROBE_PATH']) {
   const binaryPath = env[key];
-  // `child_process` resolves a bare path to `path.exe` via PATHEXT on
-  // Windows, but `existsSync` does not — check both forms.
-  const exists = existsSync(binaryPath) || existsSync(`${binaryPath}.exe`);
-  if (!exists) {
+  // Resolve the binary the way it is actually invoked: `execFile`/`execFileSync`
+  // search PATH (and PATHEXT on Windows), while `existsSync` never does — the
+  // documented system-path defaults `'ffmpeg'`/`'ffprobe'` resolve through
+  // PATH and must keep working (F-4-04). `-version` exits 0 for either binary;
+  // a genuinely missing executable throws, failing startup loudly instead of a
+  // cryptic 422 at upload time (Phase 4 corrections).
+  try {
+    execFileSync(binaryPath, ['-version'], { stdio: 'ignore' });
+  } catch {
     throw new Error(
       `${key} points to a missing binary: "${binaryPath}". Set it to an existing ffmpeg/ffprobe executable in backend/.env (Phase 4 corrections — fail-fast instead of a cryptic 422 at upload time).`,
     );

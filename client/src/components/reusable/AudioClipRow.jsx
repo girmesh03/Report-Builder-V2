@@ -31,7 +31,11 @@ function formatDuration(seconds) {
  * state only, REQ-140) — shared between the create-dialog recorder review
  * list and the report-details audio list (`## UI/UX Spec` §11). The delete
  * button is only rendered when `onDelete` is provided; the report-details
- * list omits it.
+ * list omits it. `crossOrigin="use-credentials"` lets the browser attach the
+ * auth cookie when fetching the stream (backend CORS is exact-origin +
+ * credentials, `backend/app.js`), which the report-details list needs;
+ * without it Chrome blocks the request as opaque (F-4-02). `onEnded` resets
+ * the play button and the position to 0 (F-4-15).
  *
  * @param {Object} props - Component props.
  * @param {{ id: string, url: string, duration: number }} props.clip - The audio clip to play.
@@ -53,13 +57,24 @@ function AudioClipRow({ clip, onDelete }) {
     }
   };
 
+  const handleEnded = () => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.currentTime = 0;
+    }
+    setIsPlaying(false);
+    setPosition(0);
+  };
+
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
       <audio
         ref={audioRef}
         src={clip.url}
+        crossOrigin="use-credentials"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
+        onEnded={handleEnded}
         onTimeUpdate={(event) => setPosition(event.currentTarget.currentTime)}
       />
       <IconButton

@@ -138,8 +138,14 @@ export function splitWavChunks(wavBuffer, { chunkDurationSec = constants.ADDIS_A
   if (info.blockAlign <= 0) {
     throw new TypeError('Invalid block alignment');
   }
+  if (info.byteRate <= 0) {
+    throw new TypeError('Invalid byte rate');
+  }
   const rawChunkBytes = chunkDurationSec * info.byteRate;
   const chunkBytes = rawChunkBytes - (rawChunkBytes % info.blockAlign);
+  if (chunkBytes <= 0) {
+    throw new TypeError('Invalid chunk size');
+  }
   const end = info.dataOffset + info.dataLength;
   const chunks = [];
   for (let offset = info.dataOffset; offset < end; offset += chunkBytes) {

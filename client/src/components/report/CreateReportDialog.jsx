@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import FormHelperText from "@mui/material/FormHelperText";
+import { alpha, useTheme } from "@mui/material/styles";
 import Close from "@mui/icons-material/Close";
 import Storefront from "@mui/icons-material/Storefront";
 import FiberManualRecord from "@mui/icons-material/FiberManualRecord";
@@ -98,7 +99,14 @@ function formatDuration(seconds) {
  * recordings themselves are preserved in the IndexedDB-backed audio draft
  * store (Phase 4 corrections, user decision, REQ-140 exception) — restored
  * on the next dialog open, cleared on a successful upload. Network errors
- * of unknown outcome never delete the report. Cancel is available while
+ * of unknown outcome never delete the report. A 502 can only mean
+ * "transcription failed, retry?" when it lands on the transcribe step
+ * (`audioUploaded`); a 502 during the upload itself is a server-rejected
+ * upload that falls into the known-outcome rollback instead (F-4-17c).
+ * Unknown-outcome uploads keep `createdReportId` and flag
+ * `audioUploadAttempted`, so a retry skips the upload — the server may
+ * already hold the clips, and re-uploading would duplicate Audio docs
+ * (F-4-08/F-4-17c). Cancel is available while
  * transcribing so a slow/hung STT provider never traps the session (the
  * report stays `audio_attached` in the list for a later retry); the dialog
  * otherwise closes only via Cancel or a successful submit.
@@ -138,6 +146,12 @@ function CreateReportDialog({ open, onClose }) {
   const [createdReportId, setCreatedReportId] = useState(null);
   const [draftLoaded, setDraftLoaded] = useState(false);
   const [audioUploaded, setAudioUploaded] = useState(false);
+  // Set only when an upload ends in a network error of unknown outcome: the
+  // server may already hold the clips, so a retry must not re-upload (that
+  // would duplicate Audio docs, REQ-082) — it proceeds straight to
+  // transcribe (F-4-08/F-4-17c).
+  const [audioUploadAttempted, setAudioUploadAttempted] = useState(false);
+  const theme = useTheme();
   const fallbackNotifiedRef = useRef(false);
   const closedRef = useRef(false);
   const clipsRef = useRef(clips);
@@ -194,6 +208,7 @@ function CreateReportDialog({ open, onClose }) {
   const handleClose = (wasCancelled = false) => {
     closedRef.current = true;
     setAudioUploaded(false);
+    setAudioUploadAttempted(false);
     if (wasCancelled && submitStep === SUBMIT_STEP_TRANSCRIBE) {
       toast.info("Report saved with audio — transcription pending. Open the report to retry.");
     }
@@ -334,7 +349,7 @@ function CreateReportDialog({ open, onClose }) {
           reportId = (await createReport(payload).unwrap())._id;
           setCreatedReportId(reportId);
         }
-        if (!audioUploaded) {
+        if (!audioUploaded && !audioUploadAttempted) {
           setSubmitStep(SUBMIT_STEP_AUDIO);
           await uploadAudioClips({ reportId, clips }).unwrap();
           setAudioUploaded(true);
@@ -353,7 +368,7 @@ function CreateReportDialog({ open, onClose }) {
       } catch (error) {
         setSubmitStep(null);
         if (closedRef.current) return;
-        if (error.status === 502 && reportId) {
+        if (error.status === 502 && reportId && audioUploaded) {
           setTranscribeFailed(true);
           return;
         }
@@ -365,10 +380,15 @@ function CreateReportDialog({ open, onClose }) {
               // Best-effort rollback; a failed delete leaves a draft in the list.
             }
             setCreatedReportId(null);
-            const errors = error.data?.data?.errors;
-            const detail = errors?.[0]?.message ?? error.data?.message ?? "Audio upload failed";
+            const rawErrors = error.data?.data?.errors;
+            const firstError = Array.isArray(rawErrors)
+              ? rawErrors[0]
+              : Object.values(rawErrors ?? {})[0];
+            const detail =
+              firstError?.message ?? error.data?.message ?? "Audio upload failed";
             toast.error(`${detail} — your recordings are preserved.`);
           } else {
+            setAudioUploadAttempted(true);
             toast.error(
               "Upload result unknown — check the Reports list before retrying. Your recordings are preserved.",
             );
@@ -529,8 +549,16 @@ function CreateReportDialog({ open, onClose }) {
                     aria-label={`Remove ${branch.name}`}
                     size="small"
                     onClick={() => {
+                      const removedIndex = branches.findIndex(
+                        (item) => item.branchId === branch.branchId,
+                      );
                       setBranches((previous) =>
                         previous.filter((item) => item.branchId !== branch.branchId),
+                      );
+                      setBranchErrors((previous) =>
+                        removedIndex >= 0
+                          ? previous.filter((_errors, index) => index !== removedIndex)
+                          : previous,
                       );
                       setBranchSelectionError("");
                     }}
@@ -621,7 +649,7 @@ function CreateReportDialog({ open, onClose }) {
                   sx={{
                     position: "absolute",
                     inset: 0,
-                    bgcolor: "rgba(0, 0, 0, 0.6)",
+                    bgcolor: alpha(theme.palette.common.black, 0.6),
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -695,7 +723,7 @@ function CreateReportDialog({ open, onClose }) {
             position: "absolute",
             inset: 0,
             zIndex: 1300,
-            bgcolor: "rgba(255, 255, 255, 0.85)",
+            bgcolor: `rgb(${theme.vars.palette.background.paperChannel} / 0.85)`,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -718,6 +746,7 @@ function CreateReportDialog({ open, onClose }) {
               clockOut: previous.find((branch) => branch.branchId === next.branchId)?.clockOut ?? null,
             })),
           );
+          setBranchErrors([]);
           setBranchSelectionError("");
           setSelectorOpen(false);
         }}

@@ -120,6 +120,8 @@ export async function convertToWav(
  * @param {number[]} [options.backoffMs] - Retry backoff schedule.
  * @param {string} [options.wavMime] - Chunk MIME type.
  * @returns {Promise<{ text: string, requestId: string }>} The transcription and provider request id.
+ * @throws {Error} REQ-128 cap exceeded (chunk > 10 MB) — never retried.
+ * @throws {Object} statusCode/message on provider or empty-transcription failures; 429/503 and network errors retry per the backoff schedule.
  */
 export async function transcribeWavChunk(
   wavChunk,
@@ -134,6 +136,9 @@ export async function transcribeWavChunk(
     wavMime = constants.AUDIO_WAV_MIME,
   } = {},
 ) {
+  if (wavChunk.length > constants.ADDIS_AI_STT_MAX_BYTES_PER_REQUEST) {
+    throw new Error('STT chunk exceeds the 10 MB per-request cap');
+  }
   let lastError = null;
   for (let attempt = 0; attempt <= retries; attempt += 1) {
     try {
@@ -142,36 +147,43 @@ export async function transcribeWavChunk(
       formData.append('request_data', JSON.stringify({ language_code: languageCode }));
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-      let response;
       try {
-        response = await fetchImpl(`${baseUrl}/api/v2/stt`, {
+        const response = await fetchImpl(`${baseUrl}/api/v2/stt`, {
           method: 'POST',
           headers: { 'x-api-key': apiKey },
           body: formData,
           signal: controller.signal,
         });
+        if (!response.ok) {
+          const error = {
+            retryable: response.status === 429 || response.status === 503,
+            statusCode: response.status,
+            message: mapSttError(response.status),
+          };
+          throw error;
+        }
+        const body = await response.json();
+        if (body?.status !== 'success' || typeof body?.data?.transcription !== 'string') {
+          const error = {
+            retryable: false,
+            statusCode: 200,
+            message: 'Addis AI returned an unexpected response',
+          };
+          throw error;
+        }
+        if (!body.data.transcription.trim()) {
+          const error = {
+            retryable: false,
+            statusCode: 200,
+            message: 'Addis AI returned an empty transcription',
+          };
+          throw error;
+        }
+        const requestId = body.data.usage_metadata?.requestId ?? '';
+        return { text: body.data.transcription, requestId };
       } finally {
         clearTimeout(timeoutId);
       }
-      if (!response.ok) {
-        const error = {
-          retryable: response.status === 429 || response.status === 503,
-          statusCode: response.status,
-          message: mapSttError(response.status),
-        };
-        throw error;
-      }
-      const body = await response.json();
-      if (body?.status !== 'success' || typeof body?.data?.transcription !== 'string') {
-        const error = {
-          retryable: false,
-          statusCode: 200,
-          message: 'Addis AI returned an unexpected response',
-        };
-        throw error;
-      }
-      const requestId = body.data.usage_metadata?.requestId ?? '';
-      return { text: body.data.transcription, requestId };
     } catch (error) {
       // Network/abort errors (fetch TypeError, AbortError) carry no status
       // code and are always retryable; provider answers keep their mapped
