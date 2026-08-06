@@ -38,6 +38,10 @@ export const validateRegenerate = [
     .isIn([constants.PROVIDER_ADDIS, constants.PROVIDER_GEMINI, constants.PROVIDER_NVIDIA])
     .withMessage('Provider must be addis, gemini, or nvidia'),
   body('reasoning').optional().isBoolean().withMessage('reasoning must be a boolean'),
+  body('tool')
+    .optional()
+    .isIn([constants.ASSISTANT_TOOL_SAVE_REPORT, constants.ASSISTANT_TOOL_SAVE_TRANSCRIPTION])
+    .withMessage('tool must be save_report or save_transcription'),
   validate,
 ];
 
@@ -50,6 +54,10 @@ export const validateSendMessage = [
     .isIn([constants.PROVIDER_ADDIS, constants.PROVIDER_GEMINI, constants.PROVIDER_NVIDIA])
     .withMessage('Provider must be addis, gemini, or nvidia'),
   body('reasoning').optional().isBoolean().withMessage('reasoning must be a boolean'),
+  body('tool')
+    .optional()
+    .isIn([constants.ASSISTANT_TOOL_SAVE_REPORT, constants.ASSISTANT_TOOL_SAVE_TRANSCRIPTION])
+    .withMessage('tool must be save_report or save_transcription'),
   validate,
 ];
 

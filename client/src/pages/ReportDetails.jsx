@@ -14,7 +14,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Delete from '@mui/icons-material/Delete';
@@ -27,6 +26,7 @@ import LoadingSpinner from '../components/reusable/LoadingSpinner.jsx';
 import MuiButton from '../components/reusable/MuiButton.jsx';
 import MuiConfirmDialog from '../components/reusable/MuiConfirmDialog.jsx';
 import MuiPageHeader from '../components/reusable/MuiPageHeader.jsx';
+import MuiSelect from '../components/reusable/MuiSelect.jsx';
 import MuiStatusBadge from '../components/reusable/MuiStatusBadge.jsx';
 import MuiTextField from '../components/reusable/MuiTextField.jsx';
 import { useOpenInAssistant } from '../hooks/useOpenInAssistant.js';
@@ -345,17 +345,16 @@ function ReportDetails() {
                 </>
               )}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mt: 1 }}>
-                <Select
+                <MuiSelect
                   value={provider}
                   onChange={(event) => setProvider(event.target.value)}
-                  size="small"
                   disabled={!isGeneratingAllowed}
                   inputProps={{ 'aria-label': 'AI provider' }}
                 >
                   <MenuItem value={PROVIDER_ADDIS}>Addis AI</MenuItem>
                   <MenuItem value={PROVIDER_GEMINI}>Gemini</MenuItem>
                   <MenuItem value={PROVIDER_NVIDIA}>NVIDIA</MenuItem>
-                </Select>
+                </MuiSelect>
                 <MuiButton
                   variant="contained"
                   onClick={handleGenerate}

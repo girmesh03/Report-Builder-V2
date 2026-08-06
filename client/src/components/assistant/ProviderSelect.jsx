@@ -3,8 +3,8 @@
  */
 
 import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 
+import MuiSelect from '../reusable/MuiSelect.jsx';
 import { PROVIDER_ADDIS, PROVIDER_GEMINI, PROVIDER_NVIDIA } from '../../utils/constants.js';
 
 /**
@@ -19,10 +19,9 @@ import { PROVIDER_ADDIS, PROVIDER_GEMINI, PROVIDER_NVIDIA } from '../../utils/co
  */
 function ProviderSelect({ value, onChange }) {
   return (
-    <Select
+    <MuiSelect
       value={value}
       onChange={(event) => onChange(event.target.value)}
-      size="small"
       variant="standard"
       inputProps={{ 'aria-label': 'AI agent' }}
       sx={{ minWidth: 96, flexShrink: 0 }}
@@ -30,7 +29,7 @@ function ProviderSelect({ value, onChange }) {
       <MenuItem value={PROVIDER_ADDIS}>Addis AI</MenuItem>
       <MenuItem value={PROVIDER_GEMINI}>Gemini</MenuItem>
       <MenuItem value={PROVIDER_NVIDIA}>NVIDIA</MenuItem>
-    </Select>
+    </MuiSelect>
   );
 }
 

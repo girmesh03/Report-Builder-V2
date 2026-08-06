@@ -88,3 +88,19 @@ export function buildCorrectionPrompt(context) {
     buildContextBlock(context),
   ].join('\n');
 }
+
+/**
+ * Builds the transcription-correction prompt (T-5-04b regeneration lane): the
+ * dedicated transcription system prompt plus the raw transcription as the
+ * editable material. The output is a corrected transcription — never a report
+ * structure — so no format template or tone directive is appended.
+ *
+ * @param {Object} context - The transcription correction context.
+ * @param {string} context.transcriptionText - The raw/latest transcription to correct.
+ * @returns {string} The assembled transcription-correction prompt.
+ */
+export function buildTranscriptionCorrectionPrompt({ transcriptionText }) {
+  return [constants.AI_SYSTEM_PROMPT_TRANSCRIPTION_CORRECTION, '', 'Transcription to correct:', transcriptionText || '(empty transcription)'].join(
+    '\n',
+  );
+}

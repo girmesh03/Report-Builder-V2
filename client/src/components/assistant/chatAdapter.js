@@ -231,8 +231,9 @@ async function throwFromResponse(response, fallback) {
  * (`docs/initial-doc.md` §3.5.2). The adapter is a plain object whose methods
  * mirror the Chat provider contract: `sendMessage` returns the SSE response
  * body transformed into Chat chunks, `listMessages` returns the persisted
- * history, `addToolApprovalResponse` resolves the pending `save_transcription`
- * tool call, and `stop` aborts nothing (the provider aborts via the signal the
+ * history, `addToolApprovalResponse` resolves a pending correction tool call
+ * (`save_report` writes the corrected report, `save_transcription` writes the
+ * corrected transcription and returns the report to `reviewed`), and `stop` aborts nothing (the provider aborts via the signal the
  * runtime already passes to `sendMessage`). The conversation rail is NOT part
  * of the adapter: the Assistant page drives it through the controlled
  * `conversations` prop from `aiConversationSlice` (user decision), so

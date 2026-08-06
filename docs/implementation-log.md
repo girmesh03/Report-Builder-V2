@@ -423,6 +423,26 @@
   - Server boots with real env keys; health + protected keys reachable (see review-log runtime notes).
   - **Committed** as `92b52e6` inside `feat: phase 5 ai generation and correction` and pushed to `origin/phase-5-ai-generation-and-correction`; **not merged** (per the user's instruction). The browser/gauda-pass handoff (composer + approve + reload + regenerate + reasoning toggle) needs real credentials, so it stays with the user.
 
+### Phase 5 corrigenda — review-loop fixes (F-5-01..F-5-08)
+
+- **Branch:** `phase-5-ai-generation-and-correction` — **Commit:** (created on `feat:` after this record; pushed to `origin/phase-5-ai-generation-and-correction`; **not merged** per the user's instruction)
+- **Date:** 2026-08-07
+- **User request:** apply every `OPEN` finding of Phase 5's `docs/implementation-review-log.md`; then log **only** in `docs/implementation-log.md` (spec is left untouched).
+- **Implemented / corrections (per finding):**
+  - **F-5-01 — AI-provider failures now normalize to 502**: `generateWithFallback` (`backend/controllers/ai.controller.js`) wraps every non-`CustomError` and validation-shaped failure in `new CustomError(BAD_GATEWAY, …)` and throws `lastError ??` the default 502 message; the `@throws` JSDoc was updated.
+  - **F-5-02 — `save_transcription` becomes the regeneration lane (Option B)**: `streamAssistantGeneration` gains a `requestedTool` option and selects the correction tool per message — `save_transcription` (emits `{ transcriptionId, latest }`, writes `Transcription.latest`, pushes `history[]` with `reviewer=` the provider string, returns the report to `reviewed` enabling Regenerate) vs `save_report` (emits `{ reportId, correctedText }`, overwrites `Report.generated`, pushes `generatedHistory[]`, report stays `completed`). Transcription-correction uses the new `AI_SYSTEM_PROMPT_TRANSCRIPTION_CORRECTION` prompt built by `buildTranscriptionCorrectionPrompt` (`backend/utils/promptSeeds.js`). `sendMessage` / `regenerateMessage` forward `req.validated.body.tool ?? 'save_report'` as `requestedTool`.
+  - **F-5-06 — prompt constants extracted** (`backend/utils/constants.js`): `AI_SYSTEM_PROMPT_TRANSCRIPTION_CORRECTION`, `AI_ASSISTANT_FREE_CHAT_TURN` (replaces the inline `'Respond to the conversation above.'`), `ASSISTANT_TOOL_SAVE_REPORT`, `ASSISTANT_TOOL_SAVE_TRANSCRIPTION`.
+  - **F-5-04 — validator + docblocks**: `validateSendMessage` / `validateRegenerate` (`backend/validators/ai.validator.js`) accept an optional `tool` restricted to the two tool constants; the `sendMessage` controller docblock and `client/src/components/assistant/chatAdapter.js` docblock now describe the dual correction-tool flow.
+  - **F-5-07 — reasoning survives approval**: the pending tool-call record stores `reasoningText`, and `approveToolCall` re-emits it as a `reasoning` part in both the approved and rejected assistant messages.
+  - **F-5-08 — user scoping**: `approveToolCall` loads the conversation with `ChatConversation.findOne({ _id, user: req.user._id })` instead of an owner-less `findById` (report lookup already was scoped). The Addis `response_text` shape is the provider contract and needs no change (`backend/services/addis.service.js`).
+  - **F-5-05 — MUI component swaps** (FF-4 announced): raw `Select` → `MuiSelect` in `client/src/components/assistant/ProviderSelect.jsx` and `client/src/pages/ReportDetails.jsx`; raw `Dialog`/`DialogTitle`/`DialogContent` → `MuiDialog` in `client/src/components/assistant/NewChatDialog.jsx`.
+- **Validation results:**
+  - `node --check` on `backend/controllers/ai.controller.js`, `backend/utils/constants.js`, `backend/utils/promptSeeds.js`, `backend/validators/ai.validator.js` (plus the full-tree sweep): PASS.
+  - `npm run lint` (client): PASS, exit 0.
+  - One-shot `npx vite build`: 0 errors; `dist/` deleted.
+  - `python scripts/verify-initial-doc.py`: exit 0, SELF-ALIGNED.
+  - `docs/specification.md` intentionally not touched (explicit user instruction).
+
 ### Phase 6 — Export And Analytics
 
 - **Branch:** `phase-6-export-and-analytics` — **Commit:** `feat: phase 6 export and analytics`

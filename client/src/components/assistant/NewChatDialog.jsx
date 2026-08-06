@@ -2,10 +2,7 @@
  * @module components/assistant/NewChatDialog
  */
 
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -14,6 +11,7 @@ import Typography from '@mui/material/Typography';
 
 import LoadingSpinner from '../reusable/LoadingSpinner.jsx';
 import MuiButton from '../reusable/MuiButton.jsx';
+import MuiDialog from '../reusable/MuiDialog.jsx';
 import MuiStatusBadge from '../reusable/MuiStatusBadge.jsx';
 import { PAGINATION_MAX_LIMIT } from '../../utils/constants.js';
 import { useListReportsQuery } from '../../redux/features/reportSlice.js';
@@ -41,9 +39,20 @@ function NewChatDialog({ open, onClose, onFreeChat, onSelect }) {
   const existing = data?.docs ?? [];
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>New Chat</DialogTitle>
-      <DialogContent dividers>
+    <MuiDialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="sm"
+      title="New Chat"
+      actions={
+        <MuiButton variant="text" onClick={onClose} sx={{ alignSelf: 'flex-end' }}>
+          Cancel
+        </MuiButton>
+      }
+      sx={{ '& .MuiPaper-root': { m: 1, py: 1 } }}
+    >
+      <Box sx={{ px: 1, py: 2 }}>
         <MuiButton
           variant="outlined"
           fullWidth
@@ -86,12 +95,8 @@ function NewChatDialog({ open, onClose, onFreeChat, onSelect }) {
             )}
           </>
         )}
-        <Divider sx={{ my: 1 }} />
-        <MuiButton variant="text" onClick={onClose} sx={{ alignSelf: 'flex-end' }}>
-          Cancel
-        </MuiButton>
-      </DialogContent>
-    </Dialog>
+      </Box>
+    </MuiDialog>
   );
 }
 

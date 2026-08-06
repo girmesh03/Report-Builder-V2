@@ -69,6 +69,10 @@
 * @property {string} AI_SYSTEM_PROMPT_GENERATION - Report-generation system prompt (echo of `## AI Prompt Spec`).
    * @property {string} AI_SYSTEM_PROMPT_CORRECTION - Report-correction system prompt (echo of `## AI Prompt Spec` REQ-147).
    * @property {string} AI_SYSTEM_PROMPT_ASSISTANT - Free-chat assistant system prompt (report-less conversations follow-up).
+   * @property {string} AI_SYSTEM_PROMPT_TRANSCRIPTION_CORRECTION - Transcription-correction system prompt (save_transcription lane).
+   * @property {string} AI_ASSISTANT_FREE_CHAT_TURN - Free-chat single user-turn directive (F-5-06).
+   * @property {string} ASSISTANT_TOOL_SAVE_REPORT - Tool name for report corrections (F-5-02/04).
+   * @property {string} ASSISTANT_TOOL_SAVE_TRANSCRIPTION - Tool name for transcription corrections (T-5-04b regeneration lane).
   * @property {Object} AI_PROMPT_SEEDS - Frozen PR-01..PR-18 prompt seeds (echo of `## AI Prompt Spec`).
   * @property {string} AI_TONE_DIRECTIVE - Tone directive appended to prompts (echo of `## AI Prompt Spec` §4).
   * @property {string} AI_TRANSLITERATION_DIRECTIVE - Transliteration directive (echo of `## AI Prompt Spec` §4).
@@ -144,6 +148,11 @@ const constants = Object.freeze({
     'You are an expert report editor. The user has provided corrections to a previously generated report. Incorporate the corrections while maintaining the original structure and style.',
   AI_SYSTEM_PROMPT_ASSISTANT:
     'You are the Report Builder V2 assistant. Answer questions about the app, reports, transcription, and general topics. Match the user\'s language (Amharic, English, or mixed) and keep answers concise, factual, and free of invented data. This is a free conversation not tied to a report; do not generate daily report documents here.',
+  AI_SYSTEM_PROMPT_TRANSCRIPTION_CORRECTION:
+    'You are an expert transcription reviewer. The user has provided corrections to a transcription. Apply the corrections: keep everything the user did not ask to change verbatim, keep the original spelling/terminology of untouched passages, and return ONLY the corrected transcription text (no report structure, no section labels, no explanations).',
+  AI_ASSISTANT_FREE_CHAT_TURN: 'Respond to the conversation above.',
+  ASSISTANT_TOOL_SAVE_REPORT: 'save_report',
+  ASSISTANT_TOOL_SAVE_TRANSCRIPTION: 'save_transcription',
   AI_PROMPT_SEEDS: Object.freeze({
     PR_01: 'Generate the report in Amharic.',
     PR_02: 'Use the exact section structure required by the report format.',

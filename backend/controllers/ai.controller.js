@@ -14,7 +14,7 @@ import { generateNvidiaText } from '../services/nvidia.service.js';
 import constants from '../utils/constants.js';
 import { CustomError } from '../utils/error.js';
 import { BAD_GATEWAY, CONFLICT, CREATED, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from '../utils/httpStatus.js';
-import { buildCorrectionPrompt, buildGenerationPrompt } from '../utils/promptSeeds.js';
+import { buildCorrectionPrompt, buildGenerationPrompt, buildTranscriptionCorrectionPrompt } from '../utils/promptSeeds.js';
 import { validateReportOutput } from '../utils/reportValidator.js';
 import logger from '../utils/logger.js';
 
@@ -28,7 +28,10 @@ const BRANCH_POPULATE = { path: 'branches.branchId', select: 'name location' };
 const newMessageId = () => crypto.randomUUID();
 
 /** @type {string} The report-correction tool name (Phase 5 corrigenda: report edits must write `Report.generated`, not the transcription — `## AI Prompt Spec` §9 vs §11). */
-const REPORT_TOOL_NAME = 'save_report';
+const REPORT_TOOL_NAME = constants.ASSISTANT_TOOL_SAVE_REPORT;
+
+/** @type {string} The transcription-correction tool name (T-5-04b: approved writing returns the report to `reviewed` so it can be regenerated). */
+const TRANSCRIPTION_TOOL_NAME = constants.ASSISTANT_TOOL_SAVE_TRANSCRIPTION;
 
 /**
  * Ordered provider dispatch table: each entry wraps the domain service in a
@@ -73,7 +76,7 @@ const providerDispatchers = Object.freeze({
  * @param {boolean} [payload.validateOutput] - True to run the 16-rule output validation (generation only).
  * @param {boolean} [payload.reasoning] - True to request reasoning output from reasoning-capable providers.
  * @returns {Promise<{ text: string, provider: string, reasoning?: string }>} The validated output, the provider that produced it, and optional reasoning text.
- * @throws {Object} The mapped error when the chain is exhausted or an explicit provider fails.
+ * @throws {CustomError} BAD_GATEWAY when the chain is exhausted or an explicit provider fails (F-5-01 — always a CustomError so the error middleware answers the unified 502 envelope, never a leaked provider object → 500).
  */
 async function generateWithFallback({
   systemPrompt,
@@ -106,16 +109,13 @@ async function generateWithFallback({
       if (validateOutput) {
         const check = validateReportOutput(text, { report, transcription: contextTranscription });
         if (!check.valid) {
-          lastError = {
-            statusCode: BAD_GATEWAY,
-            message: `Generated report failed validation (${check.violations.join('; ')})`,
-          };
+          lastError = new CustomError(BAD_GATEWAY, `Generated report failed validation (${check.violations.join('; ')})`);
           continue;
         }
       }
       return { text, provider, reasoning: reasoningText };
     } catch (error) {
-      lastError = error;
+      lastError = error instanceof CustomError ? error : new CustomError(BAD_GATEWAY, error?.message || 'AI provider failed');
       if (isExplicitSelection) {
         // The provider's own status must NOT leak through as a 4xx (a 401
         // would trip the client's refresh machinery for the wrong reason) —
@@ -421,9 +421,10 @@ function endSseStream(res, toolCallId = '', messageId = '') {
  * @param {import('express').Response} options.res - The SSE response.
  * @param {string} options.requestedProvider - The user-selected provider (`addis` | `gemini` | `nvidia`).
  * @param {boolean} options.reasoningEnabled - True to request reasoning output.
+ * @param {string|undefined} options.requestedTool - The desired correction tool for report-bound chats (`save_transcription` to correct the transcription — T-5-04b regeneration lane; anything else falls back to `save_report`).
  * @returns {Promise<void>}
  */
-async function streamAssistantGeneration({ conversation, res, requestedProvider, reasoningEnabled }) {
+async function streamAssistantGeneration({ conversation, res, requestedProvider, reasoningEnabled, requestedTool }) {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
@@ -445,7 +446,7 @@ async function streamAssistantGeneration({ conversation, res, requestedProvider,
     try {
       run = await generateWithFallback({
         systemPrompt: constants.AI_SYSTEM_PROMPT_ASSISTANT,
-        prompt: 'Respond to the conversation above.',
+        prompt: constants.AI_ASSISTANT_FREE_CHAT_TURN,
         history,
         report: null,
         requestedProvider,
@@ -485,13 +486,30 @@ async function streamAssistantGeneration({ conversation, res, requestedProvider,
     throw new CustomError(NOT_FOUND, 'Report not found');
   }
   const transcription = report.transcription ?? null;
-  const prompt = buildCorrectionPrompt({
-    report,
-    transcriptionText: transcription?.latest || transcription?.raw || '',
-  });
+  // Tool selection (F-5-02, Option B): the requested tool drives which write
+  // the approved correction performs. `save_transcription` is the T-5-04b
+  // regeneration lane — the corrected transcription returns the report to
+  // `reviewed` so it can be regenerated; `save_report` stays the final
+  // report-correction (approved text lands on `Report.generated`, stays
+  // `completed`).
+  const useTranscriptionTool =
+    requestedTool === TRANSCRIPTION_TOOL_NAME &&
+    transcription &&
+    (transcription.latest || transcription.raw);
+  const toolName = useTranscriptionTool ? TRANSCRIPTION_TOOL_NAME : REPORT_TOOL_NAME;
+  const prompt = useTranscriptionTool
+    ? buildTranscriptionCorrectionPrompt({
+        transcriptionText: transcription.latest || transcription.raw || '',
+      })
+    : buildCorrectionPrompt({
+        report,
+        transcriptionText: transcription?.latest || transcription?.raw || '',
+      });
   try {
     run = await generateWithFallback({
-      systemPrompt: constants.AI_SYSTEM_PROMPT_CORRECTION,
+      systemPrompt: useTranscriptionTool
+        ? constants.AI_SYSTEM_PROMPT_TRANSCRIPTION_CORRECTION
+        : constants.AI_SYSTEM_PROMPT_CORRECTION,
       prompt,
       history,
       contextTranscription: transcription?.latest || '',
@@ -516,12 +534,9 @@ async function streamAssistantGeneration({ conversation, res, requestedProvider,
     writeSseEvent(res, 'part', { type: 'reasoning', text: reasoningText });
   }
   const toolCallId = newMessageId();
-  // Report corrections are writes to the generated report itself — the
-  // proposed corrected text is approved and stored on `Report.generated`
-  // (AD-010), not on the transcription (Phase 5 corrigenda; the previous
-  // `save_transcription` write left the live update invisible to the report).
-  const toolName = REPORT_TOOL_NAME;
-  const toolInput = { reportId: report._id.toString(), correctedText: text };
+  const toolInput = useTranscriptionTool
+    ? { transcriptionId: transcription._id.toString(), latest: text }
+    : { reportId: report._id.toString(), correctedText: text };
   writeSseEvent(res, 'part', {
     type: 'tool-input-available',
     toolCallId,
@@ -532,7 +547,7 @@ async function streamAssistantGeneration({ conversation, res, requestedProvider,
     type: 'tool-approval-request',
     toolCallId,
     toolName,
-    input: { correctedText: text },
+    input: useTranscriptionTool ? { latest: text } : { correctedText: text },
   });
   const expiry = setTimeout(() => {
     if (!pendingToolCalls.has(toolCallId)) return;
@@ -555,6 +570,7 @@ async function streamAssistantGeneration({ conversation, res, requestedProvider,
     toolInput,
     provider,
     messageId,
+    reasoningText,
     expiry,
     keepalive,
   });
@@ -570,12 +586,14 @@ async function streamAssistantGeneration({ conversation, res, requestedProvider,
  * /api/v1/assistant/conversations/:id/messages`, SSE response). The user
  * message is persisted, then the provider run starts with the correction
  * system prompt (REQ-147) and the frozen AI Correction config (REQ-127).
- * The returned text is offered as the `save_report` tool input: the
- * server emits `start` then `tool-input-available` and
- * `tool-approval-request` and holds the run in the pending map until the
- * user decides (60 s timeout). Free chats stream the plain reply.
+ * Report-bound chats offer the requested correction tool — `save_report`
+ * (F-5-02 default) or `save_transcription` when the user asked to redo the
+ * transcription (T-5-04b regeneration lane); the server emits `start` then
+ * `tool-input-available` and `tool-approval-request` and holds the run in the
+ * pending map until the user decides (60 s timeout). Free chats stream the
+ * plain reply.
  *
- * @param {import('express').Request} req - The request; `req.params.id` is the conversation id; `req.validated.body.content` is the correction instruction.
+ * @param {import('express').Request} req - The request; `req.params.id` is the conversation id; `req.validated.body.content` is the correction instruction; `req.validated.body.tool` selects the correction tool (`save_report` | `save_transcription`, default `save_report`).
  * @param {import('express').Response} res - The response.
  * @returns {Promise<void>}
  */
@@ -592,7 +610,8 @@ export const sendMessage = asyncHandler(async (req, res) => {
 
   const requestedProvider = req.validated.body.provider ?? constants.AI_DEFAULT_PROVIDER;
   const reasoningEnabled = req.validated.body.reasoning ?? false;
-  await streamAssistantGeneration({ conversation, res, requestedProvider, reasoningEnabled });
+  const requestedTool = req.validated.body.tool ?? REPORT_TOOL_NAME;
+  await streamAssistantGeneration({ conversation, res, requestedProvider, reasoningEnabled, requestedTool });
 });
 
 /**
@@ -654,7 +673,8 @@ export const regenerateMessage = asyncHandler(async (req, res) => {
 
   const requestedProvider = req.validated.body.provider ?? constants.AI_DEFAULT_PROVIDER;
   const reasoningEnabled = req.validated.body.reasoning ?? false;
-  await streamAssistantGeneration({ conversation, res, requestedProvider, reasoningEnabled });
+  const requestedTool = req.validated.body.tool ?? REPORT_TOOL_NAME;
+  await streamAssistantGeneration({ conversation, res, requestedProvider, reasoningEnabled, requestedTool });
 });
 
 /**
@@ -689,17 +709,19 @@ export const approveToolCall = asyncHandler(async (req, res) => {
   clearInterval(keepalive);
   pendingToolCalls.delete(toolCallId);
 
-  const conversation = await ChatConversation.findById(pending.conversationId);
+  const conversation = await ChatConversation.findOne({ _id: pending.conversationId, user: req.user._id });
   if (!conversation) {
     throw new CustomError(NOT_FOUND, 'Conversation not found');
   }
   const replyId = pending.messageId ?? newMessageId();
+  const reasoningPart = pending.reasoningText ? [{ type: 'reasoning', text: pending.reasoningText }] : [];
   if (!approved) {
     conversation.messages.push({
       id: replyId,
       role: 'assistant',
       status: 'complete',
       parts: [
+        ...reasoningPart,
         { type: 'tool-input-available', toolCallId, toolName: pending.toolName, input: toolInput },
         {
           type: 'tool-approval-request',
@@ -755,6 +777,7 @@ export const approveToolCall = asyncHandler(async (req, res) => {
     role: 'assistant',
     status: 'complete',
     parts: [
+      ...reasoningPart,
       { type: 'tool-input-available', toolCallId, toolName: pending.toolName, input: toolInput },
       {
         type: 'tool-approval-request',
