@@ -7,6 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Delete from "@mui/icons-material/Delete";
+import Edit from "@mui/icons-material/Edit";
 import Visibility from "@mui/icons-material/Visibility";
 
 import MuiStatusBadge from "../reusable/MuiStatusBadge.jsx";
@@ -14,16 +15,16 @@ import MuiStatusBadge from "../reusable/MuiStatusBadge.jsx";
 /**
  * Builds the report columns for MuiDataGrid (`## MUI Component Standards`
  * §9.6): date, status badge, branch names, clock times, created date, and
- * the action column last (View + Delete — Phase 3 scope; the Edit action
- * opens the Assistant chat in Phase 5 and Archive/Restore arrive with the
- * §35 lifecycle in Phase 8, so the Phase 3 UI never offers them).
+ * the action column last (View, Edit → opens the Assistant chat, Delete;
+ * Archive/Restore arrive with the §35 lifecycle in Phase 8).
  *
  * @param {Object} handlers - Action callbacks.
  * @param {(id: string) => void} handlers.onView - View action callback.
+ * @param {(id: string) => void} handlers.onEdit - Edit (Assistant) action callback.
  * @param {(id: string) => void} handlers.onDelete - Delete action callback.
  * @returns {import('@mui/x-data-grid').GridColDef[]} The report columns.
  */
-export function buildReportColumns({ onView, onDelete }) {
+export function buildReportColumns({ onView, onDelete, onEdit }) {
   return [
     { field: "date", headerName: "Date", flex: 1, minWidth: 120 },
     {
@@ -48,7 +49,7 @@ export function buildReportColumns({ onView, onDelete }) {
       headerName: "Actions",
       sortable: false,
       filterable: false,
-      width: 110,
+      width: 140,
       renderCell: ({ row }) => (
         <Stack direction="row">
           <Tooltip title="View">
@@ -58,6 +59,15 @@ export function buildReportColumns({ onView, onDelete }) {
               onClick={() => onView(row._id)}
             >
               <Visibility fontSize="small" sx={{ color: "primary.main" }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Edit Report">
+            <IconButton
+              aria-label="Edit report in assistant"
+              size="small"
+              onClick={() => onEdit(row._id)}
+            >
+              <Edit fontSize="small" sx={{ color: "info.main" }} />
             </IconButton>
           </Tooltip>
           <Tooltip title="Delete">

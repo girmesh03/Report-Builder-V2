@@ -6,6 +6,7 @@ import { Router } from 'express';
 
 import authenticate from '../middleware/authenticate.middleware.js';
 import { transcribeReport } from '../controllers/transcription.controller.js';
+import { generateReport } from '../controllers/ai.controller.js';
 import {
   createReport,
   deleteReport,
@@ -19,6 +20,7 @@ import {
   validateUpdateReport,
 } from '../validators/report.validator.js';
 import { validateTranscribeReportId } from '../validators/transcription.validator.js';
+import { validateGeneration } from '../validators/ai.validator.js';
 import { OK } from '../utils/httpStatus.js';
 
 const router = Router();
@@ -31,6 +33,7 @@ router.get('/', authenticate, listReports);
 router.get('/:id', authenticate, validateReportId, getReport);
 router.post('/', authenticate, validateCreateReport, createReport);
 router.post('/:id/transcribe', authenticate, validateTranscribeReportId, transcribeReport);
+router.post('/:id/generate', authenticate, validateReportId, validateGeneration, generateReport);
 router.put('/:id', authenticate, validateUpdateReport, updateReport);
 router.delete('/:id', authenticate, validateReportId, deleteReport);
 

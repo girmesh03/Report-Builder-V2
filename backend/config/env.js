@@ -71,10 +71,23 @@ const env = {
   LOG_LEVEL: process.env.LOG_LEVEL || (process.env.NODE_ENV === 'production' ? 'info' : 'debug'),
   NVIDIA_API_KEY: process.env.NVIDIA_API_KEY,
   GEMINI_API_KEY: process.env.GEMINI_API_KEY,
-  NVIDIA_API_BASE_URL: process.env.NVIDIA_API_BASE_URL,
-  GEMINI_API_BASE_URL: process.env.GEMINI_API_BASE_URL,
+  NVIDIA_API_BASE_URL:
+    process.env.NVIDIA_API_BASE_URL && process.env.NVIDIA_API_BASE_URL !== 'change me'
+      ? process.env.NVIDIA_API_BASE_URL
+      : 'https://integrate.api.nvidia.com/v1',
+  GEMINI_API_BASE_URL:
+    process.env.GEMINI_API_BASE_URL && process.env.GEMINI_API_BASE_URL !== 'change me'
+      ? process.env.GEMINI_API_BASE_URL
+      : 'https://generativelanguage.googleapis.com/v1beta',
   FFMPEG_PATH: process.env.FFMPEG_PATH || 'ffmpeg',
   FFPROBE_PATH: process.env.FFPROBE_PATH || 'ffprobe',
+  // Optional model overrides: let the deployment point the providers at a
+  // reasoning-capable variant (e.g. `deepseek-ai/deepseek-v4-flash`) without
+  // a code change. Non-required keys — they fall back to the frozen
+  // `constants.GEMINI_MODEL`/`NVIDIA_MODEL` in the services.
+  GEMINI_MODEL: process.env.GEMINI_MODEL && process.env.GEMINI_MODEL !== 'change me' ? process.env.GEMINI_MODEL : undefined,
+  NVIDIA_MODEL:
+    process.env.NVIDIA_MODEL && process.env.NVIDIA_MODEL !== 'change me' ? process.env.NVIDIA_MODEL : undefined,
 };
 
 if (process.env.OAUTH_GOOGLE_CLIENT_ID) {
@@ -90,6 +103,24 @@ if (process.env.OAUTH_GOOGLE_CALLBACK_URL) {
 const missingKeys = REQUIRED_KEYS.filter((key) => !env[key]);
 if (missingKeys.length > 0) {
   throw new Error(`Missing required environment variables: ${missingKeys.join(', ')}`);
+}
+
+const PLACEHOLDER_PATTERNS = [/change\s?me/i, /your[-_]?\w*-?key/i, /<[^>]+>/];
+const placeholderKeys = [
+  'ADDIS_AI_API_KEY',
+  'ADDIS_AI_TEXT_MODEL',
+  'ADDIS_AI_STT_MODEL',
+  'NVIDIA_API_KEY',
+  'GEMINI_API_KEY',
+  'NVIDIA_API_BASE_URL',
+  'GEMINI_API_BASE_URL',
+].filter((key) => env[key] && PLACEHOLDER_PATTERNS.some((pattern) => pattern.test(String(env[key]))));
+if (placeholderKeys.length > 0) {
+  throw new Error(
+    `Provider placeholder values in backend/.env (phase-5: a downloaded .env template with "change me" keys silently fell back to Addis, breaking provider selection): ${placeholderKeys.join(
+      ', ',
+    )}. Set real values in backend/.env.`,
+  );
 }
 
 if (env.JWT_ACCESS_SECRET.length < JWT_SECRET_MIN_LENGTH) {

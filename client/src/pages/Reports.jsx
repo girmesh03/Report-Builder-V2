@@ -17,6 +17,7 @@ import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Add from '@mui/icons-material/Add';
 import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
 import FilterList from '@mui/icons-material/FilterList';
 import ViewGrid from '@mui/icons-material/GridView';
 import ViewList from '@mui/icons-material/ViewList';
@@ -35,6 +36,7 @@ import LoadingSpinner from '../components/reusable/LoadingSpinner.jsx';
 import CreateReportDialog from '../components/report/CreateReportDialog.jsx';
 import ReportFilterDialog from '../components/report/ReportFilterDialog.jsx';
 import { buildReportColumns } from '../components/columns/reportColumns.jsx';
+import { useOpenInAssistant } from '../hooks/useOpenInAssistant.js';
 import { PAGINATION_DEFAULT_LIMIT, PAGINATION_DEFAULT_PAGE } from '../utils/constants.js';
 import { formatEthiopianDateLong, gregorianToEthiopian } from '../utils/ethiopianDate.js';
 import { useDeleteReportMutation, useListReportsQuery } from '../redux/features/reportSlice.js';
@@ -62,6 +64,7 @@ function Reports() {
   const [createOpen, setCreateOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteReport, { isLoading: isDeleting }] = useDeleteReportMutation();
+  const { openInAssistant } = useOpenInAssistant();
 
   const activeFilterCount = (filters.date ? 1 : 0) + (filters.branchId ? 1 : 0) + (filters.isArchived ? 1 : 0);
 
@@ -71,7 +74,7 @@ function Reports() {
       )
     : undefined;
 
-  const { data, isFetching } = useListReportsQuery({
+  const { data, isFetching, isError, error } = useListReportsQuery({
     page,
     limit,
     date: dateFilter,
@@ -101,7 +104,9 @@ function Reports() {
 
   const handleView = (id) => navigate(`/reports/${id}/details`);
 
-  const reportColumns = buildReportColumns({ onView: handleView, onDelete: setDeleteTarget });
+  const handleEdit = (id) => openInAssistant(id);
+
+  const reportColumns = buildReportColumns({ onView: handleView, onEdit: handleEdit, onDelete: setDeleteTarget });
 
   return (
     <>
@@ -144,6 +149,16 @@ function Reports() {
       {viewMode === 'list' ? (
         isFetching && !data ? (
           <LoadingSpinner minHeight="320px" />
+        ) : isError ? (
+          <MuiEmptyState
+            resource="reports"
+            subtitle={error?.data?.message || 'Failed to load reports. Please try again.'}
+            action={
+              <MuiButton variant="contained" startIcon={<Add />} onClick={() => setCreateOpen(true)}>
+                Create Report
+              </MuiButton>
+            }
+          />
         ) : data?.docs?.length ? (
           <>
             <Grid container spacing={2}>
@@ -168,6 +183,11 @@ function Reports() {
                         <Tooltip title="View">
                           <IconButton aria-label="View report" size="small" onClick={() => handleView(report._id)}>
                             <Visibility fontSize="small" sx={{ color: 'primary.main' }} />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit Report">
+                          <IconButton aria-label="Edit report in assistant" size="small" onClick={() => handleEdit(report._id)}>
+                            <Edit fontSize="small" sx={{ color: 'info.main' }} />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Delete">
@@ -197,6 +217,16 @@ function Reports() {
             }
           />
         )
+      ) : isError && !data ? (
+        <MuiEmptyState
+          resource="reports"
+          subtitle={error?.data?.message || 'Failed to load reports. Please try again.'}
+          action={
+            <MuiButton variant="contained" startIcon={<Add />} onClick={() => setCreateOpen(true)}>
+              Create Report
+            </MuiButton>
+          }
+        />
       ) : (
         <MuiDataGrid
           rows={rows}

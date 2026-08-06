@@ -10,6 +10,7 @@ import reportRoutes from './report.routes.js';
 import audioRoutes from './audio.routes.js';
 import transcriptionRoutes from './transcription.routes.js';
 import aiRoutes from './ai.routes.js';
+import assistantRoutes from './assistant.routes.js';
 import userRoutes from './user.routes.js';
 import analyticsRoutes from './analytics.routes.js';
 import { OK } from '../utils/httpStatus.js';
@@ -26,6 +27,7 @@ router.use('/reports', reportRoutes);
 router.use('/audio', audioRoutes);
 router.use('/transcriptions', transcriptionRoutes);
 router.use('/ai', aiRoutes);
+router.use('/assistant', assistantRoutes);
 router.use('/user', userRoutes);
 router.use('/analytics', analyticsRoutes);
 

@@ -22,7 +22,17 @@ const app = express();
 
 app.use(helmet());
 app.use(cors({ origin: env.CLIENT_ORIGIN, credentials: true }));
-app.use(compression());
+app.use(
+  compression({
+    // SSE streams are never compressed: compression buffers responses,
+    // which would break the live `res.flush()` discipline of the assistant
+    // chat stream (`docs/initial-doc.md` §3.5.2).
+    filter: (req, res) => {
+      const isSse = String(req.headers.accept ?? '').includes('text/event-stream');
+      return !isSse && compression.filter(req, res);
+    },
+  }),
+);
 app.use(cookieParser());
 
 function makeQueryWritable(req, _res, next) {

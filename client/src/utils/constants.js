@@ -34,11 +34,12 @@
  * @property {number} AUDIO_WAVEFORM_FFT_SIZE - AnalyserNode FFT size feeding the waveform bars (F-4-17d).
  * @property {number} AUDIO_WAVEFORM_BAR_WIDTH_RATIO - Fraction of each bar cell filled by the bar (F-4-17d).
  * @property {number} AUDIO_WAVEFORM_FALLBACK_WIDTH - CSS fallback width in px before the canvas is measured (F-4-17d).
- * @property {number} AUDIO_WAVEFORM_CANVAS_HEIGHT - CSS fallback height in px before the canvas is measured (F-4-17d).
+* @property {number} AUDIO_WAVEFORM_CANVAS_HEIGHT - CSS fallback height in px before the canvas is measured (F-4-17d).
  * @property {string[]} RECORDER_MIME_PRIORITY - MediaRecorder MIME priority, first supported wins (REQ-141).
  * @property {string} AUDIO_DRAFT_DB_NAME - IndexedDB name for the audio draft store (Phase 4 corrections — REQ-140 exception).
- * @property {string} AUDIO_DRAFT_STORE_NAME - IndexedDB object store for audio drafts (Phase 4 corrections — REQ-140 exception).
+ * @property {string} AUDIO_DRAFT_STORE_NAME - IndexedDB object store for audio drafts (REQ-140 exception).
  * @property {number} AUDIO_DRAFT_DB_VERSION - IndexedDB schema version for the audio draft store.
+ * @property {number} SESSION_REFRESH_INTERVAL_MS - Proactive session-refresh interval (before the ~15m access-token expiry).
  */
 
 /** @type {Readonly<ApiConfig>} */
@@ -142,6 +143,9 @@ const AUDIO_DRAFT_STORE_NAME = "drafts";
 /** @type {number} IndexedDB schema version of the audio draft store. */
 const AUDIO_DRAFT_DB_VERSION = 1;
 
+/** @type {number} Proactive session-refresh interval (keeps the access cookie fresh before its ~15m expiry). */
+const SESSION_REFRESH_INTERVAL_MS = 12 * 60 * 1000;
+
 export {
   API_CONFIG,
   AUTH_NO_REFRESH_PATHS,
@@ -174,4 +178,5 @@ export {
   AUDIO_DRAFT_DB_NAME,
   AUDIO_DRAFT_STORE_NAME,
   AUDIO_DRAFT_DB_VERSION,
+  SESSION_REFRESH_INTERVAL_MS,
 };

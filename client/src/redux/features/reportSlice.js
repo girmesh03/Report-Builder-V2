@@ -56,6 +56,15 @@ export const reportApi = api.injectEndpoints({
       transformResponse: (response) => response.data.transcription,
       invalidatesTags: (_result, _error, reportId) => [{ type: 'Report', id: reportId }],
     }),
+    generateReport: build.mutation({
+      query: ({ reportId, provider }) => ({
+        url: `/reports/${reportId}/generate`,
+        method: 'POST',
+        body: { provider },
+      }),
+      transformResponse: (response) => response.data.report,
+      invalidatesTags: (_result, _error, arg) => [{ type: 'Report', id: arg.reportId }],
+    }),
   }),
 });
 
@@ -68,4 +77,5 @@ export const {
   useDeleteReportMutation,
   useUploadAudioClipsMutation,
   useTranscribeReportMutation,
+  useGenerateReportMutation,
 } = reportApi;

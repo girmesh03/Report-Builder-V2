@@ -7,11 +7,14 @@ import { useSelector } from 'react-redux';
 
 import { useGetMeQuery } from '../../redux/features/authSlice.js';
 import LoadingSpinner from '../reusable/LoadingSpinner.jsx';
+import SessionRefresher from './SessionRefresher.jsx';
 
 /**
  * Route guard for authenticated pages (12.4, REQ-095): shows a spinner while
  * the session is initializing, calls `GET /api/v1/auth/me` on mount, and
- * redirects unauthenticated users to `/login` preserving `state.from`.
+ * redirects unauthenticated users to `/login` preserving `state.from`. The
+ * proactive `SessionRefresher` keeps the access cookie fresh for the whole
+ * guarded subtree (including `/assistant`, which bypasses `AppShell`).
  *
  * @returns {JSX.Element} The guarded outlet or a redirect.
  */
@@ -26,7 +29,12 @@ function ProtectedRoute() {
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
-  return <Outlet />;
+  return (
+    <>
+      <SessionRefresher />
+      <Outlet />
+    </>
+  );
 }
 
 ProtectedRoute.displayName = 'ProtectedRoute';

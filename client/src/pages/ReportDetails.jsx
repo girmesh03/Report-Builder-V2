@@ -13,9 +13,12 @@ import LinearProgress from '@mui/material/LinearProgress';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
 import { useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
 
@@ -26,10 +29,12 @@ import MuiConfirmDialog from '../components/reusable/MuiConfirmDialog.jsx';
 import MuiPageHeader from '../components/reusable/MuiPageHeader.jsx';
 import MuiStatusBadge from '../components/reusable/MuiStatusBadge.jsx';
 import MuiTextField from '../components/reusable/MuiTextField.jsx';
-import { API_CONFIG } from '../utils/constants.js';
+import { useOpenInAssistant } from '../hooks/useOpenInAssistant.js';
+import { API_CONFIG, PROVIDER_ADDIS, PROVIDER_GEMINI, PROVIDER_NVIDIA, REPORT_STATUS_REVIEWED } from '../utils/constants.js';
 import {
   useDeleteReportMutation,
   useGetReportQuery,
+  useGenerateReportMutation,
   useTranscribeReportMutation,
 } from '../redux/features/reportSlice.js';
 import { useUpdateTranscriptionMutation } from '../redux/features/transcriptionSlice.js';
@@ -55,10 +60,13 @@ function ReportDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [provider, setProvider] = useState(PROVIDER_ADDIS);
   const [deleteReport, { isLoading: isDeleting }] = useDeleteReportMutation();
   const { data: report, isLoading, isError } = useGetReportQuery(id);
   const [updateTranscription, { isLoading: isSaving }] = useUpdateTranscriptionMutation();
   const [transcribeReport, { isLoading: isTranscribing }] = useTranscribeReportMutation();
+  const [generateReport, { isLoading: isGenerating }] = useGenerateReportMutation();
+  const { openInAssistant, isOpening } = useOpenInAssistant();
   const transcription = report?.transcription ?? null;
   const [draft, setDraft] = useState('');
   const transcriptionKey = transcription
@@ -95,12 +103,23 @@ function ReportDetails() {
 
   const handleReTranscribe = async () => {
     try {
-      await transcribeReport(report._id).unwrap();
+      await transcribeReport(id).unwrap();
       toast.success('Transcription updated');
     } catch (error) {
       toast.error(error.data?.message || 'Failed to re-transcribe');
     }
   };
+
+  const handleGenerate = async () => {
+    try {
+      await generateReport({ reportId: id, provider }).unwrap();
+      toast.success('Report generated');
+    } catch (error) {
+      toast.error(error.data?.message || 'Failed to generate the report');
+    }
+  };
+
+  const handleEditReport = () => openInAssistant(id);
 
   if (isLoading) {
     return <LoadingSpinner minHeight="400px" />;
@@ -120,12 +139,34 @@ function ReportDetails() {
     );
   }
 
-  const versions = [...report.generatedHistory].reverse();
+  const versions = [...(report.generatedHistory ?? [])].reverse();
+  const audioClips = (report.audio ?? []).filter(Boolean);
+  // Format a generatedHistory timestamp defensively: an invalid/missing
+  // `generatedAt` (older or hand-written records) must not crash the page
+  // with a RangeError from dayjs (F-4-16 style guards).
+  const formatGeneratedAt = (generatedAt) => {
+    const parsed = dayjs(generatedAt);
+    return parsed.isValid() ? parsed.format('DD-MM-YYYY hh:mm A') : 'Unknown date';
+  };
+  // Generation is allowed while the report is back in `reviewed` — after an
+  // approved assistant correction the backend returns it to `reviewed`
+  // (T-5-04b) so the user can regenerate (T-5-03b), even when a version
+  // already exists.
+  const isGeneratingAllowed = report.status === REPORT_STATUS_REVIEWED;
 
   return (
     <>
       <MuiPageHeader title="Report Details" subtitle={`Report · ${report.date}`}>
         <MuiStatusBadge status={report.status} />
+        <MuiButton
+          variant="contained"
+          startIcon={<Edit />}
+          onClick={handleEditReport}
+          loading={isOpening}
+          sx={{ flexShrink: 0 }}
+        >
+          Edit Report
+        </MuiButton>
         <Tooltip title="Delete">
           <IconButton aria-label="Delete report" size="small" onClick={() => setDeleteOpen(true)}>
             <Delete fontSize="small" sx={{ color: 'error.main' }} />
@@ -150,7 +191,7 @@ function ReportDetails() {
                 Clock Out: {report.clockOut || '—'}
               </Typography>
               <List dense disablePadding>
-                {report.branches.map((branch) => (
+                {(report.branches ?? []).filter(Boolean).map((branch) => (
                   <ListItem key={branch.branchId?._id ?? branch.branchId} disablePadding>
                     <ListItemText
                       primary={branch.branchId?.name ?? branch.name ?? 'Branch'}
@@ -173,15 +214,15 @@ function ReportDetails() {
               <Typography variant="h6" gutterBottom>
                 Audio
               </Typography>
-              {report.audio.length === 0 ? (
+              {audioClips.length === 0 ? (
                 <Typography variant="body2" color="text.secondary">
                   No audio clips attached.
                 </Typography>
               ) : (
                 <List dense disablePadding>
-                  {report.audio.map((clip) => (
+                  {audioClips.map((clip) => (
                     <ListItem
-                      key={clip._id}
+                      key={clip._id ?? clip.id}
                       disablePadding
                       sx={{
                         flexDirection: 'column',
@@ -192,16 +233,16 @@ function ReportDetails() {
                     >
                       <AudioClipRow
                         clip={{
-                          id: clip._id,
+                          id: clip._id ?? clip.id,
                           url: `${API_CONFIG.VITE_API_BASE_URL}/audio/${clip._id}/stream`,
                           duration: clip.duration,
                         }}
                       />
                       <ListItemText
                         primary={clip.originalName}
-                        secondary={`${clip.mimeType} · ${clip.fileSize} bytes · ${clip.duration}s · ${dayjs(
+                        secondary={`${clip.mimeType} · ${clip.fileSize} bytes · ${clip.duration}s · ${formatGeneratedAt(
                           clip.createdAt,
-                        ).format('DD-MM-YYYY hh:mm A')}`}
+                        )}`}
                         sx={{ mt: 0.5 }}
                       />
                     </ListItem>
@@ -278,29 +319,60 @@ function ReportDetails() {
                 Generated Report
               </Typography>
               {report.generated ? (
+                <Typography variant="body2" sx={{ mb: 2, whiteSpace: 'pre-wrap' }}>
+                  {report.generated}
+                </Typography>
+              ) : (
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  No generated report yet.
+                </Typography>
+              )}
+              {(report.generatedHistory?.length ?? 0) > 0 && (
                 <>
-                  <Typography variant="body2" sx={{ mb: 2, whiteSpace: 'pre-wrap' }}>
-                    {report.generated}
-                  </Typography>
                   <Typography variant="subtitle2" gutterBottom>
                     Version History
                   </Typography>
                   <List dense disablePadding>
                     {versions.map((entry, index) => (
-                      <ListItem key={`${entry.generatedAt}-${index}`} alignItems="flex-start" disablePadding sx={{ mb: 1 }}>
+                      <ListItem key={`${index}-${entry.provider}`} alignItems="flex-start" disablePadding sx={{ mb: 1 }}>
                         <ListItemText
-                          primary={`${entry.provider} · ${dayjs(entry.generatedAt).format('DD-MM-YYYY hh:mm A')}`}
+                          primary={`${entry.provider} · ${formatGeneratedAt(entry.generatedAt)}`}
                           secondary={entry.text}
                         />
                       </ListItem>
                     ))}
                   </List>
                 </>
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  No generated report yet.
-                </Typography>
               )}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mt: 1 }}>
+                <Select
+                  value={provider}
+                  onChange={(event) => setProvider(event.target.value)}
+                  size="small"
+                  disabled={!isGeneratingAllowed}
+                  inputProps={{ 'aria-label': 'AI provider' }}
+                >
+                  <MenuItem value={PROVIDER_ADDIS}>Addis AI</MenuItem>
+                  <MenuItem value={PROVIDER_GEMINI}>Gemini</MenuItem>
+                  <MenuItem value={PROVIDER_NVIDIA}>NVIDIA</MenuItem>
+                </Select>
+                <MuiButton
+                  variant="contained"
+                  onClick={handleGenerate}
+                  loading={isGenerating}
+                  disabled={!isGeneratingAllowed}
+                  sx={{ flexShrink: 0 }}
+                >
+                  {report.generated ? 'Regenerate Report' : 'Generate Report'}
+                </MuiButton>
+              </Box>
+              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                {isGeneratingAllowed
+                  ? 'Generate the final report from the reviewed transcription'
+                  : transcription && transcription.latest
+                    ? 'Review the transcription first'
+                    : 'Waiting for transcription'}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>

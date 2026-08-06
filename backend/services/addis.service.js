@@ -206,6 +206,119 @@ export async function transcribeWavChunk(
 }
 
 /**
+ * Maps an Addis AI status/error to a safe user message for the text
+ * generation path (`## Addis AI` §8, REQ-129) — a superset of the STT map
+ * so chat_generate errors surface consistently.
+ *
+ * @param {number} statusCode - The provider HTTP status.
+ * @returns {string} The safe message.
+ */
+export function mapTextError(statusCode) {
+  return mapSttError(statusCode);
+}
+
+/**
+ * Sends one text-generation request to the Addis AI endpoint
+ * `POST {baseUrl}/api/v1/chat_generate` (`## Addis AI` §6, REQ-127) with
+ * the assembled prompt (`## AI Prompt Spec` §7), the frozen generation or
+ * correction config (REQ-124), and `x-api-key` auth (REQ-126). Uses native
+ * `fetch` (REQ-125). Network failures retry per the backoff schedule;
+ * provider 4xx/5xx fail fast with the mapped message (REQ-129).
+ *
+ * @param {string} prompt - The assembled directive text (`utils/promptSeeds.js`).
+ * @param {Object} [options] - Request options.
+ * @param {Function} [options.fetchImpl] - The fetch implementation (injectable for probes).
+ * @param {string} [options.baseUrl] - Addis AI API base URL.
+ * @param {string} [options.apiKey] - Addis AI API key.
+ * @param {string} [options.model] - The Addis text model id.
+ * @param {string} [options.targetLanguage] - Response language (`am`).
+ * @param {Array<{role: string, content: string}>} [options.history] - Prior conversation turns.
+ * @param {Object} [options.generationConfig] - Frozen generation config (temperature, maxOutputTokens, topP, topK).
+ * @param {number} [options.timeoutMs] - Request timeout.
+ * @param {number} [options.retries] - Network-failure retry count.
+ * @param {number[]} [options.backoffMs] - Retry backoff schedule.
+ * @returns {Promise<{ text: string, requestId: string }>} The generated text and provider request id.
+ * @throws {Object} statusCode/message on provider or empty-output failures; network/429/503 retry per the backoff schedule.
+ */
+export async function generateText(
+  prompt,
+  {
+    fetchImpl = globalThis.fetch,
+    baseUrl = env.ADDIS_AI_BASE_URL,
+    apiKey = env.ADDIS_AI_API_KEY,
+    model = env.ADDIS_AI_TEXT_MODEL,
+    targetLanguage = env.ADDIS_AI_DEFAULT_TARGET_LANGUAGE,
+    history = [],
+    generationConfig = {
+      temperature: constants.AI_TEMPERATURE,
+      maxOutputTokens: constants.AI_MAX_OUTPUT_TOKENS,
+      topP: constants.AI_TOP_P,
+      topK: constants.AI_TOP_K,
+    },
+    timeoutMs = env.ADDIS_AI_TIMEOUT_MS,
+    retries = constants.AI_NETWORK_RETRIES,
+    backoffMs = constants.AI_RETRY_BACKOFF_MS,
+  } = {},
+) {
+  let lastError = null;
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetchImpl(`${baseUrl}/api/v1/chat_generate`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'x-api-key': apiKey },
+          body: JSON.stringify({
+            model,
+            prompt,
+            target_language: targetLanguage,
+            conversation_history: history,
+            generation_config: generationConfig,
+          }),
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          const error = {
+            retryable: response.status === 429 || response.status === 503,
+            statusCode: response.status,
+            message: mapTextError(response.status),
+          };
+          throw error;
+        }
+        const body = await response.json();
+        if (typeof body?.data?.response_text !== 'string' || !body.data.response_text.trim()) {
+          const error = {
+            retryable: false,
+            statusCode: 200,
+            message: 'Addis AI returned an empty report',
+          };
+          throw error;
+        }
+        const requestId = body.data.usage_metadata?.requestId ?? '';
+        return { text: body.data.response_text, requestId };
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    } catch (error) {
+      const wrapped =
+        error && error.statusCode !== undefined
+          ? error
+          : { retryable: true, statusCode: 0, message: 'Addis AI could not be reached', requestId: '' };
+      lastError = wrapped;
+      if (wrapped.retryable && attempt < retries) {
+        const delay = backoffMs[attempt] ?? backoffMs[backoffMs.length - 1];
+        addisLogger.warn('Text generation request retrying', { attempt: attempt + 1, statusCode: wrapped.statusCode });
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      } else {
+        throw wrapped;
+      }
+    }
+  }
+  throw lastError;
+}
+
+/**
  * Runs the full STT pipeline over one stored clip: single-pass WAV
  * conversion → PCM-level chunking → one `v2/stt` call per chunk
  * (`## Audio Recording STT` §8). Provider 4xx/5xx failures mark the chunk

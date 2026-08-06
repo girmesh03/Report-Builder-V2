@@ -2,14 +2,14 @@
  * @module App
  */
 
-import { Suspense } from 'react';
-import { Outlet } from 'react-router';
-import CssBaseline from '@mui/material/CssBaseline';
+import { Suspense } from "react";
+import { Outlet } from "react-router";
+import CssBaseline from "@mui/material/CssBaseline";
 
-import AppTheme from './theme/AppTheme.jsx';
-import AppErrorBoundary from './components/layout/AppErrorBoundary.jsx';
-import AppToastContainer from './components/layout/AppToastContainer.jsx';
-import LoadingSpinner from './components/reusable/LoadingSpinner.jsx';
+import AppTheme from "./theme/AppTheme.jsx";
+import AppErrorBoundary from "./components/layout/AppErrorBoundary.jsx";
+import AppToastContainer from "./components/layout/AppToastContainer.jsx";
+import LoadingSpinner from "./components/reusable/LoadingSpinner.jsx";
 
 /**
  * Root layout: AppTheme, CssBaseline, AppErrorBoundary, AppToastContainer,
@@ -34,6 +34,6 @@ function App() {
   );
 }
 
-App.displayName = 'App';
+App.displayName = "App";
 
 export default App;

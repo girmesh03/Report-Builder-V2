@@ -374,6 +374,55 @@
 - **Changes/updates/corrections:** (to be recorded in Step 6 of Phase 5)
 - **Validation results:** (the documented validations run in Phase 5 and their outcomes)
 
+### Phase 5 follow-up — Assistant UX fixes and free chat (user's 9-item request)
+
+- **Branch:** `phase-5-ai-generation-and-correction` — **Commit:** none (fix round uncommitted; Phase 5 re-review pending).
+- **Date:** 2026-08-06
+- **User request:** (1) `_id` TypeError when navigating Reports → ReportDetails; (2) back navigation from the Assistant page; (3) agent (AI provider) selector in the chat field; (4) stop button while the agent is processing; (5) delete a conversation from the rail; (6) move "New Chat" into the Assistant rail; (7) support free (report-less) chats; (8) AppShell sidebar entry starts a free chat; (9) Reports/ReportDetails entries still open the report's chat.
+- **Implemented / corrections (per item):**
+  1. **`_id` TypeError hardening** (`client/src/pages/ReportDetails.jsx`): populated slots can be `null` when a referenced doc is gone — `report.audio` is now `(report.audio ?? []).filter(Boolean)` with `clip._id ?? clip.id` keys/ids, `report.branches` filtered, `[...(report.generatedHistory ?? [])]` — no unguarded `_id` read remains. Also fixed a latent slice corruption: `onConversationsChange` fed provider-shaped items (`{id}` — no `_id`) into `aiConversationSlice`; `normalizeConversation(s)` (`client/src/redux/features/aiConversationSlice.js`) now maps both producers to canonical `{_id, id, title, lastMessageAt}` on every ingestion path (list/create/set), and `removeConversation` reducer was added.
+  2. **Back navigation** (`Assistant.jsx`): `ArrowBack` IconButton in the Assistant AppBar → `navigate(-1)`.
+  3. **Agent selector** (session-wide, user decision): `ProviderSelect.jsx` (Addis AI/Gemini/NVIDIA) rendered in the composer toolbar via `slots.composerToolbar` (`AssistantComposerToolbar.jsx`); `createAssistantAdapter({ currentUser, provider })` (`chatAdapter.js`) sends `provider` in the SSE message POST body (backend `validateSendMessage` already accepted it).
+  4. **Stop button** (`StopStreamingButton.jsx`): `useChat()` (`@mui/x-chat-headless`) `isStreaming`/`stopStreaming` inside the Chat provider tree — aborts the adapter fetch via the runtime signal (verified: `processStream` treats abort as a clean stop, no error card).
+  5. **Delete conversation**: backend `DELETE /api/v1/assistant/conversations/:id` (`deleteConversation` in `ai.controller.js`, route + `validateConversationId`); frontend `deleteConversation` mutation (`assistantApi.js`), `ConversationDeleteButton.jsx` rendered via the rail `itemActions` slot (compact variant, hover-reveal — verified `itemActions` only renders in compact in `@mui/x-chat`); slice drop + stale `?conversation=` param cleanup effect.
+  6. **New Chat in the rail**: `ConversationRail.jsx` (`slots.conversationList`) — full-width "New Chat" button above `ChatConversationList`; AppBar keeps only back arrow + title.
+  7. **Free chat**: `ChatConversation.report` now optional (`default: null`); `validateCreateConversation` allows absent/`null` `reportId`; `createConversation` without `reportId` creates a free conversation with `buildFreeChatWelcomeMessage`; `sendMessage` branches on `!conversation.report` — generic assistant flow (`AI_SYSTEM_PROMPT_ASSISTANT` constant), no transcription context and no `save_transcription` tool; `listConversations` maps `reportId: null` (no `toString()` crash). `NewChatDialog` gains a "Start a free conversation" action.
+  8. **Sidebar → free chat**: `assistant` route mounts without a `conversation` deep link → the resolution effect now starts with no selection (free view).
+  9. **Reports/ReportDetails → report chat**: unchanged `useOpenInAssistant` deep-link flow, verified compatible with the free-chat model.
+  - `client/package.json` — `@mui/x-chat-headless` added as a direct dependency (`^9.0.0-alpha.15`, was transitive-only).
+- **Validation results:**
+  - `node --check` on all backend files: PASS.
+  - `npm run lint` (client): PASS, exit 0.
+  - One-shot `npx vite build`: 0 errors (Assistant chunk 306 kB → 87.85 kB gzip); `client/dist/` deleted after.
+  - `python scripts/verify-initial-doc.py`: exit 0, SELF-ALIGNED.
+  - Static verification against installed `@mui/x-chat`/`@mui/x-chat-headless` (not guessed): `useChat` export, `composerToolbar` unconditional render, `itemActions` compact-only + hover reveal, `processStream` abort handling, `ConversationListRoot` `conversation.id` keying (motivating the slice normalization).
+  - **Not committed.** Re-review (Phase 5) is the next step; the manual browser pass for #1 (repro Reports → View) stays with the user.
+
+### Phase 5 follow-up — full rework of auth/chat/provider/reasoning/report layers (user's phase-5 defect list)
+
+- **Branch:** `phase-5-ai-generation-and-correction` — **Commit:** none (user approval to commit pending).
+- **Date:** 2026-08-06
+- **User request:** user-verified breakdowns just shorted below; decision: the rework goes "completely" — every phase-5 item the user listed gets fixed and logged "strictly for the implementation AI"; persisted approval cards will render as read-only tool cards in the UI.
+- **Implemented / corrections (by workstream + todo):**
+  1. **A1/A3 — auth/refresh hardening that made refresh tokens fail**: `client/src/redux/features/api.js` `baseQueryWithReauth` never logs out on transient (network/5xx) failures anymore; only a real 401/403 after a refresh attempt clears the session. `authSlice.js` tightened the same rule — `getMe` wipes the user only on 401/403, not any rejection. New `refresh` endpoint + `useRefreshMutation`. `client/src/components/routes/SessionRefresher.jsx` silently refreshes every `SESSION_REFRESH_INTERVAL_MS` (12 min, `constants.js`) mounted under `ProtectedRoute`; the previous code let stale/expired access tokens masquerade, and transient blips were logged out for nothing.
+  2. **A2 — raw-fetch reauth again bypassing the refresh path**: added `client/src/utils/authRefresh.js` (one shared serialized in-flight refresh promise) and `fetchWithReauth.js` (401→refresh→retry); `chatAdapter` now uses it for `sendMessage`, `listMessages`, `addToolApprovalResponse` (only this file calls raw fetch — `messageId` never goes through the RTK baseQuery, so SSE stays outside `bRw`).
+  3. **B1 — provider vars sanity**: added optional `GEMINI_MODEL`/`NVIDIA_MODEL` (so deepseek flash-4 can be the nvidia model) and made the placeholder `"change me"` values fail startup loudly instead of silently defaulting — previously `NVIDIA_API_BASE_URL="change me"` caused a silent fallback to Addis, which is exactly what broke "provider selection doesn't work".
+  4. **B2 — provider selection falls back to Addis silently**: `generateWithFallback` now *isExplicitSelection* only for a user-selected non-flag provider; explicit selection fails loudly (502 + exactly which provider) instead of silently succeeding with Addis, so the user knows the real cause; the default chain keeps working. Mapped messages from the services surface through.
+  5. **B3–B5 — reasoning**: `gemini.service.js`/`nvidia.service.js` accept `reasoning` → Gemini `thinkingConfig`/Nvidia `enable_reasoning`; both now return `{ text, requestId, reasoning }`; constants `AI_REASONING_*BUDGET`/`AI_REASONING_MAX_TOKENS`. Validator accepts `body('reasoning').optional().isBoolean()`; the SSE streams emit `reasoning` parts; the controller passes `reasoning` through `sendMessage`/`generateReport`. Client: `reasoning` toggle added to the composer toolbar (`ReasoningToggle`), carried through `createAssistantAdapter`; `chatAdapter` maps `reasoning` parts to MUI `reasoning` chunks — the assistant page renders them in the message part renderer.
+  6. **C1–C3 — generate old stale UI locked to never regenerate**: `ReportDetails` showed Generate only when `generated` was empty; now the generate controls render whenever the report is back in `reviewed` (button becomes "Regenerate Report"), so an approved correction that returns the report to `reviewed` can be regenerated (backend already returns to `reviewed` per T-5-04b).
+  7. **C2 — approved corrections never refreshed the report cache**: `chatAdapter` `addToolApprovalResponse` now calls `onToolApproved` (wired from `Assistant.jsx` → invalidates shared `api.util.invalidateTags(['Report'])`), so `ReportDetails`/`Reports` refetch after an approved `save_report`.
+  8. **D1 — report edits were being written into the transcription**: adding the new `save_report` tool (user-approved): report-correction handles now approve+persist the edit directly to `Report.generated` + `generatedHistory[]` push (same approve/expire flow), instead of trampling `Transcription.latest` (which was the whole "updated transcription doesn't link to report"). `approveToolCall` branches on which tool.
+  9. **E1–E2 — message identity/parts**: `endSseStream` now carries `finish {messageId}` and the free-chat branch emits `event: start {messageId}` so messenger ids match; `chatAdapter` parses `start`/reasoning and rehydrates persisted `tool-*` parts into read-only MUI `tool` cards on reload.
+  10. **E3/F1/F2 — rail/deep-link/empty/error branches**: tried-again list load failures in the Assistant no longer stall deep links forever (`failed` status toasts + clears the deep-link param); `Reports` now shows an error state instead of silently "no reports" on API failure; version-history timestamps guard against invalid (missing/non-date) `generatedAt`.
+  11. **Backend status**: `Report.generated`/`generatedHistory` replacement semantics stay (push-old-into-history); the report advances to `completed` on a fresh generate; an approved `save_report` keeps `completed` status.
+- **Validation results:**
+  - `backend/node --check` on every backend file + the full tree → temp check triggered for every file in the backend folder (`services/gemini.service.js`, `nvidia.service.js` chain — fine): PASS.
+  - `npm run lint` (client): PASS, exit 0.
+  - One-shot `npx vite build`: 0 errors; dist deleted.
+  - `python scripts/verify-initial-doc.py`: exit 0, SELF-ALIGNED.
+  - Server boots with real env keys; health + protected keys reachable (see review-log runtime notes).
+  - **Not committed.** The browser/gauda-pass handoff (composer + approve + reload + regenerate + reasoning toggle) needs real credentials, so it stays with the user.
+
 ### Phase 6 — Export And Analytics
 
 - **Branch:** `phase-6-export-and-analytics` — **Commit:** `feat: phase 6 export and analytics`

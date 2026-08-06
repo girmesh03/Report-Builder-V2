@@ -7,6 +7,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { api } from '../features/api.js';
 import { assistantApi } from '../features/assistantApi.js';
 import authReducer from '../features/authSlice.js';
+import aiConversationReducer from '../features/aiConversationSlice.js';
 // Side-effect imports: branchSlice/reportSlice/transcriptionSlice inject
 // their endpoints into the shared `api` slice via `injectEndpoints`
 // (REQ-103) — the same reducer and middleware, so nothing extra is
@@ -21,6 +22,7 @@ import '../features/transcriptionSlice.js';
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    aiConversation: aiConversationReducer,
     [api.reducerPath]: api.reducer,
     [assistantApi.reducerPath]: assistantApi.reducer,
   },

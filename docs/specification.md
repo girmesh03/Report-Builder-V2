@@ -435,9 +435,9 @@ All `§` references below identify sections of the original source brief. They a
 
 | Source ref | Fact | Recorded in spec section |
 |---|---|---|
-| §19 | Nvidia and Gemini are used in addition to Addis AI; STT always uses Addis AI; all providers must be free (no credit card or subscription — never non-free AI); Nvidia and Gemini keys in `backend/.env`; Gemini model `gemini-3.1-flash-lite`; Nvidia model `z-ai/glm-5.2` at least for now; other free models may be added; HTTP client for Gemini and Nvidia is axios; all three providers available, selected by the user at generation time via dropdown or buttons, default Addis; provider stored per AI conversation message; different providers for corrections vs initial generation; fallback chain Addis → Gemini → Nvidia | Other AI Providers (1–3), AI Prompt Spec (8), Requirements (REQ-132..135, REQ-138) |
+| §19 | Nvidia and Gemini are used in addition to Addis AI; STT always uses Addis AI; all providers must be free (no credit card or subscription — never non-free AI); Nvidia and Gemini keys in `backend/.env`; Gemini model `gemini-3.1-flash-lite`; Nvidia model `deepseek-ai/deepseek-v4-flash` at least for now; other free models may be added; HTTP client for Gemini and Nvidia is axios; all three providers available, selected by the user at generation time via dropdown or buttons, default Addis; provider stored per AI conversation message; different providers for corrections vs initial generation; fallback chain Addis → Gemini → Nvidia | Other AI Providers (1–3), AI Prompt Spec (8), Requirements (REQ-132..135, REQ-138) |
 | §19.1 | Gemini: model `gemini-3.1-flash-lite`; endpoint `:generateContent?key=${GEMINI_API_KEY}`; request `{ contents, systemInstruction, generationConfig (0.2, 2048, 0.9, 40) }`; no streaming; network failure retry 3x exponential backoff; provider error returns 502 | Other AI Providers (4), AI Prompt Spec (8), Requirements (REQ-136) |
-| §19.2 | Nvidia: model `z-ai/glm-5.2`; Nvidia API message format with `Authorization: Bearer` token; same retry pattern as Gemini | Other AI Providers (5), AI Prompt Spec (8), Requirements (REQ-137) |
+| §19.2 | Nvidia: model `deepseek-ai/deepseek-v4-flash`; Nvidia API message format with `Authorization: Bearer` token; same retry pattern as Gemini | Other AI Providers (5), AI Prompt Spec (8), Requirements (REQ-137) |
 | §19 + codebase (`backend/.env`, `backend/package.json`) | `backend/.env` holds real Nvidia (`nvapi-` prefixed) and Gemini (`AIzaSy` prefixed) keys plus `NVIDIA_API_BASE_URL`/`GEMINI_API_BASE_URL` `change me` placeholders; the spec records the keys as placeholders only (REQ-123); axios is absent from `backend/package.json` — added during implementation (REQ-138) | Other AI Providers (1, 4, 5), Environment Config (2), Requirements (REQ-138) |
 
 ## Source Trace Map — Phase 20 (source §20)
@@ -1068,7 +1068,7 @@ Secondary features should not distract from the core workflow of generating a bo
 | Addis-፩-አሌፍ | The Addis AI text model used for report generation and correction; configured via `ADDIS_AI_TEXT_MODEL` and sent as `model` in `chat_generate` requests. | §18.5 |
 | x-api-key | The HTTP header Addis AI REST authentication uses; it carries the `sk_`-prefixed secret key and is sent by backend services only. | §18.4 |
 | gemini-3.1-flash-lite | The Gemini text-generation model used as a fallback provider; configured via `GEMINI_API_KEY` and called through the `generateContent` endpoint. | §19.1 |
-| z-ai/glm-5.2 | The Nvidia text-generation model used as a fallback provider; configured via `NVIDIA_API_KEY` and called through the Nvidia message format with a bearer token. | §19.2 |
+| deepseek-ai/deepseek-v4-flash | The Nvidia text-generation model used as a fallback provider; configured via `NVIDIA_API_KEY` and called through the Nvidia message format with a bearer token. | §19.2 |
 | aiCorrectedText | Superseded field name (Phase 24, AD-011): AI transcription corrections are stored as `Transcription.latest` plus a new `history[]` entry whose `reviewer` is the provider string (`## Data Modeling` §4.3). | §21.4 |
 | Noto Sans Ethiopic | The Amharic-capable Unicode font used to render Amharic text in the PDF export (section headers and body). | §22 |
 | Google Drive export | The Google Docs export mechanism (Phase 25 user decision): the backend creates the document with the user's own Google OAuth token — the login flow extended with the `drive.file` scope — so the document lands in the user's own Google Drive, fully owned and editable by the user. | §22 |
@@ -1086,7 +1086,7 @@ Secondary features should not distract from the core workflow of generating a bo
 | MUI | Material UI — the React component library used for the entire frontend; imported tree-shaken (never the `@mui/material` barrel), styled via `sx`/`styled()` only, Tailwind CSS forbidden; the MUI X line is used in the community edition only. | §34, §9.1, §14 |
 | Addis AI (Addis) | The primary language model provider for speech-to-text and text generation, chosen for its Ethiopian Amharic specialization; STT always uses Addis AI, text generation is user-selectable across Addis/Gemini/Nvidia with Addis as the default. | §34, §18, §19.1 |
 | Gemini | The alternative language model provider (Google) for text generation; used as a fallback provider via `generateContent` with the `gemini-3.1-flash-lite` model and 3x exponential-backoff retries. | §34, §19.1 |
-| Nvidia | The alternative language model provider for text generation; used as a fallback provider via the Nvidia message format with a bearer token (`z-ai/glm-5.2` model). | §34, §19.2 |
+| Nvidia | The alternative language model provider for text generation; used as a fallback provider via the Nvidia message format with a bearer token (`deepseek-ai/deepseek-v4-flash` model). | §34, §19.2 |
 | PCM | Pulse-code modulation — the uncompressed audio sample format of the STT chunking pipeline: the full recording is converted to WAV (`pcm_s16le`, 16 kHz, mono) in a single ffmpeg pass, then split in-memory at the PCM level into ~60 s chunks; per-chunk re-encoding never happens. | §34, §20.4, REQ-144 |
 | ffmpeg | The multimedia framework used for audio conversion in the STT pipeline; converts the full recording to WAV (`pcm_s16le`, 16 kHz, mono) in a single pass before the PCM-level split. | §34, §20.4, REQ-144 |
 | wavSplitter | The backend service (`backend/utils/wavSplitter.js`) that splits a WAV file in-memory at the PCM level into ~60 s chunks (`ADDIS_AI_STT_MAX_DURATION_SEC` = 60) for STT. | §34, §20.4 |
@@ -1443,7 +1443,7 @@ Requirement ID scheme: `REQ-<NNN>`. Acceptance criteria are written to be testab
 | REQ-134 | The provider fallback chain is Addis → Gemini → Nvidia; when the selected provider fails, the next provider in the chain is used. | Fallback logic exists in the AI client; failures cascade through the chain in order. | §19 |
 | REQ-135 | All AI providers used must be free — no credit card or subscription required; non-free AI is never used. | No provider requires payment; no non-free AI service is called. | §19 |
 | REQ-136 | Gemini integration uses model `gemini-3.1-flash-lite`; `POST …:generateContent?key=${GEMINI_API_KEY}` with request `{ contents, systemInstruction, generationConfig }` (temperature 0.2, maxOutputTokens 2048, topP 0.9, topK 40); no streaming; network failures retry 3 times with exponential backoff; provider errors return 502. | The Gemini service builds the documented request; retries and the 502 mapping behave per contract. | §19.1 |
-| REQ-137 | Nvidia integration uses model `z-ai/glm-5.2` with the Nvidia API message format and `Authorization: Bearer` token; network failures retry 3 times with exponential backoff; provider errors return 502. | The Nvidia service builds the documented message format; retries and the 502 mapping behave per contract. | §19.2 |
+| REQ-137 | Nvidia integration uses model `deepseek-ai/deepseek-v4-flash` with the Nvidia API message format and `Authorization: Bearer` token; network failures retry 3 times with exponential backoff; provider errors return 502. | The Nvidia service builds the documented message format; retries and the 502 mapping behave per contract. | §19.2 |
 | REQ-138 | Gemini and Nvidia calls use axios (echo of REQ-078); axios is absent from `backend/package.json` and is added during implementation. | All Gemini/Nvidia calls go through axios; axios appears in `backend/package.json` during implementation. | §19, §9.1 (REQ-078) |
 
 ### Functional Requirements (Phase 20)
@@ -3040,7 +3040,7 @@ Project handling (REQ-129):
 - STT always uses Addis AI; Gemini and Nvidia are text-generation providers only (REQ-132).
 - All AI providers used must be free — no credit card or subscription required; non-free AI is never used (REQ-135).
 - Nvidia and Gemini API keys live in `backend/.env` only (echo of `## Environment Config` §4, REQ-123).
-- Models: Gemini `gemini-3.1-flash-lite`; Nvidia `z-ai/glm-5.2` at least for now; other free models may be added (REQ-136, REQ-137).
+- Models: Gemini `gemini-3.1-flash-lite`; Nvidia `deepseek-ai/deepseek-v4-flash` at least for now; other free models may be added (REQ-136, REQ-137).
 - HTTP client for Gemini and Nvidia: axios (echo of `## Rules` §1 and REQ-078; axios is absent from `backend/package.json` and is added during implementation — REQ-138).
 
 ### 2. Provider Selection And Storage (§19)
@@ -3065,7 +3065,7 @@ Project handling (REQ-129):
 
 ### 5. Nvidia Integration (§19.2)
 
-- Model: `z-ai/glm-5.2`; key `NVIDIA_API_KEY` and base URL in `backend/.env` (`## Environment Config` §2).
+- Model: `deepseek-ai/deepseek-v4-flash`; key `NVIDIA_API_KEY` and base URL in `backend/.env` (`## Environment Config` §2).
 - Uses the Nvidia API message format with `Authorization: Bearer` token (REQ-137); the key is sent only from backend services (REQ-123).
 - Same retry pattern as Gemini: network failure retries 3 times with exponential backoff; provider error returns 502 (REQ-137).
 - HTTP client: axios (REQ-138).
