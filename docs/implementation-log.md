@@ -368,15 +368,15 @@
 
 ### Phase 5 — AI Report Generation And Correction
 
-- **Branch:** `phase-5-ai-generation-and-correction` — **Commit:** `feat: phase 5 ai generation and correction`
-- **Date:** (to be filled at the end of Phase 5)
+- **Branch:** `phase-5-ai-generation-and-correction` — **Commit:** `92b52e6` (`feat: phase 5 ai generation and correction`, pushed to `origin/phase-5-ai-generation-and-correction`; merge to `main` deferred per the user's explicit instruction — the branch is committed and pushed but **not merged**)
+- **Date:** 2026-08-06
 - **Implemented:** (summary of what was built — files, features, endpoints, components — recorded in Step 6 of Phase 5)
 - **Changes/updates/corrections:** (to be recorded in Step 6 of Phase 5)
 - **Validation results:** (the documented validations run in Phase 5 and their outcomes)
 
 ### Phase 5 follow-up — Assistant UX fixes and free chat (user's 9-item request)
 
-- **Branch:** `phase-5-ai-generation-and-correction` — **Commit:** none (fix round uncommitted; Phase 5 re-review pending).
+- **Branch:** `phase-5-ai-generation-and-correction` — **Commit:** `92b52e6` (shipped inside `feat: phase 5 ai generation and correction`, pushed to `origin/phase-5-ai-generation-and-correction`; **not merged** per the user's instruction).
 - **Date:** 2026-08-06
 - **User request:** (1) `_id` TypeError when navigating Reports → ReportDetails; (2) back navigation from the Assistant page; (3) agent (AI provider) selector in the chat field; (4) stop button while the agent is processing; (5) delete a conversation from the rail; (6) move "New Chat" into the Assistant rail; (7) support free (report-less) chats; (8) AppShell sidebar entry starts a free chat; (9) Reports/ReportDetails entries still open the report's chat.
 - **Implemented / corrections (per item):**
@@ -396,11 +396,11 @@
   - One-shot `npx vite build`: 0 errors (Assistant chunk 306 kB → 87.85 kB gzip); `client/dist/` deleted after.
   - `python scripts/verify-initial-doc.py`: exit 0, SELF-ALIGNED.
   - Static verification against installed `@mui/x-chat`/`@mui/x-chat-headless` (not guessed): `useChat` export, `composerToolbar` unconditional render, `itemActions` compact-only + hover reveal, `processStream` abort handling, `ConversationListRoot` `conversation.id` keying (motivating the slice normalization).
-  - **Not committed.** Re-review (Phase 5) is the next step; the manual browser pass for #1 (repro Reports → View) stays with the user.
+  - **Committed** as `92b52e6` inside `feat: phase 5 ai generation and correction` and pushed to `origin/phase-5-ai-generation-and-correction`; **not merged** (per the user's instruction). The manual browser pass for #1 (repro Reports → View) stays with the user.
 
 ### Phase 5 follow-up — full rework of auth/chat/provider/reasoning/report layers (user's phase-5 defect list)
 
-- **Branch:** `phase-5-ai-generation-and-correction` — **Commit:** none (user approval to commit pending).
+- **Branch:** `phase-5-ai-generation-and-correction` — **Commit:** `92b52e6` (shipped inside `feat: phase 5 ai generation and correction`, pushed to `origin/phase-5-ai-generation-and-correction`; **not merged** per the user's instruction).
 - **Date:** 2026-08-06
 - **User request:** user-verified breakdowns just shorted below; decision: the rework goes "completely" — every phase-5 item the user listed gets fixed and logged "strictly for the implementation AI"; persisted approval cards will render as read-only tool cards in the UI.
 - **Implemented / corrections (by workstream + todo):**
@@ -421,7 +421,7 @@
   - One-shot `npx vite build`: 0 errors; dist deleted.
   - `python scripts/verify-initial-doc.py`: exit 0, SELF-ALIGNED.
   - Server boots with real env keys; health + protected keys reachable (see review-log runtime notes).
-  - **Not committed.** The browser/gauda-pass handoff (composer + approve + reload + regenerate + reasoning toggle) needs real credentials, so it stays with the user.
+  - **Committed** as `92b52e6` inside `feat: phase 5 ai generation and correction` and pushed to `origin/phase-5-ai-generation-and-correction`; **not merged** (per the user's instruction). The browser/gauda-pass handoff (composer + approve + reload + regenerate + reasoning toggle) needs real credentials, so it stays with the user.
 
 ### Phase 6 — Export And Analytics
 
